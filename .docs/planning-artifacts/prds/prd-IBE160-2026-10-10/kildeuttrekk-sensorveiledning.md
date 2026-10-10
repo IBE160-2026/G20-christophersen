@@ -1,0 +1,26 @@
+# Kildeuttrekk: Sensorveiledning IBE160 – Del 1
+
+Dato: 2026-10-10. Kilde: [Sensorveiledning-IBE160-Del-1.pdf](../../../reference/course/Sensorveiledning-IBE160-Del-1.pdf). Sidereferansene viser PDF-ens trykte sidetall (1–7). Tekst lest med macOS PDFKit. Dette er et konsentrert, parafrasert uttrekk til PRD-arbeidet, ikke en ny kravkilde.
+
+## Det veiledningen faktisk sier
+
+- **Ramme og vurdering (s. 1):** Del 1 vurderer app og repo som helhet, inklusive hvordan løsningen er laget og om andre kan forstå, kjøre og videreutvikle den. Prosesspor – planlegging, prompts, iterasjoner, kvalitetssikring og beslutninger – vurderes sammen med produktet. Veiledningen er støtte for faglig skjønn, ikke en mekanisk sjekkliste; kravene må ses mot valgt oppgave og ambisjonsnivå.
+- **Veiledende vekter (s. 1):** Prosess/KI-styring 30 %, funksjonalitet/omfang 20 %, kvalitetssikring/testing 15 %, design/UX 10 %, kodekvalitet/arkitektur 10 %, README/kjørbarhet 10 %, ryddighet 5 %. Del 1 teller 70 % av total karakter.
+- **Godkjent retning og scope (s. 2–3):** Sensor leser godkjent proposal og eventuell brief for å vite hva gruppen har lovet. Kjerneflytene fra proposal og README skal fungere fra start til slutt. Omfang vurderes opp mot valgt oppgave og ambisjon; datalagring, roller, integrasjoner og regler er eksempler på kompleksitet, ikke universelle krav. Utelatelser/endringer fra proposal skal beskrives og begrunnes. Vanlig bruk, feil input og gjentatte handlinger inngår i stabilitetsvurderingen.
+- **Sporbar plan–kode og KI-prosess (s. 2–3):** Sensor ser etter BMAD-dokumenter som faktisk brukes og oppdateres, funksjoner som kan spores til krav/stories, forklarte planavvik, lagrede prompts og KI-økter, konkrete eksempler på presisering/avvisning/retting/forbedring av KI-forslag og begrunnede teknologi-/arkitektur-/løsningsvalg. Historikken bør vise iterativ utvikling og små, avgrensede commits med beskrivende meldinger. Branches, PR-er, issues eller tilsvarende er eksempler på organisert arbeidsflyt. Ujevn commitfordeling alene gir ikke grunnlag for trekk.
+- **Kvalitetssikring og testing (s. 3–4):** Sensor ser etter kjørbare automatiserte tester av meningsfull logikk, dokumenterte manuelle tester/testplaner der automatisering ikke er hensiktsmessig, spor av kodegjennomgang og konkrete funn/rettinger i KI-generert kode. Grunnleggende feilhåndtering, inputvalidering og sikkerhetsbevissthet inngår. Høyt nivå innebærer relevante tester av sentral logikk og systematisk dokumentert kvalitetssikring. Veiledningen fastsetter ingen prosentvis testdekning og krever ikke alle testtyper.
+- **UX (s. 4–5):** Sensor ser etter konsistent uttrykk, tydelig navigasjon/informasjonsstruktur, forståelige tilbakemeldinger, feil og tomtilstander, grunnleggende tilgjengelighet (kontrast, tastatur, alternativtekst, skjemaetiketter), relevante skjermstørrelser og spor av designarbeid. Vurderingen tilpasses apptype.
+- **Arkitektur og kode (s. 5):** Struktur bør samsvare med dokumentert arkitektur. Lesbarhet, konsekvent stil, lite duplisering/død kode og fornuftig konfigurasjons-/avhengighetshåndtering vurderes. Linter/formatter nevnes som mulig støtte, ikke som obligatorisk verktøyvalg.
+- **README og kjørbarhet (s. 2, 5–6):** Sensor forsøker å starte appen i rent miljø kun fra README og kjører testene som beskrevet. README bør forklare målgruppe/funksjon, versjonerte forutsetninger, eksakte installasjons-/oppstartskommandoer, nødvendige miljøvariabler med eksempel uten hemmeligheter, testdata/-brukere ved behov, testkommandoer, mappestruktur og lenker til plan/prosess. Den må stemme med koden. Manglende kjørbarhet trekker ned og begrenser funksjonalitetsvurderingen.
+- **Repo og varseltegn (s. 6–7):** Oversiktlig struktur, relevante versjonerte filer, .gitignore og fravær av hemmeligheter (også i historikken) vurderes. Planer som beskriver en annen app, generell KI-dokumentasjon uten kobling til endringer, trivielle/feilende tester og konsentrert opplasting rett før fristen er varseltegn.
+
+## Tolkning for PRD-arbeidet – ikke selvstendige kurskrav
+
+- Gi krav stabile ID-er og knytt dem til brief/addendum og senere UX, arkitektur, stories og testbevis. Dette er en praktisk måte å oppfylle forventningen om sporbarhet; et bestemt ID-format eller matriseformat kreves ikke i veiledningen.
+- Formuler kjerneflyter og feiltilfeller som observerbare akseptansekriterier, slik at gjennomføring og stabilitet kan kontrolleres. Konkrete responstider, terskler og produktregler må komme fra produktkildene eller brukersvar, ikke fra sensorveiledningen.
+- Bevar låst scope. Dokumenter produktbeslutninger og eventuelle avvik; vurderingskriteriets eksempler på kompleksitet begrunner ikke ekstra roller, integrasjoner eller funksjoner.
+- Skill produktkrav fra leveranse-/prosessbevis (README, testkjøring, beslutningslogg, KI-sesjoner). Kursveiledningen gir ikke grunnlag for å bygge en egen revisjons- eller prosessfunksjon inn i appen.
+
+## Ingen slike krav funnet i denne kilden
+
+Ingen spesifikk teknologistakk, PRD-mal, krav-ID-struktur, obligatorisk integrasjon, minimum antall roller, bestemt oppetid/responstid, prosentvis testdekning eller plikt til å overgå godkjent scope. Det står heller ikke at hvert eksempel i kriterielistene må implementeres.

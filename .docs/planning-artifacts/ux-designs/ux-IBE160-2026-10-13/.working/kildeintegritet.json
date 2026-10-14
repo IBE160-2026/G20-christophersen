@@ -1,0 +1,90 @@
+{
+  "captured_date": "2026-10-13",
+  "purpose": "Kildeintegritet; UX-arbeidet endrer ikke låst produktgrunnlag.",
+  "sources": [
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/.memlog.md",
+      "sha256": "67cb7b49384ce65b1b3bba79f81dd80e99f5eb1bb472ef873922f77d11f45a05"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "sha256": "ad1b5e0e040fd6261cd2caf2e209f061f8cbb55b7131079c35ebf0797b7ae15d"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/beslutningsavstemming.md",
+      "sha256": "93f76ac04b38659b8918e7e3e27d65293ccd97c8df46a2cd66bd4355aec4cb24"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/kildegrunnlag.md",
+      "sha256": "a67c8e33a7e79b5012302cacc9d722bad8b670522d198fdb23697668ec7a524e"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/kildeuttrekk-sensorveiledning.md",
+      "sha256": "9372efcdde7518e9df89ab1a6a8dbdce1538120439940a17341a63b46b698bbf"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "sha256": "17e86a0298c844a384aa9053e8d9f7bae72dd12634a9a69693d0c2a7daabfaf0"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/reconcile-brief-addendum.md",
+      "sha256": "819302e8ffff87dd811a747cff39364af540aeb7de6532e15c6887c0281aab13"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/reconcile-brief.md",
+      "sha256": "a956bbfed18cccc9b628a862f4b0fa8b958b202aa031c52753b44ecd43a38d96"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/reconcile-faglaerer.md",
+      "sha256": "61abca83e790ab9b6db8e83e157fd7c585ff96616526e88663dac6e44412865b"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/reconcile-revisjonskontroll.md",
+      "sha256": "f8a17d6c461b6731d8abdd13df60be19f3f416f3bb11871de97009a2c12cb1c3"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/reconcile-sensorveiledning.md",
+      "sha256": "5e385d8f70761f8dbaee7932cc26f259eeade9f774f5023b4742532780f58038"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/review-prose.md",
+      "sha256": "163cff3239b7140cd8e6b8eb788f76a3e857d171ffb2dac7f53a1e3596d2b296"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/review-rubric.md",
+      "sha256": "acc59ab97f15f86e629c4ffec85599a5d01d3f063b1a2993e6191199df86a060"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/review-structure.md",
+      "sha256": "9c3f0aba416385a2394426a5778b8a776dcbcd4c382b7f6287e697d25769822f"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/sluttkontroll.md",
+      "sha256": "506c2feaf41b6d1a2f124091d24f59a269e198cd189db41c433ec76f1de6f022"
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/.memlog.md",
+      "sha256": "45ceea5f6539b13616bd842016d35f60ad02ce16be59bc16e122ce6e3307f5e3"
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "sha256": "0b2cbe583a289fe33a6d99ca2249bdba05a4f6feba0471abb48723be73bbc11f"
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "sha256": "01d875a58691d8c137eaa160180207e4b7a139ca072559f295801aa4a5065043"
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/revisjonskontroll-2026-10-08.md",
+      "sha256": "e299483c448b4699a36a87b47d8ec1f99df3eb576878f9c5b2138c86f4a92605"
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md",
+      "sha256": "6d02fe52f238ef3c8a563cf150949c2e1c2845f0f6fc7e04bcccfde4001e5fd0"
+    },
+    {
+      "path": ".docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf",
+      "sha256": "a0069856666a32e2e5c886fe1c46ade1d666a99bf800bc42b9e20113adc2e509"
+    }
+  ]
+}

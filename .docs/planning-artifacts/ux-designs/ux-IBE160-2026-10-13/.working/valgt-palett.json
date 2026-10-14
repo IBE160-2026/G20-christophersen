@@ -1,0 +1,210 @@
+{
+  "selected_by": "Mads",
+  "date": "2026-10-13",
+  "source": "fargekontraster-1.json",
+  "option": {
+    "number": 2,
+    "name": "Grafitt og petrol",
+    "mode": "light",
+    "tokens": {
+      "page": "#F1F5F4",
+      "surface": "#FFFFFF",
+      "subtle": "#EBF1EF",
+      "structure": "#253436",
+      "text": "#243537",
+      "muted": "#526865",
+      "accent": "#22665F",
+      "focus": "#22665F",
+      "control": "#738781",
+      "rule": "#D5E0DC",
+      "success": "#2D6144",
+      "success_bg": "#EDF5EE",
+      "warning": "#7B5318",
+      "warning_bg": "#FBF3E2",
+      "danger": "#903E43",
+      "danger_bg": "#F7ECED"
+    },
+    "pairings": [
+      {
+        "label": "text / surface",
+        "foreground": "#243537",
+        "background": "#FFFFFF",
+        "ratio": 12.8094,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "text / page",
+        "foreground": "#243537",
+        "background": "#F1F5F4",
+        "ratio": 11.655,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "text / subtle",
+        "foreground": "#243537",
+        "background": "#EBF1EF",
+        "ratio": 11.1996,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "muted / surface",
+        "foreground": "#526865",
+        "background": "#FFFFFF",
+        "ratio": 5.9544,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "muted / page",
+        "foreground": "#526865",
+        "background": "#F1F5F4",
+        "ratio": 5.4178,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "muted / subtle",
+        "foreground": "#526865",
+        "background": "#EBF1EF",
+        "ratio": 5.2061,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "accent / surface",
+        "foreground": "#22665F",
+        "background": "#FFFFFF",
+        "ratio": 6.7011,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "accent / page",
+        "foreground": "#22665F",
+        "background": "#F1F5F4",
+        "ratio": 6.0972,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "accent / subtle",
+        "foreground": "#22665F",
+        "background": "#EBF1EF",
+        "ratio": 5.859,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "primary text / primary fill",
+        "foreground": "#FFFFFF",
+        "background": "#22665F",
+        "ratio": 6.7011,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "inverse text / structure",
+        "foreground": "#FFFFFF",
+        "background": "#253436",
+        "ratio": 12.938,
+        "proposed_target": 4.5,
+        "kind": "text",
+        "passes": true
+      },
+      {
+        "label": "success text / success surface",
+        "foreground": "#2D6144",
+        "background": "#EDF5EE",
+        "ratio": 6.505,
+        "proposed_target": 4.5,
+        "kind": "status text",
+        "passes": true
+      },
+      {
+        "label": "warning text / warning surface",
+        "foreground": "#7B5318",
+        "background": "#FBF3E2",
+        "ratio": 6.1501,
+        "proposed_target": 4.5,
+        "kind": "status text",
+        "passes": true
+      },
+      {
+        "label": "danger text / danger surface",
+        "foreground": "#903E43",
+        "background": "#F7ECED",
+        "ratio": 6.1489,
+        "proposed_target": 4.5,
+        "kind": "status text",
+        "passes": true
+      },
+      {
+        "label": "focus / surface",
+        "foreground": "#22665F",
+        "background": "#FFFFFF",
+        "ratio": 6.7011,
+        "proposed_target": 3,
+        "kind": "control boundary",
+        "passes": true
+      },
+      {
+        "label": "focus / page",
+        "foreground": "#22665F",
+        "background": "#F1F5F4",
+        "ratio": 6.0972,
+        "proposed_target": 3,
+        "kind": "control boundary",
+        "passes": true
+      },
+      {
+        "label": "focus / subtle",
+        "foreground": "#22665F",
+        "background": "#EBF1EF",
+        "ratio": 5.859,
+        "proposed_target": 3,
+        "kind": "control boundary",
+        "passes": true
+      },
+      {
+        "label": "control / surface",
+        "foreground": "#738781",
+        "background": "#FFFFFF",
+        "ratio": 3.8102,
+        "proposed_target": 3,
+        "kind": "control boundary",
+        "passes": true
+      },
+      {
+        "label": "control / page",
+        "foreground": "#738781",
+        "background": "#F1F5F4",
+        "ratio": 3.4668,
+        "proposed_target": 3,
+        "kind": "control boundary",
+        "passes": true
+      },
+      {
+        "label": "control / subtle",
+        "foreground": "#738781",
+        "background": "#EBF1EF",
+        "ratio": 3.3314,
+        "proposed_target": 3,
+        "kind": "control boundary",
+        "passes": true
+      }
+    ]
+  }
+}

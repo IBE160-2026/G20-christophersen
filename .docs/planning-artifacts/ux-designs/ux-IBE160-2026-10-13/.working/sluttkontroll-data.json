@@ -1,0 +1,53 @@
+{
+  "yaml_parsed": 2,
+  "matching_sources": true,
+  "missing_sources": [],
+  "colors_hex": true,
+  "colors": 17,
+  "palette_matches": true,
+  "resolved_token_refs": 28,
+  "unresolved_token_refs": [],
+  "component_ids_match": true,
+  "components": 26,
+  "design_sections": [
+    "Brand & Style",
+    "Colors",
+    "Typography",
+    "Layout & Spacing",
+    "Elevation & Depth",
+    "Shapes",
+    "Components",
+    "Do's and Don'ts"
+  ],
+  "experience_sections": [
+    "Foundation",
+    "Information Architecture",
+    "Voice and Tone",
+    "Component Patterns",
+    "State Patterns",
+    "Interaction Primitives",
+    "Accessibility Floor",
+    "Responsive & Platform",
+    "Inspiration & Anti-patterns",
+    "Key Flows"
+  ],
+  "pending_markers": [],
+  "missing_links": [],
+  "offline_HTML_checked": [
+    "mockups/key-kontroller-funn.html",
+    "mockups/key-oversikt.html",
+    "mockups/key-resultat.html",
+    "mockups/key-tallgrunnlag.html",
+    "mockups/key-tilstandsrapport.html",
+    "validation-report.html"
+  ],
+  "working_keepers_match": true,
+  "upstream_sources": 21,
+  "upstream_changes": [],
+  "final_statuses": {
+    "DESIGN.md": "final",
+    "EXPERIENCE.md": "final"
+  },
+  "updated": "2026-10-14",
+  "completion_links_checked": true
+}

@@ -1,0 +1,451 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3690 1720" width="3690" height="1720">
+<defs><marker id="head" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M 0 0 L 8 4 L 0 8" fill="none" stroke="#222" stroke-width="1.5"/></marker></defs>
+<rect width="3690" height="1720" fill="white"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="32" fill="#222222" opacity="1.0">
+<tspan x="50" y="54.0">Property Acquisition Agent — firetrinns flytskisse</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="20" fill="#222222" opacity="1.0">
+<tspan x="50" y="95.0">Godkjente trinn og kontrollmekanismer. Gråtoner, geometri, komponentformer og detaljtetthet er illustrative.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="50" y="126.0">Tidligere fullførte trinn er klikkbare. Fremtidige trinn krever nødvendig grunnlag og forklaring av det som gjenstår. Tilbake bevarer fortsatt gyldig grunnlag.</tspan>
+</text>
+<rect x="50" y="180" width="800" height="1050" fill="#fafafa" stroke="#333333" stroke-width="2"/>
+<rect x="75" y="205" width="177" height="76" fill="#e2e2e2" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="85" y="232.0">1 Tallgrunnlag</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="85" y="257.0">Gjeldende</tspan>
+</text>
+<rect x="262" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="272" y="232.0">2 Tilstandsrapport</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="272" y="257.0">Gjenstår</tspan>
+</text>
+<rect x="449" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="459" y="232.0">3 Kontroller funn</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="459" y="257.0">Gjenstår</tspan>
+</text>
+<rect x="636" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="646" y="232.0">4 Resultat</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="646" y="257.0">Gjenstår</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="26" fill="#222222" opacity="1.0">
+<tspan x="75" y="351.0">1 Tallgrunnlag</tspan>
+</text>
+<rect x="980" y="180" width="800" height="1050" fill="#fafafa" stroke="#333333" stroke-width="2"/>
+<rect x="1005" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="1015" y="232.0">1 Tallgrunnlag</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="1015" y="257.0">Fullført</tspan>
+</text>
+<rect x="1192" y="205" width="177" height="76" fill="#e2e2e2" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="1202" y="232.0">2 Tilstandsrapport</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="1202" y="257.0">Gjeldende</tspan>
+</text>
+<rect x="1379" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="1389" y="232.0">3 Kontroller funn</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="1389" y="257.0">Gjenstår</tspan>
+</text>
+<rect x="1566" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="1576" y="232.0">4 Resultat</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="1576" y="257.0">Gjenstår</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="26" fill="#222222" opacity="1.0">
+<tspan x="1005" y="351.0">2 Tilstandsrapport</tspan>
+</text>
+<rect x="1910" y="180" width="800" height="1050" fill="#fafafa" stroke="#333333" stroke-width="2"/>
+<rect x="1935" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="1945" y="232.0">1 Tallgrunnlag</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="1945" y="257.0">Fullført</tspan>
+</text>
+<rect x="2122" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2132" y="232.0">2 Tilstandsrapport</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="2132" y="257.0">Fullført</tspan>
+</text>
+<rect x="2309" y="205" width="177" height="76" fill="#e2e2e2" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2319" y="232.0">3 Kontroller funn</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="2319" y="257.0">Gjeldende</tspan>
+</text>
+<rect x="2496" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2506" y="232.0">4 Resultat</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="2506" y="257.0">Gjenstår</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="26" fill="#222222" opacity="1.0">
+<tspan x="1935" y="351.0">3 Kontroller funn</tspan>
+</text>
+<rect x="2840" y="180" width="800" height="1050" fill="#fafafa" stroke="#333333" stroke-width="2"/>
+<rect x="2865" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2875" y="232.0">1 Tallgrunnlag</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="2875" y="257.0">Fullført</tspan>
+</text>
+<rect x="3052" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="3062" y="232.0">2 Tilstandsrapport</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="3062" y="257.0">Fullført</tspan>
+</text>
+<rect x="3239" y="205" width="177" height="76" fill="#ffffff" stroke="#999999" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="3249" y="232.0">3 Kontroller funn</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="3249" y="257.0">Fullført</tspan>
+</text>
+<rect x="3426" y="205" width="177" height="76" fill="#e2e2e2" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="3436" y="232.0">4 Resultat</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#555555" opacity="1.0">
+<tspan x="3436" y="257.0">Gjeldende</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="26" fill="#222222" opacity="1.0">
+<tspan x="2865" y="351.0">4 Resultat</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="75" y="383.0">Manuell registrering og kontroll for ett objekt.</tspan>
+</text>
+<rect x="75" y="415" width="750" height="99" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="89" y="443.0">Totalpris (P) — NOK</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="89" y="471.0">Inklusive eventuell fellesgjeld, uten kjøpsomkostninger.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#555555" opacity="1.0">
+<tspan x="89" y="499.0">[Verdi]   •   [Kilde / brukerforutsetning]</tspan>
+</text>
+<rect x="75" y="524" width="750" height="99" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="89" y="552.0">Brutto leieinntekt (L) — NOK / år eller måned</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="89" y="580.0">Periode og anvendt årsverdi tilgjengelig.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#555555" opacity="1.0">
+<tspan x="89" y="608.0">[Verdi]   •   [Kilde / brukerforutsetning]</tspan>
+</text>
+<rect x="75" y="633" width="750" height="99" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="89" y="661.0">Eierbetalte driftskostnader (D) — NOK / år eller måned</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="89" y="689.0">Kostnadsinnhold uten renter/avdrag eller dobbelttelling.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#555555" opacity="1.0">
+<tspan x="89" y="717.0">[Verdi]   •   [Kilde / brukerforutsetning]</tspan>
+</text>
+<rect x="75" y="742" width="750" height="99" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="89" y="770.0">Gjeldsbetjening (J) — NOK / år eller måned</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="89" y="798.0">Renter og avdrag, inklusive eventuell fellesgjeld.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#555555" opacity="1.0">
+<tspan x="89" y="826.0">[Verdi]   •   [Kilde / brukerforutsetning]</tspan>
+</text>
+<rect x="75" y="851" width="750" height="99" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="89" y="879.0">Minimumskrav til nettoyield (Ymin) — %</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="89" y="907.0">Brukerens krav; samme objekt og årsgrunnlag.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#555555" opacity="1.0">
+<tspan x="89" y="935.0">[Verdi]   •   [Kilde / brukerforutsetning]</tspan>
+</text>
+<rect x="75" y="983" width="750" height="109" fill="#eeeeee" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="89" y="1015.0">Kontroll før bekreftelse</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="89" y="1042.0">Enheter, perioder, årsverdier og kilder er kontrollerbare.</tspan>
+<tspan x="89" y="1062.0">Feltfeil og mangler forklares. Blank er ikke null; null bekreftes eksplisitt.</tspan>
+</text>
+<rect x="75" y="1155" width="330" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="171.0" y="1185.0">Bekreft tallgrunnlag</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#666666" opacity="1.0">
+<tspan x="423" y="1184.0">FR-1–FR-4, FR-15</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="1005" y="383.0">Velg rapport og start analysen eksplisitt.</tspan>
+</text>
+<rect x="1005" y="415" width="750" height="175" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="20" fill="#222222" opacity="1.0">
+<tspan x="1020" y="450.0">Gjeldende tilstandsrapport</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="1020" y="485.0">[Dokumentnavn.pdf]   •   [Dokumentstatus]</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="1020" y="516.0">Én tekstbasert PDF, høyst 30 sider.</tspan>
+<tspan x="1020" y="536.0">Ustøttet format / OCR-behov forklares som dokumentfeil.</tspan>
+</text>
+<rect x="1005" y="615" width="310" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="1087.0" y="645.0">Velg tilstandsrapport</tspan>
+</text>
+<rect x="1005" y="695" width="750" height="200" fill="#eeeeee" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="20" fill="#222222" opacity="1.0">
+<tspan x="1020" y="733.0">Analysestatus — klart skilt</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="1020" y="771.0">Klar / analyserer / fullført / analysefeil.</tspan>
+<tspan x="1020" y="793.5">Ufullført analyse og feil blir synlige; tomt uttrekk er ikke automatisk «ingen funn».</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="1020" y="854.0">Kjent årsak og manglende grunnlag beskrives.</tspan>
+</text>
+<rect x="1005" y="931" width="750" height="148" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="20" fill="#222222" opacity="1.0">
+<tspan x="1020" y="968.0">Opphav og gjenbruk</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="1020" y="1002.0">Demo merkes som lagret KI-uttrekk.</tspan>
+<tspan x="1020" y="1023.25">Live: ett eksplisitt analysekall per ny rapport.</tspan>
+<tspan x="1020" y="1044.5">Uendret rapport gjenbruker uttrekk.</tspan>
+</text>
+<rect x="1005" y="1155" width="280" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="1098.5" y="1185.0">Start analyse</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#666666" opacity="1.0">
+<tspan x="1305" y="1177.0">Etter gyldig, bekreftet tallgrunnlag.</tspan>
+<tspan x="1305" y="1194.5">FR-6–FR-9</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="1935" y="383.0">Funn og originalrapport samtidig.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="19" fill="#222222" opacity="1.0">
+<tspan x="1935" y="426.0">Funnliste / valgt funn</tspan>
+</text>
+<rect x="1935" y="439" width="365" height="54" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="1947" y="471.0">TG2 / TG3 — velg et funn</tspan>
+</text>
+<rect x="1935" y="512" width="365" height="258" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="1947" y="540.0">Valgt funn • KI-uttrekk fra rapport</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="1947" y="581.0">[Rapportens TG2 eller TG3]</tspan>
+<tspan x="1947" y="601.0">[Kort KI-beskrivelse]</tspan>
+<tspan x="1947" y="621.0">[Dokumentnavn] • PDF-side [n]</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#222222" opacity="1.0">
+<tspan x="1947" y="656.0">Usikkerhet: [eventuell kjent årsak]</tspan>
+<tspan x="1947" y="674.75">Funnstatus: [gjeldende status]</tspan>
+</text>
+<rect x="1947" y="709" width="103" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="1976.0" y="737.0">Bekreft</tspan>
+</text>
+<rect x="2063" y="709" width="103" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2089.0" y="737.0">Korriger</tspan>
+</text>
+<rect x="2179" y="709" width="109" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2217.0" y="737.0">Avvis</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#222222" opacity="1.0">
+<tspan x="1938" y="806.0">Opprinnelig KI-uttrekk og brukerendring</tspan>
+<tspan x="1938" y="824.75">beholdes tilgjengelig og tydelig atskilt.</tspan>
+</text>
+<rect x="1935" y="854" width="365" height="235" fill="#eeeeee" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="1947" y="886.0">Alvorlig TG3 — separat avklaring</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="1947" y="921.0">Status: Avklart / Uavklart</tspan>
+<tspan x="1947" y="941.0">Begrunnelse: [brukeroppgitt tekst]</tspan>
+<tspan x="1947" y="961.0">Avklaringsgrunnlag: [konkret grunnlag]</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#222222" opacity="1.0">
+<tspan x="1947" y="996.0">Avklart krever status og begge tekster.</tspan>
+<tspan x="1947" y="1014.75">Brukerbekreftet for førstevurdering;</tspan>
+<tspan x="1947" y="1033.5">systemet verifiserer ikke grunnlaget.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="19" fill="#222222" opacity="1.0">
+<tspan x="2325" y="426.0">Original-PDF i appen</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="2325" y="462.0">[Dokumentnavn] • PDF-side [n]</tspan>
+</text>
+<rect x="2325" y="482" width="162" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2351.5" y="510.0">Forrige PDF-side</tspan>
+</text>
+<rect x="2499" y="482" width="186" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2542.0" y="510.0">Neste PDF-side</tspan>
+</text>
+<rect x="2325" y="552" width="360" height="537" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="19" fill="#222222" opacity="1.0">
+<tspan x="2342" y="591.0">Hel originalside</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="2342" y="628.0">Valgt funn åpner automatisk</tspan>
+<tspan x="2342" y="648.0">riktig PDF-side.</tspan>
+<tspan x="2342" y="668.0">Nabosider kan leses her.</tspan>
+</text>
+<rect x="2343" y="714" width="324" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="745" width="282" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="776" width="324" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="807" width="282" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="838" width="324" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="869" width="282" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="900" width="324" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="931" width="282" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="962" width="324" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<rect x="2343" y="993" width="282" height="2" fill="#dddddd" stroke="#dddddd" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#666666" opacity="1.0">
+<tspan x="2343" y="1061.0">[Originalrapportens innhold]</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#222222" opacity="1.0">
+<tspan x="1935" y="1125.0">Separat listebekreftelse. Uavklart TG3 kan beholdes; regelutfallet følger grunnlaget.</tspan>
+</text>
+<rect x="1935" y="1155" width="390" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="2035.5" y="1185.0">Bekreft gjeldende funnliste</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#666666" opacity="1.0">
+<tspan x="2342" y="1184.0">FR-5, FR-8–FR-11</tspan>
+</text>
+<rect x="2865" y="385" width="750" height="132" fill="#eeeeee" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="22" fill="#222222" opacity="1.0">
+<tspan x="2880" y="425.0">Én kodebasert anbefaling — [regelutfall]</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="2880" y="462.0">Kort regelbegrunnelse og anbefalingsbundet neste handling.</tspan>
+<tspan x="2880" y="483.25">Avgjørende regelprioritet og konkrete utløsere tilgjengelige.</tspan>
+</text>
+<rect x="2865" y="545" width="365" height="96" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="2877" y="575.0">Bruttoyield — %</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#222222" opacity="1.0">
+<tspan x="2877" y="608.0">[Gjeldende beregning / konkret årsak]</tspan>
+</text>
+<rect x="3250" y="545" width="365" height="96" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="3262" y="575.0">NOI — NOK/år</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#222222" opacity="1.0">
+<tspan x="3262" y="608.0">[Gjeldende beregning / konkret årsak]</tspan>
+</text>
+<rect x="2865" y="654" width="365" height="96" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="2877" y="684.0">Nettoyield — %</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#222222" opacity="1.0">
+<tspan x="2877" y="717.0">[Gjeldende beregning / konkret årsak]</tspan>
+</text>
+<rect x="3250" y="654" width="365" height="96" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="3262" y="684.0">Kontantstrøm før skatt — NOK/år</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="15" fill="#222222" opacity="1.0">
+<tspan x="3262" y="717.0">[Gjeldende beregning / konkret årsak]</tspan>
+</text>
+<rect x="2865" y="785" width="750" height="243" fill="#ffffff" stroke="#666666" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="20" fill="#222222" opacity="1.0">
+<tspan x="2880" y="821.0">Påkrevd kontrollgrunnlag tilgjengelig</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="2880" y="855.0">Formler, brukte verdier, perioder og kilder / brukerforutsetninger.</tspan>
+<tspan x="2880" y="876.25">Aktive TG2/TG3 med dokumentnavn og PDF-side.</tspan>
+<tspan x="2880" y="897.5">Opprinnelige KI-funn, brukerrettinger og avvisninger.</tspan>
+<tspan x="2880" y="918.75">Separat brukerbekreftet TG3-avklaring.</tspan>
+<tspan x="2880" y="940.0">Mangler, konflikter, usikkerhet og dokument- / analysefeil.</tspan>
+<tspan x="2880" y="961.25">Delgrunnlag og lagret demoanalyse merkes.</tspan>
+</text>
+<rect x="2865" y="1070" width="345" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="2972.0" y="1100.0">Endre tallgrunnlag</tspan>
+</text>
+<rect x="2865" y="1155" width="345" height="49" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#222222" opacity="1.0">
+<tspan x="2951.0" y="1185.0">Gå tilbake til rapportfunn</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="16" fill="#666666" opacity="1.0">
+<tspan x="3230" y="1114.0">Gjeldende grunnlag og</tspan>
+<tspan x="3230" y="1134.0">opplysninger beholdes.</tspan>
+<tspan x="3230" y="1154.0">FR-12–FR-18</tspan>
+</text>
+<path d="M 857 770 L 973 770" fill="none" stroke="#222222" stroke-width="2"  marker-end="url(#head)"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="860" y="706.0">Tall kontrollert</tspan>
+<tspan x="860" y="723.5">og bekreftet</tspan>
+</text>
+<path d="M 1787 770 L 1903 770" fill="none" stroke="#222222" stroke-width="2"  marker-end="url(#head)"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="1790" y="706.0">Analyse fullført;</tspan>
+<tspan x="1790" y="723.5">funnliste synlig</tspan>
+</text>
+<path d="M 2717 770 L 2833 770" fill="none" stroke="#222222" stroke-width="2"  marker-end="url(#head)"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="14" fill="#222222" opacity="1.0">
+<tspan x="2720" y="706.0">Gjeldende liste</tspan>
+<tspan x="2720" y="723.5">bekreftet</tspan>
+</text>
+<path d="M 3000 1240 L 3000 1320 L 2310 1320 L 2310 1240" fill="none" stroke="#222222" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#head)"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="2325" y="1357.0">Til rapportfunn: ny listebekreftelse ved endring, uten ny KI-analyse.</tspan>
+</text>
+<path d="M 3240 1240 L 3240 1440 L 450 1440 L 450 1240" fill="none" stroke="#222222" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#head)"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#222222" opacity="1.0">
+<tspan x="750" y="1478.0">Til tallgrunnlag: kontroll og bekreftelse av endrede tall, så ny kodeberegning / anbefaling. Uendret rapport gjenbrukes.</tspan>
+</text>
+<rect x="50" y="1540" width="3590" height="150" fill="#f5f5f5" stroke="#aaaaaa" stroke-width="1"/>
+<text font-family="Helvetica,Arial,sans-serif" font-size="20" fill="#222222" opacity="1.0">
+<tspan x="70" y="1578.0">Godkjent endringshåndtering</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#222222" opacity="1.0">
+<tspan x="70" y="1608.0">Stepperen viser også Endret — må oppdateres når berørt grunnlag er endret. Ny rapport krever ny analyse og ny kontroll.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#666666" opacity="1.0">
+<tspan x="70" y="1639.0">Tidligere anbefaling / nøkkeltall beholdes historisk og dempet: «Utdatert / Må bekreftes på nytt». Endring og nødvendig ny bekreftelse forklares.</tspan>
+</text>
+<text font-family="Helvetica,Arial,sans-serif" font-size="17" fill="#666666" opacity="1.0">
+<tspan x="70" y="1670.0">Gamle resultater er aldri aktive eller beslutningsklare. Ny gyldig beregning erstatter dem etter nødvendig bekreftelse. Presis geometri og detaljtetthet er ikke valgt.</tspan>
+</text>
+</svg>

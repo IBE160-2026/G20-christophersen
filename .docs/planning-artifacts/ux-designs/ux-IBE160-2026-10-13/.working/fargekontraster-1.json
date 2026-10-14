@@ -1,0 +1,831 @@
+{
+  "title": "Property Acquisition Agent — fargevalg 1",
+  "date": "2026-10-13",
+  "status": "proposed UX alternatives; no palette selected",
+  "scope": "light desktop static design illustration",
+  "method": "sRGB relative luminance; contrast=(Lmax+0.05)/(Lmin+0.05)",
+  "target_note": "Practical proposed UX targets, not a course-imposed certification.",
+  "decorative_rule_note": "rule is decorative and is not used alone for information, status, focus or control boundaries",
+  "options": [
+    {
+      "number": 1,
+      "name": "Marine og blå",
+      "mode": "light",
+      "tokens": {
+        "page": "#F3F5F8",
+        "surface": "#FFFFFF",
+        "subtle": "#EEF2F7",
+        "structure": "#14283F",
+        "text": "#172D43",
+        "muted": "#526477",
+        "accent": "#285E9A",
+        "focus": "#285E9A",
+        "control": "#718297",
+        "rule": "#D8DFE8",
+        "success": "#235F42",
+        "success_bg": "#EDF5F0",
+        "warning": "#795016",
+        "warning_bg": "#FCF3E2",
+        "danger": "#97393D",
+        "danger_bg": "#F8ECEC"
+      },
+      "pairings": [
+        {
+          "label": "text / surface",
+          "foreground": "#172D43",
+          "background": "#FFFFFF",
+          "ratio": 14.0672,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "text / page",
+          "foreground": "#172D43",
+          "background": "#F3F5F8",
+          "ratio": 12.8798,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "text / subtle",
+          "foreground": "#172D43",
+          "background": "#EEF2F7",
+          "ratio": 12.5127,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / surface",
+          "foreground": "#526477",
+          "background": "#FFFFFF",
+          "ratio": 6.0905,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / page",
+          "foreground": "#526477",
+          "background": "#F3F5F8",
+          "ratio": 5.5764,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / subtle",
+          "foreground": "#526477",
+          "background": "#EEF2F7",
+          "ratio": 5.4174,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / surface",
+          "foreground": "#285E9A",
+          "background": "#FFFFFF",
+          "ratio": 6.6499,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / page",
+          "foreground": "#285E9A",
+          "background": "#F3F5F8",
+          "ratio": 6.0886,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / subtle",
+          "foreground": "#285E9A",
+          "background": "#EEF2F7",
+          "ratio": 5.9151,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "primary text / primary fill",
+          "foreground": "#FFFFFF",
+          "background": "#285E9A",
+          "ratio": 6.6499,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "inverse text / structure",
+          "foreground": "#FFFFFF",
+          "background": "#14283F",
+          "ratio": 14.9462,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "success text / success surface",
+          "foreground": "#235F42",
+          "background": "#EDF5F0",
+          "ratio": 6.7887,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "warning text / warning surface",
+          "foreground": "#795016",
+          "background": "#FCF3E2",
+          "ratio": 6.4123,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "danger text / danger surface",
+          "foreground": "#97393D",
+          "background": "#F8ECEC",
+          "ratio": 6.1313,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "focus / surface",
+          "foreground": "#285E9A",
+          "background": "#FFFFFF",
+          "ratio": 6.6499,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "focus / page",
+          "foreground": "#285E9A",
+          "background": "#F3F5F8",
+          "ratio": 6.0886,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "focus / subtle",
+          "foreground": "#285E9A",
+          "background": "#EEF2F7",
+          "ratio": 5.9151,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / surface",
+          "foreground": "#718297",
+          "background": "#FFFFFF",
+          "ratio": 3.9311,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / page",
+          "foreground": "#718297",
+          "background": "#F3F5F8",
+          "ratio": 3.5992,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / subtle",
+          "foreground": "#718297",
+          "background": "#EEF2F7",
+          "ratio": 3.4967,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Grafitt og petrol",
+      "mode": "light",
+      "tokens": {
+        "page": "#F1F5F4",
+        "surface": "#FFFFFF",
+        "subtle": "#EBF1EF",
+        "structure": "#253436",
+        "text": "#243537",
+        "muted": "#526865",
+        "accent": "#22665F",
+        "focus": "#22665F",
+        "control": "#738781",
+        "rule": "#D5E0DC",
+        "success": "#2D6144",
+        "success_bg": "#EDF5EE",
+        "warning": "#7B5318",
+        "warning_bg": "#FBF3E2",
+        "danger": "#903E43",
+        "danger_bg": "#F7ECED"
+      },
+      "pairings": [
+        {
+          "label": "text / surface",
+          "foreground": "#243537",
+          "background": "#FFFFFF",
+          "ratio": 12.8094,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "text / page",
+          "foreground": "#243537",
+          "background": "#F1F5F4",
+          "ratio": 11.655,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "text / subtle",
+          "foreground": "#243537",
+          "background": "#EBF1EF",
+          "ratio": 11.1996,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / surface",
+          "foreground": "#526865",
+          "background": "#FFFFFF",
+          "ratio": 5.9544,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / page",
+          "foreground": "#526865",
+          "background": "#F1F5F4",
+          "ratio": 5.4178,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / subtle",
+          "foreground": "#526865",
+          "background": "#EBF1EF",
+          "ratio": 5.2061,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / surface",
+          "foreground": "#22665F",
+          "background": "#FFFFFF",
+          "ratio": 6.7011,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / page",
+          "foreground": "#22665F",
+          "background": "#F1F5F4",
+          "ratio": 6.0972,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / subtle",
+          "foreground": "#22665F",
+          "background": "#EBF1EF",
+          "ratio": 5.859,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "primary text / primary fill",
+          "foreground": "#FFFFFF",
+          "background": "#22665F",
+          "ratio": 6.7011,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "inverse text / structure",
+          "foreground": "#FFFFFF",
+          "background": "#253436",
+          "ratio": 12.938,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "success text / success surface",
+          "foreground": "#2D6144",
+          "background": "#EDF5EE",
+          "ratio": 6.505,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "warning text / warning surface",
+          "foreground": "#7B5318",
+          "background": "#FBF3E2",
+          "ratio": 6.1501,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "danger text / danger surface",
+          "foreground": "#903E43",
+          "background": "#F7ECED",
+          "ratio": 6.1489,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "focus / surface",
+          "foreground": "#22665F",
+          "background": "#FFFFFF",
+          "ratio": 6.7011,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "focus / page",
+          "foreground": "#22665F",
+          "background": "#F1F5F4",
+          "ratio": 6.0972,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "focus / subtle",
+          "foreground": "#22665F",
+          "background": "#EBF1EF",
+          "ratio": 5.859,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / surface",
+          "foreground": "#738781",
+          "background": "#FFFFFF",
+          "ratio": 3.8102,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / page",
+          "foreground": "#738781",
+          "background": "#F1F5F4",
+          "ratio": 3.4668,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / subtle",
+          "foreground": "#738781",
+          "background": "#EBF1EF",
+          "ratio": 3.3314,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Blekk og plomme",
+      "mode": "light",
+      "tokens": {
+        "page": "#F5F4F7",
+        "surface": "#FFFFFF",
+        "subtle": "#F0EDF4",
+        "structure": "#292731",
+        "text": "#292832",
+        "muted": "#665E72",
+        "accent": "#655181",
+        "focus": "#655181",
+        "control": "#84788E",
+        "rule": "#DFDAE5",
+        "success": "#326247",
+        "success_bg": "#EDF4EF",
+        "warning": "#7C551B",
+        "warning_bg": "#FBF4E7",
+        "danger": "#953C49",
+        "danger_bg": "#F8EDF0"
+      },
+      "pairings": [
+        {
+          "label": "text / surface",
+          "foreground": "#292832",
+          "background": "#FFFFFF",
+          "ratio": 14.5444,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "text / page",
+          "foreground": "#292832",
+          "background": "#F5F4F7",
+          "ratio": 13.2741,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "text / subtle",
+          "foreground": "#292832",
+          "background": "#F0EDF4",
+          "ratio": 12.5532,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / surface",
+          "foreground": "#665E72",
+          "background": "#FFFFFF",
+          "ratio": 6.1601,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / page",
+          "foreground": "#665E72",
+          "background": "#F5F4F7",
+          "ratio": 5.6221,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / subtle",
+          "foreground": "#665E72",
+          "background": "#F0EDF4",
+          "ratio": 5.3168,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / surface",
+          "foreground": "#655181",
+          "background": "#FFFFFF",
+          "ratio": 6.8913,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / page",
+          "foreground": "#655181",
+          "background": "#F5F4F7",
+          "ratio": 6.2894,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / subtle",
+          "foreground": "#655181",
+          "background": "#F0EDF4",
+          "ratio": 5.9479,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "primary text / primary fill",
+          "foreground": "#FFFFFF",
+          "background": "#655181",
+          "ratio": 6.8913,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "inverse text / structure",
+          "foreground": "#FFFFFF",
+          "background": "#292731",
+          "ratio": 14.6972,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "success text / success surface",
+          "foreground": "#326247",
+          "background": "#EDF4EF",
+          "ratio": 6.318,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "warning text / warning surface",
+          "foreground": "#7C551B",
+          "background": "#FBF4E7",
+          "ratio": 6.0512,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "danger text / danger surface",
+          "foreground": "#953C49",
+          "background": "#F8EDF0",
+          "ratio": 6.0796,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "focus / surface",
+          "foreground": "#655181",
+          "background": "#FFFFFF",
+          "ratio": 6.8913,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "focus / page",
+          "foreground": "#655181",
+          "background": "#F5F4F7",
+          "ratio": 6.2894,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "focus / subtle",
+          "foreground": "#655181",
+          "background": "#F0EDF4",
+          "ratio": 5.9479,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / surface",
+          "foreground": "#84788E",
+          "background": "#FFFFFF",
+          "ratio": 4.1516,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / page",
+          "foreground": "#84788E",
+          "background": "#F5F4F7",
+          "ratio": 3.789,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / subtle",
+          "foreground": "#84788E",
+          "background": "#F0EDF4",
+          "ratio": 3.5832,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "name": "Kull og bronse",
+      "mode": "light",
+      "tokens": {
+        "page": "#F6F5F3",
+        "surface": "#FFFFFF",
+        "subtle": "#F0EEEA",
+        "structure": "#302C28",
+        "text": "#312D28",
+        "muted": "#6A6158",
+        "accent": "#79513B",
+        "focus": "#79513B",
+        "control": "#887C6D",
+        "rule": "#E1DCD4",
+        "success": "#3B634A",
+        "success_bg": "#EFF4EF",
+        "warning": "#765115",
+        "warning_bg": "#FAF3E4",
+        "danger": "#953E38",
+        "danger_bg": "#F8EEEC"
+      },
+      "pairings": [
+        {
+          "label": "text / surface",
+          "foreground": "#312D28",
+          "background": "#FFFFFF",
+          "ratio": 13.6666,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "text / page",
+          "foreground": "#312D28",
+          "background": "#F6F5F3",
+          "ratio": 12.5432,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "text / subtle",
+          "foreground": "#312D28",
+          "background": "#F0EEEA",
+          "ratio": 11.7943,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / surface",
+          "foreground": "#6A6158",
+          "background": "#FFFFFF",
+          "ratio": 6.063,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / page",
+          "foreground": "#6A6158",
+          "background": "#F6F5F3",
+          "ratio": 5.5646,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "muted / subtle",
+          "foreground": "#6A6158",
+          "background": "#F0EEEA",
+          "ratio": 5.2324,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / surface",
+          "foreground": "#79513B",
+          "background": "#FFFFFF",
+          "ratio": 6.8782,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / page",
+          "foreground": "#79513B",
+          "background": "#F6F5F3",
+          "ratio": 6.3128,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "accent / subtle",
+          "foreground": "#79513B",
+          "background": "#F0EEEA",
+          "ratio": 5.9359,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "primary text / primary fill",
+          "foreground": "#FFFFFF",
+          "background": "#79513B",
+          "ratio": 6.8782,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "inverse text / structure",
+          "foreground": "#FFFFFF",
+          "background": "#302C28",
+          "ratio": 13.8469,
+          "proposed_target": 4.5,
+          "kind": "text",
+          "passes": true
+        },
+        {
+          "label": "success text / success surface",
+          "foreground": "#3B634A",
+          "background": "#EFF4EF",
+          "ratio": 6.1431,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "warning text / warning surface",
+          "foreground": "#765115",
+          "background": "#FAF3E4",
+          "ratio": 6.4248,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "danger text / danger surface",
+          "foreground": "#953E38",
+          "background": "#F8EEEC",
+          "ratio": 6.0952,
+          "proposed_target": 4.5,
+          "kind": "status text",
+          "passes": true
+        },
+        {
+          "label": "focus / surface",
+          "foreground": "#79513B",
+          "background": "#FFFFFF",
+          "ratio": 6.8782,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "focus / page",
+          "foreground": "#79513B",
+          "background": "#F6F5F3",
+          "ratio": 6.3128,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "focus / subtle",
+          "foreground": "#79513B",
+          "background": "#F0EEEA",
+          "ratio": 5.9359,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / surface",
+          "foreground": "#887C6D",
+          "background": "#FFFFFF",
+          "ratio": 4.0771,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / page",
+          "foreground": "#887C6D",
+          "background": "#F6F5F3",
+          "ratio": 3.7419,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        },
+        {
+          "label": "control / subtle",
+          "foreground": "#887C6D",
+          "background": "#F0EEEA",
+          "ratio": 3.5185,
+          "proposed_target": 3,
+          "kind": "control boundary",
+          "passes": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-13",
+  "purpose": "Dokumentgrunnlag ved oppstart av de tre brukerautoriserte UX-kontrollene",
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "fa31526e1eaedc8a2b1c8dd9dac344da5d0ba82c4be459364025f1d3b3859266"
+    },
+    {
+      "path": "EXPERIENCE.md",
+      "sha256": "c579105f846f965fb41bf8ff82ab9d9e154d9b929cd06c62c1ef0ca2d06ef86c"
+    },
+    {
+      "path": ".memlog.md",
+      "sha256": "c91a180169f3f46c24232c8d87f744207968f737ac9b3a23ff2cfd7a25b289ab"
+    },
+    {
+      "path": ".working/valgt-palett.json",
+      "sha256": "a70a25722863983aed165c9508a1f9d6cc6765a1f7b3ced76f8f4559f1dfa767"
+    }
+  ]
+}

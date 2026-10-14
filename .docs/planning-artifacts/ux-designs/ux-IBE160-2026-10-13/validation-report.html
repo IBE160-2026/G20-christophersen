@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--
+  UX Design Validation Report — skeleton template.
+
+  This file is a starter the synthesis pass fills in directly. There is no
+  substitution engine. The LLM:
+    1. Reads {doc_workspace}/review-rubric.md and every review-{slug}.md from
+       additional reviewers.
+    2. Copies this skeleton.
+    3. Replaces the placeholder content (everything between TEMPLATE markers)
+       with the consolidated review, preserving the structure and CSS.
+    4. Writes the result to {doc_workspace}/validation-report.html.
+    5. Writes a markdown twin to {doc_workspace}/validation-report.md.
+
+  Visual rules the LLM must preserve:
+    - The container width, the color tokens, the typography.
+    - One dimension = one collapsible <section class="dimension">.
+    - Verdict pill uses the verdict-* class matching its judgment.
+    - Severity badge uses the badge-sev-* class matching its level.
+    - Each extra reviewer (accessibility, adversarial, etc.) gets its own
+      collapsible section below the rubric dimensions.
+    - The footer always shows the artifact paths and timestamp.
+-->
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<title>UX-validering: Property Acquisition Agent</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --border: #e7e5e4;
+    --text: #1c1917;
+    --muted: #78716c;
+
+    --verdict-strong: #16a34a;
+    --verdict-adequate: #65a30d;
+    --verdict-thin: #d97706;
+    --verdict-broken: #dc2626;
+
+    --sev-low: #64748b;
+    --sev-medium: #ca8a04;
+    --sev-high: #ea580c;
+    --sev-critical: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  header.report-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .title h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .title .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+
+  .synthesis {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--muted);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    font-size: 15.5px;
+  }
+  .synthesis p { margin: 0 0 10px; }
+  .synthesis p:last-child { margin-bottom: 0; }
+
+  .dimension-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .dim-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .dim-card .dim-name { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .dim-card .dim-verdict { font-size: 14px; font-weight: 600; }
+
+  section.dimension, section.reviewer-section { margin-bottom: 14px; }
+  section.dimension details, section.reviewer-section details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  section summary {
+    padding: 14px 20px;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  section summary::-webkit-details-marker { display: none; }
+  section summary::before {
+    content: "▸";
+    display: inline-block;
+    color: var(--muted);
+    transition: transform 0.15s ease;
+  }
+  section details[open] summary::before { transform: rotate(90deg); }
+  section summary h2 {
+    display: inline;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    flex: 1;
+  }
+  .verdict-pill {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: white;
+  }
+  .verdict-strong { background: var(--verdict-strong); }
+  .verdict-adequate { background: var(--verdict-adequate); }
+  .verdict-thin { background: var(--verdict-thin); }
+  .verdict-broken { background: var(--verdict-broken); }
+
+  .dim-body { padding: 4px 20px 18px; }
+  .dim-judgment { color: var(--text); font-size: 14.5px; }
+  .dim-judgment p { margin: 0 0 10px; }
+
+  .findings-list { padding: 0 20px 4px; }
+  article.finding {
+    padding: 14px 0;
+    border-top: 1px solid var(--border);
+  }
+  article.finding:first-child { border-top: none; }
+  article.finding header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .badge {
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .badge-sev-low { background: rgba(100, 116, 139, 0.12); color: var(--sev-low); }
+  .badge-sev-medium { background: rgba(202, 138, 4, 0.14); color: var(--sev-medium); }
+  .badge-sev-high { background: rgba(234, 88, 12, 0.14); color: var(--sev-high); }
+  .badge-sev-critical { background: rgba(220, 38, 38, 0.14); color: var(--sev-critical); }
+  .finding-title { margin: 0; font-size: 15px; font-weight: 500; flex: 1; min-width: 200px; }
+  .finding-location { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; color: var(--muted); }
+  .finding-note, .finding-fix { margin-top: 6px; font-size: 14px; }
+  .finding-fix strong { color: var(--muted); font-weight: 500; }
+
+  .reviewer-source {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  .mechanical {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 24px;
+    font-size: 14px;
+  }
+  .mechanical h3 { margin: 0 0 10px; font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .mechanical ul { margin: 0; padding-left: 20px; }
+  .mechanical li { margin-bottom: 4px; color: var(--text); }
+
+  footer.report-footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  footer .meta { display: flex; gap: 24px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="container">
+<header class="report-header"><div class="title"><h1>Property Acquisition Agent — UX-validering</h1><div class="subtitle">ux-IBE160-2026-10-13 · DESIGN.md + EXPERIENCE.md</div></div></header>
+<div class="synthesis"><p>Kontrollen av draft-utkastet 13. oktober 2026 viste god mekanisk dekning: kilder/tokenreferanser løste, 26 komponenter hadde begge kontrakter, og den ene låste brukerreisen var dekket med kontroll-, endrings- og feilforløp. Den identifiserte seks medium-forekomster om korrigeringsanvendelse, separat TG3-endring, lokalt mangelutfall, smal PDF-/zoomvisning og statuskunngjøring. TG3-overgangen overlappet mellom to linser: fem ulike forhold, ikke doble produktkrav.</p><p>Alle seks forekomstene er nå lukket på dokumentnivå gjennom de tre målrettede etterkontrollene 14. oktober. Mads sine valg og UX-rettingene er innarbeidet med konkrete bevislenker nedenfor. Originalrapportene, rubric-nivåene og de opprinnelige alvorlighetsantallene beholdes: critical 0, high 0, medium 6, low 0. Gjenværende åpne funn i dette kontrollerte utvalget: 0.</p><p>Kategorivurderinger og funnbeskrivelser nedenfor er det opprinnelige kontrollbildet fra 13. oktober, ikke nye påstander om mangler i dagens kontrakt. Etterkontroll/status viser gjeldende løsninger. Hovedagentens visuelle sluttkontroll og dokumentpolish er fullført; <a href="sluttkontroll.md">sluttkontrollen</a> dokumenterer dette separat fra de opprinnelige review-funnene. Rapporten hevder ingen faktisk appkontroll, implementerte produkttester eller tilgjengelighetssertifisering.</p></div>
+<div class="dimension-summary"><div class="dim-card"><div class="dim-name">1. Flytdekning</div><div class="dim-verdict" style="color: var(--verdict-strong)">strong</div></div>
+<div class="dim-card"><div class="dim-name">2. Tokenfullstendighet</div><div class="dim-verdict" style="color: var(--verdict-strong)">strong</div></div>
+<div class="dim-card"><div class="dim-name">3. Komponentdekning</div><div class="dim-verdict" style="color: var(--verdict-adequate)">adequate</div></div>
+<div class="dim-card"><div class="dim-name">4. Tilstandsdekning</div><div class="dim-verdict" style="color: var(--verdict-adequate)">adequate</div></div>
+<div class="dim-card"><div class="dim-name">5. Visuell referansedekning</div><div class="dim-verdict" style="color: var(--verdict-strong)">strong</div></div>
+<div class="dim-card"><div class="dim-name">6. Omfang og overspesifisering</div><div class="dim-verdict" style="color: var(--verdict-strong)">strong</div></div>
+<div class="dim-card"><div class="dim-name">7. Kildearv og konsistens</div><div class="dim-verdict" style="color: var(--verdict-strong)">strong</div></div>
+<div class="dim-card"><div class="dim-name">8. Dokumentform</div><div class="dim-verdict" style="color: var(--verdict-strong)">strong</div></div></div>
+<section class="dimension"><details><summary><h2>1. Flytdekning</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>Pass 1 hentet kravnavn fra den faktiske PRD-en: <strong>UJ-1: Mads førstevurderer ett boligutleieobjekt</strong>, FR-1–FR-18, NFR-1–NFR-5 og S1–S6. Den ene produktreisen beholder sitt ordrette navn. EXPERIENCE.md §Key Flows har fire forløp med Mads som navngitt protagonist, nummererte handlinger, eksplisitt klimaks og feilforløp (linje 165–207).</p>
+<p>Registrering, kilder/kostnadsinnhold, tallkontroll, rapportuttrekk, PDF-kontroll, retting/avvisning, separat TG3-status, listebekreftelse, fire beregninger, regelutfall og sporbarhet er koblet til flow 1. Flow 2 utdyper FR-5/FR-8–FR-11, flow 3 FR-15/FR-18 og flow 4 mangler, rapportfeil og demo. Ingen FR mangler en faktisk flyt-/komponentkobling. NFR-ene og S1–S6 støtter samme flyt; evalueringsmålene omformes ikke til nye appfunksjoner.</p><p class="reviewer-source">Flow coverage · <a href="review-rubric.md">review-rubric.md</a></p></div></div></details></section>
+<section class="dimension"><details><summary><h2>2. Tokenfullstendighet</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>Begge frontmatters er tolket med Ruby/Psych <code>safe_load</code>. DESIGN.md definerer 17 flate fargetokens med seks-tegns hex, seks typeroller, fem radier, 13 spacing-tokens og 26 komponentobjekter. Alle 28 unike <code>{path.to.token}</code>-referanser i DESIGN.md frontmatter/prose og EXPERIENCE.md løser i faktisk YAML; ingen referanse er udefinert. Typene følger <code>references/design-md-spec.md</code>.</p>
+<p>De valgte hexene er sammenholdt med <code>.working/valgt-palett.json</code>, alternativ 2. Alle 20 dokumenterte kontrastpar er beregnet på nytt fra hexene, med samsvar til de lagrede forholdene. Svakeste informasjonstekstpar er 5,2061:1; svakeste kontrollpar er 3,3314:1. Lastbærende mål på 4,5:1 og 3:1, lys avstand ved fokus på aksentfylt knapp og lesbar historisk visning er eksplisitte (DESIGN.md linje 211–234). Lys modus er valgt; mørke tokens er ikke et manglende krav.</p><p class="reviewer-source">Token completeness · <a href="review-rubric.md">review-rubric.md</a></p></div></div></details></section>
+<section class="dimension"><details><summary><h2>3. Komponentdekning</h2><span class="verdict-pill verdict-adequate">adequate</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>Pass 1 sammenholdt alle komponentnavn i frontmatter, DESIGN.md §Components og EXPERIENCE.md §Component Patterns. De samme 26 ID-ene har konkrete visuelle og atferdsmessige rader; ingen komponent mangler sin peer-kontrakt. Enkeltfunnets kontroll, listebekreftelse og TG3-avklaring er egne komponenter. Pass 2 fant én operasjon som fortsatt overlater en viktig overgang til downstream-tolkning.</p><p class="reviewer-source">Component coverage · <a href="review-rubric.md">review-rubric.md</a></p></div></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">RUB-COMP-1 — Korrigeringens gjeldende-versjon er ikke avgrenset</h3></header><div class="finding-location">Opprinnelig medium-funn — 2026-10-13.</div><div class="finding-location">Komponentdekning · <a href="review-rubric.md">review-rubric.md</a></div><div class="finding-note"><p><code>finding-edit</code> sier hvilke felt som kan korrigeres og at endret liste krever ny bekreftelse, men ikke når en retting blir den gjeldende brukerversjonen. Et downstream-team må velge mellom løpende oppdatering og eksplisitt lagring, og avgjøre hva som skjer ved funnvalg/trinnbytte mens rettingen er halvferdig. Dette påvirker hvilken liste som bekreftes og når et tidligere resultat blir historisk (EXPERIENCE.md linje 80; flow 2 linje 180–183; DESIGN.md linje 280).</p></div><div class="finding-fix"><strong>Foreslått retting:</strong> konkretiser den eksisterende korrigeringshandlingens avslutning og navigasjon: hvordan rettingen gjøres gjeldende, hvordan eventuelt uferdig input beholdes/avbrytes, og at original KI-versjon og listebekreftelse fortsatt er separate. Dette er UX-operasjonalisering av FR-10/FR-11, uten ny analyse eller varig lagring.</div><div class="finding-fix"><strong>Etterkontroll 14. oktober — lukket på dokumentnivå:</strong> Bruk korrigering gjør utkastet gjeldende og funn/liste ubekreftet; Avbryt beholder tidligere gjeldende versjon. Uferdig utkast beholdes ved navigasjon uten automatisk bruk. Bevis: EXPERIENCE finding-edit/origin-detail, linje 81–82/118, og DESIGN linje 280 ved etterkontrollen. <a href=".working/etterkontroll-rubrikk.md">Kontrollbevis</a>.</div></article></div></details></section>
+<section class="dimension"><details><summary><h2>4. Tilstandsdekning</h2><span class="verdict-pill verdict-adequate">adequate</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>Alle fire IA-flater er gjennomgått. EXPERIENCE.md §State Patterns har 29 rader: seks for Tallgrunnlag, sju for Tilstandsrapport, åtte for Kontroller funn og åtte for Resultat. Tomt, faktisk lasting, feil, fokus, offline/demo og gjeldende/ubekreftet/endret grunnlag er behandlet der relevant. Fullført tomliste skilles fra feilet analyse. Dokumenttilgangsfeil er nevnt uten å introdusere innlogging/roller. Pass 2 fant en manglende eksplisitt overgang for en separat opplysningstype.</p><p class="reviewer-source">State coverage · <a href="review-rubric.md">review-rubric.md</a></p></div></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">RUB-STATE-1 — TG3-endring mangler egen resultat-overgang</h3></header><div class="finding-location">Opprinnelig medium-funn — 2026-10-13.</div><div class="finding-location">Tilstandsdekning · <a href="review-rubric.md">review-rubric.md</a></div><div class="finding-note"><p>TG3-avklaring er uttrykkelig atskilt fra korrigering og funnlistekontroll, men <code>tg3-resolution</code>, stale-radene og oppdateringsforløpet angir ikke eksplisitt virkningen av å endre status, begrunnelse eller avklaringsgrunnlag etter et resultat. PRD FR-5 pkt. 8 og FR-18 pkt. 4 krever at tidligere anbefaling aldri fremstår gjeldende ved denne endringen. En generell henvisning til «endret grunnlag» lar downstream tolke om en separat avklaring omfattes av listeendring (EXPERIENCE.md linje 83, 119, 127–128, 139 og flow 3 linje 191–196).</p></div><div class="finding-fix"><strong>Foreslått retting:</strong> legg til en kort, eksplisitt overgang for de tre TG3-avklaringsopplysningene: merk berørt grunnlag/resultat endret, vis tidligere resultat historisk, og la ny kontroll/regelevaluering bruke gjeldende status etter FR-5. Avklar UX-bekreftelsespunktet uten å legge til ny rapportanalyse eller endre hva Avklart/Uavklart betyr.</div><div class="finding-fix"><strong>Etterkontroll 14. oktober — lukket på dokumentnivå:</strong> Endret registrert TG3-status, begrunnelse og grunnlag gjør tidligere anbefaling umiddelbart historisk. FR-5-kontroll og kodevurdering bruker aktuell avklaring med uendret tall/liste/uttrekk beholdt. Bevis: EXPERIENCE linje 84/92/121/142/203–204. Samme forhold som PT-1. <a href=".working/etterkontroll-rubrikk.md">Kontrollbevis</a>.</div></article></div></details></section>
+<section class="dimension"><details><summary><h2>5. Visuell referansedekning</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>Pass 1 inventerte <code>mockups/</code>, <code>wireframes/</code> og <code>imports/</code>: ingen filer er promotert eller importert i disse mappene ennå, og dermed finnes ingen orphan i de endelige referansemappene. Alle eksisterende inline-lenker løser. <code>.working/color-themes-1.html</code> navngir valgt alternativ 2; <code>.working/valgt-palett.json</code>/<code>fargekontraster-1.json</code> dokumenterer tokenvalg og par. Excalidraw/SVG er lenket ved layout og IA med formål om fire trinn, delt PDF-kontroll og retur. Wireframens 184 elementer og faktiske etiketter er kontrollert; uvalgt geometri og gammel detaljtetthet er uttrykkelig illustrative. DESIGN.md linje 203 sier én gang at spine-paret vinner ved konflikt.</p><p class="reviewer-source">Visual reference coverage · <a href="review-rubric.md">review-rubric.md</a></p></div></div></details></section>
+<section class="dimension"><details><summary><h2>6. Omfang og overspesifisering</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>De konkrete dimensjonene er samlet i tokens og suppleres med anvendelsesregler. Komponent- og tilstandstabellene har reelle oppgaver i den sekvensielle kontrollflyten. FR-/NFR-/S-ID-er brukes som spor; finansfasit og evalueringsprotokoll er ikke kopiert inn som en ny produktspesifikasjon. Gjentatte gyldighets-/opphavsgrenser beskytter ulike feilutsatte operasjoner. Ingen teknologistakk, bibliotek, ekstra dashboard, eksport, historikkfunksjon eller annen ikke-bestilt v1-funksjon er innført.</p><p class="reviewer-source">Bloat &amp; overspecification · <a href="review-rubric.md">review-rubric.md</a></p></div></div></details></section>
+<section class="dimension"><details><summary><h2>7. Kildearv og konsistens</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>Begge <code>sources</code> har samme åtte eksisterende kilder; <code>paired_with</code> og peer-lenker er gjensidige. UJ-1-navn, fire valgte trinnnavn, P/L/D/J/Ymin, PDF-side telt fra 1, de tre anbefalingene og opphavstypene er konsistente med gjeldende PRD og beslutningslogg. Faglærerens historiske bredere scope videreføres ikke som nye krav. Komponentenavn er identiske i begge spines og frontmatter. EXPERIENCE.md refererer faktisk definert <code>{colors.focus-ring}</code>.</p>
+<p>Siste memlog triagerer A1–A5 som fasilitatorens operasjonalisering innen valgt retning; de er ikke feilaktig omtalt som ordrette brukerbeslutninger i spines. Eldre arbeidsnotaters antakelsesstatus er prosesshistorikk, ikke autoritet foran memlog eller spine-paret. OPEN UX-C er fortsatt eksplisitt og ikke omskrevet til et vedtatt breakpoint/panel.</p><p class="reviewer-source">Inheritance discipline · <a href="review-rubric.md">review-rubric.md</a></p></div></div></details></section>
+<section class="dimension"><details><summary><h2>8. Dokumentform</h2><span class="verdict-pill verdict-strong">strong</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>Alle tre konfigurerte DESIGN.md-eksempler og begge EXPERIENCE.md-eksempler er lest. DESIGN.md har de åtte kanoniske seksjonene i riktig rekkefølge. EXPERIENCE.md har alle åtte obligatoriske seksjoner og de to utløste seksjonene Responsive &amp; Platform og Inspiration &amp; Anti-patterns. Ingen UI-system er valgt som krever ytterligere arvekontrakt. Ingen obligatorisk seksjon er droppet eller erstattet med en oppdiktet produktdel.</p><p class="reviewer-source">Shape fit · <a href="review-rubric.md">review-rubric.md</a></p></div></div></details></section>
+<section class="reviewer-section"><details><summary><h2>Samsvar med låst PRD og brukerbeslutninger</h2><span class="verdict-pill verdict-adequate">adequate</span><span class="reviewer-source">review-prd-trace.md</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p><strong>Adequate.</strong> Ingen faktisk scope-utvidelse, finansendring, endret anbefalingsprioritet eller tilsidesatt brukerbeslutning er funnet. To UX-overganger er likevel for uklart beskrevet for en ferdig atferdskontrakt: endring av separat TG3-avklaring etter Resultat og hvor selve mangelutfallet vises når førstegangsgrunnlaget blokkerer neste trinn. Begge kan konkretiseres innen eksisterende PRD og brukerens valgte lokale feilvisning.</p>
+<p><strong>Funn:</strong> critical 0 · high 0 · medium 2 · low 0. Dette er kontroll av dokumentene, ikke verifikasjon av en implementert app.</p><p><a href="review-prd-trace.md">Full reviewer-rapport</a></p></div></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">PT-1 — TG3-endring etter Resultat mangler eksplisitt gyldighetsovergang</h3></header><div class="finding-location">Opprinnelig medium-funn — 2026-10-13.</div><div class="finding-location">EXPERIENCE <code>tg3-resolution</code>, l. 84; <code>stale-result</code>, l. 92; Interaction Primitives l. 139; Key Flow 3 l. 191–196. DESIGN <code>stale-result</code>, l. 291. · <a href="review-prd-trace.md">review-prd-trace.md</a></div><div class="finding-note"><p>Det er godt beskrevet at finansverdier og endret funnliste gjør forrige resultat historisk, mens TG3-avklaring samtidig er en separat opplysning. Ingen av disse overgangene navngir hva som skjer når bare TG3-status, begrunnelse eller avklaringsgrunnlag endres etter et gyldig resultat. Flow 3s feilforløp omtaler tom TG3-tekst, men ikke den vanlige overgangen Avklart → Uavklart eller øvrig redigering av avklaringen. Kilderegelen er arvet og ikke endret; UX-kontrakten lar likevel denne separate endringstypen falle mellom de beskrevne utløsere.</p>
+<p><strong>Kilde:</strong> PRD FR-5 AK8, l. 173, og FR-18 AK4, l. 367; PRD-addendum FR-5-eksemplet l. 22 og AT-16 l. 96 inkluderer eksplisitt TG3-statusendring.</p></div><div class="finding-fix"><strong>Foreslått retting:</strong> Navngi TG3-status/begrunnelse/grunnlag som berørt resultatgrunnlag i gyldighetsreglene og en returvariant. Beskriv at gammel anbefaling umiddelbart opphører å være gjeldende, og at kodeutfallet for Uavklart eller ugyldig Avklart er Innhent mer informasjon med funnet navngitt. Bevar gyldige finansverdier og uendret rapportuttrekk; ingen nytt KI-kall eller automatisk ny listebekreftelse innføres bare fordi den separate avklaringen endres. Den nødvendige brukerbekreftelsen følger FR-5, ikke en ny produktregel.</div><div class="finding-fix"><strong>Etterkontroll 14. oktober — lukket på dokumentnivå:</strong> Separat TG3-endring er eksplisitt resultatgrunnlag; Uavklart/ugyldig Avklart gir navngitt Innhent mer informasjon. Ingen nytt KI-kall eller ny bekreftelse av uendrede tall/liste. Bevis: EXPERIENCE linje 84/92/121/142/203–204 og DESIGN linje 291. Samme forhold som RUB-STATE-1. <a href=".working/etterkontroll-prd.md">Kontrollbevis</a>.</div></article>
+<article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">PT-2 — Selve mangelutfallet har ingen bestemt synlig plass i den sperrede førstegangsreisen</h3></header><div class="finding-location">Opprinnelig medium-funn — 2026-10-13.</div><div class="finding-location">EXPERIENCE IA l. 35/39–41, State Patterns l. 102/108–109/121–124 og Key Flows l. 174/203–204. Arbeidsnotatet <a href=".working/ia-og-navigasjon.md">ia-og-navigasjon.md</a>, l. 22, sier at konkret inngang til delgrunnlag gjenstår. DESIGN l. 250/289. · <a href="review-prd-trace.md">review-prd-trace.md</a></div><div class="finding-note"><p>Mangler vises korrekt lokalt, og fremtidige trinn sperres uten nødvendig grunnlag. Selve kodeanbefalingen Innhent mer informasjon er spesifisert på Resultat, men visningen ved manglende tall eller dokument-/analysefeil beskrives bare med «hvis Resultat vises». Ingen bestemt lokal tilstand sier at utfallet vises i stedet når førstegangsreisen stoppes før Resultat. Uavklart TG3 etter bekreftet kontroll har en tydelig resultatrute; ufullstendige tall og feilet analyse har bare feilruten. Dette er et uavklart UX-ledd, ikke påvist endret regelprioritet.</p>
+<p><strong>Kilde:</strong> PRD FR-3 AK5, l. 139; FR-4 AK4, l. 150; FR-9 AK4, l. 230; FR-16 AK2, l. 338. Addendum RT-19 l. 48 og AT-12/AT-13 l. 92–93 krever Innhent mer informasjon for disse tilfellene. Brukerens valg er lokale feil uten nødvendig Resultat-omvei, UX-memlog l. 19 og brukersvar l. 246–264.</p></div><div class="finding-fix"><strong>Foreslått retting:</strong> Konkretiser at identifisert ufullstendig kritisk grunnlag gir det kodebaserte utfallet Innhent mer informasjon i det aktuelle trinnet, sammen med lokale konkrete blokkere og nødvendig handling. Forklar at ordinær videregang er sperret, mens dette mangelutfallet fortsatt er synlig. Behold Resultats samlede oppsummering når Resultat faktisk åpnes; ikke innfør en tvungen Resultat-omvei eller godta ufullstendig grunnlag som fullført.</div><div class="finding-fix"><strong>Etterkontroll 14. oktober — lukket på dokumentnivå:</strong> Kodebasert Innhent mer informasjon vises i problemtrinnet med konkrete blokkere og neste handling, selv om vanlig videregang er sperret. Resultat beholder samlet oppsummering når det åpnes. Bevis: EXPERIENCE linje 41/125–126/214–215 og DESIGN linje 250. <a href=".working/etterkontroll-prd.md">Kontrollbevis</a>.</div></article></div></details></section>
+<section class="reviewer-section"><details><summary><h2>Tilgjengelighet og forståelig kontrollflyt</h2><span class="verdict-pill verdict-adequate">adequate</span><span class="reviewer-source">review-accessibility.md</span></summary><div class="dim-body"><div class="dim-judgment"><p class="reviewer-source">Opprinnelig kontrollbilde — 2026-10-13. Gjeldende funnstatus er etterkontrollert 2026-10-14.</p><p>Spine-paret har et gjennomarbeidet grunnlag for enkel desktop-kontroll: synlige etiketter/enheter, tekstlige statuser, tastatur og fokus, lokalt forståelige mangler samt tydelig skille mellom uttrekkskontroll, TG3-avklaring og listebekreftelse. To forhold må konkretiseres før paret er et ferdig UX-grunnlag: den allerede åpne smal-desktop-/PDF-beslutningen og kunngjøring av asynkrone statusendringer uten fokusflytting.</p>
+<p><strong>Funn:</strong> critical 0 · high 0 · medium 2 · low 0. Dette er dokument- og fargekontroll av et UX-utkast, ikke tastaturtest, skjermlesertest eller samsvarsvurdering av en implementert app.</p><p><a href="review-accessibility.md">Full reviewer-rapport</a></p></div></div><div class="findings-list"><article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">A11Y-1 — Åpen PDF-fallback gjør mindre desktop og zoom uavklart</h3></header><div class="finding-location">Opprinnelig medium-funn — 2026-10-13.</div><div class="finding-location"><a href="DESIGN.md#layout--spacing">DESIGN.md, Layout &amp; Spacing</a>, linje 248; <a href="EXPERIENCE.md#responsive--platform">EXPERIENCE.md, Responsive &amp; Platform</a>, linje 155; <code>[OPEN UX-C]</code> i begge spines. · <a href="review-accessibility.md">review-accessibility.md</a></div><div class="finding-note"><p>Valgt desktop-flyt krever samtidig funn-/PDF-kontekst, og NFR-2 krever at kilde og kontroll ikke skjules av oppsettet. Utkastet markerer ærlig at relevant vindusbredde, panelandel og mekanisme ved plassmangel ennå ikke er valgt. Dermed er dette en kjent designavhengighet, ikke et påvist feilaktig breakpoint. Det er ennå ikke bestemt hvordan brukeren beholder valgt funn, dokument/PDF-side og kontrollhandlinger når vinduet innsnevres eller teksten forstørres.</p></div><div class="finding-fix"><strong>Foreslått retting:</strong> Avklar UX-C med Mads før finalisering. Beskriv den valgte atferden og fokus/retur dersom PDF vises i et eget panel; behold riktig side og funnkontekst. Dokumenter representative mindre desktop-/zoomvisninger som viser at etiketter, stegstatus og handlinger fortsatt kan brukes. Kontrollen trenger ingen ny mobilreise eller reparasjon av innholdet i original-PDF-en. <a href="../../prds/prd-IBE160-2026-10-10/prd.md#nfr-2-forståelig-desktop-flyt-og-grunnleggende-tilgjengelighet">PRD NFR-2</a> og sensorveiledningen s. 4 er kravgrunnlaget; <a href="https://www.w3.org/WAI/WCAG22/Understanding/reflow.html">W3C Reflow</a> gir praktisk støtte for forstørrelse uten funksjonstap, med særbehandling av nødvendige todimensjonale områder.</div><div class="finding-fix"><strong>Etterkontroll 14. oktober — lukket på dokumentnivå:</strong> Mads har valgt PDF-panel ved behov med kompakt valgt funn, korrekt kilde-side og bevart retur/kontekst. Desktop er fortsatt delt; fokus til paneloverskrift og tilbake til åpneren ved lukking/Esc er eksplisitt. Stepper/tekst ombrytes uten tap av navn/status. Bevis: EXPERIENCE linje 83/153/158–166 og DESIGN linje 248/282. <a href=".working/etterkontroll-tilgjengelighet.md">Kontrollbevis</a>.</div></article>
+<article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">A11Y-2 — Status uten fokusflytting er ikke konkretisert for hjelpemidler</h3></header><div class="finding-location">Opprinnelig medium-funn — 2026-10-13.</div><div class="finding-location"><a href="EXPERIENCE.md#component-patterns">EXPERIENCE.md, Component Patterns</a>, <code>analysis-status</code> og <code>pdf-viewer</code>, linje 77/83; <a href="EXPERIENCE.md#state-patterns">State Patterns</a>, linje 107/114/127; <a href="EXPERIENCE.md#interaction-primitives">Interaction Primitives</a>, linje 138; <a href="EXPERIENCE.md#accessibility-floor">Accessibility Floor</a>, linje 148–151. · <a href="review-accessibility.md">review-accessibility.md</a></div><div class="finding-note"><p>Synlige laste-/feilstatuser er beskrevet, og automatisk PDF-sideskift skal korrekt beholde fokus på valgt funn. Derimot er «kunngjøring» bare nevnt som del av senere kontroll: kontrakten sier ikke hvilke viktige endringer som meddeles uten at brukeren må flytte fokus og lete. Analyse som blir ferdig/feiler, den forespurte PDF-siden som blir tilgjengelig/feiler, og resultat som blir utdatert kan derfor bli ulike opplevelser avhengig av senere tolkning.</p></div><div class="finding-fix"><strong>Foreslått retting:</strong> Legg en kort atferdsregel i Interaction Primitives/Accessibility Floor: viktige analyse-, PDF- og gyldighetsstatusendringer formidles som korte tekstlige beskjeder som hjelpemidler kan oppfatte uten fokusflytting. PDF-status navngir dokument og aktuell/forespurt PDF-side; fullført analyse kan navngi at funnlisten er klar, også ved gyldig tomliste. Behold det vedtatte fokusforløpet og unngå automatisk opplesning av hele PDF-en/funnlisten eller gjentatte avbrudd. Dette konkretiserer forståelige tilbakemeldinger og eksisterende NFR-2, uten nytt sertifiseringskrav. <a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">W3C Status Messages</a> forklarer hvordan viktige statusendringer kan formidles uten å overta fokus.</div><div class="finding-fix"><strong>Etterkontroll 14. oktober — lukket på dokumentnivå:</strong> Viktige analyse-, PDF- og gyldighetsoverganger formidles kort og tekstlig til hjelpemidler én gang uten fokusflytting eller opplesning av hele rapporten/listen. Bevis: EXPERIENCE Interaction Primitives, linje 141 ved etterkontrollen. <a href=".working/etterkontroll-tilgjengelighet.md">Kontrollbevis</a>.</div></article></div></details></section><div class="mechanical"><h3>Funnstatus og etterkontroll — 14. oktober</h3><p>Alle 6 opprinnelige medium-forekomster er etterkontrollert og lukket på dokumentnivå; de representerer 5 ulike forhold fordi TG3-overgangen overlapper. Dette endrer ikke de historiske alvorlighetsantallene eller rubric-vurderingene. Ingen samlet karakter er satt.</p><ul><li><strong>RUB-COMP-1 — lukket på dokumentnivå:</strong> Bruk korrigering gjør utkastet gjeldende og funn/liste ubekreftet; Avbryt beholder tidligere gjeldende versjon. Uferdig utkast beholdes ved navigasjon uten automatisk bruk. Bevis: EXPERIENCE finding-edit/origin-detail, linje 81–82/118, og DESIGN linje 280 ved etterkontrollen. <a href=".working/etterkontroll-rubrikk.md">Etterkontroll</a>.</li><li><strong>RUB-STATE-1 — lukket på dokumentnivå:</strong> Endret registrert TG3-status, begrunnelse og grunnlag gjør tidligere anbefaling umiddelbart historisk. FR-5-kontroll og kodevurdering bruker aktuell avklaring med uendret tall/liste/uttrekk beholdt. Bevis: EXPERIENCE linje 84/92/121/142/203–204. Samme forhold som PT-1. <a href=".working/etterkontroll-rubrikk.md">Etterkontroll</a>.</li><li><strong>PT-1 — lukket på dokumentnivå:</strong> Separat TG3-endring er eksplisitt resultatgrunnlag; Uavklart/ugyldig Avklart gir navngitt Innhent mer informasjon. Ingen nytt KI-kall eller ny bekreftelse av uendrede tall/liste. Bevis: EXPERIENCE linje 84/92/121/142/203–204 og DESIGN linje 291. Samme forhold som RUB-STATE-1. <a href=".working/etterkontroll-prd.md">Etterkontroll</a>.</li><li><strong>PT-2 — lukket på dokumentnivå:</strong> Kodebasert Innhent mer informasjon vises i problemtrinnet med konkrete blokkere og neste handling, selv om vanlig videregang er sperret. Resultat beholder samlet oppsummering når det åpnes. Bevis: EXPERIENCE linje 41/125–126/214–215 og DESIGN linje 250. <a href=".working/etterkontroll-prd.md">Etterkontroll</a>.</li><li><strong>A11Y-1 — lukket på dokumentnivå:</strong> Mads har valgt PDF-panel ved behov med kompakt valgt funn, korrekt kilde-side og bevart retur/kontekst. Desktop er fortsatt delt; fokus til paneloverskrift og tilbake til åpneren ved lukking/Esc er eksplisitt. Stepper/tekst ombrytes uten tap av navn/status. Bevis: EXPERIENCE linje 83/153/158–166 og DESIGN linje 248/282. <a href=".working/etterkontroll-tilgjengelighet.md">Etterkontroll</a>.</li><li><strong>A11Y-2 — lukket på dokumentnivå:</strong> Viktige analyse-, PDF- og gyldighetsoverganger formidles kort og tekstlig til hjelpemidler én gang uten fokusflytting eller opplesning av hele rapporten/listen. Bevis: EXPERIENCE Interaction Primitives, linje 141 ved etterkontrollen. <a href=".working/etterkontroll-tilgjengelighet.md">Etterkontroll</a>.</li></ul><p>Hovedagenten har fullført visuell kontroll av HTML-mocks, dokumentpolish og BMAD Finalize. Begge spines har status final, oppdatert 14. oktober 2026. <a href="sluttkontroll.md">Sluttkontrollen</a> dokumenterer leveransen og kontrollens praktiske grenser. Etterkontrollene verifiserer dokumentkontrakten; faktisk app-/PDF-komponentkontroll og sertifisering påstås ikke.</p></div>
+<div class="mechanical"><h3>Mekaniske merknader</h3><ul><li>Kontrollutkastet hadde status draft i begge YAML-frontmatters. Alle 8/8 kildereferanser per dokument og lokale inline-lenker løste.</li><li>26/26 komponent-ID-er samsvarte; 28/28 tokenreferanser løste, og alle 17 farger hadde hex. Ingen Mermaid-blokker var relevante.</li><li>Kontrastkontrollen bekrefter lesbar historisk sekundærtekst, 5,2061:1, primærknapp 6,7011:1, fokus 5,8590:1 og kontrollkant 3,3314:1. Petrolfokus på petrolfylt knapp trenger den eksplisitte lyse avstanden. Dette er kontroll av designverdier, ikke rendering eller appkontroll.</li><li>Arkitektur, epics, stories, implementering, betalte live-tester og faktisk appverifikasjon er ikke startet gjennom denne syntesen.</li><li>Reviewer-rapportene er uendret. Linjenumre, vurderinger og opprinnelig åpen UX-C viser kontrollutkastet 13. oktober; senere triage er samlet i sin egen seksjon.</li></ul></div>
+<footer class="report-footer"><div class="meta"><span>Spines: <a href="DESIGN.md">DESIGN.md</a> · <a href="EXPERIENCE.md">EXPERIENCE.md</a></span><span>Kontrollutkast: 2026-10-13</span><span>Syntese: 2026-10-14T12:48:43+02:00</span><span>Etterkontroll innarbeidet: 2026-10-14T13:03:38+02:00</span><span>Reviewere: <a href="review-rubric.md">review-rubric.md</a> · <a href="review-prd-trace.md">review-prd-trace.md</a> · <a href="review-accessibility.md">review-accessibility.md</a></span><span>Markdown-tvilling: <a href="validation-report.md">validation-report.md</a></span></div></footer>
+</div>
+</body>
+</html>

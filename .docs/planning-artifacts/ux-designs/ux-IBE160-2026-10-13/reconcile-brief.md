@@ -1,0 +1,18 @@
+# Kildeavstemming: Product Brief
+
+2026-10-13. Pålagt BMAD Finalize-avstemming av [brief.md](../../briefs/brief-IBE160-2026-09-15/brief.md) mot UX-utkastene og [.memlog.md](.memlog.md). Dette er kildeavstemming, ikke nye produktkrav eller testbevis. Linjereferanser gjelder dokumentene lest i denne avstemmingen; seksjonsnavn gir stabil kontekst.
+
+| Meningsbærende input | Behandling i UX-spine |
+|---|---|
+| Visjon om sporbart beslutningsgrunnlag og investorens neste undersøkelse; ingen kjøpsbeslutning. Brief «Sammendrag og visjon», l. 10–14. | [DESIGN.md](DESIGN.md) «Brand & Style», l. 199–205: profesjonelt kontrollverktøy og kort investeringsnotat. [EXPERIENCE.md](EXPERIENCE.md) «Foundation», l. 20–26, og «Key Flows» 1, l. 168–173: etterprøvbar førstevurdering med investorens beslutning bevart. |
+| Privat norsk investor med finanskunnskap, uten byggfaglig sakkyndighet; manuell førstevurdering 30–60 minutter er brukeranslag. Brief «Problemet og primærbrukeren», l. 16–20. | Mads, ett allerede funnet objekt og manuell kontroll er bevart i EXPERIENCE «Key Flows» 1. Kompetanseprofil og tidsanslag er arvet via de autoritative `sources`, uten ny persona eller påstand om oppnådd tidsgevinst. DESIGN lar kilder/usikkerhet forbli lesbare («Typography», l. 236–240). |
+| Enkel sekvens, ett objekt, én rapport ≤30 sider, kontroll og deterministiske fire nøkkeltall. Brief «Med i v1», l. 28–34. | EXPERIENCE «Information Architecture», l. 28–43: de fire valgte UI-trinnene realiserer samme arbeid. «Component Patterns», l. 71–88, bevarer tallbekreftelse, eksplisitt analyse, listebekreftelse og kodebasert resultat. |
+| Kilder, brukerforutsetninger, KI-tolkning, ufullstendighet og mangler skilles. Brief «Troverdighet», l. 67–82. | EXPERIENCE «Foundation» l. 26, «Voice and Tone» l. 49–59 og «State Patterns» l. 100–128; DESIGN «Components» source-note/origin-detail/issue-message, l. 272–291. Resultat viser avgjørende grunnlag fra start og øvrig sporbarhet ved behov. |
+| Låste finansdefinisjoner og regelprioritet; TG2/TG3 betyr ikke automatisk Forkast. Brief l. 36–65. | EXPERIENCE arver final PRD («Foundation» l. 22) og bevarer ansvar/prioritet i recommendation/metric-grid, l. 86–88. Avrunding og uavrundede regler er uttrykkelig skilt i DESIGN «Typography» l. 240. Ingen ny formel eller anbefalingslogikk er valgt. |
+| Langsiktig bredere produkt, kostnadsfri merket demo og etterprøvbar evaluering; ambisjoner utenfor v1. Brief l. 84–94. | EXPERIENCE «Key Flows» 4, l. 197–206, beholder demo/live-opphav uten å påstå levert app. «Inspiration & Anti-patterns», l. 156–160, og DESIGN «Do's and Don'ts», l. 293–301, lar uttrykket vokse uten framtidige v1-funksjoner. S1–S6 arves; de er ikke bestått gjennom UX. |
+
+Ingen produktkravkonflikt eller faktisk fjernet godkjent idé er funnet. «Relevante» funn i eldre brief er konkretisert til **alle eksplisitte TG2/TG3** i final PRD; UX følger den senere presiseringen (EXPERIENCE l. 78).
+
+Historisk dashboard/agentpipeline/score fra briefens tidligere memlog er overstyrt, ikke glemt. Gjeldende brief «Utenfor v1» l. 84–86 og UX-memlog l. 12–15 beholder sekvens og menneskelig kontroll, mens score/sourcing/avanserte agentroller forblir senere muligheter. Briefens daværende «PRD/UX ikke startet» er historisk status, ikke et nåværende arbeidsforbud.
+
+**Avstemmingsstatus:** kildeinnhold bevart eller eksplisitt supersedert av final PRD og senere brukerbeslutninger. OPEN UX-C og A1–A5 er fortsatt foreløpige; eksisterende wireframe dekker de fire valgte flater, mens nøkkelskjerm-mocks ennå ikke er rendret. Dette er ikke sluttgodkjenning av UX eller produkt.

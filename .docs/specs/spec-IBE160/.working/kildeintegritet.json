@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-15",
+  "files": [
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "sha256": "01d875a58691d8c137eaa160180207e4b7a139ca072559f295801aa4a5065043"
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "sha256": "0b2cbe583a289fe33a6d99ca2249bdba05a4f6feba0471abb48723be73bbc11f"
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/revisjonskontroll-2026-10-08.md",
+      "sha256": "e299483c448b4699a36a87b47d8ec1f99df3eb576878f9c5b2138c86f4a92605"
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md",
+      "sha256": "6d02fe52f238ef3c8a563cf150949c2e1c2845f0f6fc7e04bcccfde4001e5fd0"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "sha256": "17e86a0298c844a384aa9053e8d9f7bae72dd12634a9a69693d0c2a7daabfaf0"
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "sha256": "ad1b5e0e040fd6261cd2caf2e209f061f8cbb55b7131079c35ebf0797b7ae15d"
+    },
+    {
+      "path": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "sha256": "e9dd28cf0b961c8844b751178e2102c07e65694219201a7040b4c336ada49565"
+    },
+    {
+      "path": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "sha256": "49bd5b3d956dbf7add2dfca236dec1a25bbbfe1f1873c9696983c83a135709b0"
+    },
+    {
+      "path": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "sha256": "3055bccfe0438c2526c2daa23032d20f837f8238e8942cb5f81f79c23ba27604"
+    },
+    {
+      "path": ".docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf",
+      "sha256": "a0069856666a32e2e5c886fe1c46ade1d666a99bf800bc42b9e20113adc2e509"
+    }
+  ]
+}

@@ -1,0 +1,954 @@
+{
+  "date": "2026-10-15",
+  "adopted_sections": [
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 8,
+      "end": 9,
+      "heading": "# Product Brief: Property Acquisition Agent",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 10,
+      "end": 15,
+      "heading": "## Sammendrag og visjon",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 16,
+      "end": 21,
+      "heading": "## Problemet og primærbrukeren",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 22,
+      "end": 27,
+      "heading": "## What Makes This Different",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 28,
+      "end": 35,
+      "heading": "## Med i v1",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 36,
+      "end": 50,
+      "heading": "## Finansdefinisjoner for v1",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 51,
+      "end": 66,
+      "heading": "## Kritisk informasjon og anbefalingsregler",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 67,
+      "end": 83,
+      "heading": "## Troverdighet og målbar suksess",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 84,
+      "end": 87,
+      "heading": "## Utenfor v1 og senere produktutvikling",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "start": 88,
+      "end": 94,
+      "heading": "## Emnekontekst og videre avklaringer",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 1,
+      "end": 4,
+      "heading": "# Vedlegg: Property Acquisition Agent",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 5,
+      "end": 26,
+      "heading": "## Utregnet fasit",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 27,
+      "end": 37,
+      "heading": "### Minst fire kontrollerte testcaser",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 38,
+      "end": 57,
+      "heading": "### Regelvarianter med fasit",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 58,
+      "end": 65,
+      "heading": "## Kontroll mot dokumenter og KI-feil",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 66,
+      "end": 76,
+      "heading": "## Kjørbarhet, kostnader og repo",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 77,
+      "end": 82,
+      "heading": "## Bruksflate på briefnivå",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 83,
+      "end": 98,
+      "heading": "## Langsiktige produktambisjoner, utenfor v1",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "start": 99,
+      "end": 103,
+      "heading": "## Produktbeslutninger låst før PRD",
+      "landing": "../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 8,
+      "end": 9,
+      "heading": "# PRD: Property Acquisition Agent",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 10,
+      "end": 17,
+      "heading": "## Formål og arbeidsstatus",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 18,
+      "end": 27,
+      "heading": "## Kildegrunnlag",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 28,
+      "end": 35,
+      "heading": "## Visjon og målgruppe",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 36,
+      "end": 43,
+      "heading": "## Låst v1-scope og ikke-mål",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 44,
+      "end": 73,
+      "heading": "## Begreper",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 74,
+      "end": 75,
+      "heading": "## Brukerreise",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 76,
+      "end": 98,
+      "heading": "### UJ-1: Mads førstevurderer ett boligutleieobjekt",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 99,
+      "end": 102,
+      "heading": "## Funksjoner og funksjonelle krav",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 103,
+      "end": 106,
+      "heading": "### Registrering og kontroll av tallgrunnlag",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 107,
+      "end": 117,
+      "heading": "#### FR-1: Registrere finansverdier for ett objekt",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 118,
+      "end": 128,
+      "heading": "#### FR-2: Synliggjøre kilder, forutsetninger og kostnadsinnhold",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 129,
+      "end": 140,
+      "heading": "#### FR-3: Validere tall og skille null fra manglende verdi",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 141,
+      "end": 153,
+      "heading": "#### FR-4: Kontrollere og bekrefte tallgrunnlaget",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 154,
+      "end": 157,
+      "heading": "### Brukerbekreftet avklaring av alvorlige TG3-funn",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 158,
+      "end": 178,
+      "heading": "#### FR-5: Registrere og anvende brukerbekreftet TG3-avklaring",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 179,
+      "end": 184,
+      "heading": "### Analyse av tilstandsrapport og presentasjon av rapportfunn",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 185,
+      "end": 196,
+      "heading": "#### FR-6: Analysere én støttet tilstandsrapport",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 197,
+      "end": 208,
+      "heading": "#### FR-7: Trekke ut alle eksplisitte TG2- og TG3-funn",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 209,
+      "end": 220,
+      "heading": "#### FR-8: Vise kilde og gjøre originalrapporten tilgjengelig for kontroll",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 221,
+      "end": 234,
+      "heading": "#### FR-9: Synliggjøre usikkerhet og ufullstendig analyse",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 235,
+      "end": 247,
+      "heading": "#### FR-10: Korrigere eller avvise KI-funn med bevart opprinnelse",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 248,
+      "end": 263,
+      "heading": "#### FR-11: Bekrefte gjeldende rapportgrunnlag før screening",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 264,
+      "end": 269,
+      "heading": "### Deterministiske beregninger og synlig beregningsgrunnlag",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 270,
+      "end": 283,
+      "heading": "#### FR-12: Beregne de fire låste økonomiske nøkkeltallene",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 284,
+      "end": 296,
+      "heading": "#### FR-13: Vise bare beregninger med gyldig grunnlag",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 297,
+      "end": 308,
+      "heading": "#### FR-14: Gjøre beregninger etterprøvbare og bevare presisjon",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 309,
+      "end": 324,
+      "heading": "#### FR-15: Beregne på nytt etter endret finansgrunnlag",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 325,
+      "end": 330,
+      "heading": "### Anbefalingsregler og samlet beslutningsgrunnlag",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 331,
+      "end": 345,
+      "heading": "#### FR-16: Bestemme én anbefaling med låst regelprioritet",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 346,
+      "end": 357,
+      "heading": "#### FR-17: Forklare anbefaling, utløste regler og neste handling",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 358,
+      "end": 374,
+      "heading": "#### FR-18: Presentere et sammenhengende og gjeldende beslutningsgrunnlag",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 375,
+      "end": 380,
+      "heading": "## Tverrgående kvalitetskrav",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 381,
+      "end": 389,
+      "heading": "### NFR-1: Stabilitet og etterprøvbar regelkjøring",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 390,
+      "end": 398,
+      "heading": "### NFR-2: Forståelig desktop-flyt og grunnleggende tilgjengelighet",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 399,
+      "end": 407,
+      "heading": "### NFR-3: Lokal kjørbarhet og kostnadsfri demo",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 408,
+      "end": 415,
+      "heading": "### NFR-4: Hemmeligheter og testdata",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 416,
+      "end": 428,
+      "heading": "### NFR-5: Tidsbruk i førstevurderingen",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 429,
+      "end": 432,
+      "heading": "## Suksesskriterier og evalueringsbevis",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 433,
+      "end": 436,
+      "heading": "### S1: Beregninger",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 437,
+      "end": 440,
+      "heading": "### S2: Dokumentfunn",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 441,
+      "end": 444,
+      "heading": "### S3: Mangler og regler",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 445,
+      "end": 448,
+      "heading": "### S4: Sporbarhet i resultatet",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 449,
+      "end": 454,
+      "heading": "### S5: Tidsbruk",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 455,
+      "end": 458,
+      "heading": "### S6: Kjørbarhet",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 459,
+      "end": 466,
+      "heading": "### Kontrollmål som motvirker misvisende optimalisering",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 467,
+      "end": 474,
+      "heading": "### Testgrunnlag og prosessbevis",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 475,
+      "end": 483,
+      "heading": "## Avklaringsstatus og videre gjennomføringsarbeid",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 484,
+      "end": 487,
+      "heading": "### Antakelsesstatus",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "start": 488,
+      "end": 492,
+      "heading": "### Q-1: Operasjonelle målepunkter for S5 — løst",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "start": 8,
+      "end": 11,
+      "heading": "# PRD-addendum: Property Acquisition Agent",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "start": 12,
+      "end": 23,
+      "heading": "## TG3-avklaring: testeksempler for FR-5",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "start": 24,
+      "end": 49,
+      "heading": "## Rapportanalyse: RT-1–RT-19",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "start": 50,
+      "end": 74,
+      "heading": "## Beregninger: BT-1–BT-18",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "start": 75,
+      "end": 101,
+      "heading": "## Anbefaling: AT-1–AT-20",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "start": 102,
+      "end": 126,
+      "heading": "## S5: Måleprotokoll og TT-1–TT-9",
+      "landing": "../../planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 197,
+      "end": 198,
+      "heading": "# Property Acquisition Agent — Design",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 199,
+      "end": 206,
+      "heading": "## Brand & Style",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 207,
+      "end": 235,
+      "heading": "## Colors",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 236,
+      "end": 241,
+      "heading": "## Typography",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 242,
+      "end": 253,
+      "heading": "## Layout & Spacing",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 254,
+      "end": 257,
+      "heading": "## Elevation & Depth",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 258,
+      "end": 261,
+      "heading": "## Shapes",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 262,
+      "end": 294,
+      "heading": "## Components",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "start": 295,
+      "end": 303,
+      "heading": "## Do's and Don'ts",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 18,
+      "end": 19,
+      "heading": "# Property Acquisition Agent — Experience",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 20,
+      "end": 27,
+      "heading": "## Foundation",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 28,
+      "end": 46,
+      "heading": "## Information Architecture",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 47,
+      "end": 62,
+      "heading": "## Voice and Tone",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 63,
+      "end": 95,
+      "heading": "## Component Patterns",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 96,
+      "end": 135,
+      "heading": "## State Patterns",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 136,
+      "end": 146,
+      "heading": "## Interaction Primitives",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 147,
+      "end": 157,
+      "heading": "## Accessibility Floor",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 158,
+      "end": 169,
+      "heading": "## Responsive & Platform",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 170,
+      "end": 175,
+      "heading": "## Inspiration & Anti-patterns",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 176,
+      "end": 177,
+      "heading": "## Key Flows",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 178,
+      "end": 188,
+      "heading": "### 1. UJ-1: Mads førstevurderer ett boligutleieobjekt",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 189,
+      "end": 199,
+      "heading": "### 2. Mads retter et funn og skiller uttrekkskontroll fra TG3-avklaring",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 200,
+      "end": 210,
+      "heading": "### 3. Mads endrer grunnlag etter Resultat",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "start": 211,
+      "end": 220,
+      "heading": "### 4. Mads møter en rapportfeil eller bruker lagret demo",
+      "landing": "../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 25,
+      "end": 26,
+      "heading": "# Architecture Spine — Property Acquisition Agent",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 27,
+      "end": 32,
+      "heading": "## Design Paradigm",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 33,
+      "end": 34,
+      "heading": "## Invariants & Rules",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 35,
+      "end": 57,
+      "heading": "### AD-1 — Modulgrenser og importretning [ADOPTED]",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 58,
+      "end": 63,
+      "heading": "### AD-2 — Frontend eier aktiv økt og opphav [ADOPTED]",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 64,
+      "end": 69,
+      "heading": "### AD-3 — Sidemerket dokumentgrunnlag og originalkilde [ADOPTED]",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 70,
+      "end": 75,
+      "heading": "### AD-4 — Én delt, validert kontrakt og eksplisitt fullføring",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 76,
+      "end": 81,
+      "heading": "### AD-5 — Ett HTTP-forløp med vern mot duplikater og gamle svar [ADOPTED]",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 82,
+      "end": 101,
+      "heading": "### AD-6 — Felles demo/live-adapter og entydig rapportbinding [ADOPTED]",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 102,
+      "end": 107,
+      "heading": "### AD-7 — Eksakte finansgrenser og separat presentasjon [ADOPTED]",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 108,
+      "end": 113,
+      "heading": "### AD-8 — Én kodebasert screening og separat TG3-avklaring [ADOPTED]",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 114,
+      "end": 119,
+      "heading": "### AD-9 — Lokal levering, konfigurasjon og godkjent UX [ADOPTED]",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 120,
+      "end": 125,
+      "heading": "### AD-10 — Verifikasjonsgrenser og kravspor",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 126,
+      "end": 136,
+      "heading": "## Consistency Conventions",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 137,
+      "end": 155,
+      "heading": "## Stack",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 156,
+      "end": 188,
+      "heading": "## Structural Seed",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 189,
+      "end": 205,
+      "heading": "## Capability → Architecture Map",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 206,
+      "end": 218,
+      "heading": "## Verifikasjonsgrenser",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    },
+    {
+      "source": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "start": 219,
+      "end": 228,
+      "heading": "## Deferred",
+      "landing": "../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "route": "adopted_full_text"
+    }
+  ],
+  "absorbed_sources": {
+    "faglaerer": "verifikasjon-og-avklaringer.md#kurs--og-faglærerføringer",
+    "sensorveiledning": "verifikasjon-og-avklaringer.md#kurs--og-faglærerføringer"
+  },
+  "note": "Fulltekst-adopsjon bevarer krav også når de ikke gjentas i kernel. Semantisk kildeavstemming og wrapper-avgrensning er dokumentert i sluttkontroll.md; denne datafilen erstatter ikke den vurderingen."
+}

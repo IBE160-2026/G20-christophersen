@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-15",
+  "verdict": "pass",
+  "capabilities": 8,
+  "authored_companions": 3,
+  "adopted_companions": 7,
+  "requirement_rows": 30,
+  "architecture_ids": [
+    "AD-1",
+    "AD-2",
+    "AD-3",
+    "AD-4",
+    "AD-5",
+    "AD-6",
+    "AD-7",
+    "AD-8",
+    "AD-9",
+    "AD-10"
+  ],
+  "test_examples_in_adopted_prd": {
+    "RT": 19,
+    "BT": 18,
+    "AT": 20,
+    "TT": 9
+  },
+  "source_sections_adopted": 118,
+  "local_links_checked": 29,
+  "integrity": [
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/revisjonskontroll-2026-10-08.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+      "unchanged": true
+    },
+    {
+      "path": ".docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf",
+      "unchanged": true
+    }
+  ],
+  "errors": [],
+  "limits": "Kun dokumentstruktur/referanser/identiteter/kildeintegritet; ingen produktverifikasjon, ingen lesing av memlog."
+}

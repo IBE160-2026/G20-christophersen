@@ -1,0 +1,18 @@
+{
+  "recorded": "2026-10-14",
+  "phase": "architecture source intake",
+  "files": {
+    "AGENTS.md": "d8352b191278f2bcdcbc89e2e29eab6ad5af737d9bffc1b4cfbc1bb4220b300c",
+    ".docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf": "a0069856666a32e2e5c886fe1c46ade1d666a99bf800bc42b9e20113adc2e509",
+    ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md": "01d875a58691d8c137eaa160180207e4b7a139ca072559f295801aa4a5065043",
+    ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md": "0b2cbe583a289fe33a6d99ca2249bdba05a4f6feba0471abb48723be73bbc11f",
+    ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/revisjonskontroll-2026-10-08.md": "e299483c448b4699a36a87b47d8ec1f99df3eb576878f9c5b2138c86f4a92605",
+    ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md": "6d02fe52f238ef3c8a563cf150949c2e1c2845f0f6fc7e04bcccfde4001e5fd0",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md": "17e86a0298c844a384aa9053e8d9f7bae72dd12634a9a69693d0c2a7daabfaf0",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md": "ad1b5e0e040fd6261cd2caf2e209f061f8cbb55b7131079c35ebf0797b7ae15d",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/.memlog.md": "67cb7b49384ce65b1b3bba79f81dd80e99f5eb1bb472ef873922f77d11f45a05",
+    ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md": "e9dd28cf0b961c8844b751178e2102c07e65694219201a7040b4c336ada49565",
+    ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md": "49bd5b3d956dbf7add2dfca236dec1a25bbbfe1f1873c9696983c83a135709b0",
+    ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/.memlog.md": "3956930f08b390fb041c92cb87e0d5b60cd50395fc97d85d2ef74b2c7ab0d1e2"
+  }
+}

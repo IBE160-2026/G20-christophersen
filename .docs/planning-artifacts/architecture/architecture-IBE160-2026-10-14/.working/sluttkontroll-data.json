@@ -1,0 +1,48 @@
+{
+  "phase": "final",
+  "checked": "2026-10-15",
+  "status_final": true,
+  "updated": "2026-10-15",
+  "source_count": 9,
+  "missing_sources": [],
+  "upstream_hash_count": 12,
+  "changed_upstream": [],
+  "binding_count": 30,
+  "missing_binding_ids": [],
+  "unexpected_binding_ids": [],
+  "broken_local_links": [],
+  "ad_count": 10,
+  "ad_ids": [
+    "AD-1",
+    "AD-2",
+    "AD-3",
+    "AD-4",
+    "AD-5",
+    "AD-6",
+    "AD-7",
+    "AD-8",
+    "AD-9",
+    "AD-10"
+  ],
+  "missing_ad_fields": [],
+  "mermaid_count": 2,
+  "diagrams_visually_rendered": false,
+  "missing_review_reports": [],
+  "review_gate": {
+    "source_reconciliations": 5,
+    "initial_lenses": 3,
+    "focused_rechecks": 2,
+    "open_findings": 0
+  },
+  "lint": {
+    "ok": true,
+    "spine": "ARCHITECTURE-SPINE.md",
+    "total_findings": 0,
+    "by_severity": {},
+    "findings": []
+  },
+  "git_diff_check_ok": true,
+  "trailing_whitespace": [],
+  "product_tests_run": false,
+  "implementation_started": false
+}

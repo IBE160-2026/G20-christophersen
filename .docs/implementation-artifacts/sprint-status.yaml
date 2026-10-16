@@ -1,0 +1,140 @@
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created, ready for development
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when its first story starts (via build's sprint sync)
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates the next story after the previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; the status view surfaces open ones
+# Prosjektets rekkefølge og påkrevde porter står i sprint-plan.md og metadata nedenfor.
+# development_status er gruppert per epic, ikke etter implementeringsrekkefølge.
+# BMADs generiske statusanbefaling håndhever ikke avhengigheter eller porter.
+generated: 10-16-2026 18:23
+last_updated: 10-16-2026 18:23
+project: IBE160
+project_key: NOKEY
+tracking_system: file-system
+story_location: .docs/implementation-artifacts
+development_status:
+  epic-1: backlog
+  1-1-etablere-reproduserbar-startstruktur-og-importgrenser: backlog
+  1-2-starte-den-bygde-lokale-appen-med-godkjent-appskall: backlog
+  1-3-registrere-og-bevare-finansverdier-for-ett-objekt: backlog
+  1-4-validere-tall-og-normalisere-kjent-månedsgrunnlag-eksakt: backlog
+  1-5-gjøre-kilder-kostnadsinnhold-og-uløste-konflikter-kontroller: backlog
+  1-6-vurdere-kritiske-mangler-med-fast-kodebegrunnelse: backlog
+  1-7-kontrollere-bekrefte-og-rette-gjeldende-tallgrunnlag: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-dele-og-validere-dokument-analysekontrakten: backlog
+  2-2-validere-pdf-format-sidegrense-og-originalidentitet: backlog
+  2-3-trekke-ut-sidemerket-tekst-med-kontrollert-lesbarhet: backlog
+  2-4-hente-lagret-demo-uttrekk-bundet-til-riktig-rapport-og-versj: backlog
+  2-5-gjennomføre-ett-http-analyseforløp-med-duplikatsperre: backlog
+  2-6-velge-rapport-og-ta-imot-bare-gjeldende-analyseutfall: backlog
+  2-7-kontrollere-funnets-kilde-i-original-pdf-og-smalt-panel: backlog
+  2-8-kontrollere-og-korrigere-funn-med-bevart-original-og-utkast: backlog
+  2-9-avvise-feilaktig-ki-funn-med-bevart-opphav: backlog
+  2-10-registrere-og-validere-separat-tg3-avklaring: backlog
+  2-11-bekrefte-gjeldende-funnliste-med-tydelig-tilstrekkelighet: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-beregne-fire-nøkkeltall-fra-hvert-sitt-gyldige-årsgrunnlag: backlog
+  3-2-avgjøre-økonomiske-terskler-med-eksakte-verdier: backlog
+  3-3-formatere-nøkkeltall-uten-å-skjule-økonomiske-brudd: backlog
+  3-4-gi-én-komplett-regelbasert-anbefaling-med-fast-begrunnelse: backlog
+  3-5-binde-resultat-til-revisjoner-og-gjøre-tidligere-resultat-hi: backlog
+  3-6-gjøre-hvert-nøkkeltall-og-beregningsgrunnlag-lesbart: backlog
+  3-7-vise-ett-samlet-screeningresultat-med-kontrollgrunnlag: backlog
+  3-8-oppdatere-resultat-etter-endret-og-bekreftet-finansgrunnlag: backlog
+  3-9-oppdatere-resultat-etter-rapportkontroll-og-separat-tg3-endr: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-konfigurere-valgt-live-leverandør-uten-å-eksponere-nøkkelen: backlog
+  4-2-analysere-hele-det-sidemerkede-rapportgrunnlaget-i-ett-ki-ka: backlog
+  4-3-bruke-live-analysen-i-samme-kontroll-og-resultatflyt: backlog
+  4-4-gjennomføre-ekte-live-analyse-og-evaluere-opprinnelig-uttrek: backlog
+  4-5-måle-live-analyse-og-menneskelig-kontroll-etter-s5-protokoll: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-etterprøve-den-samlede-demoen-med-meningsfulle-automatiserte: backlog
+  5-2-etterprøve-hele-den-felles-brukerflyten-og-grunnleggende-til: backlog
+  5-3-dokumentere-en-komplett-oppskrift-for-lokal-demo-og-tester: backlog
+  5-4-la-en-annen-person-gjennomføre-readme-basert-ren-kjøring: backlog
+  5-5-samle-etterprøvbare-leveransebevis-og-kontrollere-repoet: backlog
+  epic-5-retrospective: optional
+
+# Planmetadata fra Sprint Planning 2026-10-16; ingen implementering er startet.
+# Custom keys bevares av BMAD-generatoren. Les sprint_plan_file før storyvalg.
+sprint_plan_file: .docs/implementation-artifacts/sprint-plan.md
+readiness_report: .docs/planning-artifacts/implementation-readiness.md
+readiness_verdict: CONCERNS
+planned_sprints:
+  SP1: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7']
+  SP2: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7']
+  SP3: ['2.8', '2.9', '2.10', '2.11']
+  SP4: ['3.1', '3.2', '3.3', '3.4', '3.5']
+  SP5: ['3.6', '3.7', '3.8', '3.9']
+  SP6: ['5.1', '5.2', '5.3', '5.4']
+  SP7: ['4.1', '4.2', '4.3']
+  SP8: ['4.4', '4.5', '5.5']
+clarification_gates:
+  R2:
+    status: open
+    owner: Dokumentansvar
+    before_stories: ['2.3']
+    subject: Konkret PDF-lesbarhetsmetode og forventede fixtureutfall
+    decision_record: null
+  R3:
+    status: open
+    owner: Backendansvar
+    before_stories: ['2.5']
+    subject: Upload-/HTTP-ressursgrenser, timeouter og opprydding
+    decision_record: null
+  R1:
+    status: open
+    owner: Mads + live-integrasjon
+    before_stories: ['4.1', '4.2', '4.3', '4.4', '4.5']
+    subject: Leverandør, modell/SDK, kapasitet, pris/budsjett og live-timeouter
+    decision_record: null
+  R4-S6:
+    readiness_issue: R4
+    status: open
+    owner: Mads / evalueringsansvarlig
+    before_stories: ['5.4']
+    subject: Faktisk annen person, rent lokalt miljø og avtalt S6-gjennomføring
+    decision_record: null
+  R4-S5:
+    readiness_issue: R4
+    status: open
+    owner: Mads / evalueringsansvarlig
+    before_stories: ['4.5']
+    also_before: S5-målepunkter i 4.4 dersom de samles for gjenbruk i 4.5
+    subject: Faktisk person/miljø for kontroll, måling og samme-case manuell referanse
+    decision_record: null

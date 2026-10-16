@@ -1,0 +1,1381 @@
+Loggformat: 2 linjer fra Playwrights feilutskrift hadde avsluttende mellomrom; disse er fjernet for Git whitespacekontroll. Kommandoer, tekstinnhold og utfall er ellers bevart.
+
+[2026-10-16T19:04:50.641119+02:00] $ npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.35 kB
+dist/assets/index-C_jNTSwf.css    4.38 kB │ gzip:  1.47 kB
+dist/assets/index-DXw4LN2h.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 389ms
+
+Exit: 0
+
+[2026-10-16T19:04:58.682337+02:00] $ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+tests/e2e/app-shell.spec.ts:59:64: warning eslint(no-useless-escape): Unnecessary escape character '"' help: Replace `\"` with `"`.
+
+Exit: 1
+
+[2026-10-16T19:05:43.034314+02:00] $ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+
+Exit: 0
+
+[2026-10-16T19:05:44.352480+02:00] $ npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 86ms
+
+Exit: 0
+
+[2026-10-16T19:05:56.577350+02:00] $ npm run test:e2e
+
+> property-acquisition-agent@0.0.0 test:e2e
+> playwright test
+
+[WebServer] (node:94153) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] Appen kunne ikke starte på http://127.0.0.1:3000. Kontroller at port 3000 er ledig.
+Error: Process from config.webServer was not able to start. Exit code: 1
+
+
+Exit: 1
+
+[2026-10-16T19:06:18.352618+02:00] $ npm run test:e2e
+
+> property-acquisition-agent@0.0.0 test:e2e
+> playwright test
+
+[WebServer] (node:94351) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 4 workers
+
+(node:94352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:94355) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:94354) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:94353) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 tests/e2e/app-shell.spec.ts:55:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (74ms)
+  ✓  2 tests/e2e/app-shell.spec.ts:32:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (1.0s)
+  ✓  1 tests/e2e/app-shell.spec.ts:3:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (1.0s)
+  ✓  5 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (1.1s)
+  ✘  4 tests/e2e/app-shell.spec.ts:80:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (1.0s)
+  ✓  6 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (371ms)
+  ✓  8 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (332ms)
+  ✓  7 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (361ms)
+
+
+  1) tests/e2e/app-shell.spec.ts:80:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -1,14 +1,14 @@
+      Object {
+        "bodySize": "14px",
+        "controlHeight": "36px",
+        "controlRadius": "4px",
+    -   "focus": "#22665F",
+    +   "focus": "#22665f",
+        "groupRadius": "6px",
+        "gutter": "32px",
+        "ink": "rgb(37, 52, 54)",
+    -   "page": "rgb(241, 245, 244)",
+    +   "page": "rgba(0, 0, 0, 0)",
+        "petrol": "rgb(34, 102, 95)",
+        "secondary": "rgb(82, 104, 101)",
+        "sectionGap": "24px",
+        "text": "rgb(36, 53, 55)",
+        "titleLineHeight": "30px",
+
+      116 |     }
+      117 |   })
+    > 118 |   expect(style).toMatchObject({
+          |                 ^
+      119 |     page: 'rgb(241, 245, 244)', white: 'rgb(255, 255, 255)', ink: 'rgb(37, 52, 54)',
+      120 |     text: 'rgb(36, 53, 55)', secondary: 'rgb(82, 104, 101)', petrol: 'rgb(34, 102, 95)',
+      121 |     bodySize: '14px', titleSize: '24px', titleWeight: '600', titleLineHeight: '30px',
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/app-shell.spec.ts:118:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-faktisk-typo-8bc94-i-og-kontrast-følger-DESIGN/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/app-shell-AC4-faktisk-typo-8bc94-i-og-kontrast-følger-DESIGN/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-faktisk-typo-8bc94-i-og-kontrast-følger-DESIGN/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/app-shell-AC4-faktisk-typo-8bc94-i-og-kontrast-følger-DESIGN/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/app-shell.spec.ts:80:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN
+  7 passed (6.0s)
+
+Exit: 1
+
+[2026-10-16T19:06:31.224972+02:00] $ npm run test:e2e
+
+> property-acquisition-agent@0.0.0 test:e2e
+> playwright test
+
+[WebServer] (node:94662) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 4 workers
+
+(node:94664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:94663) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:94665) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:94666) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 tests/e2e/app-shell.spec.ts:55:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (91ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"focus":6.097195425903059,"border":3.8101786636538826}
+  ✓  2 tests/e2e/app-shell.spec.ts:80:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (309ms)
+  ✓  1 tests/e2e/app-shell.spec.ts:32:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (348ms)
+  ✓  3 tests/e2e/app-shell.spec.ts:3:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (594ms)
+  ✓  5 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (536ms)
+  ✓  6 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (459ms)
+  ✓  7 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (447ms)
+  ✓  8 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (316ms)
+
+  8 passed (2.0s)
+
+Exit: 0
+
+[2026-10-16T19:07:57.957163+02:00] $ python3 /tmp/ibe160-story-1-2-integration.py
+Ren prosjektmappe: /tmp/ibe160-story-1-2-clean-70lsj0ri
+Ny installasjonscache: /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+npm error code ERR_SSL_CIPHER_OPERATION_FAILED
+npm error 80A1EDF001000000:error:1C800066:Provider routines:ossl_gcm_stream_update:cipher operation failed:../deps/openssl/openssl/providers/implementations/ciphers/ciphercommon_gcm.c:343:
+npm error
+npm error A complete log of this run can be found in: /tmp/ibe160-story-1-2-clean-cache/_logs/2026-10-16T17_07_56_342Z-debug-0.log
+Exit: 1
+Traceback (most recent call last):
+  File "/tmp/ibe160-story-1-2-integration.py", line 54, in <module>
+    run(['npm','ci'])
+  File "/tmp/ibe160-story-1-2-integration.py", line 25, in run
+    assert result.returncode==expected,(args,result.returncode)
+AssertionError: (['npm', 'ci'], 1)
+
+Exit: 1
+
+[2026-10-16T19:08:34.800348+02:00] $ python3 /tmp/ibe160-story-1-2-integration.py
+Ren prosjektmappe: /tmp/ibe160-story-1-2-clean-sxk_njyl
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 785ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-clean-sxk_njyl
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 346ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND   PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    95011 madschristophersen   14u  IPv4 0xe00dad5743b47d54      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+DEV HTTP /@vite/client 404
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node --watch src/backend/server.ts --dev
+
+`server.hmr.protocol/host/port/path/clientPort/timeout/server` is deprecated. Use `server.ws.*` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: 0
+Traceback (most recent call last):
+  File "/tmp/ibe160-story-1-2-integration.py", line 81, in <module>
+    assert status==200
+AssertionError
+
+Exit: 1
+
+[2026-10-16T19:10:30.546998+02:00] $ python3 /tmp/ibe160-story-1-2-integration.py
+Ren prosjektmappe: /tmp/ibe160-story-1-2-clean-53wb94un
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 1s
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-clean-53wb94un
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 344ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND   PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    95612 madschristophersen   14u  IPv4 0x4f8d979f9f756a89      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+DEV HTTP /@vite/client 404
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node src/backend/server.ts --dev
+
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+Traceback (most recent call last):
+  File "/tmp/ibe160-story-1-2-integration.py", line 81, in <module>
+    assert status==200
+AssertionError
+
+Exit: 1
+
+[2026-10-16T19:11:39.836085+02:00] $ git diff --exit-code HEAD -- .docs/planning-artifacts .docs/specs .docs/reference
+
+Exit: 0
+
+[2026-10-16T19:11:39.897651+02:00] $ git diff --check
+
+Exit: 0
+
+[2026-10-16T19:11:39.949675+02:00] $ rg -n '^(import|export)|import\(|require\(' src vite.config.ts playwright.config.ts
+vite.config.ts:1:import react from '@vitejs/plugin-react'
+vite.config.ts:2:import { defineConfig } from 'vite'
+vite.config.ts:4:export default defineConfig({
+playwright.config.ts:1:import { defineConfig } from '@playwright/test'
+playwright.config.ts:3:export default defineConfig({
+src/backend/server.ts:1:import express, { type ErrorRequestHandler } from 'express'
+src/backend/server.ts:2:import { access, readFile } from 'node:fs/promises'
+src/backend/server.ts:3:import { createServer } from 'node:http'
+src/backend/server.ts:4:import { fileURLToPath } from 'node:url'
+src/backend/server.ts:38:    ? await (await import('vite')).createServer({
+src/frontend/App.tsx:65:export default App
+src/frontend/main.tsx:1:import { StrictMode } from 'react'
+src/frontend/main.tsx:2:import { createRoot } from 'react-dom/client'
+src/frontend/main.tsx:3:import App from './App.tsx'
+src/frontend/main.tsx:4:import './styles.css'
+
+Exit: 0
+
+[2026-10-16T19:11:40.816228+02:00] $ python3 /tmp/ibe160-story-1-2-integration.py
+Ren prosjektmappe: /tmp/ibe160-story-1-2-clean-qavf1721
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 749ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-clean-qavf1721
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 355ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND   PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    95865 madschristophersen   14u  IPv4 0x56026df15e9892ce      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: 0
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+$ node --input-type=module -
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+page.waitForEvent: Timeout 30000ms exceeded while waiting for event "websocket"
+=========================== logs ===========================
+waiting for event "websocket"
+============================================================
+    at /private/tmp/ibe160-story-1-2-clean-qavf1721/[eval1]:5:23 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v24.21.0
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node src/backend/server.ts --dev
+
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: 0
+Traceback (most recent call last):
+  File "/tmp/ibe160-story-1-2-integration.py", line 94, in <module>
+    run(['node','--input-type=module','-'],input=script)
+  File "/tmp/ibe160-story-1-2-integration.py", line 25, in run
+    assert result.returncode==expected,(args,result.returncode)
+AssertionError: (['node', '--input-type=module', '-'], 1)
+
+Exit: 1
+
+[2026-10-16T19:11:41.113411+02:00] $ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+
+Exit: 0
+
+[2026-10-16T19:11:41.310939+02:00] $ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+
+Exit: 0
+
+[2026-10-16T19:12:23.192524+02:00] $ python3 /tmp/ibe160-story-1-2-integration.py
+Ren prosjektmappe: /tmp/ibe160-story-1-2-clean-xl9rpxpi
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 811ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-clean-xl9rpxpi
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 346ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND   PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    96282 madschristophersen   14u  IPv4 0x5ad7cad20c56000e      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+DEV HTTP /@vite/client 200
+$ node --input-type=module -
+Dev-nettleser: synlig skall, system-CSS og HMR på ws://127.0.0.1:3000/
+Exit: 0
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node src/backend/server.ts --dev
+
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: 0
+package.json SHA-256 identisk: 38bdc49bba7865a1728140074a3a3d032b3c21ec1d20e567f2525738ad47b14a
+package-lock.json SHA-256 identisk: 2ce16ccc5b52024ff29e9bb79f32fb4aeb39ca5aca52b7fc8fb78b62bcf50438
+Ren installasjon, manglende build, offline build/demo, HTTP-grense, opptatt port og dev/HMR: BESTÅTT.
+
+Exit: 0
+
+[2026-10-16T19:14:00.613373+02:00] $ python3 /tmp/ibe160-story-1-2-integration.py
+Ren prosjektmappe: /tmp/ibe160-story-1-2-clean-vk9mwhew
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 872ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-clean-vk9mwhew
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 363ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND   PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    96703 madschristophersen   14u  IPv4 0xa31850dd51f0da55      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+DEV HTTP /@vite/client 200
+DEV miljøressurs: 200 fiktiv markør eksponert: False
+DEV privat kontrollfil: 200
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node src/backend/server.ts --dev
+
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: 0
+Traceback (most recent call last):
+  File "/tmp/ibe160-story-1-2-integration.py", line 87, in <module>
+    assert status in (403,404) and 'FICTIONAL-PRIVATE-DOCUMENT-STORY12' not in private_body
+AssertionError
+
+Exit: 1
+
+[2026-10-16T19:14:39.216292+02:00] $ python3 /tmp/ibe160-story-1-2-integration.py
+Ren prosjektmappe: /tmp/ibe160-story-1-2-clean-8um2szr3
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 704ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-clean-8um2szr3
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 321ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND   PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    96961 madschristophersen   14u  IPv4 0x22d4a9d2c6c5a3bc      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+DEV HTTP /@vite/client 200
+DEV miljøressurs: 200 fiktiv markør eksponert: False
+DEV privat kontrollfil: 403
+$ node --input-type=module -
+Dev-nettleser: synlig skall, system-CSS og HMR på ws://127.0.0.1:3000/
+Exit: 0
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node src/backend/server.ts --dev
+
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+The request id "/private/tmp/ibe160-story-1-2-clean-8um2szr3/private/report.pdf" is outside of Vite serving allow list.
+
+- /private/tmp/ibe160-story-1-2-clean-8um2szr3
+
+Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+
+
+Prosessgruppe stoppet. Forelder-exit: 0
+package.json SHA-256 identisk: 38bdc49bba7865a1728140074a3a3d032b3c21ec1d20e567f2525738ad47b14a
+package-lock.json SHA-256 identisk: 2ce16ccc5b52024ff29e9bb79f32fb4aeb39ca5aca52b7fc8fb78b62bcf50438
+Ren installasjon, manglende build, offline build/demo, HTTP-grense, opptatt port og dev/HMR: BESTÅTT.
+
+Exit: 0
+
+[2026-10-16T19:14:40.655807+02:00] $ npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 94ms
+
+Exit: 0
+
+[2026-10-16T19:15:06.655302+02:00] $ npm run test:e2e
+
+> property-acquisition-agent@0.0.0 test:e2e
+> playwright test
+
+[WebServer] (node:97171) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 4 workers
+
+(node:97173) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97175) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97174) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/app-shell.spec.ts:55:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (102ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"focus":6.097195425903059,"border":3.8101786636538826}
+  ✓  4 tests/e2e/app-shell.spec.ts:32:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (545ms)
+  ✓  2 tests/e2e/app-shell.spec.ts:80:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (553ms)
+  ✓  3 tests/e2e/app-shell.spec.ts:3:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (906ms)
+  ✓  5 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (933ms)
+  ✓  6 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (506ms)
+  ✓  7 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (519ms)
+  ✓  8 tests/e2e/app-shell.spec.ts:138:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (312ms)
+
+  8 passed (2.3s)
+
+Exit: 0
+
+[2026-10-16T19:20:55.155244+02:00] $ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+
+Exit: 0
+
+[2026-10-16T19:20:59.814289+02:00] $ npm run test:e2e
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 91ms
+[WebServer] (node:97979) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 4 workers
+
+(node:97983) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97985) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97986) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:97984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 tests/e2e/app-shell.spec.ts:57:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (109ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"focus":6.097195425903059,"border":3.8101786636538826}
+  ✓  3 tests/e2e/app-shell.spec.ts:96:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (567ms)
+  ✓  1 tests/e2e/app-shell.spec.ts:34:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (567ms)
+  ✓  2 tests/e2e/app-shell.spec.ts:5:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (973ms)
+  ✓  5 tests/e2e/app-shell.spec.ts:154:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (1.0s)
+  ✓  6 tests/e2e/app-shell.spec.ts:154:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (558ms)
+  ✓  7 tests/e2e/app-shell.spec.ts:154:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (683ms)
+  ✓  8 tests/e2e/app-shell.spec.ts:154:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (448ms)
+
+  8 passed (2.6s)
+
+Exit: 0
+
+[2026-10-16T19:21:38.730942+02:00] $ python3 /tmp/ibe160-story-1-2-cleanup-check.py
+$ python3 -c 'import time; time.sleep(30)'
+Ryddet prosessgruppe etter oppstartsfeil:
+
+Traceback (most recent call last):
+  File "<serve-kontroll>", line 40, in serve
+  File "/tmp/ibe160-story-1-2-cleanup-check.py", line 13, in refuse
+    def refuse(_path): raise ConnectionRefusedError('Kontroll: ingen server lytter')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionRefusedError: Kontroll: ingen server lytter
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/ibe160-story-1-2-cleanup-check.py", line 17, in <module>
+    namespace['serve'](['python3','-c','import time; time.sleep(30)'])
+  File "<serve-kontroll>", line 42, in serve
+NameError: name 'urllib' is not defined
+
+Exit: 1
+
+[2026-10-16T19:21:45.420141+02:00] $ python3 .docs/implementation-artifacts/story-1-2-lokal-kontroll.py
+Ren prosjektmappe: /tmp/ibe160-story-1-2-(2026)-cnhyh_wk
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 829ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-(2026)-cnhyh_wk
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 352ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND   PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    98378 madschristophersen   14u  IPv4 0x3f3ebc54e82811b2      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+DEV HTTP /@vite/client 200
+DEV miljøressurs: 200 fiktiv markør eksponert: False
+DEV privat kontrollfil: 403
+$ node --input-type=module -
+Dev-nettleser: synlig skall, system-CSS og HMR på ws://127.0.0.1:3000/
+Exit: 0
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node src/backend/server.ts --dev
+
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+The request id "/private/tmp/ibe160-story-1-2-(2026)-cnhyh_wk/private/report.pdf" is outside of Vite serving allow list.
+
+- /private/tmp/ibe160-story-1-2-(2026)-cnhyh_wk
+
+Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+
+
+Prosessgruppe stoppet. Forelder-exit: 0
+package.json SHA-256 identisk: 465cb1c06c6083b88cad998a220f2576fabc557319e50a484a4ad5fc5c519063
+package-lock.json SHA-256 identisk: 2ce16ccc5b52024ff29e9bb79f32fb4aeb39ca5aca52b7fc8fb78b62bcf50438
+Ren installasjon, manglende build, offline build/demo, HTTP-grense, opptatt port og dev/HMR: BESTÅTT.
+
+Exit: 0
+
+[2026-10-16T19:21:52.830650+02:00] $ python3 /tmp/ibe160-story-1-2-cleanup-check.py
+$ python3 -c 'import time; time.sleep(30)'
+Ryddet prosessgruppe etter oppstartsfeil:
+
+Forventet oppstartsfeil: Lokal server startet ikke
+Faktisk startet kontrollprosess 98401 er stoppet, exit: -15
+Opprydding ved oppstartstimeout: BESTÅTT
+
+Exit: 0
+
+[2026-10-16T19:23:10.644195+02:00] $ git diff --exit-code HEAD -- .docs/planning-artifacts .docs/specs .docs/reference .docs/implementation-artifacts/spec-1-1-etablere-reproduserbar-startstruktur-og-importgrenser.md
+
+Exit: 0
+
+[2026-10-16T19:23:10.700184+02:00] $ git diff --check
+
+Exit: 0
+
+[2026-10-16T19:23:10.757113+02:00] $ git ls-files --cached --ignored --exclude-standard
+
+Exit: 0
+
+[2026-10-16T19:24:23.439831+02:00] $ ruby -ryaml -e 'path=".docs/implementation-artifacts/sprint-status.yaml"; current=YAML.safe_load(File.read(path)); previous=YAML.safe_load(IO.popen(["git","show","HEAD:"+path], &:read)); key="1-2-starte-den-bygde-lokale-appen-med-godkjent-appskall"; raise "Feil status" unless current["development_status"][key]=="review"; current["development_status"].each { |k,v| raise k unless k==key || previous["development_status"][k]==v }; current.each { |k,v| raise k unless ["last_updated","development_status"].include?(k) || previous[k]==v }; puts "Gyldig YAML; bare Story 1.2 og last_updated er endret. Alle senere stories, porter og sprintmetadata er bevart."'
+Gyldig YAML; bare Story 1.2 og last_updated er endret. Alle senere stories, porter og sprintmetadata er bevart.
+
+Exit: 0
+
+[2026-10-16T19:24:23.563088+02:00] $ python3 -m py_compile .docs/implementation-artifacts/story-1-2-lokal-kontroll.py .docs/implementation-artifacts/story-1-2-logg-kontroll.py .docs/implementation-artifacts/story-1-2-oppryddingskontroll.py
+
+Exit: 0

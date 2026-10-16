@@ -32,7 +32,7 @@
 # development_status er gruppert per epic, ikke etter implementeringsrekkefølge.
 # BMADs generiske statusanbefaling håndhever ikke avhengigheter eller porter.
 generated: 10-16-2026 18:23
-last_updated: 10-16-2026 18:54
+last_updated: 10-16-2026 19:23
 project: IBE160
 project_key: NOKEY
 tracking_system: file-system
@@ -40,7 +40,7 @@ story_location: .docs/implementation-artifacts
 development_status:
   epic-1: in-progress
   1-1-etablere-reproduserbar-startstruktur-og-importgrenser: done
-  1-2-starte-den-bygde-lokale-appen-med-godkjent-appskall: backlog
+  1-2-starte-den-bygde-lokale-appen-med-godkjent-appskall: review
   1-3-registrere-og-bevare-finansverdier-for-ett-objekt: backlog
   1-4-validere-tall-og-normalisere-kjent-månedsgrunnlag-eksakt: backlog
   1-5-gjøre-kilder-kostnadsinnhold-og-uløste-konflikter-kontroller: backlog

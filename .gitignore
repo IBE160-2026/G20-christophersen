@@ -13,6 +13,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# Private originaldokumenter og lokalt arbeidsmateriale
+/private/
+
 # Python environments, bytecode, packaging and caches
 .venv/
 venv/

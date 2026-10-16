@@ -1,0 +1,221 @@
+Story 1.1 — faktisk kontroll 2026-10-16
+Miljø: macOS-26.6.2-arm64-arm-64bit
+Ren mappe: /tmp/ibe160-story-1-1-clean-zm6g6rpd
+Bare package/config/index/src kopiert; ingen node_modules, miljøfiler eller brukerdata.
+
+$ node --version
+v24.21.0
+Exit: 0
+
+$ npm --version
+11.19.0
+Exit: 0
+
+$ npm ci --offline --no-audit --no-fund --cache /tmp/ibe160-story-1-1-npm-cache
+
+added 28 packages in 526ms
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+Exit: 0
+
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src vite.config.ts
+Exit: 0
+
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-1-clean-zm6g6rpd
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+Exit: 0
+
+Typekontroll skal avvise feil datatype
+Midlertidig kilde: "export const verificationProbe: number = 'feil'\n"
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+src/frontend/verification-probe.tsx(1,14): error TS2322: Type 'string' is not assignable to type 'number'.
+Exit: 2 (forventet ulik 0)
+
+Lint skal avvise betinget hook
+Midlertidig kilde: "import { useState } from 'react'\nexport function VerificationProbe({ flag }: { flag: boolean }) {\n  if (flag) useState(0)\n  return null\n}\n"
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src vite.config.ts
+
+src/frontend/verification-probe.tsx:3:13: error react-hooks(rules-of-hooks): React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. help: Move the Hook call before the condition, or call it unconditionally and branch inside the Hook/effect instead.
+Exit: 1 (forventet ulik 0)
+
+Etter slettet kontrollprobe: $ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+Exit: 0
+
+Etter slettet kontrollprobe: $ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src vite.config.ts
+Exit: 0
+
+Supplerende import-/Git-/låsfilkontroll og negativ miljøkontroll
+
+$ rg -n ^import src vite.config.ts
+vite.config.ts:1:import react from '@vitejs/plugin-react'
+vite.config.ts:2:import { defineConfig } from 'vite'
+src/frontend/main.tsx:1:import { StrictMode } from 'react'
+src/frontend/main.tsx:2:import { createRoot } from 'react-dom/client'
+src/frontend/main.tsx:3:import App from './App.tsx'
+Exit: 0 (forventet 0)
+
+$ git check-ignore --no-index --stdin
+stdin:
+node_modules/react/package.json
+dist/index.html
+build/server.js
+.env
+.env.local
+private/original.pdf
+kontroll.tsbuildinfo
+node_modules/react/package.json
+dist/index.html
+build/server.js
+.env
+.env.local
+private/original.pdf
+kontroll.tsbuildinfo
+Exit: 0 (forventet 0)
+
+$ git check-ignore --no-index --stdin
+stdin:
+package.json
+package-lock.json
+.nvmrc
+.npmrc
+.oxlintrc.json
+tsconfig.json
+tsconfig.app.json
+tsconfig.node.json
+vite.config.ts
+index.html
+src/frontend/main.tsx
+src/frontend/App.tsx
+
+Exit: 1 (forventet 1)
+
+$ git diff --check
+
+Exit: 0 (forventet 0)
+
+JSON-kontroll: alle ni direkte versjoner og rotmetadata samsvarer. Låsfil byteidentisk med ren kopi.
+package-lock.json SHA-256: 91a3fbe29cc65f2b4b7dbe19f63439c7c3bcfb4f573b2a6639871c1e657749ea
+
+$ /opt/homebrew/bin/node --version
+v26.8.1
+Exit: 0 (forventet 0)
+
+$ /opt/homebrew/bin/npm ci --dry-run --offline --no-audit --no-fund --cache /tmp/ibe160-story-1-1-npm-cache
+npm error code EBADENGINE
+npm error engine Unsupported engine
+npm error engine Not compatible with your version of node/npm: property-acquisition-agent@0.0.0
+npm error notsup Not compatible with your version of node/npm: property-acquisition-agent@0.0.0
+npm error notsup Required: {"node":"24.21.0","npm":"11.19.0"}
+npm error notsup Actual:   {"node":"v26.8.1","npm":"11.19.0"}
+npm error A complete log of this run can be found in: /tmp/ibe160-story-1-1-npm-cache/_logs/2026-10-16T16_41_25_688Z-debug-0.log
+Exit: 1 (forventet 1)
+
+
+Tidligere verktøyutdata fra nettinstallasjonen, bevart fra samme økt:
+$ PATH=/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin:$PATH npm ci --no-audit --no-fund --fetch-retries=0 --fetch-timeout=30000 --cache /tmp/ibe160-story-1-1-npm-cache
+npm error code ERR_SSL_CIPHER_OPERATION_FAILED
+npm error 80A1EDF001000000:error:1C800066:Provider routines:ossl_gcm_stream_update:cipher operation failed:../deps/openssl/openssl/providers/implementations/ciphers/ciphercommon_gcm.c:343:
+npm error
+npm error A complete log of this run can be found in: /tmp/ibe160-story-1-1-npm-cache/_logs/2026-10-16T16_36_32_054Z-debug-0.log
+Exit: 1
+
+Samme kommando ved nytt forsøk:
+added 28 packages in 520ms
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+Gjennomgang av hele kilden og faktisk Git-indeks
+
+$ shasum -a 256 package-lock.json /tmp/ibe160-story-1-1-clean-zm6g6rpd/package-lock.json
+91a3fbe29cc65f2b4b7dbe19f63439c7c3bcfb4f573b2a6639871c1e657749ea  package-lock.json
+91a3fbe29cc65f2b4b7dbe19f63439c7c3bcfb4f573b2a6639871c1e657749ea  /tmp/ibe160-story-1-1-clean-zm6g6rpd/package-lock.json
+Exit: 0
+
+$ rg --files src
+src/domain/README.md
+src/backend/README.md
+src/contracts/README.md
+src/frontend/main.tsx
+src/frontend/App.tsx
+Exit: 0
+
+$ rg -n import|export|require|process|fetch|XMLHttpRequest|WebSocket|readFile|writeFile|localStorage src vite.config.ts
+vite.config.ts:1:import react from '@vitejs/plugin-react'
+vite.config.ts:2:import { defineConfig } from 'vite'
+vite.config.ts:4:export default defineConfig({
+src/domain/README.md:4:screening etter AD-1. Tillatt intern importretning er domain → contracts.
+src/frontend/main.tsx:1:import { StrictMode } from 'react'
+src/frontend/main.tsx:2:import { createRoot } from 'react-dom/client'
+src/frontend/main.tsx:3:import App from './App.tsx'
+src/frontend/App.tsx:5:export default App
+Exit: 0
+
+$ git ls-files --cached --ignored --exclude-standard
+
+Exit: 0
+
+$ git diff --cached --name-only
+.docs/implementation-artifacts/epic-1-context.md
+.docs/implementation-artifacts/spec-1-1-etablere-reproduserbar-startstruktur-og-importgrenser.md
+.docs/implementation-artifacts/sprint-status.yaml
+.docs/implementation-artifacts/story-1-1-kontroller.txt
+.docs/implementation-artifacts/story-1-1-verifikasjon.md
+.docs/process/arbeidsokter/2026-10-16-story-1-1.md
+.docs/process/prompts/session-01a1458d-79d7-72b2-8679-8bee3ae108b8.jsonl
+.gitignore
+.npmrc
+.nvmrc
+.oxlintrc.json
+README.md
+index.html
+package-lock.json
+package.json
+src/backend/README.md
+src/contracts/README.md
+src/domain/README.md
+src/frontend/App.tsx
+src/frontend/main.tsx
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+Exit: 0
+
+$ git diff --cached --check
+
+Exit: 0

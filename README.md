@@ -33,6 +33,8 @@ kontroller uten feil eller advarsler. npm 11.19.0 kan på macOS varsle om
 installasjonsscriptet til den valgfrie avhengigheten `fsevents@2.3.3`;
 installasjonen og kontrollene er prøvd med dette varselet og avsluttes med 0.
 Installasjon krever nett til npm-registeret.
+Oppskriften er prøvd på macOS 26.6.2 (arm64). Andre plattformer er ikke
+etterprøvd i Story 1.1.
 Kontrollene krever ingen API-nøkkel eller betalt tjeneste. De sjekker faktisk
 TypeScript-/React-kilde og Vite-konfigurasjon; funksjonstester tilføyes sammen
 med funksjonene de skal verifisere.
@@ -51,10 +53,12 @@ og nødvendige avhengigheter er eksakt låst etter arkitekturen.
 | `src/backend/` | Senere HTTP, dokumenter og analyseadaptere. Bruker contracts; finans/anbefaling forblir i domain. |
 | `.docs/` | Autoritative planer, implementeringsbevis og prosesspor. |
 
-Importgrensene gjennomgås ved endringer. Domene-/kontraktmapper inneholder
+Importgrensene gjennomgås ved endringer, inklusive reeksporter, dynamiske
+importer og direkte I/O-bruk. Type- og lintkontroll erstatter ikke denne
+gjennomgangen mot AD-1. Domene-/kontraktmapper inneholder
 foreløpig bare ansvarsbeskrivelser, uten framtidig modell eller forretningslogikk.
 Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,
-som er Git-ignorert. `.env*` holdes utenfor Git, med unntak for
+som er Git-ignorert. `.env` og `.env.*` holdes utenfor Git, med unntak for
 `.env.example` og `.env.*.example` uten hemmeligheter. `node_modules/`, bygge-
 og kontrollartefakter holdes også utenfor Git. Framtidige fiktive fixtures får egen versjonert plass
 under `tests/fixtures/property-cases/`.

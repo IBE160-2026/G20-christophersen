@@ -13,6 +13,9 @@ og [kommandoutskriften](story-1-1-kontroller.txt) dokumenterer utførelsen.
   Offisiell distribusjon: [node-v24.21.0-darwin-arm64.tar.gz](https://nodejs.org/dist/v24.21.0/node-v24.21.0-darwin-arm64.tar.gz).
   SHA-256 kontrollert mot [SHASUMS256.txt](https://nodejs.org/dist/v24.21.0/SHASUMS256.txt):
   `bed7eea5325e1108f32ce5228ddd6a5f0f08a499ee42aa7442aea583702f6057`.
+  Dette er registrert fra implementeringsøkten; den opprinnelige
+  sjekksumutskriften ble ikke bevart. Den etterfølgende reviewen verifiserer
+  faktisk Node-/npm-versjon og installasjon, uten ny kontroll av arkivfilen.
 - Offisiell [Vite react-ts-starter](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts),
   revisjon `df7503cc499e0b49e45701e3be7546918ee9d322`.
   React-inngangen er flyttet til frontend-grensen, demonstrasjonsinnhold og
@@ -66,23 +69,29 @@ ble den isolerte distribusjonen valgt med PATH-oppsettet ovenfor. Kjør så fra
 reporoten; dette gjenskaper filutvalget som ble brukt i den dokumenterte kopien:
 
 ```sh
-kontrollmappe=$(mktemp -d /tmp/ibe160-story-1-1-clean-XXXXXX)
-cp package.json package-lock.json .npmrc .nvmrc .oxlintrc.json \
-  tsconfig.json tsconfig.app.json tsconfig.node.json vite.config.ts \
-  index.html "$kontrollmappe/"
-cp -R src "$kontrollmappe/src"
-cd "$kontrollmappe"
-node --version
-npm --version
-npm ci
-npm run typecheck
-npm run lint
-npm ls --depth=0
+(
+  set -eu
+  kontrollmappe=$(mktemp -d /tmp/ibe160-story-1-1-clean-XXXXXX)
+  cp package.json package-lock.json .npmrc .nvmrc .oxlintrc.json \
+    tsconfig.json tsconfig.app.json tsconfig.node.json vite.config.ts \
+    index.html "$kontrollmappe/"
+  cp -R src "$kontrollmappe/src"
+  cd "$kontrollmappe"
+  node --version
+  npm --version
+  npm ci
+  npm run typecheck
+  npm run lint
+  npm ls --depth=0
+)
 ```
 
 Den faktiske førstegangskopieringen brukte Python tempfile/shutil til det samme
 filutvalget. Ren installasjon ble kjørt med npm-cacheflagget i tabellen slik at
 de allerede nedlastede, låsfilkontrollerte pakkene kunne gjenbrukes uten nett.
+«Ren» gjelder prosjektmappen, ikke et nytt operativsystem eller en erstattet
+bruker-/global npm-konfigurasjon. Reviewutskriften nedenfor angir relevante
+effektive innstillinger og om slike konfigurasjonsfiler finnes, uten hemmeligheter.
 
 ## Endrede og opprettede filer
 
@@ -104,10 +113,20 @@ triagert i storyfilen. Det gjenstår ingen åpne spørsmål eller utsatte funn.
 Faktisk sporet/klargjort innhold er kontrollert: ingen ignorerte filer spores,
 og `git diff --cached --check` bestod med alle nye filer i indeksen.
 
-BMADs oneshot-rute setter storyfilen til `done` og sprintnøkkelen til `review`.
+Ved implementeringens avslutning satte BMADs oneshot-rute storyfilen til `done`
+og sprintnøkkelen til `review`.
 Epic 1 er `in-progress`; alle andre stories, inklusive 1.2, er `backlog`.
 
 Dette er ikke S6-bevis fra
 en annen person og ikke produkt-/UX-/live-verifikasjon. Appserver, oppstart,
 build-/dev-/demokontrakt og godkjent appskall tilhører Story 1.2. Ingen senere
 story er startet. Ingen uavklart produkt-/arkitekturbeslutning er identifisert.
+
+## Etterfølgende code review 2026-10-16
+
+Review av commit `2a9abfa4b6941797f6cfd2087e42dd28da3e90cd` og tilhørende
+dokumentasjonsrettinger er dokumentert i [storyfilens Review Findings](spec-1-1-etablere-reproduserbar-startstruktur-og-importgrenser.md#review-findings).
+[Nye faktiske kontroller](story-1-1-review-kontroller.txt) viser nettinstallasjon
+fra tom npm-cache, type/lint, oppretting og sletting av negative prober samt
+kontroll av miljø, låsfil, import-/Git-grenser og den rettede oppskriften.
+Gjeldende status etter review finnes i [sprintstatus](sprint-status.yaml).

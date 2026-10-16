@@ -1,4 +1,7 @@
 Story 1.1 — faktisk kontroll 2026-10-16
+Ved senere code review er shellquoting i import-/I/O-søket nedenfor rettet;
+søkeuttrykk og bevarte utdata er uendret. Nye, kopierbare kontroller står i
+story-1-1-review-kontroller.txt.
 Miljø: macOS-26.6.2-arm64-arm-64bit
 Ren mappe: /tmp/ibe160-story-1-1-clean-zm6g6rpd
 Bare package/config/index/src kopiert; ingen node_modules, miljøfiler eller brukerdata.
@@ -174,7 +177,7 @@ src/frontend/main.tsx
 src/frontend/App.tsx
 Exit: 0
 
-$ rg -n import|export|require|process|fetch|XMLHttpRequest|WebSocket|readFile|writeFile|localStorage src vite.config.ts
+$ rg -n 'import|export|require|process|fetch|XMLHttpRequest|WebSocket|readFile|writeFile|localStorage' src vite.config.ts
 vite.config.ts:1:import react from '@vitejs/plugin-react'
 vite.config.ts:2:import { defineConfig } from 'vite'
 vite.config.ts:4:export default defineConfig({

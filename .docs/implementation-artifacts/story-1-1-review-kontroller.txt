@@ -1,0 +1,322 @@
+Review av 2a9abfa4b6941797f6cfd2087e42dd28da3e90cd, 2026-10-16
+Ren mappe: /tmp/ibe160-story-1-1-review-clean-zxro213r
+Tom npm-cache: /tmp/ibe160-story-1-1-review-cache-rzwwdlf3
+PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin:$PATH
+Miljø: npm_config_cache ovenfor; fetch_timeout=30000, fetch_retries=0 (kun nettverksventing). Ingen node_modules eller miljøfiler kopiert.
+
+$ node --version
+v24.21.0
+Exit: 0
+
+$ npm --version
+11.19.0
+Exit: 0
+
+$ npm ci
+npm error code ENOTFOUND
+npm error syscall getaddrinfo
+npm error errno ENOTFOUND
+npm error network request to https://registry.npmjs.org/vite/-/vite-8.3.4.tgz failed, reason: getaddrinfo ENOTFOUND registry.npmjs.org
+npm error network This is a problem related to network connectivity.
+npm error network In most cases you are behind a proxy or have bad network settings.
+npm error network
+npm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly.  See: 'npm help config'
+npm error A complete log of this run can be found in: /tmp/ibe160-story-1-1-review-cache-rzwwdlf3/_logs/2026-10-16T16_47_28_785Z-debug-0.log
+Exit: 1
+LOCK_SHA256_BEFORE=91a3fbe29cc65f2b4b7dbe19f63439c7c3bcfb4f573b2a6639871c1e657749ea
+LOCK_SHA256_AFTER=91a3fbe29cc65f2b4b7dbe19f63439c7c3bcfb4f573b2a6639871c1e657749ea
+ALL_PASSED=False
+
+Nytt forsøk med nettverkstilgang utenfor sandkassens DNS-begrensning.
+Samme rene mappe og tomme cache fra forrige forsøk; ingen pins eller installasjonspolicy endret.
+$ npm ci
+
+added 27 packages, and audited 28 packages in 1s
+
+8 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+(Utdata over bevart fra verktøykjøringen med nettverkstilgang.)
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src vite.config.ts
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-1-review-clean-zxro213r
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ python3 -c 'from pathlib import Path; Path('"'"'src/frontend/review-probe.tsx'"'"').write_text("export const probe: number = '"'"'feil'"'"'\n")'
+
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+src/frontend/review-probe.tsx(1,14): error TS2322: Type 'string' is not assignable to type 'number'.
+Exit: 2; forventet: 2
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ python3 -c 'from pathlib import Path; Path('"'"'src/frontend/review-probe.tsx'"'"').write_text("import { useState } from '"'"'react'"'"'\nexport function ReviewProbe({ flag }: { flag: boolean }) {\n  if (flag) useState(0)\n  return null\n}\n")'
+
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src vite.config.ts
+
+src/frontend/review-probe.tsx:3:13: error react-hooks(rules-of-hooks): React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. help: Move the Hook call before the condition, or call it unconditionally and branch inside the Hook/effect instead.
+Exit: 1; forventet: 1
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ python3 -c 'from pathlib import Path; Path('"'"'src/frontend/review-probe.tsx'"'"').unlink()'
+
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src vite.config.ts
+Exit: 0; forventet: 0
+
+CWD: /Users/madschristophersen/IBE160/G20-christophersen
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+Exit: 0; forventet: 0
+
+CWD: /Users/madschristophersen/IBE160/G20-christophersen
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src vite.config.ts
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ node --version
+v26.8.1
+Exit: 0; forventet: 0
+
+CWD: /tmp/ibe160-story-1-1-review-clean-zxro213r
+$ npm ci --dry-run --offline --no-audit --no-fund
+npm error code EBADENGINE
+npm error engine Unsupported engine
+npm error engine Not compatible with your version of node/npm: property-acquisition-agent@0.0.0
+npm error notsup Not compatible with your version of node/npm: property-acquisition-agent@0.0.0
+npm error notsup Required: {"node":"24.21.0","npm":"11.19.0"}
+npm error notsup Actual:   {"node":"v26.8.1","npm":"11.19.0"}
+npm error A complete log of this run can be found in: /tmp/ibe160-story-1-1-review-cache-rzwwdlf3/_logs/2026-10-16T16_49_20_274Z-debug-0.log
+Exit: 1; forventet: 1
+
+LOCK_SHA256_AFTER_ALL_CHECKS=91a3fbe29cc65f2b4b7dbe19f63439c7c3bcfb4f573b2a6639871c1e657749ea
+ALL_CHECKS_PASSED=True
+
+Vert: macOS-26.6.2-arm64-arm-64bit; macOS 26.6.2; arm64
+
+$ rg -n 'import|export|require|process|fetch|XMLHttpRequest|WebSocket|readFile|writeFile|localStorage' src vite.config.ts
+vite.config.ts:1:import react from '@vitejs/plugin-react'
+vite.config.ts:2:import { defineConfig } from 'vite'
+vite.config.ts:4:export default defineConfig({
+src/domain/README.md:4:screening etter AD-1. Tillatt intern importretning er domain → contracts.
+src/frontend/main.tsx:1:import { StrictMode } from 'react'
+src/frontend/main.tsx:2:import { createRoot } from 'react-dom/client'
+src/frontend/main.tsx:3:import App from './App.tsx'
+src/frontend/App.tsx:5:export default App
+Exit: 0; forventet: 0
+
+$ git check-ignore --no-index --stdin
+stdin:
+node_modules/react/package.json
+dist/index.html
+build/server.js
+.env
+.env.local
+.env.production
+private/original.pdf
+kontroll.tsbuildinfo
+
+node_modules/react/package.json
+dist/index.html
+build/server.js
+.env
+.env.local
+.env.production
+private/original.pdf
+kontroll.tsbuildinfo
+Exit: 0; forventet: 0
+
+$ git check-ignore --no-index --stdin
+stdin:
+package.json
+package-lock.json
+.nvmrc
+.npmrc
+.oxlintrc.json
+tsconfig.json
+tsconfig.app.json
+tsconfig.node.json
+vite.config.ts
+index.html
+src/frontend/main.tsx
+src/frontend/App.tsx
+.env.example
+.env.local.example
+
+
+Exit: 1; forventet: 1
+
+$ git ls-files --cached --ignored --exclude-standard
+
+Exit: 0; forventet: 0
+
+$ git diff --check
+
+Exit: 0; forventet: 0
+
+$ git diff '2a9abfa^' 2a9abfa --check
+
+Exit: 0; forventet: 0
+
+Sikker konfigurasjonskontroll (bare eksplisitt utvalgte nøkler; ingen token-/auth-utdata):
+{
+  "engine-strict": true,
+  "save-exact": true,
+  "ignore-scripts": false,
+  "package-lock": true,
+  "install-strategy": "hoisted",
+  "omit": [],
+  "include": [],
+  "legacy-peer-deps": false,
+  "install-links": false,
+  "audit": true,
+  "registry_is_official": true,
+  "userconfig_exists": false,
+  "globalconfig_exists": false,
+  "npm_config_environment_names": [
+    "npm_config_cache",
+    "npm_config_fetch_retries",
+    "npm_config_fetch_timeout"
+  ]
+}
+Merk: ren gjelder prosjektmappen og npm-cachen. Vertens bruker-/globale konfigurasjon og operativsystem er ikke erstattet.
+Hemmelighetsmønstre, bare kandidatstier: [".codex/hooks/test_log_user_prompt.py"]
+Manuelt kontrollert: alle kandidatene er eksplisitt fiktive testdata i eksisterende maskeringstester. Ingen reell nøkkel funnet. Mønstersøk er ikke en garanti for alle nøkkelformater.
+Sporbarhets-/import-/Git-kontroller bestått.
+
+Etter dokumentasjonsretting: faktisk oppskrift lest direkte fra verifikasjonens sh-kodeblokk. Her brukes allerede nettverifisert cache med npm_config_offline=true; første installasjon ovenfor brukte tom cache og nett.
+$ /bin/sh -c '(
+  set -eu
+  kontrollmappe=$(mktemp -d /tmp/ibe160-story-1-1-clean-XXXXXX)
+  cp package.json package-lock.json .npmrc .nvmrc .oxlintrc.json \
+    tsconfig.json tsconfig.app.json tsconfig.node.json vite.config.ts \
+    index.html "$kontrollmappe/"
+  cp -R src "$kontrollmappe/src"
+  cd "$kontrollmappe"
+  node --version
+  npm --version
+  npm ci
+  npm run typecheck
+  npm run lint
+  npm ls --depth=0
+)
+'
+v24.21.0
+11.19.0
+
+added 27 packages, and audited 28 packages in 440ms
+
+8 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src vite.config.ts
+
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-1-clean-K96z0N
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+
+Exit: 0
+PIN react: 19.3.0
+PIN react-dom: 19.3.0
+PIN @types/node: 24.19.2
+PIN @types/react: 19.3.0
+PIN @types/react-dom: 19.3.0
+PIN @vitejs/plugin-react: 6.1.2
+PIN oxlint: 1.87.0
+PIN typescript: 6.0.2
+PIN vite: 8.3.4
+JSON-kontroll: metadata/pins samsvarer, 70 låste registeroppføringer har integritet og offisiell registry-URL.
+Kode, pins, låsfil og type/lint/Vite-konfigurasjon er byteuendret fra review-commiten.
+Låsfil SHA-256: 91a3fbe29cc65f2b4b7dbe19f63439c7c3bcfb4f573b2a6639871c1e657749ea
+Etterkontroll av rettet oppskrift og implementasjonsintegritet: BESTÅTT.
+
+Sluttkontroll etter lagring av reviewrapport, prosesspor og sprintstatus:
+$ git diff --check
+
+Exit: 0
+$ git ls-files --cached --ignored --exclude-standard
+
+Exit: 0
+Python-assertkontroll: alle lokale lenker i README/verifikasjon/story/reviewøkt peker på eksisterende filer.
+Python-assertkontroll: sprint-status.yaml avviker bare på last_updated og Story 1.1 review -> done; 1.2 er backlog, porter og kommentarer er identiske.
+Python-assertkontroll: alle app-/konfigurasjonsfiler er byteidentiske med 2a9abfa; endrede/nye dokumenter har ingen etterfølgende whitespace og slutter med linjeskift.
+Sluttresultat: BESTÅTT; AC1–AC4 done. Ingen appkode eller senere story lagt til.

@@ -58,8 +58,38 @@ Story 1.2. Story 1.3 og senere funksjonalitet er ikke startet.
 
 ## Sluttstatus
 
-AC1–AC5 er oppfylt. Storyfilen er `done`; sprintnøkkel 1.2 er `review` etter
-bmad-builds oneshot-workflow. Epic 1 forblir `in-progress`, Story 1.1 er
-fortsatt `done` og alle senere stories er `backlog`. Ingen avklaringsport,
-låst plan eller produktbeslutning er endret. Ingen åpne spørsmål gjenstår
-innen Story 1.2.
+AC1–AC5 er oppfylt etter uavhengig code review og retting 2026-10-17.
+Storyfilen og sprintnøkkel 1.2 er `done` etter bmad-code-review-workflowen.
+Epic 1 forblir `in-progress`, Story 1.1 er fortsatt `done` og alle senere
+stories er `backlog`. Ingen avklaringsport, låst plan eller produktbeslutning
+er endret. Ingen åpne spørsmål gjenstår innen Story 1.2.
+Se [reviewrapporten](story-1-2-review.md) for funn, rettinger og bevis.
+
+## Review Findings — uavhengig code review 2026-10-17
+
+Review av `6296dfef0f93b69fd29180475732469a7acfd12d`, med fire BMAD-lag
+(Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor).
+Brukeren har autorisert retting av alle feil innen Story 1.2 og ny verifikasjon.
+Funnene nedenfor er triagert før retting; full evidens og alle avvisninger føres i
+[reviewrapporten](story-1-2-review.md).
+
+- [x] [Review][Patch] Bevar hele trinnkontroller/fokus og plass til arbeidsoverskrift ved 320×200 og korte zoomvinduer. [src/frontend/styles.css:89]
+- [x] [Review][Patch] Mål faktisk outline-farge ved fokus, ikke bare petrolbakgrunnen. [tests/e2e/app-shell.spec.ts:121]
+- [x] [Review][Patch] Send rå traverseringsstier uten URL-normalisering i HTTP-kontrollen. [tests/e2e/app-shell.spec.ts:86]
+- [x] [Review][Patch] Kontroller synlig produktnavn og eksakt rekkefølge/navn/nummer/status. [tests/e2e/app-shell.spec.ts:9]
+- [x] [Review][Patch] Krev tilkoblet HMR og synlig oppdatering i den isolerte dev-proben. [story-1-2-lokal-kontroll.py:100]
+- [x] [Review][Patch] La dev-nettleserfeil feile kontrollen. [story-1-2-lokal-kontroll.py:99]
+- [x] [Review][Patch] Avvis opptatt port før kontrollskriptet starter en server. [story-1-2-lokal-kontroll.py:33]
+- [x] [Review][Patch] Finn kontrollskriptets checkout fra egen filplassering. [story-1-2-lokal-kontroll.py:3]
+- [x] [Review][Patch] Kjør dev-skall/HMR og faktisk privatfilgrense gjennom vanlig testkommando. [playwright.config.ts:16]
+
+### Rejected
+
+- Blind Hunter B5 — **low**: WebSocket-sperre mangler i demoens nettlesertest,
+  men demoen oppretter ingen WebSocket. Faktisk OS-nettsperre brukes i separat
+  build/demo-kontroll. Et nytt WebSocket-vern for en framtidig kodebane gir
+  unødvendig kompleksitet i Story 1.2.
+- Blind Hunter B9 — **low**: Kontrollhjelperen har ingen SIGKILL-reserve etter
+  SIGTERM-timeout. Ingen av de aktuelle Node-/npm-prosessene henger ved stopp;
+  en ny eskalerende oppryddingsmekanisme for et hypotetisk kontrollforløp tas
+  ikke inn. Faktisk oppstartstimeout/opprydding etterprøves separat.

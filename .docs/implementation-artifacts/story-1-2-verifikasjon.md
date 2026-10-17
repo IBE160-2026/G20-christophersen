@@ -1,5 +1,15 @@
 # Story 1.2 — verifikasjon
 
+**Oppfølging 2026-10-17:** Uavhengig BMAD code review fant og rettet
+fokusklipping ved smal/kort zoom samt hull i ordinær dev-/fokus-/HTTP-kontroll.
+Gjeldende resultat er **12 beståtte demotester og 2 beståtte dev-tester**,
+bestått ren offline build/demo, faktisk HMR-oppdatering og manuell Chrome-zoom.
+AC1–AC5 er oppfylt etter retting, og sprintstatus er nå `done`.
+[Reviewrapport](story-1-2-review.md) og
+[reviewkontroller](story-1-2-review-kontroller.txt) eier disse nye bevisene.
+Teksten nedenfor bevarer implementeringens historiske resultat fra 2026-10-16;
+åtte tester og sprintstatus `review` beskriver det tidligere tidspunktet.
+
 Dato: 2026-10-16. Utgangspunkt: `4db56a119fc72f9d881b9a3e16a8cd406d9c5f35`.
 Autoritet: [Story 1.2, AC1–AC5](../planning-artifacts/epics.md#story-12-starte-den-bygde-lokale-appen-med-godkjent-appskall),
 [DESIGN](../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md),

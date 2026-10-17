@@ -1,6 +1,6 @@
 from pathlib import Path
-import os, sys, subprocess, tempfile, shutil, signal, time, urllib.request, urllib.error, shlex, json, hashlib
-root=Path.cwd()
+import os, sys, subprocess, tempfile, shutil, signal, time, urllib.request, urllib.error, shlex, json, hashlib, socket
+root=Path(__file__).resolve().parents[2]
 clean=Path(tempfile.mkdtemp(prefix='ibe160-story-1-2-(2026)-',dir='/tmp'))
 env=os.environ.copy()
 env['PATH']='/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin:'+env['PATH']
@@ -9,7 +9,7 @@ env['npm_config_update_notifier']='false'
 env['PLAYWRIGHT_BROWSERS_PATH']='/tmp/ibe160-story-1-2-browsers'
 env['VITE_IBE160_TEST_SECRET']='FICTIONAL-STORY12-BOUNDARY-PROBE'
 profile='(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))'
-for name in ['package.json','package-lock.json','.npmrc','.nvmrc','.oxlintrc.json','index.html','vite.config.ts','tsconfig.json','tsconfig.app.json','tsconfig.node.json','tsconfig.e2e.json','playwright.config.ts','src','tests']:
+for name in ['package.json','package-lock.json','.npmrc','.nvmrc','.oxlintrc.json','index.html','vite.config.ts','tsconfig.json','tsconfig.app.json','tsconfig.node.json','tsconfig.e2e.json','playwright.config.ts','playwright.dev.config.ts','src','tests']:
  source=root/name
  if source.is_dir(): shutil.copytree(source,clean/name)
  else: shutil.copy2(source,clean/name)
@@ -31,6 +31,10 @@ def fetch(path,script=False):
  except urllib.error.HTTPError as e: return e.code,e.read().decode()
 
 def serve(args):
+ with socket.socket() as probe:
+  probe.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+  try: probe.bind(('127.0.0.1',3000))
+  except OSError as error: raise RuntimeError('Port 3000 må være ledig før lokal kontroll starter') from error
  print('$ '+shlex.join(args),flush=True)
  p=subprocess.Popen(args,cwd=clean,env=env,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,start_new_session=True)
  try:
@@ -93,17 +97,32 @@ try:
  print('DEV privat kontrollfil:',status,flush=True)
  assert status in (403,404) and 'FICTIONAL-PRIVATE-DOCUMENT-STORY12' not in private_body
  script="""import { chromium } from './node_modules/playwright/index.mjs';
+import { readFile, writeFile } from 'node:fs/promises';
 const browser=await chromium.launch();
 try {
  const page=await browser.newPage();
- page.on('pageerror',e=>console.log('Dev-nettleserfeil:',e.message));
- const websocket=page.waitForEvent('websocket',{timeout:10000});
- websocket.catch(()=>{});
+ page.setDefaultTimeout(10000);
+ const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ const connected=new Promise(resolve=>page.on('websocket',ws=>ws.on('framereceived',({payload})=>{
+  if(JSON.parse(String(payload)).type==='connected') resolve(ws.url());
+ })));
  await page.goto('http://127.0.0.1:3000');
  await page.getByRole('heading',{name:'Ingen tall registrert'}).waitFor();
- const ws=await websocket;
- if(!ws.url().startsWith('ws://127.0.0.1:3000/')) throw Error('HMR har feil origin');
- console.log('Dev-nettleser: synlig skall, system-CSS og HMR på',ws.url().split('?')[0]);
+ let connectionDeadline;
+ const ws=await Promise.race([connected,new Promise((_,reject)=>{
+  connectionDeadline=setTimeout(()=>reject(Error('HMR koblet ikke til')),10000);
+ })]).finally(()=>clearTimeout(connectionDeadline));
+ if(new URL(ws).origin!=='ws://127.0.0.1:3000') throw Error('HMR har feil origin');
+ const source='src/frontend/App.tsx';
+ const original=await readFile(source,'utf8');
+ try {
+  await writeFile(source,original.replace('Ingen tall registrert','Kontrollert HMR-oppdatering'));
+  await page.getByRole('heading',{name:'Kontrollert HMR-oppdatering'}).waitFor();
+ } finally { await writeFile(source,original); }
+ await page.getByRole('heading',{name:'Ingen tall registrert'}).waitFor();
+ if(errors.length) throw Error('Dev-nettleserfeil: '+JSON.stringify(errors));
+ console.log('Dev-nettleser: synlig skall, feilfri HMR-tilkobling og synlig oppdatering/retur på',ws.split('?')[0]);
 } finally { await browser.close(); }
 """
  run(['node','--input-type=module','-'],input=script)

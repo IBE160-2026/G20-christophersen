@@ -1,0 +1,765 @@
+Story 1.2 — kontrollutskrifter fra BMAD-review 2026-10-17
+Målcommit: 6296dfef0f93b69fd29180475732469a7acfd12d
+
+Innledende forsøk i ytre sandkasse avviste lokal lytting (EPERM) og nested sandbox-exec (exit 71). Lokal server/Chromium/offlinekontroll ble deretter kjørt med godkjent unntak. En eldre demo fra denne checkouten på port 3000 ble midlertidig stoppet og senere gjenopprettet. Ingen av disse miljøforholdene er tolket som produktfeil.
+
+
+===== Eksisterende E2E før retting =====
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 88ms
+[WebServer] (node:1919) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 4 workers
+
+(node:1922) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1921) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:1920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 tests/e2e/app-shell.spec.ts:57:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (93ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"focus":6.097195425903059,"border":3.8101786636538826}
+  ✓  1 tests/e2e/app-shell.spec.ts:34:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (587ms)
+  ✓  4 tests/e2e/app-shell.spec.ts:96:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (595ms)
+  ✓  3 tests/e2e/app-shell.spec.ts:5:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (990ms)
+  ✓  5 tests/e2e/app-shell.spec.ts:154:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (1.0s)
+  ✓  6 tests/e2e/app-shell.spec.ts:154:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (529ms)
+  ✓  7 tests/e2e/app-shell.spec.ts:154:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (678ms)
+  ✓  8 tests/e2e/app-shell.spec.ts:154:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (425ms)
+
+  8 passed (2.5s)
+
+
+===== Ren kontroll før retting =====
+Ren prosjektmappe: /tmp/ibe160-story-1-2-(2026)-clbex5nb
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 825ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-(2026)-clbex5nb
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-D9QNlyoF.css    4.41 kB │ gzip:  1.47 kB
+dist/assets/index-yI9XEos6.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 351ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND  PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    2442 madschristophersen   14u  IPv4 0xb5ba12fa7bd30543      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+DEV HTTP /@vite/client 200
+DEV miljøressurs: 200 fiktiv markør eksponert: False
+DEV privat kontrollfil: 403
+$ node --input-type=module -
+Dev-nettleser: synlig skall, system-CSS og HMR på ws://127.0.0.1:3000/
+Exit: 0
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node src/backend/server.ts --dev
+
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+The request id "/private/tmp/ibe160-story-1-2-(2026)-clbex5nb/private/report.pdf" is outside of Vite serving allow list.
+
+- /private/tmp/ibe160-story-1-2-(2026)-clbex5nb
+
+Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+
+
+Prosessgruppe stoppet. Forelder-exit: 0
+package.json SHA-256 identisk: 465cb1c06c6083b88cad998a220f2576fabc557319e50a484a4ad5fc5c519063
+package-lock.json SHA-256 identisk: 2ce16ccc5b52024ff29e9bb79f32fb4aeb39ca5aca52b7fc8fb78b62bcf50438
+Ren installasjon, manglende build, offline build/demo, HTTP-grense, opptatt port og dev/HMR: BESTÅTT.
+
+
+===== Etter første zoomretting: én kort visning feilet =====
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-DfBz7-hX.css    4.57 kB │ gzip:  1.49 kB
+dist/assets/index-oGEuCeKw.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 88ms
+[WebServer] (node:2972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 4 workers
+
+(node:2976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2973) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2974) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2975) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 tests/e2e/app-shell.spec.ts:66:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (104ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   3 tests/e2e/app-shell.spec.ts:118:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (575ms)
+  ✓   4 tests/e2e/app-shell.spec.ts:43:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (580ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (950ms)
+  ✓   1 tests/e2e/app-shell.spec.ts:6:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (1.0s)
+  ✓   6 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (549ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (698ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (592ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (614ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (641ms)
+  ✘  11 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (504ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (487ms)
+
+
+  1) tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 117.390625
+    Received:    116.390625
+
+      234 |       const title = await heading.boundingBox()
+      235 |       const work = await workspace.boundingBox()
+    > 236 |       expect(title!.y - 5).toBeGreaterThanOrEqual(before!.y + before!.height)
+          |                            ^
+      237 |       expect(title!.y + title!.height + 5).toBeLessThanOrEqual(work!.y + work!.height)
+      238 |     }
+      239 |     const screenshot = testInfo.outputPath('appskall.png')
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/app-shell.spec.ts:236:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-tastatur-omb-751fb-s-uten-overlapp-ved-360×160/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/app-shell-AC4-tastatur-omb-751fb-s-uten-overlapp-ved-360×160/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-tastatur-omb-751fb-s-uten-overlapp-ved-360×160/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/app-shell-AC4-tastatur-omb-751fb-s-uten-overlapp-ved-360×160/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 
+  11 passed (3.2s)
+
+
+===== Andre zoomretting: demo bestod; dev-konfigurasjonen startet to servere =====
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-Ck2BeCRy.css    4.54 kB │ gzip:  1.49 kB
+dist/assets/index-B8_A-g66.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 86ms
+[WebServer] (node:3277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 4 workers
+
+(node:3279) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3278) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3281) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 tests/e2e/app-shell.spec.ts:66:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (102ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   1 tests/e2e/app-shell.spec.ts:118:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (527ms)
+  ✓   2 tests/e2e/app-shell.spec.ts:43:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (525ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (847ms)
+  ✓   4 tests/e2e/app-shell.spec.ts:6:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (924ms)
+  ✓   6 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (493ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (708ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (613ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (546ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (503ms)
+  ✓  11 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (479ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (413ms)
+
+  12 passed (3.0s)
+[WebServer] (node:3332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+Error: http://127.0.0.1:3000 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.
+
+
+
+===== Rettet dev-konfigurasjon: 12 + 2 bestod =====
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-Ck2BeCRy.css    4.54 kB │ gzip:  1.49 kB
+dist/assets/index-B8_A-g66.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 87ms
+[WebServer] (node:3632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 4 workers
+
+(node:3633) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3635) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3634) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 tests/e2e/app-shell.spec.ts:66:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (94ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   1 tests/e2e/app-shell.spec.ts:118:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (549ms)
+  ✓   2 tests/e2e/app-shell.spec.ts:43:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (551ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (904ms)
+  ✓   4 tests/e2e/app-shell.spec.ts:6:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (1.0s)
+  ✓   6 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (515ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (717ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (668ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (719ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (757ms)
+  ✓  11 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (636ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (446ms)
+
+  12 passed (4.8s)
+[WebServer] (node:3769) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:3770) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3771) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/private/story-1-2-dev-Og2RnM/private.txt" is outside of Vite serving allow list.
+[WebServer] 
+[WebServer] - /Users/madschristophersen/IBE160/G20-christophersen
+[WebServer] 
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+[WebServer] 
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+  ✓  1 tests/e2e/dev-shell.spec.ts:21:1 › AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler (46ms)
+  ✓  2 tests/e2e/dev-shell.spec.ts:5:1 › AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil (263ms)
+
+  2 passed (1.1s)
+
+
+===== Ren kontroll: portproben oppdaget TIME_WAIT som opptatt port =====
+Ren prosjektmappe: /tmp/ibe160-story-1-2-(2026)-gje4dgtv
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 854ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-(2026)-gje4dgtv
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-Ck2BeCRy.css    4.54 kB │ gzip:  1.49 kB
+dist/assets/index-B8_A-g66.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 330ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+Traceback (most recent call last):
+  File "/Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-1-2-lokal-kontroll.py", line 35, in serve
+    try: probe.bind(('127.0.0.1',3000))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 48] Address already in use
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-1-2-lokal-kontroll.py", line 76, in <module>
+    p,html=serve(['sandbox-exec','-p',profile,'npm','run','demo'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-1-2-lokal-kontroll.py", line 36, in serve
+    except OSError as error: raise RuntimeError('Port 3000 må være ledig før lokal kontroll starter') from error
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Port 3000 må være ledig før lokal kontroll starter
+
+
+===== Ren kontroll etter rettet portprobe, inklusive synlig HMR-oppdatering =====
+Ren prosjektmappe: /tmp/ibe160-story-1-2-(2026)-5opgkvzx
+Dedikert installasjonscache (gjenbrukes ved nytt forsøk): /tmp/ibe160-story-1-2-clean-cache
+Node-PATH: /tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin
+Sandboxprofil for build/demo: (version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))
+$ node --version
+v24.21.0
+Exit: 0
+$ npm --version
+11.19.0
+Exit: 0
+$ npm ci
+
+added 105 packages, and audited 106 packages in 844ms
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Exit: 0
+$ npm ls --depth=0
+property-acquisition-agent@0.0.0 /private/tmp/ibe160-story-1-2-(2026)-5opgkvzx
+├── @playwright/test@1.64.0
+├── @types/express@5.0.6
+├── @types/node@24.19.2
+├── @types/react-dom@19.3.0
+├── @types/react@19.3.0
+├── @vitejs/plugin-react@6.1.2
+├── express@5.3.0
+├── oxlint@1.87.0
+├── react-dom@19.3.0
+├── react@19.3.0
+├── typescript@6.0.2
+└── vite@8.3.4
+
+Exit: 0
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts
+
+Exit: 0
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Bygget app mangler. Kjør npm run build før npm run demo.
+Exit: 1
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' node --input-type=module -e 'import net from '"'"'node:net'"'"'; const socket=net.connect({host:'"'"'1.1.1.1'"'"',port:443}); socket.on('"'"'connect'"'"',()=>{console.log('"'"'Uventet ekstern tilgang'"'"');process.exit(1)}); socket.on('"'"'error'"'"',e=>{console.log('"'"'Eksternt TCP-forsøk:'"'"',e.code);process.exit(e.code==='"'"'EPERM'"'"'?0:1)}); setTimeout(()=>process.exit(2),3000);'
+Eksternt TCP-forsøk: EPERM
+Exit: 0
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-Ck2BeCRy.css    4.54 kB │ gzip:  1.49 kB
+dist/assets/index-B8_A-g66.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 347ms
+Exit: 0
+Fiktiv miljømarkør finnes ikke i byggeutdata.
+$ sandbox-exec -p '(version 1) (allow default) (deny network-outbound) (allow network-outbound (remote ip "localhost:*"))' npm run demo
+$ lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND  PID               USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    4310 madschristophersen   14u  IPv4 0x66773a46fc0ae854      0t0  TCP 127.0.0.1:3000 (LISTEN)
+Exit: 0
+HTTP /private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /../private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /%2e%2e/private/report.pdf 404 'Fant ikke ressursen.'
+HTTP /package.json 404 'Fant ikke ressursen.'
+HTTP /.git/HEAD 404 'Fant ikke ressursen.'
+HTTP /.env 404 'Fant ikke ressursen.'
+HTTP /src/backend/server.ts 404 'Fant ikke ressursen.'
+HTTP /api/analysis 404 'API-ruten er ikke tilgjengelig.'
+HTTP /assets/missing.js 404 'Fant ikke ressursen.'
+$ npm run demo
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Appen kunne ikke starte på http://127.0.0.1:3000. Port 3000 er opptatt. Stopp den andre serveren og prøv igjen.
+Exit: 1
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 demo
+> node src/backend/server.ts
+
+Property Acquisition Agent · Demo · http://127.0.0.1:3000
+
+Prosessgruppe stoppet. Forelder-exit: -15
+$ npm run dev
+DEV HTTP /src/frontend/main.tsx 200
+DEV HTTP /src/frontend/styles.css 200
+DEV HTTP /@vite/client 200
+DEV miljøressurs: 200 fiktiv markør eksponert: False
+DEV privat kontrollfil: 403
+$ node --input-type=module -
+Dev-nettleser: synlig skall, feilfri HMR-tilkobling og synlig oppdatering/retur på ws://127.0.0.1:3000/
+Exit: 0
+Serverutskrift:
+
+> property-acquisition-agent@0.0.0 dev
+> node src/backend/server.ts --dev
+
+Property Acquisition Agent · Utvikling · http://127.0.0.1:3000
+The request id "/private/tmp/ibe160-story-1-2-(2026)-5opgkvzx/private/report.pdf" is outside of Vite serving allow list.
+
+- /private/tmp/ibe160-story-1-2-(2026)-5opgkvzx
+
+Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+
+3:44:48 PM [vite] (client) hmr update /src/frontend/App.tsx
+3:44:48 PM [vite] (client) hmr update /src/frontend/App.tsx
+
+Prosessgruppe stoppet. Forelder-exit: 0
+package.json SHA-256 identisk: 51f4bb7ad1753f73a1ec6c636bfd2316fd49ac371cfaecd678409ebe41478da4
+package-lock.json SHA-256 identisk: 2ce16ccc5b52024ff29e9bb79f32fb4aeb39ca5aca52b7fc8fb78b62bcf50438
+Ren installasjon, manglende build, offline build/demo, HTTP-grense, opptatt port og dev/HMR: BESTÅTT.
+
+
+===== Oppstartstimeout i standard sandkasse: prosess startet ikke =====
+Forventet oppstartsfeil: Port 3000 må være ledig før lokal kontroll starter
+Traceback (most recent call last):
+  File "/Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-1-2-oppryddingskontroll.py", line 21, in <module>
+    assert len(processes)==1
+AssertionError
+
+
+===== Faktisk oppstartstimeout/opprydding utenfor ytre sandkasse =====
+$ python3 -c 'import time; time.sleep(30)'
+Ryddet prosessgruppe etter oppstartsfeil:
+
+Forventet oppstartsfeil: Lokal server startet ikke
+Faktisk startet kontrollprosess 4447 er stoppet, exit: -15
+Opprydding ved oppstartstimeout: BESTÅTT
+
+
+===== Portprobe avviser aktiv server uten ny prosess =====
+Forventet avvisning uten prosessoppstart: Port 3000 må være ledig før lokal kontroll starter
+Portproben avviser en faktisk aktiv lytter: BESTÅTT
+
+
+===== Typekontroll =====
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+
+
+===== Lint =====
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts
+
+
+
+===== Siste komplette E2E, separate bevarte outputmapper =====
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.34 kB
+dist/assets/index-Ck2BeCRy.css    4.54 kB │ gzip:  1.49 kB
+dist/assets/index-B8_A-g66.js   222.09 kB │ gzip: 69.37 kB
+
+✓ built in 91ms
+[WebServer] (node:4729) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 4 workers
+
+(node:4732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4730) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4733) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4731) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 tests/e2e/app-shell.spec.ts:66:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (98ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   1 tests/e2e/app-shell.spec.ts:43:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (549ms)
+  ✓   3 tests/e2e/app-shell.spec.ts:118:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (563ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (868ms)
+  ✓   2 tests/e2e/app-shell.spec.ts:6:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (1.0s)
+  ✓   6 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (481ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (595ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (595ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (643ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (687ms)
+  ✓  11 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (562ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:176:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (489ms)
+
+  12 passed (3.3s)
+[WebServer] (node:4785) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:4791) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4790) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/private/story-1-2-dev-noWBy5/private.txt" is outside of Vite serving allow list.
+[WebServer] 
+[WebServer] - /Users/madschristophersen/IBE160/G20-christophersen
+[WebServer] 
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+[WebServer] 
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+  ✓  1 tests/e2e/dev-shell.spec.ts:21:1 › AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler (49ms)
+  ✓  2 tests/e2e/dev-shell.spec.ts:5:1 › AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil (264ms)
+
+  2 passed (1.1s)

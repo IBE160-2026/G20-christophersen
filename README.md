@@ -73,10 +73,13 @@ npm run lint
 npm run test:e2e
 ```
 
-E2E bygger gjeldende kilde og starter/stopper selv appen på port 3000, som må være ledig.
+E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
+port 3000, som må være ledig. Tolv demotester og to dev-tester kjøres.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
-tastatur/fokus/ombryting ved desktop og viewport tilsvarende sterk zoom.
+tastatur/fokus/ombryting ved desktop og viewport tilsvarende sterk zoom,
+inkludert 320×200 og korte 320×160/360×160-flater. Dev-kontrollene krever
+synlig skall, tilkoblet HMR på samme origin og avvisning av faktiske private filer.
 Chromium-binæren må være installert før offline kjøring. Feilspor/skjermbilder
 legges under Git-ignorerte `test-results/`.
 
@@ -100,7 +103,7 @@ og nødvendige avhengigheter er eksakt låst etter arkitekturen.
 | `src/domain/` | Rene regler og beregninger. Bruker contracts. Ingen UI, server eller I/O. |
 | `src/contracts/` | Felles runtime-skjema og avledede typer. Ingen UI, server eller I/O. |
 | `src/backend/` | Lokal HTTP-server; senere dokumenter, analyseadaptere og contracts. Finans/anbefaling forblir i domain. |
-| `tests/e2e/` | Playwright-kontroll mot den bygde lokale appen. |
+| `tests/e2e/` | Playwright-kontroll mot bygget demo og lokalt dev-skall. |
 | `.docs/` | Autoritative planer, implementeringsbevis og prosesspor. |
 
 Importgrensene gjennomgås ved endringer, inklusive reeksporter, dynamiske
@@ -123,6 +126,7 @@ under `tests/fixtures/property-cases/`.
 - [Faktisk verifikasjon av Story 1.1](.docs/implementation-artifacts/story-1-1-verifikasjon.md)
 - [Story 1.2 og implementeringsnotater](.docs/implementation-artifacts/spec-1-2-starte-den-bygde-lokale-appen-med-godkjent-appskall.md)
 - [Arbeidsøkt for Story 1.2](.docs/process/arbeidsokter/2026-10-16-story-1-2.md)
+- [Uavhengig review av Story 1.2](.docs/implementation-artifacts/story-1-2-review.md)
 - [Lagrede brukerprompter](.docs/process/prompts/README.md)
 
 ## Medlemmer

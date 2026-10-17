@@ -1,4 +1,4 @@
-import ast, os, signal, subprocess, tempfile, time, urllib.error
+import ast, os, signal, subprocess, tempfile, time, urllib.error, socket
 from pathlib import Path
 source=Path('.docs/implementation-artifacts/story-1-2-lokal-kontroll.py').read_text()
 module=ast.parse(source)
@@ -11,7 +11,7 @@ def record_process(*args,**kwargs):
  return p
 subprocess.Popen=record_process
 def refuse(_path): raise ConnectionRefusedError('Kontroll: ingen server lytter')
-namespace={'urllib':__import__('urllib'),'subprocess':subprocess,'os':os,'signal':signal,'time':time,'shlex':__import__('shlex'),'env':os.environ.copy(),'clean':Path(tempfile.mkdtemp(prefix='ibe160-story12-cleanup-',dir='/tmp')),'fetch':refuse}
+namespace={'urllib':__import__('urllib'),'subprocess':subprocess,'os':os,'signal':signal,'time':time,'socket':socket,'shlex':__import__('shlex'),'env':os.environ.copy(),'clean':Path(tempfile.mkdtemp(prefix='ibe160-story12-cleanup-',dir='/tmp')),'fetch':refuse}
 exec(compile(ast.Module(body=[serve_node],type_ignores=[]),'<serve-kontroll>','exec'),namespace)
 try:
  namespace['serve'](['python3','-c','import time; time.sleep(30)'])

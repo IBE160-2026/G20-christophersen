@@ -1,15 +1,24 @@
 import { expect, test } from '@playwright/test'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { relative, resolve } from 'node:path'
+import { get } from 'node:http'
 
 test('AC1/AC3: bygget skall starter med riktig status og sperret videregang', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/')
   await expect(page).toHaveTitle('Property Acquisition Agent')
+  await expect(page.getByRole('banner').getByText('Property Acquisition Agent', { exact: true })).toBeVisible()
   await expect(page.getByText('Demo · lagret KI-uttrekk', { exact: true })).toBeVisible()
   const navigation = page.getByRole('navigation', { name: 'Vurderingens fire trinn' })
   await expect(navigation.getByRole('listitem')).toHaveCount(4)
+  const steps = navigation.getByRole('listitem')
+  for (const [index, name] of ['Tallgrunnlag', 'Tilstandsrapport', 'Kontroller funn', 'Resultat'].entries()) {
+    await expect(steps.nth(index).locator('.step-number')).toHaveText(String(index + 1))
+    await expect(steps.nth(index).locator('.step-name')).toHaveText(name)
+    await expect(steps.nth(index).locator('.step-status')).toHaveText(index === 0
+      ? 'Trinn 1 · Gjeldende' : `Trinn ${index + 1} · Gjenstår · Utilgjengelig`)
+  }
   await expect(navigation.getByRole('link')).toHaveAttribute('aria-current', 'step')
   await expect(navigation.getByRole('link')).toContainText('Trinn 1 · Gjeldende')
   for (const name of ['Tilstandsrapport', 'Kontroller funn', 'Resultat']) {
@@ -91,6 +100,19 @@ test('AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente A
     expect(await response.text()).toBe(path.startsWith('/api')
       ? 'API-ruten er ikke tilgjengelig.' : 'Fant ikke ressursen.')
   }
+  // node:http beholder request-target; nettleser/APIRequestContext normaliserer /%2e%2e/.
+  for (const path of ['/../package.json', '/%2e%2e/package.json', '/assets/%2e%2e/%2e%2e/.env']) {
+    const response = await new Promise<{ status: number | undefined, body: string }>((resolve, reject) => {
+      get({ hostname: '127.0.0.1', port: 3000, path }, (response) => {
+        let body = ''
+        response.setEncoding('utf8')
+        response.on('data', (chunk: string) => { body += chunk })
+        response.on('end', () => resolve({ status: response.statusCode, body }))
+        response.on('error', reject)
+      }).on('error', reject)
+    })
+    expect(response, path).toEqual({ status: 404, body: 'Fant ikke ressursen.' })
+  }
 })
 
 test('AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN', async ({ page }) => {
@@ -118,7 +140,6 @@ test('AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN', asyn
       secondary: ratio(css('.meta').color, header.backgroundColor),
       status: ratio(status.color, status.backgroundColor),
       current: ratio(current.color, current.backgroundColor),
-      focus: ratio(current.backgroundColor, root.backgroundColor),
       border: ratio(css('.step:not(.step-current) .step-number').borderColor, header.backgroundColor),
     }
     return {
@@ -142,14 +163,15 @@ test('AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN', asyn
   for (const role of ['primary', 'secondary', 'status', 'current'] as const) {
     expect(style.contrast[role], role).toBeGreaterThanOrEqual(4.5)
   }
-  expect(style.contrast.focus).toBeGreaterThanOrEqual(3)
   expect(style.contrast.border).toBeGreaterThanOrEqual(3)
   console.log('Målt kontrast i bygget app:', JSON.stringify(style.contrast))
 })
 
 for (const viewport of [
   { width: 1440, height: 900 }, { width: 1280, height: 800 },
-  { width: 720, height: 450 }, { width: 360, height: 225 },
+  { width: 720, height: 450 }, { width: 640, height: 400 },
+  { width: 360, height: 225 }, { width: 320, height: 200 },
+  { width: 360, height: 160 }, { width: 320, height: 160 },
 ]) {
   test(`AC4: tastatur, ombryting og fokus uten overlapp ved ${viewport.width}×${viewport.height}`, async ({ page }, testInfo) => {
     await page.setViewportSize(viewport)
@@ -173,12 +195,25 @@ for (const viewport of [
         const box = element.getBoundingClientRect()
         const parent = element.closest('nav')?.getBoundingClientRect()
         const extent = Math.max(0, parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset))
+        const luminance = (color: string) => {
+          const channels = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map((channel) => {
+            const value = channel / 255
+            return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+          })
+          return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722
+        }
+        const surface = element.closest('nav') ?? (element.matches('.skip-link')
+          ? document.querySelector('.app-header')! : document.documentElement)
+        const values = [luminance(style.outlineColor), luminance(getComputedStyle(surface).backgroundColor)].sort((a, b) => b - a)
         return { outline: style.outlineStyle, width: style.outlineWidth, top: box.top - extent,
           bottom: box.bottom + extent, left: box.left - extent, right: box.right + extent,
+          color: style.outlineColor, contrast: (values[0] + 0.05) / (values[1] + 0.05),
           parentTop: parent?.top, parentBottom: parent?.bottom }
       })
       expect(focus.outline).toBe('solid')
       expect(focus.width).toBe('2px')
+      expect(focus.color).toBe('rgb(34, 102, 95)')
+      expect(focus.contrast).toBeGreaterThanOrEqual(3)
       expect(focus.top).toBeGreaterThanOrEqual(0)
       expect(focus.bottom).toBeLessThanOrEqual(viewport.height)
       expect(focus.left).toBeGreaterThanOrEqual(0)

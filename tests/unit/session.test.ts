@@ -30,14 +30,29 @@ describe('Story 1.3 — råregistrering og aktiv økt', () => {
       ['D', '400000', 'year', '2025'],
       ['J', '0', 'unknown', ' 2026 '],
     ] as const) {
-      state = sessionReducer(state, { type: 'register-value', field, rawValue })
-      state = sessionReducer(state, { type: 'register-period', field, period })
-      state = sessionReducer(state, { type: 'register-year', field, year })
+      state = sessionReducer(freezeSession(state), { type: 'register-value', field, rawValue })
+      const beforePeriod = freezeSession(state)
+      state = sessionReducer(beforePeriod, { type: 'register-period', field, period })
+      expect(beforePeriod.financial[field].period).toBe('')
+      const beforeYear = freezeSession(state)
+      state = sessionReducer(beforeYear, { type: 'register-year', field, year })
+      expect(beforeYear.financial[field].year).toBe('')
       expect(state.financial[field]).toEqual({ rawValue, period, year, confirmed: false })
     }
     state = sessionReducer(state, { type: 'register-period', field: 'L', period: '' })
     state = sessionReducer(state, { type: 'register-year', field: 'L', year: '' })
     expect(state.financial.L).toEqual({ rawValue: '120000', period: '', year: '', confirmed: false })
+  })
+
+  it('AC1–AC3: råkontrakten avviser bekreftelse, talltyper og manglende/ukjent struktur', () => {
+    const financial = createInitialSession().financial
+    for (const invalid of [
+      { ...financial, P: { rawValue: '', confirmed: true } },
+      { ...financial, P: { rawValue: 0, confirmed: false } },
+      { ...financial, L: { rawValue: '', confirmed: false, period: '' } },
+      { ...financial, D: { ...financial.D, period: 'week' } },
+      { ...financial, J: { ...financial.J, source: 'ekstra felt' } },
+    ]) expect(RawFinancialInputSchema.safeParse(invalid).success).toBe(false)
   })
 
   it.each<FinancialField>(['P', 'L', 'D', 'J', 'Ymin'])('AC3: %s bevarer råstreng og skiller registrert 0 fra sletting uten bekreftelse', (field) => {

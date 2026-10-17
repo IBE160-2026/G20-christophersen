@@ -201,6 +201,7 @@ h1 {
   border-top: 1px solid var(--border-decorative);
 }
 .financial-row label { display: block; font-weight: 600; line-height: 1.4; }
+.registered-value > label { margin-bottom: var(--space-2); }
 .field-definition p, .field-status { margin-top: var(--space-2); }
 .financial-row input, .financial-row select {
   width: 100%;
@@ -210,6 +211,7 @@ h1 {
   border: 1px solid var(--border-control);
   border-radius: var(--radius-md);
   background: var(--surface-main);
+  scroll-margin-block: 40px var(--space-2);
 }
 .value-control { display: flex; gap: var(--space-2); align-items: center; }
 .value-control input { flex: 1; width: 0; font-variant-numeric: tabular-nums; }
@@ -264,4 +266,8 @@ h1 {
     padding-block: var(--space-1);
     row-gap: 0;
   }
+}
+
+@media (max-height: 200px) {
+  .financial-row input, .financial-row select { scroll-margin-block: var(--space-2); }
 }

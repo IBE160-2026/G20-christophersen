@@ -27,6 +27,7 @@ test('1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjenge
   await page.goto('/')
   for (const [field, value] of Object.entries({ P: '16000000', L: '1900000', D: '400000', J: '800000', Ymin: '7' })) {
     await page.locator(`#value-${field}`).fill(value)
+    await expect(page.locator(`#status-${field}`)).toHaveText('Registrert · Ubekreftet')
   }
   for (const field of ['L', 'D', 'J']) {
     await page.getByLabel(`Periode for ${field}`, { exact: true }).selectOption('year')
@@ -62,9 +63,13 @@ test('1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjenge
   await page.locator('#value-P').fill('16000000')
   await page.reload()
   for (const field of fields) await expect(page.locator(`#value-${field}`)).toHaveValue('')
+  for (const field of ['L', 'D', 'J']) {
+    await expect(page.getByLabel(`Periode for ${field}`, { exact: true })).toHaveValue('')
+    await expect(page.getByLabel(`År for ${field}`, { exact: true })).toHaveValue('')
+  }
 })
 
-for (const viewport of [{ width: 1440, height: 900 }, { width: 720, height: 450 }, { width: 360, height: 225 }]) {
+for (const viewport of [{ width: 1440, height: 900 }, { width: 720, height: 450 }, { width: 360, height: 225 }, { width: 360, height: 160 }, { width: 320, height: 160 }]) {
   test(`1.3 UX: feltrekkefølge, fokus og ombryting ved ${viewport.width}×${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport)
     await page.goto('/')
@@ -80,9 +85,20 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 720, height: 450 
       const box = await control.boundingBox()
       expect(box!.x - 5).toBeGreaterThanOrEqual(0)
       expect(box!.x + box!.width + 5).toBeLessThanOrEqual(viewport.width)
-      expect(box!.y - 5).toBeGreaterThanOrEqual(navBox!.y + navBox!.height)
-      expect(box!.y + box!.height + 5).toBeLessThanOrEqual(viewport.height)
-      expect(await control.evaluate((element) => getComputedStyle(element).outlineColor)).toBe('rgb(34, 102, 95)')
+      // Chromium avrunder rulleposisjoner til delpiksler ved svært korte flater.
+      expect(box!.y - 5).toBeGreaterThanOrEqual(navBox!.y + navBox!.height - 0.5)
+      expect(box!.y + box!.height + 5).toBeLessThanOrEqual(viewport.height + 0.5)
+      const focus = await control.evaluate((element) => {
+        const style = getComputedStyle(element)
+        return { visible: element.matches(':focus-visible'), color: style.outlineColor,
+          style: style.outlineStyle, width: style.outlineWidth, offset: style.outlineOffset }
+      })
+      expect(focus).toEqual({ visible: true, color: 'rgb(34, 102, 95)', style: 'solid', width: '2px', offset: '3px' })
+      if (viewport.height >= 225) {
+        const label = await page.locator(`label[for="${ids.at(-1)}"]`).boundingBox()
+        expect(label!.y).toBeGreaterThanOrEqual(navBox!.y + navBox!.height)
+        expect(label!.y + label!.height).toBeLessThanOrEqual(viewport.height)
+      }
       await page.keyboard.press('Tab')
     }
     expect(ids).toEqual(['value-P', 'value-L', 'period-L', 'year-L', 'value-D', 'period-D', 'year-D', 'value-J', 'period-J', 'year-J', 'value-Ymin'])

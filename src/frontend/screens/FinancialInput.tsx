@@ -27,10 +27,10 @@ export function FinancialInput({ financial, dispatch }: {
         return (
           <div className="financial-row" key={id} role="group" aria-labelledby={`label-${id}`}>
             <div className="field-definition">
-              <label id={`label-${id}`} htmlFor={`value-${id}`}>{label} ({id})</label>
               <p className="meta" id={`hint-${id}`}>{description}</p>
             </div>
             <div className="registered-value">
+              <label id={`label-${id}`} htmlFor={`value-${id}`}>{label} ({id})</label>
               <div className="value-control">
                 <input
                   id={`value-${id}`}
@@ -79,7 +79,7 @@ export function FinancialInput({ financial, dispatch }: {
                   />
                 </div>
               </div>
-            ) : <p className="meta unchanged-period">{id === 'P' ? 'Totalpris' : 'Prosentkrav'} · ingen årsnormalisering</p>}
+            ) : <p className="meta unchanged-period">{id === 'P' ? 'Totalpris for objektet' : 'Minimumskrav i prosent'}</p>}
           </div>
         )
       })}

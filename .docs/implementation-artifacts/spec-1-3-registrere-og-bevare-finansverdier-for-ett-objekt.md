@@ -2,7 +2,7 @@
 title: 'Story 1.3 — Registrere og bevare finansverdier for ett objekt'
 type: 'feature'
 created: '2026-10-17'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '1-3-registrere-og-bevare-finansverdier-for-ett-objekt'
 baseline_commit: '0a8e21dfb10bd8a41609728446d5b86156bde154'
@@ -33,3 +33,22 @@ Normalisering og numerisk validering tilhører 1.4; kilder/kostnader/konfliktkon
 - Verifikasjonsplan: nødvendige låste Zod 4.6.7/Vitest 5.0.4 innføres ved første faktiske bruk. Rene Vitest-kontroller av blank/0/sletting, F1/F3, eksakte råstrenger og navigasjon uten mutasjon; Playwright mot bygget skjema for alle fire AC, etiketter, feltfokus og smal ombryting. Eksisterende 1.2-demotester/HTTP-/dev-/HMR-/zoomregresjon bevares med nye forventninger til registreringsflaten. Kjør typecheck, lint, build og E2E; se faktisk UI ved desktop/zoom og dokumenter bevis i egne filer.
 
 - Implementert og egenverifisert 2026-10-17: fem rå felt, eksplisitt periode/år, én reducer og delt råschema. Zod/Vitest følger eksakte pins. 8 Vitest, 17 bygget demo-E2E og 2 dev-tester består; typecheck/lint/build består. Native 100/200/400 % og faktiske Chromium-bilder er kontrollert. Miljøavvisninger og native avgrensninger er dokumentert i [verifikasjonen](story-1-3-verifikasjon.md). Ingen ny beslutning eller 1.4-logikk. Status er in-review/review i påvente av separat BMAD code review; denne fasen har ingen commit.
+
+### Review Findings
+
+Uavhengig BMAD code review 2026-10-17 er bestått etter rettinger. Status **done**; Epic 1 er in-progress, 1.4 er backlog og startes ikke i denne mini-sprinten etter brukerens stoppstyring. [Full per-funn-dom, handling, AC-bevis og testresultater](story-1-3-review.md) og [rå kontroller](story-1-3-review-kontroller.txt).
+
+- [x] [Review][Patch] B1: feltnær etikett/fokusmargin ved zoom.
+- [x] [Review][Patch] B3: feltfokus på korte 320/360×160-flater, med tilpasset margin.
+- [x] [Review][Patch] B4: faktisk fokusstil/-bredde/-avstand/-synlighet.
+- [x] [Review][Patch] B5: periode/år nullstilles ved reload.
+- [x] [Review][Patch] B6: råschema avviser ugyldig struktur/bekreftelse.
+- [x] [Review][Patch] B7: immutable periode-/årsoverganger verifisert.
+- [x] [Review][Patch] B9: konkret produktspråk for totalpris/prosentkrav.
+- [x] [Review][Patch] V1: vanlig Registrert · Ubekreftet-status verifisert.
+- [x] [Review][Patch] O1: PageDown-test venter på rulleslutt før syntetisk fokus.
+- [x] [Review][Defer] B8: isolert npm ci-bevis er miljøblokkert av SSL-feil; [avgrensning](deferred-work.md), ingen kodefeil påvist og ingen ny readiness-port.
+
+Rejected: B2 false — eksplisitt navngitte periode-/årskontroller gir allerede synlig og tilgjengelig tidskontekst; samlet ekstra beskrivelse ved hvert beløpsfokus er ikke et UX-/AC-krav.
+
+Sluttverifikasjon fra reviewer: 9 Vitest, 19 bygget E2E og 2 dev består; typecheck/lint/build består. Ren isolert installasjon er ikke påstått bestått. Ingen uavklarte high/medium-produktfunn, nye produkt-/arkitekturvalg eller senere funksjoner.

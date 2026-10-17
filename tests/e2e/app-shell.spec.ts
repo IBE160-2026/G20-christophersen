@@ -229,7 +229,12 @@ for (const viewport of [
       const workspace = page.getByRole('main')
       const before = await page.getByRole('navigation').boundingBox()
       await workspace.focus()
-      await page.keyboard.press('PageDown')
+      await Promise.all([
+        workspace.evaluate((element) => new Promise<void>((resolve) => {
+          element.addEventListener('scrollend', () => resolve(), { once: true })
+        })),
+        page.keyboard.press('PageDown'),
+      ])
       await expect.poll(() => workspace.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
       expect(await page.getByRole('navigation').boundingBox()).toEqual(before)
       await heading.focus()

@@ -1,4 +1,11 @@
+import { useReducer, useRef } from 'react'
+import { FinancialInput } from './screens/FinancialInput.tsx'
+import { createInitialSession, sessionReducer } from './state/session.ts'
+
 function App() {
+  const [session, dispatch] = useReducer(sessionReducer, undefined, createInitialSession)
+  const heading = useRef<HTMLHeadingElement>(null)
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#tallgrunnlag">Hopp til arbeidsinnhold</a>
@@ -11,7 +18,11 @@ function App() {
       <nav className="step-navigation" aria-label="Vurderingens fire trinn">
         <ol className="stepper">
           <li className="step step-current">
-            <a className="step-control" href="#tallgrunnlag" aria-current="step">
+            <a className="step-control" href="#tallgrunnlag" aria-current="step" onClick={(event) => {
+              event.preventDefault()
+              dispatch({ type: 'navigate', step: 'tallgrunnlag' })
+              heading.current?.focus()
+            }}>
               <span className="step-number" aria-hidden="true">1</span>
               <span>
                 <span className="step-name">Tallgrunnlag</span>
@@ -46,17 +57,13 @@ function App() {
       <main className="workspace" tabIndex={0} aria-labelledby="tallgrunnlag">
         <div className="screen-heading">
           <div>
-            <h1 id="tallgrunnlag" tabIndex={-1}>Tallgrunnlag</h1>
+            <h1 id="tallgrunnlag" tabIndex={-1} ref={heading}>Tallgrunnlag</h1>
             <p>Samle og kontroller tall, perioder og kilder for ett boligutleieobjekt.</p>
           </div>
           <span className="status-label">Ubekreftet tallgrunnlag</span>
         </div>
 
-        <section className="empty-state" aria-labelledby="empty-title">
-          <h2 id="empty-title">Ingen tall registrert</h2>
-          <p>Registrering og bekreftelse av tall er ennå ikke tilgjengelig.</p>
-          <p>Tilstandsrapport åpnes først når tallgrunnlaget er gyldig og bekreftet.</p>
-        </section>
+        <FinancialInput financial={session.financial} dispatch={dispatch} />
       </main>
     </div>
   )

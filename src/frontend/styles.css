@@ -46,7 +46,7 @@
 
 * { box-sizing: border-box; }
 body, h1, h2, p, ol { margin: 0; }
-button, a { font: inherit; color: inherit; }
+button, a, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 button[aria-disabled="true"] { cursor: not-allowed; }
 
@@ -181,14 +181,52 @@ h1 {
   background: var(--surface-subtle);
 }
 
-.empty-state {
-  max-width: 960px;
+.financial-input {
+  max-width: 1280px;
   padding: var(--space-5);
   border: 1px solid var(--border-decorative);
   border-radius: var(--radius-lg);
   background: var(--surface-main);
 }
-.empty-state p { margin-top: var(--space-2); }
+.registration-intro p, .registration-note p + p { margin-top: var(--space-2); }
+.registration-intro { margin-bottom: var(--space-5); }
+.registration-note { margin-top: var(--space-5); }
+
+.financial-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: var(--space-5);
+  align-items: start;
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--border-decorative);
+}
+.financial-row label { display: block; font-weight: 600; line-height: 1.4; }
+.field-definition p, .field-status { margin-top: var(--space-2); }
+.financial-row input, .financial-row select {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-height);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-md);
+  background: var(--surface-main);
+}
+.value-control { display: flex; gap: var(--space-2); align-items: center; }
+.value-control input { flex: 1; width: 0; font-variant-numeric: tabular-nums; }
+.field-unit { flex-shrink: 0; }
+.period-context { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-4); }
+.period-context label { margin-bottom: var(--space-2); }
+.unchanged-period { padding-top: var(--space-2); }
+
+@media (max-width: 1050px) {
+  .financial-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .field-definition { grid-column: 1 / -1; }
+}
+
+@media (max-width: 600px) {
+  .financial-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+  .financial-input { padding: var(--space-4); }
+}
 
 .skip-link {
   position: fixed;

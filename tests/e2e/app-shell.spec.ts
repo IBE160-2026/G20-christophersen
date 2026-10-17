@@ -33,10 +33,12 @@ test('AC1/AC3: bygget skall starter med riktig status og sperret videregang', as
     await step.press('Space')
     await expect(page.getByRole('heading', { name: 'Tallgrunnlag', exact: true })).toBeVisible()
   }
-  await expect(page.getByRole('heading', { name: 'Ingen tall registrert' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Registrer finansverdier' })).toBeVisible()
   await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()
   await expect(navigation.getByText('Fullført', { exact: true })).toHaveCount(0)
-  await expect(page.locator('input, select, textarea, form')).toHaveCount(0)
+  await expect(page.locator('input')).toHaveCount(8)
+  await expect(page.locator('select')).toHaveCount(3)
+  await expect(page.locator('textarea, form')).toHaveCount(0)
   expect(errors).toEqual([])
 })
 
@@ -51,7 +53,7 @@ test('AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes l
   const responses: number[] = []
   page.on('response', (response) => responses.push(response.status()))
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'Ingen tall registrert' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Registrer finansverdier' })).toBeVisible()
   expect(external).toEqual([])
   expect(responses.every((status) => status === 200)).toBe(true)
   // Kontrollprobe beviser at sperren faktisk avviser eksternt nett.
@@ -117,7 +119,7 @@ test('AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente A
 
 test('AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'Ingen tall registrert' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Registrer finansverdier' })).toBeVisible()
   const style = await page.evaluate(() => {
     const css = (selector: string) => getComputedStyle(document.querySelector(selector)!)
     const ratio = (foreground: string, background: string) => {
@@ -132,7 +134,7 @@ test('AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN', asyn
       return (values[0] + 0.05) / (values[1] + 0.05)
     }
     const main = css('.workspace'), header = css('.app-header'), body = css('body'), root = css(':root')
-    const title = css('h1'), empty = css('.empty-state'), status = css('.status-label')
+    const title = css('h1'), empty = css('.financial-input'), status = css('.status-label')
     const current = css('.step-current .step-number'), control = css('.step-control')
     const focus = root.getPropertyValue('--focus-ring').trim().toLowerCase()
     const contrast = {
@@ -176,7 +178,7 @@ for (const viewport of [
   test(`AC4: tastatur, ombryting og fokus uten overlapp ved ${viewport.width}×${viewport.height}`, async ({ page }, testInfo) => {
     await page.setViewportSize(viewport)
     await page.goto('/')
-    await expect(page.getByRole('heading', { name: 'Ingen tall registrert' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Registrer finansverdier' })).toBeVisible()
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.keyboard.press('Tab')
     await expect(page.getByRole('link', { name: 'Hopp til arbeidsinnhold' })).toBeFocused()

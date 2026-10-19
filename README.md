@@ -24,6 +24,11 @@ uavhengig reviewet med alle seks AC bestått. Rapportanalyse og full screening f
 senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
 konto kreves for registreringen.
 
+Story 2.1 er implementert og klar for separat review: felles dokument-/
+analyseschemas og rene validatorer skiller fullføring, feil og usikre
+kilder med kodekontrollert metadata. Kontrakttestene krever ingen PDF-parser
+eller betalt API. Rapportflyten i appen følger fortsatt senere stories.
+
 ## Installasjon og kontroll
 
 Bruk **Node.js 24.21.0 LTS og medfølgende npm 11.19.0**. `.nvmrc` angir
@@ -85,7 +90,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. 180 rene modultester, 41 demotester
+port 3000, som må være ledig. 270 rene modultester, 41 demotester
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
@@ -101,6 +106,9 @@ verdier, bekreftelsesgrunnlag, perioder/år, årsnormaliseringsdelen av
 BT-7/BT-15/BT-16, presise desimaler og gjentakelse uten mutasjon. De dekker også
 kilder, D/J-kostnadsdeling og alle kjente samtidige mangler med identisk
 kodebegrunnelse/neste handling, inkludert kjent rapportmangel ved F2-verdier.
+90 kontrakttester for Story 2.1 dekker versjoner, obligatoriske felt,
+fullført tomliste kontra feil, ufullstendige delresultater, RT-7s umulige/
+usikre kilder og forsøk på å erstatte kodekontrollert metadata.
 Chromium-binæren må være installert før offline kjøring. Feilspor/skjermbilder
 legges under Git-ignorerte `test-results/`.
 
@@ -130,6 +138,8 @@ kontrollerer alle fem AC og dokumenterer retting og egne sluttkontroller.
 dekker bekreftelse, feil, endring/retur, null, semantikk og faktisk zoomkontroll.
 [Review av Story 1.7](.docs/implementation-artifacts/story-1-7-review.md)
 kontrollerer alle seks AC, reviewrettinger og egne sluttkontroller.
+[Verifikasjonen for Story 2.1](.docs/implementation-artifacts/story-2-1-verifikasjon.md)
+dekker kontraktleveransens fire AC; uavhengig review gjenstår.
 Full demo, senere funksjonstester og annen-person-bevis for S6 følger sine stories.
 
 Grunnlaget er tilpasset den [offisielle Vite react-ts-starteren](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).
@@ -145,7 +155,7 @@ og nødvendige avhengigheter er eksakt låst etter arkitekturen.
 | `src/contracts/` | Felles runtime-skjema og avledede typer. Ingen UI, server eller I/O. |
 | `src/backend/` | Lokal HTTP-server; senere dokumenter, analyseadaptere og contracts. Finans/anbefaling forblir i domain. |
 | `tests/e2e/` | Playwright-kontroll mot bygget demo og lokalt dev-skall. |
-| `tests/unit/` | Rene Vitest-kontroller av registrering, navigasjon, tall-/årsvalidering, kilde-/kostnadsgrunnlag og kjente kritiske mangler. |
+| `tests/unit/` | Rene Vitest-kontroller av registrering, navigasjon, tall-/årsvalidering, kilde-/kostnadsgrunnlag, kjente kritiske mangler og dokument-/analysekontrakten. |
 | `.docs/` | Autoritative planer, implementeringsbevis og prosesspor. |
 
 Importgrensene gjennomgås ved endringer, inklusive reeksporter, dynamiske
@@ -153,7 +163,9 @@ importer og direkte I/O-bruk. Type- og lintkontroll erstatter ikke denne
 gjennomgangen mot AD-1. Contracts eier rå/registrert finansschema og
 valideringsresultat med avledede typer; `domain/validation.ts` eier numerisk
 gyldighet, bekreftelsesbehov og eksakt årsnormalisering. Ingen framtidig
-komplett rapportmodell, finansberegning eller økonomisk screeningregel er lagt inn.
+rapportflyt, finansberegning eller økonomisk screeningregel er lagt inn.
+Dokument-/analyseschemas og ren kilde-/metadatavalidering eies nå også av
+contracts; faktisk PDF-/adapter-/HTTP-/frontendkobling følger sine stories.
 `domain/financial-basis.ts` vurderer kilde-/kostnadsgrunnlaget, og
 `domain/screening.ts` samler kjente mangler til fast prioritet-1-utfall.
 Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,

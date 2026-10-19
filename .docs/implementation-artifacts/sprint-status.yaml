@@ -48,8 +48,8 @@ development_status:
   1-7-kontrollere-bekrefte-og-rette-gjeldende-tallgrunnlag: done
   epic-1-retrospective: optional
 
-  epic-2: backlog
-  2-1-dele-og-validere-dokument-analysekontrakten: backlog
+  epic-2: in-progress
+  2-1-dele-og-validere-dokument-analysekontrakten: review
   2-2-validere-pdf-format-sidegrense-og-originalidentitet: backlog
   2-3-trekke-ut-sidemerket-tekst-med-kontrollert-lesbarhet: backlog
   2-4-hente-lagret-demo-uttrekk-bundet-til-riktig-rapport-og-versj: backlog

@@ -18,3 +18,23 @@ egen forutsetning, forventet/faktisk oppgitt leie, uløst alternativ kildeverdi
 og manuelt oppgitt D-/J-innhold. Kontrollresultatet beholder hele grunnlaget
 og målrettede årsaker. Kostnadsbidrag beskriver mulig delinnhold i totalene;
 de er aldri et nytt tillegg eller et estimat.
+
+`document-analysis.ts` eier Story 2.1s versjonerte dokument-/analysekontrakt:
+kodekontekst, én tekst-/statuspost per PDF-posisjon, originale kandidater,
+kontrollerbare TG2/TG3, usikkerhet med konkrete mangler og completed/failed
+med egne dokument-/analysefeil og eksplisitt ufullstendige delresultater.
+Alle delte TypeScript-typer avledes fra disse skjemaene.
+
+`analysis-validation.ts` binder ukjent adapterinnhold til validert
+kodekontekst og validerer det delte utfallet mot forventet identitet igjen.
+Adapterens ekstra toppmetadata ignoreres. Manglende kilde/grad/side og
+umulige verdier beholdes i originalen som usikker kandidat; ingen
+konfidensprosent oppgraderer kilden. Gyldig tomliste krever eksplisitt
+completed med findings, uncertainCandidates og limitations.
+
+`checkable`/`structure-and-source` betyr bare kontroll av struktur,
+dokumentidentitet og sideområde. Det beviser ingen semantisk fullstendighet,
+faktisk støtte i originaltekst eller brukerbekreftelse. Sidestatus er en
+rapportert uttrekksstatus; skjemaene velger ingen PDF-lesbarhetsmetode.
+Faktisk PDF-/bytehashberegning, adaptere, HTTP og frontend kobles i senere
+stories; R2-porten før Story 2.3 er fortsatt åpen.

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
-import { getDocument, VerbosityLevel } from 'pdfjs-dist/legacy/build/pdf.mjs'
+import { getDocument, PDFWorker, VerbosityLevel } from 'pdfjs-dist/legacy/build/pdf.mjs'
 import type { AnalysisError } from '../../contracts/document-analysis.ts'
+import { countPdfPages } from './count-pdf-pages.ts'
 
 type DocumentError = Extract<AnalysisError, { kind: 'document' }>
 type FormatErrorCode = 'invalid-format' | 'invalid-container' | 'page-limit'
@@ -33,25 +34,49 @@ function failure(identity: ReportIdentity, code: FormatErrorCode, pageCount: num
     error: { kind: 'document', code, target: { kind: 'document' }, reason: reasons[code] } }
 }
 
+async function destroyResources(task: ReturnType<typeof getDocument> | undefined, worker: PDFWorker | undefined) {
+  let failed = false
+  try {
+    await task?.destroy()
+  } catch {
+    failed = true
+  }
+  try {
+    worker?.destroy()
+  } catch {
+    failed = true
+  }
+  if (failed) throw new Error('PDF-behandlingen kunne ikke avsluttes. Prøv igjen.')
+}
+
 /** Uses bytes only; documentName is display metadata and is never opened as a path. */
 export async function validatePdf(bytes: Uint8Array, documentName: string): Promise<PdfFormatOutcome> {
   // Snapshot before awaiting: caller mutation and PDF.js buffer transfer must not change the original.
   const originalBytes = Uint8Array.from(bytes)
   const identity = { documentName, reportHash: createHash('sha256').update(originalBytes).digest('hex') }
   let task: ReturnType<typeof getDocument> | undefined
+  let worker: PDFWorker | undefined
   try {
-    task = getDocument({ data: Uint8Array.from(originalBytes), verbosity: VerbosityLevel.ERRORS })
-    const document = await task.promise
-    const pageCount = document.numPages
+    // Own the worker so it is released even when transport destruction rejects.
+    worker = new PDFWorker({ verbosity: VerbosityLevel.ERRORS })
+    task = getDocument({ data: Uint8Array.from(originalBytes), worker, verbosity: VerbosityLevel.ERRORS })
+    await task.promise
+    const pageCount = await countPdfPages(originalBytes)
+    if (pageCount === null) return failure(identity, 'invalid-container', null)
     if (pageCount > 30) return failure(identity, 'page-limit', pageCount)
     if (!Number.isInteger(pageCount) || pageCount < 1) return failure(identity, 'invalid-container', null)
+    // The Count-independent traversal also validates every actual page's metadata.
     return { ...identity, status: 'format-validated', originalBytes, pageCount }
-  } catch {
+  } catch (error) {
+    // Operational failures must not claim the caller supplied a damaged PDF.
+    if (!(error instanceof Error) || !['InvalidPDFException', 'PasswordException', 'UnknownErrorException'].includes(error.name)) {
+      throw new Error('PDF-behandlingen kunne ikke gjennomføres. Prøv igjen.')
+    }
     // Header is used only to describe a parser failure, never as proof of a valid PDF.
     const hasPdfHeader = Buffer.from(originalBytes.subarray(0, 1024)).includes('%PDF-')
     return failure(identity, hasPdfHeader ? 'invalid-container' : 'invalid-format', null)
   } finally {
     // Destroys the document transport, page caches and worker, including rejected loading tasks.
-    await task?.destroy()
+    await destroyResources(task, worker)
   }
 }

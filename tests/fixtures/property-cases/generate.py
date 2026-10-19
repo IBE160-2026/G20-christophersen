@@ -114,6 +114,10 @@ pdf.save()
 )
 
 # Byte manifest is generated evidence, distinct from the hand-authored semantic oracle.
-manifest = {path.name: sha256(path.read_bytes()).hexdigest() for path in sorted(ROOT.glob("*.pdf"))}
+generated_names = [f"{case}-tilstandsrapport.pdf" for case in ("F1", "F2", "F3", "F4")] + [
+    "F1-tilstandsrapport-endret.pdf", "text-30-pages.pdf", "text-31-pages.pdf",
+    "without-text-layer.pdf", "invalid-format.pdf", "damaged-container.pdf",
+]
+manifest = {name: sha256((ROOT / name).read_bytes()).hexdigest() for name in sorted(generated_names)}
 (ROOT / "sha256.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 print(f"Generated {len(manifest)} deterministic PDF-named fixtures and sha256.json")

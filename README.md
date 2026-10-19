@@ -29,9 +29,11 @@ analyseschemas og rene validatorer skiller fullføring, feil og usikre
 kilder med kodekontrollert metadata. Kontrakttestene krever ingen PDF-parser
 eller betalt API. Rapportflyten i appen følger fortsatt senere stories.
 
-Story 2.2 er implementert og klar for uavhengig review: backend kontrollerer
-faktiske PDF-bytes, sidegrensen 30 og SHA-256 med låst PDF.js legacy-build.
-Originalbytes bevares, og feil bruker kontrakten fra 2.1. Formatgodkjenning
+Story 2.2 er ferdig etter [uavhengig review](.docs/implementation-artifacts/story-2-2-review.md): backend kontrollerer
+faktiske PDF-bytes, faktisk sidemengde mot grensen 30 og SHA-256 med låst PDF.js legacy-build.
+Originalbytes bevares, og dokumentfeil bruker kontrakten fra 2.1.
+Sidetrær traverseres uavhengig av deklarert `/Count`; også skjulte ødelagte
+sidereferanser og sideegenskaper avvises. Formatgodkjenning
 er et eget delutfall uten påstand om tekstlesbarhet eller fullført analyse.
 [Fiktive F1–F4-PDF-er og uavhengig fasit](tests/fixtures/property-cases/README.md)
 er kontrollert visuelt, inklusive TG3 på PDF-side 4 / trykt side 2.
@@ -98,7 +100,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. 275 rene modultester, 17 PDF-integrasjonstester, 41 demotester
+port 3000, som må være ledig. 275 rene modultester, 42 PDF-integrasjonstester, 41 demotester
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
@@ -153,8 +155,12 @@ kontrollerer alle seks AC, reviewrettinger og egne sluttkontroller.
 [Verifikasjonen for Story 2.1](.docs/implementation-artifacts/story-2-1-verifikasjon.md)
 dekker kontraktleveransens fire AC; [uavhengig review er bestått](.docs/implementation-artifacts/story-2-1-review.md).
 [Verifikasjonen for Story 2.2](.docs/implementation-artifacts/story-2-2-verifikasjon.md)
-viser fire AC, reelle PDF-tester og visuell kryssjekk. Uavhengig review gjenstår
-for 2.2; format-/fixturetestene beviser ingen 2.3-lesbarhet, S2 eller live-S5.
+viser egenverifikasjon av fire AC, reelle PDF-tester og visuell kryssjekk.
+[Reviewet av 2.2](.docs/implementation-artifacts/story-2-2-review.md) er bestått
+etter retting av manipulert sidetelling og ny full regresjon.
+Den [avgrensede koblingen til PDF.js](.docs/implementation-artifacts/story-2-2-page-tree-design.md)
+er bundet til eksakt installert parserbunt. Format-/fixturetestene beviser
+ingen 2.3-lesbarhet, S2 eller live-S5.
 Full demo, senere funksjonstester og annen-person-bevis for S6 følger sine stories.
 
 Grunnlaget er tilpasset den [offisielle Vite react-ts-starteren](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).

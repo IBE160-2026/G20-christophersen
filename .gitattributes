@@ -1,2 +1,3 @@
 # Preserve generated PDF fixture bytes and avoid text diffs/line-ending conversion.
 /tests/fixtures/property-cases/*.pdf binary
+/tests/fixtures/pdf-structure/*.pdf binary

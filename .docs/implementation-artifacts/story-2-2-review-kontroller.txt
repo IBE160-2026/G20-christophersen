@@ -1,0 +1,158 @@
+Story 2.2 review 2026-10-19: actual results. Trailing whitespace normalized for repository hygiene.
+
+=== ibe160-story-2-2-review-tests-final.txt ===
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  7 passed (7)
+      Tests  296 passed (296)
+   Start at  20:32:57
+   Duration  889ms (import 57%, tests 30%, transform 9%, worker 4%)
+
+
+=== ibe160-story-2-2-review-build-final.txt ===
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 122 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:   0.35 kB
+dist/assets/index-CXn3PL4y.css    8.74 kB │ gzip:   2.19 kB
+dist/assets/index-DLfg82t6.js   345.76 kB │ gzip: 105.28 kB
+
+✓ built in 106ms
+
+=== ibe160-story-2-2-review-lint-final.txt ===
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts vitest.config.ts
+
+
+=== ibe160-story-2-2-review-fixtures.txt ===
+F1: pypdf pages=4, all grades/text/names/pages match oracle; [('TG2', 2)]
+F2: pypdf pages=4, all grades/text/names/pages match oracle; [('TG2', 2)]
+F3: pypdf pages=4, all grades/text/names/pages match oracle; [('TG2', 2)]
+F4: pypdf pages=4, all grades/text/names/pages match oracle; [('TG2', 2), ('TG3', 4)]
+Boundary 30: pypdf pages=30, positional text on every page
+Boundary 31: pypdf pages=31, positional text on every page
+Textless fixture: one vector page, no extractable text (no readability approval)
+F3: missing L remains null. Financial outcomes/S2/S5 are not executed by this inspection.
+
+=== ibe160-story-2-2-review-e2e-demo.txt ===
+[WebServer] (node:21174) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 41 tests using 4 workers
+
+(node:21176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21178) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21177) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21175) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 tests/e2e/app-shell.spec.ts:68:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (110ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   1 tests/e2e/app-shell.spec.ts:120:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (625ms)
+  ✓   4 tests/e2e/app-shell.spec.ts:45:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (655ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (1.0s)
+  ✓   3 tests/e2e/app-shell.spec.ts:6:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (1.1s)
+  ✓   6 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (572ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (844ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (777ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (712ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (668ms)
+  ✓  11 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (618ms)
+  ✓  13 tests/e2e/financial-input.spec.ts:5:1 › 1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplisitt periode/år (435ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (777ms)
+  ✓  14 tests/e2e/financial-input.spec.ts:24:1 › 1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjengelig retur (1.2s)
+  ✓  15 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 1440×900 (2.0s)
+  ✓  18 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 (1.1s)
+  ✓  16 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 (1.9s)
+  ✓  17 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 (1.8s)
+  ✓  21 tests/e2e/financial-input.spec.ts:160:1 › 1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholder brukeropphav etter retting (469ms)
+  ✓  20 tests/e2e/financial-input.spec.ts:117:1 › 1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflikt uten automatisk valg (940ms)
+  ✓  22 tests/e2e/financial-input.spec.ts:183:1 › 1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og bevarte D/J-totaler (858ms)
+  ✓  19 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 (1.3s)
+  ✓  26 tests/e2e/financial-input.spec.ts:260:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 1440×900 (432ms)
+  ✓  27 tests/e2e/financial-input.spec.ts:260:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 320×160 (378ms)
+  ✓  23 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 1440×900 (1.7s)
+  ✓  25 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 (1.7s)
+  ✓  24 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 360×225 (1.8s)
+  ✓  29 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: F3 manglende L viser lokale feil, første berørte felt og krever retting (705ms)
+  ✓  28 tests/e2e/financial-input.spec.ts:290:1 › 1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret retur, retting og øktslutt (1.0s)
+  ✓  30 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: ugyldig P viser lokale feil, første berørte felt og krever retting (780ms)
+  ✓  31 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: ulike år viser lokale feil, første berørte felt og krever retting (949ms)
+  ✓  33 tests/e2e/financial-input.spec.ts:380:1 › 1.7 AC2: L-konflikt består gjennom forsøk; opphav og ny kontroll må rettes eksplisitt (1.1s)
+  ✓  34 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1440×900 (1.1s)
+  ✓  32 tests/e2e/financial-input.spec.ts:347:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes (1.6s)
+  ✓  35 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1280×800 (961ms)
+  ✓  36 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 720×450 (924ms)
+Story 1.7 målt kontrast: {"action":6.701109538539959,"error":7.104296467437304,"issueText":11.601821357499892,"control":3.8101786636538826,"focus":6.701109538539959}
+  ✓  37 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 320×200 (762ms)
+  ✓  39 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes (723ms)
+  ✓  38 tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast (938ms)
+  ✓  40 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes (640ms)
+  ✓  41 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes (648ms)
+
+  41 passed (11.5s)
+
+=== ibe160-story-2-2-review-e2e-dev.txt ===
+[WebServer] (node:22112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:22114) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22113) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/private/story-1-2-dev-3R2JvT/private.txt" is outside of Vite serving allow list.
+[WebServer]
+[WebServer] - /Users/madschristophersen/IBE160/G20-christophersen
+[WebServer]
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+[WebServer]
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+  ✓  2 tests/e2e/dev-shell.spec.ts:21:1 › AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler (51ms)
+  ✓  1 tests/e2e/dev-shell.spec.ts:5:1 › AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil (556ms)
+
+  2 passed (1.5s)
+
+=== ibe160-story-2-2-review-page-count.txt ===
+{"actualPages":31,"declaredCount":30,"status":"format-validated","returnedPageCount":30}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 31 preserved page objects must not receive format approval with pageCount 30
+    at file:///Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-2-2-review-page-count-probe.mjs:15:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'format-validated',
+  expected: 'format-validated',
+  operator: 'notStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0
+
+=== ibe160-story-2-2-review-page-count-independent.txt ===
+pypdf independently counts 31 actual pages after equal-length /Count 31 -> /Count 30 mutation.
+Declared Count: 30

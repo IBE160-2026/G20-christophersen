@@ -137,12 +137,16 @@ test('1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflik
   await page.getByLabel('Annen kilde for L', { exact: true }).fill('Leiekontrakt')
   await expect(page.getByRole('heading', { name: 'Uløst kildekonflikt for L' })).toBeVisible()
   await expect(page.locator('.source-conflict')).toContainText('Gjeldende registrering: 1900000 NOK · Egen forutsetning L.')
-  await expect(page.locator('#conflict-issue-L')).toContainText('Verdien er utilstrekkelig.')
+  await expect(page.locator('#source-issue-L-source-conflict')).toContainText('Verdien er utilstrekkelig.')
+  for (const id of ['value-L', 'source-L', 'conflict-value-L', 'conflict-source-L']) {
+    await expect(page.locator(`#${id}`)).toHaveAccessibleDescription(/Uløst kildekonflikt.*Verdien er utilstrekkelig/)
+    await expect(page.locator(`#${id}`)).toHaveAttribute('aria-invalid', 'true')
+  }
   await expect(page.locator('#value-L')).toHaveValue('1900000')
   await page.getByRole('link', { name: /Tallgrunnlag/ }).click()
   await expect(page.locator('#conflict-value-L')).toHaveValue('1400000')
   await page.locator('#value-L').fill('1400000')
-  await expect(page.locator('#conflict-issue-L')).toContainText('Uløst kildekonflikt')
+  await expect(page.locator('#source-issue-L-source-conflict')).toContainText('Uløst kildekonflikt')
   await page.getByRole('button', { name: 'Fjern avklart motstrid for L' }).click()
   await expect(page.locator('#conflict-add-L')).toBeFocused()
   await expect(page.getByRole('heading', { name: 'Uløst kildekonflikt for L' })).toHaveCount(0)
@@ -151,6 +155,29 @@ test('1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflik
   expect(apiRequests).toEqual([])
   await page.reload()
   for (const field of fields) await expect(page.locator(`#source-${field}`)).toHaveValue('')
+})
+
+test('1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholder brukeropphav etter retting', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('#value-L').fill('1900000')
+  await page.locator('#source-kind-L').selectOption('assumption')
+  await page.locator('#source-L').fill('Eget leieanslag')
+  await page.locator('#rent-nature-L').selectOption('actual')
+  const warning = page.locator('#source-issue-L-unsupported-actual-rent')
+  await expect(warning).toContainText('Faktisk leie mangler oppgitt kildegrunnlag')
+  for (const id of ['value-L', 'source-kind-L', 'source-L', 'rent-nature-L']) {
+    await expect(page.locator(`#${id}`)).toHaveAccessibleDescription(/Faktisk leie mangler oppgitt kildegrunnlag/)
+    await expect(page.locator(`#${id}`)).toHaveAttribute('aria-invalid', 'true')
+  }
+  await page.locator('#source-kind-L').selectOption('source')
+  await page.locator('#source-L').fill('')
+  await expect(warning).toBeVisible()
+  await page.locator('#source-L').fill('Oppgitt gjeldende leiekontrakt')
+  await expect(warning).toHaveCount(0)
+  await expect(page.locator('#source-L')).not.toHaveAttribute('aria-invalid')
+  await expect(page.locator('#rent-nature-L')).toHaveValue('actual')
+  await expect(page.locator('#value-L')).toHaveValue('1900000')
+  await expect(page.locator('#source-summary-L')).toContainText('Faktisk leie er brukeroppgitt; kildegrunnlaget må kontrolleres.')
 })
 
 test('1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og bevarte D/J-totaler', async ({ page }) => {
@@ -198,9 +225,18 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 360, height: 225 
     await page.locator('#conflict-value-L').fill('1400000')
     await page.locator('#conflict-source-L').fill('Leiekontrakt')
     await page.locator('#cost-add').click()
-    for (const id of ['conflict-value-L', 'conflict-source-L', 'cost-1-label', 'cost-1-amount', 'cost-1-debt', 'cost-1-included']) {
+    const order = [
+      'value-P', 'source-kind-P', 'source-P', 'conflict-add-P',
+      'value-L', 'period-L', 'year-L', 'source-kind-L', 'source-L', 'rent-nature-L', 'conflict-value-L', 'conflict-source-L', 'conflict-remove-L',
+      'value-D', 'period-D', 'year-D', 'source-kind-D', 'source-D', 'conflict-add-D',
+      'value-J', 'period-J', 'year-J', 'source-kind-J', 'source-J', 'conflict-add-J',
+      'value-Ymin', 'source-kind-Ymin', 'source-Ymin', 'conflict-add-Ymin',
+      'cost-1-label', 'cost-1-amount', 'cost-1-debt', 'cost-1-included', 'cost-1-remove', 'cost-add',
+    ]
+    await page.locator('#value-P').focus()
+    for (const id of order) {
       const control = page.locator(`#${id}`)
-      await control.focus()
+      await expect(control).toBeFocused()
       const box = (await control.boundingBox())!
       const nav = (await page.getByRole('navigation').boundingBox())!
       expect(box.x - 5).toBeGreaterThanOrEqual(0)
@@ -208,7 +244,32 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 360, height: 225 
       expect(box.y - 5).toBeGreaterThanOrEqual(nav.y + nav.height - 0.5)
       expect(box.y + box.height + 5).toBeLessThanOrEqual(viewport.height + 0.5)
       await expect(control).toHaveAccessibleName(/.+/)
+      await page.keyboard.press('Tab')
     }
+    await page.locator('#cost-1-remove').focus()
+    await page.keyboard.press('Enter')
+    await expect(page.locator('#cost-add')).toBeFocused()
+    await page.locator('#conflict-remove-L').focus()
+    await page.keyboard.press('Enter')
+    await expect(page.locator('#conflict-add-L')).toBeFocused()
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  })
+}
+
+for (const viewport of [{ width: 1440, height: 900 }, { width: 320, height: 160 }]) {
+  test(`1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved ${viewport.width}×${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport)
+    await page.goto('/')
+    for (const index of [1, 2]) {
+      await page.locator('#cost-add').click()
+      await page.locator(`#cost-${index}-label`).fill('Forsikring'.repeat(60))
+    }
+    await expect(page.locator('#cost-issues .field-issue')).toHaveCount(2)
+    for (const index of [1, 2]) {
+      await expect(page.locator(`#cost-${index}-amount`)).toHaveAccessibleDescription(new RegExp(`Kostnadspost ${index}.*Navn, beløp eller rentedel/avdrag`))
+      await expect(page.locator(`#cost-${index}-amount`)).toHaveAttribute('aria-invalid', 'true')
+    }
+    await expect(page.locator('#value-D')).toHaveAccessibleDescription(/Kostnadspost 1.*Kostnadspost 2/)
+    expect(await page.locator('.workspace').evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
   })
 }

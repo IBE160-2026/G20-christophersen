@@ -4,7 +4,7 @@ import { FinancialBasisSchema } from '../contracts/financial-basis.ts'
 import type { FinancialBasis, FinancialBasisValidation, CostBreakdown } from '../contracts/financial-basis.ts'
 import type { FinancialField } from '../contracts/financial-input.ts'
 import type { FinancialIssue } from '../contracts/financial-validation.ts'
-import { parseFinancialDecimal, validateFinancialInput } from './validation.ts'
+import { financialPeriodContext, parseFinancialDecimal, validateFinancialInput } from './validation.ts'
 
 const Decimal = Big()
 Decimal.strict = true
@@ -47,7 +47,8 @@ export function validateFinancialBasis(input: FinancialBasis): FinancialBasisVal
   const costProblem = (code: FinancialIssue['code'], message: string, action: string) => {
     for (const field of ['D', 'J'] as const) addIssue(field, 'cost', code, message, action)
   }
-  for (const item of items) {
+  const itemName = (index: number) => `Kostnadspost ${index + 1}${items[index]!.label.trim() ? ` (${items[index]!.label.trim()})` : ''}`
+  for (const [index, item] of items.entries()) {
     const amount = parseFinancialDecimal(item.rawAmount)
     const debt = parseFinancialDecimal(item.rawDebt)
     const valid = item.label.trim() !== '' && amount !== null && debt !== null
@@ -56,46 +57,72 @@ export function validateFinancialBasis(input: FinancialBasis): FinancialBasisVal
       ...item, amount, D: valid ? new Decimal(amount!).minus(debt!).toFixed() : null,
       J: valid ? debt : null, status: valid ? item.includedIn === null ? 'counted' : 'included' : 'invalid',
     })
-    if (!valid) costProblem('invalid-cost', `${item.label.trim() || 'Kostnadspost'}: Navn, beløp eller rentedel/avdrag er ugyldig eller mangler.`,
+    if (!valid) costProblem('invalid-cost', `${itemName(index)}: Navn, beløp eller rentedel/avdrag er ugyldig eller mangler.`,
       'Oppgi navn og ikke-negative beløp; renter/avdrag må være oppgitt (også 0) og kan ikke overstige samlet beløp.')
   }
   const byId = new Map(cost.items.map((item) => [item.id, item]))
-  for (const item of cost.items) {
+  const idCounts = new Map<string, number>()
+  for (const item of cost.items) idCounts.set(item.id, (idCounts.get(item.id) ?? 0) + 1)
+  // Bare eksplisitt oppgitte direkte barn summeres. Ingen likhet/full detaljering kreves.
+  const uncoveredParents = new Set<string>()
+  for (const parent of cost.items) {
+    if (parent.D === null || parent.J === null) continue
+    let drift = new Decimal('0')
+    let debt = new Decimal('0')
+    for (const child of cost.items) {
+      if (child.includedIn !== parent.id || child.D === null || child.J === null) continue
+      drift = drift.plus(child.D)
+      debt = debt.plus(child.J)
+    }
+    if (drift.gt(parent.D) || debt.gt(parent.J)) uncoveredParents.add(parent.id)
+  }
+  // Avgjør alle kjeder før status endres, slik at radrekkefølgen ikke velger utfallet.
+  const validInclusions = cost.items.map((item) => {
     const visited = new Set([item.id])
+    let child = item
     let parentId = item.includedIn
-    let valid = items.filter((candidate) => candidate.id === item.id).length === 1
+    let valid = idCounts.get(item.id) === 1 && !uncoveredParents.has(item.id)
     while (parentId !== null && valid) {
       const parent = byId.get(parentId)
-      if (!parent || visited.has(parentId) || parent.status === 'invalid') { valid = false; break }
+      if (!parent || visited.has(parentId) || parent.status === 'invalid'
+        || idCounts.get(parentId) !== 1 || uncoveredParents.has(parentId)) { valid = false; break }
       visited.add(parentId)
-      if (item.D !== null && item.J !== null && parent.D !== null && parent.J !== null
-        && (new Decimal(item.D).gt(parent.D) || new Decimal(item.J).gt(parent.J))) valid = false
+      if (child.D !== null && child.J !== null && parent.D !== null && parent.J !== null
+        && (new Decimal(child.D).gt(parent.D) || new Decimal(child.J).gt(parent.J))) valid = false
+      child = parent
       parentId = parent.includedIn
     }
-    if (!valid) {
+    return valid
+  })
+  for (const [index, item] of cost.items.entries()) {
+    if (!validInclusions[index]) {
       item.status = 'invalid'
-      costProblem('invalid-cost-inclusion', `${item.label.trim() || 'Kostnadspost'}: Inkluderingen kan ikke kontrolleres.`,
+      costProblem('invalid-cost-inclusion', `${itemName(index)}: Inkluderingen kan ikke kontrolleres.`,
         'Velg en eksisterende post som dekker beløpet og rentedelen, uten sirkulær eller tvetydig inkludering.')
     }
   }
-  if (cost.items.length > 0 && cost.items.every((item) => item.status !== 'invalid')) {
+  if (cost.items.length > 0) {
     let drift = new Decimal('0')
     let debt = new Decimal('0')
     for (const item of cost.items) {
-      if (item.status === 'included') continue
+      if (item.status !== 'counted') continue
       drift = drift.plus(item.D!)
       debt = debt.plus(item.J!)
     }
-    cost.D = drift.toFixed()
-    cost.J = debt.toFixed()
-    const normalization = result.fields.D.normalization
-    if (normalization !== null) {
-      cost.annualD = drift.times(normalization.factor).toFixed()
-      cost.annualJ = debt.times(normalization.factor).toFixed()
+    const complete = cost.items.every((item) => item.status !== 'invalid')
+    if (complete) {
+      cost.D = drift.toFixed()
+      cost.J = debt.toFixed()
+    }
+    const context = financialPeriodContext(registeredBasis.values.D)
+    if (context.year !== null && context.factor !== null) {
+      const annualD = drift.times(context.factor).toFixed()
+      const annualJ = debt.times(context.factor).toFixed()
+      if (complete) { cost.annualD = annualD; cost.annualJ = annualJ }
       for (const field of ['D', 'J'] as const) {
         const total = result.fields[field].normalization
-        const annual = field === 'D' ? cost.annualD : cost.annualJ
-        if (total !== null && total.year === normalization.year && new Decimal(annual).gt(total.annualValue)) {
+        const annual = field === 'D' ? annualD : annualJ
+        if (total !== null && total.year === context.year && new Decimal(annual).gt(total.annualValue)) {
           addIssue(field, 'cost', 'cost-exceeds-total', `${field}: Oppgitt kostnadsinnhold overstiger den registrerte totalen.`,
             `Kontroller oppdelingen og registrert ${field}; inkluderte poster skal ikke legges til på nytt, og renter/avdrag hører bare til J.`)
         }

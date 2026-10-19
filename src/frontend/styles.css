@@ -237,7 +237,7 @@ h1 {
 .source-conflict h3 { margin: 0 0 var(--space-2); font-size: 14px; font-weight: 600; }
 .source-conflict .source-controls { margin-block: var(--space-3); }
 .source-conflict button { margin-top: var(--space-2); }
-.field-issue { color: var(--status-danger); margin-top: var(--space-2); }
+.field-issue { color: var(--status-danger); margin-top: var(--space-2); overflow-wrap: anywhere; }
 .cost-breakdown { border-top: 1px solid var(--border-decorative); padding-top: var(--space-5); }
 .cost-breakdown > p { margin-top: var(--space-2); }
 .cost-item { min-width: 0; margin: var(--space-4) 0; padding: var(--space-4); border: 1px solid var(--border-control); border-radius: var(--radius-md); }

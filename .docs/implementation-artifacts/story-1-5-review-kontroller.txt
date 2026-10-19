@@ -1,0 +1,181 @@
+Story 1.5 — bevarte kontrollutdata, 2026-10-19
+
+De historiske probene er fra den avbrutte reviewfasen og viser tilstanden før patch. De øvrige kommandoene er kjørt av gjenopptatt reviewer etter patch. Dette er ikke råtekst fra de fire underreviewerne.
+
+### Historisk kontroll før retting — domain-prober
+Kilde: /private/tmp/ibe160-review-1-5-domain-probe.log
+
+siblings {"issues":[],"breakdown":{"items":[{"id":"parent","label":"parent","rawAmount":"100","rawDebt":"0","includedIn":null,"amount":"100","D":"100","J":"0","status":"counted"},{"id":"insurance","label":"insurance","rawAmount":"80","rawDebt":"0","includedIn":"parent","amount":"80","D":"80","J":"0","status":"included"},{"id":"fees","label":"fees","rawAmount":"80","rawDebt":"0","includedIn":"parent","amount":"80","D":"80","J":"0","status":"included"}],"D":"100","J":"0","annualD":"100","annualJ":"0"}}
+chainForward {"issues":[{"field":"D","target":"cost","code":"invalid-cost-inclusion","message":"parent: Inkluderingen kan ikke kontrolleres.","action":"Velg en eksisterende post som dekker beløpet og rentedelen, uten sirkulær eller tvetydig inkludering.","relatedFields":[]},{"field":"J","target":"cost","code":"invalid-cost-inclusion","message":"parent: Inkluderingen kan ikke kontrolleres.","action":"Velg en eksisterende post som dekker beløpet og rentedelen, uten sirkulær eller tvetydig inkludering.","relatedFields":[]}],"breakdown":{"items":[{"id":"child","label":"child","rawAmount":"10","rawDebt":"0","includedIn":"parent","amount":"10","D":"10","J":"0","status":"included"},{"id":"parent","label":"parent","rawAmount":"100","rawDebt":"0","includedIn":"grand","amount":"100","D":"100","J":"0","status":"invalid"},{"id":"grand","label":"grand","rawAmount":"50","rawDebt":"0","includedIn":null,"amount":"50","D":"50","J":"0","status":"counted"}],"D":null,"J":null,"annualD":null,"annualJ":null}}
+chainReverse {"issues":[{"field":"D","target":"cost","code":"invalid-cost-inclusion","message":"parent: Inkluderingen kan ikke kontrolleres.","action":"Velg en eksisterende post som dekker beløpet og rentedelen, uten sirkulær eller tvetydig inkludering.","relatedFields":[]},{"field":"D","target":"cost","code":"invalid-cost-inclusion","message":"child: Inkluderingen kan ikke kontrolleres.","action":"Velg en eksisterende post som dekker beløpet og rentedelen, uten sirkulær eller tvetydig inkludering.","relatedFields":[]},{"field":"J","target":"cost","code":"invalid-cost-inclusion","message":"parent: Inkluderingen kan ikke kontrolleres.","action":"Velg en eksisterende post som dekker beløpet og rentedelen, uten sirkulær eller tvetydig inkludering.","relatedFields":[]},{"field":"J","target":"cost","code":"invalid-cost-inclusion","message":"child: Inkluderingen kan ikke kontrolleres.","action":"Velg en eksisterende post som dekker beløpet og rentedelen, uten sirkulær eller tvetydig inkludering.","relatedFields":[]}],"breakdown":{"items":[{"id":"grand","label":"grand","rawAmount":"50","rawDebt":"0","includedIn":null,"amount":"50","D":"50","J":"0","status":"counted"},{"id":"parent","label":"parent","rawAmount":"100","rawDebt":"0","includedIn":"grand","amount":"100","D":"100","J":"0","status":"invalid"},{"id":"child","label":"child","rawAmount":"10","rawDebt":"0","includedIn":"parent","amount":"10","D":"10","J":"0","status":"invalid"}],"D":null,"J":null,"annualD":null,"annualJ":null}}
+unfinished {"issues":[{"field":"D","target":"cost","code":"invalid-cost","message":"unfinished: Navn, beløp eller rentedel/avdrag er ugyldig eller mangler.","action":"Oppgi navn og ikke-negative beløp; renter/avdrag må være oppgitt (også 0) og kan ikke overstige samlet beløp.","relatedFields":[]},{"field":"J","target":"cost","code":"invalid-cost","message":"unfinished: Navn, beløp eller rentedel/avdrag er ugyldig eller mangler.","action":"Oppgi navn og ikke-negative beløp; renter/avdrag må være oppgitt (også 0) og kan ikke overstige samlet beløp.","relatedFields":[]}],"breakdown":{"items":[{"id":"known","label":"known","rawAmount":"1001","rawDebt":"0","includedIn":null,"amount":"1001","D":"1001","J":"0","status":"counted"},{"id":"unfinished","label":"unfinished","rawAmount":"","rawDebt":"","includedIn":null,"amount":null,"D":null,"J":null,"status":"invalid"}],"D":null,"J":null,"annualD":null,"annualJ":null}}
+missingD {"J":{"registered":{"rawValue":"1000","confirmed":true,"period":"year","year":"2026"},"valueStatus":"valid","decimal":"1000","status":"sufficient","issues":[],"normalization":{"year":"2026","factor":"1","annualValue":"1000"}},"issues":[{"field":"D","target":"value","code":"missing-value","message":"D: Verdien mangler.","action":"Oppgi verdien for D.","relatedFields":[]}],"breakdown":{"items":[{"id":"known-debt","label":"known-debt","rawAmount":"1001","rawDebt":"1001","includedIn":null,"amount":"1001","D":"0","J":"1001","status":"counted"}],"D":"0","J":"1001","annualD":null,"annualJ":null}}
+
+### Historisk kontroll før retting — browser-prober
+Kilde: /private/tmp/ibe160-review-1-5-browser-probe.log
+
+PASS: five provenance associations; expected/actual rent correction remains user supplied
+long-invalid-cost { viewport: 1440, width: 1440, errorWidth: 1230 }
+dynamic-button { width: 1440, height: 900 } Fjern avklart motstrid for L { x: 73, y: 844.9375, width: 196.5625, height: 36 }
+dynamic-button { width: 1440, height: 900 } Fjern post 1 { x: 74, y: 697.078125, width: 100.828125, height: 36 }
+PASS: actual Tab traversal includes both dynamic removal actions { width: 1440, height: 900 }
+dynamic-button { width: 360, height: 225 } Fjern avklart motstrid for L { x: 49, y: 179.71875, width: 196.5625, height: 36 }
+dynamic-button { width: 360, height: 225 } Fjern post 1 { x: 50, y: 180.015625, width: 100.828125, height: 36 }
+PASS: actual Tab traversal includes both dynamic removal actions { width: 360, height: 225 }
+dynamic-button { width: 320, height: 160 } Fjern avklart motstrid for L { x: 49, y: 118.71875, width: 196.5625, height: 36 }
+dynamic-button { width: 320, height: 160 } Fjern post 1 { x: 50, y: 118.609375, width: 100.828125, height: 36 }
+PASS: actual Tab traversal includes both dynamic removal actions { width: 320, height: 160 }
+
+### Historisk kontroll før retting — overflow-probe
+Kilde: /private/tmp/ibe160-review-1-5-overflow-probe.log
+
+{ width: 1440, height: 900 } { width: 1440, scrollWidth: 4737 }
+{ width: 320, height: 160 } { width: 320, scrollWidth: 4713 }
+
+### Gjenopptatt reviewer: npm test
+Kilde: /private/tmp/ibe160-review-1-5-resume-unit.log
+
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  3 passed (3)
+      Tests  92 passed (92)
+   Start at  13:06:26
+   Duration  173ms (import 68%, tests 19%, transform 10%, worker 3%)
+
+
+### Gjenopptatt reviewer: npm run lint
+Kilde: /private/tmp/ibe160-review-1-5-resume-lint.log
+
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts vitest.config.ts
+
+
+### Gjenopptatt reviewer: første sandbox-E2E-forsøk
+Kilde: /private/tmp/ibe160-review-1-5-resume-e2e.log
+
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 120 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:   0.34 kB
+dist/assets/index-usopNwG7.css    7.95 kB │ gzip:   2.07 kB
+dist/assets/index-CvhqOnRo.js   332.52 kB │ gzip: 101.78 kB
+
+✓ built in 103ms
+[WebServer] (node:28987) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] Appen kunne ikke starte på http://127.0.0.1:3000. Miljøet tillater ikke lokal server på denne adressen.
+Error: Process from config.webServer was not able to start. Exit code: 1
+
+
+### Gjenopptatt reviewer: autorisert lokal E2E etter loopback-sperre
+Kilde: /private/tmp/ibe160-review-1-5-resume-e2e-escalated.log
+
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 120 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:   0.34 kB
+dist/assets/index-usopNwG7.css    7.95 kB │ gzip:   2.07 kB
+dist/assets/index-CvhqOnRo.js   332.52 kB │ gzip: 101.78 kB
+
+✓ built in 85ms
+[WebServer] (node:29168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 27 tests using 4 workers
+
+(node:29170) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29171) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29169) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 tests/e2e/app-shell.spec.ts:68:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (94ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   3 tests/e2e/app-shell.spec.ts:120:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (464ms)
+  ✓   1 tests/e2e/app-shell.spec.ts:45:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (498ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (966ms)
+  ✓   4 tests/e2e/app-shell.spec.ts:6:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (974ms)
+  ✓   6 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (626ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (799ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (705ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (681ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (612ms)
+  ✓  11 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (573ms)
+  ✓  13 tests/e2e/financial-input.spec.ts:5:1 › 1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplisitt periode/år (365ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (637ms)
+  ✓  14 tests/e2e/financial-input.spec.ts:24:1 › 1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjengelig retur (872ms)
+  ✓  15 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 1440×900 (1.5s)
+  ✓  18 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 (860ms)
+  ✓  17 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 (1.3s)
+  ✓  16 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 (1.6s)
+  ✓  21 tests/e2e/financial-input.spec.ts:160:1 › 1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholder brukeropphav etter retting (502ms)
+  ✓  22 tests/e2e/financial-input.spec.ts:183:1 › 1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og bevarte D/J-totaler (807ms)
+  ✓  20 tests/e2e/financial-input.spec.ts:117:1 › 1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflikt uten automatisk valg (1.0s)
+  ✓  19 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 (1.2s)
+  ✓  26 tests/e2e/financial-input.spec.ts:260:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 1440×900 (397ms)
+  ✓  27 tests/e2e/financial-input.spec.ts:260:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 320×160 (368ms)
+  ✓  23 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 1440×900 (1.4s)
+  ✓  24 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 360×225 (1.3s)
+  ✓  25 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 (1.2s)
+
+  27 passed (7.0s)
+[WebServer] (node:29280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:29281) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29282) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/private/story-1-2-dev-Pi7E3u/private.txt" is outside of Vite serving allow list.
+[WebServer] 
+[WebServer] - /Users/madschristophersen/IBE160/G20-christophersen
+[WebServer] 
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+[WebServer] 
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+  ✓  2 tests/e2e/dev-shell.spec.ts:21:1 › AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler (45ms)
+  ✓  1 tests/e2e/dev-shell.spec.ts:5:1 › AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil (400ms)
+
+  2 passed (1.2s)
+

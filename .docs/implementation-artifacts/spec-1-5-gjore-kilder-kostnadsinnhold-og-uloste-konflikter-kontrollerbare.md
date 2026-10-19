@@ -2,7 +2,7 @@
 title: 'Story 1.5 — Gjøre kilder, kostnadsinnhold og uløste konflikter kontrollerbare'
 type: 'feature'
 created: '2026-10-19'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '1-5-gjøre-kilder-kostnadsinnhold-og-uløste-konflikter-kontroller'
 baseline_commit: '04efbe3ecd1c82d0e55d2a4f0b590144dd42dd69'
@@ -32,3 +32,25 @@ Autoritet er storyens fem AC/testkrav, final DESIGN/EXPERIENCE, ARCHITECTURE-SPI
 - Ruten er oneshot for én reversibel, sammenhengende kontrollflate med kjente regler. Brukerens godkjente story/bestilling dekker teknisk konkretisering. Brukerens separate implementerings-/reviewfaser overstyrer integrert review/done/commit: alle reviewlag utsettes til fase 3, og hovedagenten committer etter eksplisitt retur av skriveansvaret.
 
 - Implementert og egenverifisert: 83 Vitest, typecheck/lint/build og 24 demo-/to dev-E2E består. Fem opphav/leiegrunnlag og FR-2-oppdeling/overlapp er inspisert i bygget app. En reell zoom/fokusfeil fra lang ny knapp er rettet; tester er oppdatert for nye kildefelt. [AC-/testbevis](story-1-5-verifikasjon.md), [råutdata](story-1-5-kontroller.txt) og [prosess/prompt](../process/arbeidsokter/2026-10-19-story-1-5.md) er lagret. Sluttstatus in-review/review; ingen kjent blocker, staging, commit eller push fra implementeringsagenten.
+
+### Review Findings
+
+Uavhengig fase 3, 2026-10-19: fire konfigurerte reviewlag er fullført. Individuell triage av alle 14 forslag og egne AC-/testbevis lagres i `story-1-5-review.md`. Ingen decision-needed eller defer. Brukerens mini-sprint autoriserer samtlige rutinepatcher innen 1.5 uten ny godkjenning.
+
+- [x] [Review][Patch] B1/E1: Kontroller samlet kjent innhold i samme overordnede kostnadspost uten fullstendighetskrav. [src/domain/financial-basis.ts:63]
+- [x] [Review][Patch] B2: Vurder inkluderingskjeder uavhengig av radrekkefølge. [src/domain/financial-basis.ts:69]
+- [x] [Review][Patch] B3/A1: Kontroller kjent J-bidrag selv om D-beløpet er ugyldig. [src/domain/financial-basis.ts:91]
+- [x] [Review][Patch] B4: Behold kjent overskridelse når en annen rad er uferdig. [src/domain/financial-basis.ts:81]
+- [x] [Review][Patch] B5/A2: Knytt leverte kilde-/kostnadsfeil semantisk til berørte kontroller. [src/frontend/screens/FinancialBasisInput.tsx:58]
+- [x] [Review][Patch] B7: Behold entydig radkontekst når kostnadsposter har samme navn. [src/frontend/screens/FinancialBasisInput.tsx:84]
+- [x] [Review][Patch] B8/V1: Test faktisk leie, manglende kilde og retting i bygget app. [tests/e2e/financial-input.spec.ts:114]
+- [x] [Review][Patch] B9: Test faktisk Tab-rekkefølge gjennom dynamiske fjernhandlinger og fokusretur. [tests/e2e/financial-input.spec.ts:201]
+- [x] [Review][Patch] E2: Ombryt lange navn også i kostnadsfeil. [src/frontend/styles.css:243]
+
+#### Rejected
+
+- B6 — **false som manglende 1.5-krav**: Bekreftelsesforsøk og komplett feilvisningsflyt leveres uttrykkelig i Story 1.7. Story 1.5 vurderer og viser registrert kilde-/kostnadsinnhold, men har ingen bekreftelseshandling. Å kreve denne flyten nå overskrider brukerens avgrensning; ingen ny timing-/bekreftelsesmekanisme bygges.
+
+### Review fullført
+
+Story 1.5 er **done** etter gjenopptatt fase 3. Alle fem AC er kontrollert mot faktisk kode. Alle 14 individuelle forslag er triagert: 13 lukket i ni patchgrupper, B6 avvist, ingen defer/decision-needed. [Reviewrapport](story-1-5-review.md), [egne råkontroller](story-1-5-review-kontroller.txt) og [prosesspor](../process/arbeidsokter/2026-10-19-story-1-5-review.md). Egen sluttkjøring: 92 Vitest, lint, typecheck/build, 27 demo-E2E og to dev-E2E består. 104/104 låste kilder er uendret. Ingen nye beslutninger, staging, commit eller push fra reviewer; hovedagenten får skriveansvaret tilbake før fasecommit.

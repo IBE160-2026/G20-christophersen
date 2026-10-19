@@ -141,6 +141,71 @@ describe('Story 1.5 — opphav og kontrollerbart kostnadsinnhold', () => {
       expect(result.costBreakdown.D).toBeNull()
     }
   })
+  it.each(['D', 'J'] as const)('AC2: flere inkluderte poster kan ikke overstige kjent %s-innhold i forelderen', (field) => {
+    const input = basis()
+    const debt = field === 'J' ? '100' : '0'
+    const childDebt = field === 'J' ? '80' : '0'
+    input.costItems = [cost('a', 'Samlepost', '100', debt), cost('b', 'Forsikring', '80', childDebt, 'a'), cost('c', 'Avgifter', '80', childDebt, 'a')]
+    const result = validateFinancialBasis(input)
+    expect(result.fields[field].status).toBe('insufficient')
+    expect(result.issues.map((entry) => entry.code)).toContain('invalid-cost-inclusion')
+    expect(result.costBreakdown.D).toBeNull()
+    expect(result.registeredBasis.costItems).toEqual(input.costItems)
+  })
+  it('AC2: inkludert delinnhold trenger ikke fylle forelderen, og uttrykkelig overlapp telles ikke igjen', () => {
+    const input = basis()
+    input.costItems = [cost('a', 'Samlepost', '100', '0'), cost('b', 'Delinnhold', '80', '0', 'a'), cost('c', 'Samme delinnhold', '80', '0', 'b')]
+    expect(validateFinancialBasis(input).issues).toEqual([])
+    input.costItems[2]!.rawAmount = '30'
+    input.costItems[2]!.includedIn = 'a'
+    input.costItems[1]!.rawAmount = '40'
+    const result = validateFinancialBasis(input)
+    expect(result.issues).toEqual([])
+    expect(result.costBreakdown.D).toBe('100')
+  })
+  it('AC2/AC5: ugyldig inkluderingskjede gir samme radstatus uavhengig av registreringsrekkefølge', () => {
+    const items = [cost('child', 'Barn', '10', '0', 'parent'), cost('parent', 'Forelder', '100', '0', 'grand'), cost('grand', 'Samlepost', '50', '0')]
+    for (const costItems of [items, [...items].reverse()]) {
+      const result = validateFinancialBasis({ ...basis(), costItems })
+      expect(Object.fromEntries(result.costBreakdown.items.map((item) => [item.id, item.status])))
+        .toEqual({ child: 'invalid', parent: 'invalid', grand: 'invalid' })
+      expect(result.costBreakdown.D).toBeNull()
+      expect(result.fields.D.status).toBe('insufficient')
+    }
+  })
+  it.each(['', 'ugyldig', '-1'])('AC2/AC5: kjent J-overskridelse beholdes når D-beløpet er %j', (rawValue) => {
+    const input = basis()
+    input.values.D.rawValue = rawValue
+    input.values.J.rawValue = '1000'
+    input.costItems = [cost('debt', 'Gjeld', '1001', '1001')]
+    const result = validateFinancialBasis(freezeDeep(input))
+    expect(result.costBreakdown.annualJ).toBe('1001')
+    expect(result.fields.J.issues.map((entry) => entry.code)).toEqual(['cost-exceeds-total'])
+    expect(result.fields.J.status).toBe('insufficient')
+    expect(result.registeredBasis.values).toEqual(input.values)
+  })
+  it('AC2/AC5: en uferdig rad skjuler ikke kjent overskridelse fra en annen selvstendig post', () => {
+    const input = basis()
+    input.values.D.rawValue = '1000'
+    input.values.J.rawValue = '1000'
+    input.costItems = [cost('known', 'Kjent innhold', '2002', '1001'), cost('unfinished', 'Uferdig', '', '')]
+    const result = validateFinancialBasis(input)
+    expect(result.costBreakdown.D).toBeNull()
+    expect(result.costBreakdown.annualJ).toBeNull()
+    for (const field of ['D', 'J'] as const) {
+      expect(result.fields[field].issues.map((entry) => entry.code)).toEqual(['invalid-cost', 'cost-exceeds-total'])
+    }
+    expect(result.registeredBasis).toEqual(input)
+  })
+  it('AC5/NFR-2: kostnadsfeil beholder radkontekst når to poster har samme navn', () => {
+    const input = basis()
+    input.costItems = [cost('a', 'Forsikring', '', ''), cost('b', 'Forsikring', '', '')]
+    const result = validateFinancialBasis(input)
+    expect(result.fields.D.issues.map((entry) => entry.message)).toEqual([
+      'Kostnadspost 1 (Forsikring): Navn, beløp eller rentedel/avdrag er ugyldig eller mangler.',
+      'Kostnadspost 2 (Forsikring): Navn, beløp eller rentedel/avdrag er ugyldig eller mangler.',
+    ])
+  })
   it('AC2/AC3: store og presise desimalbeløp splittes uten flyttall', () => {
     const input = basis()
     input.values.D.rawValue = '9007199254740993.000000000000000001'

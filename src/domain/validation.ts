@@ -20,6 +20,16 @@ export function parseFinancialDecimal(rawValue: string): string | null {
   return new Decimal(raw.replace(/[ \u00a0\u202f]/g, '').replace(',', '.').replace(/^\+/, '')).toFixed()
 }
 
+/** Periode/år kan være kjent selv om selve totalbeløpet mangler. */
+export function financialPeriodContext(registered: { period: string; year: string }) {
+  const rawYear = registered.year.trim()
+  const year = rawYear.replace(/^0+/, '')
+  return {
+    year: /^\d+$/.test(rawYear) && year !== '' ? year : null,
+    factor: registered.period === 'month' ? '12' as const : registered.period === 'year' ? '1' as const : null,
+  }
+}
+
 function issue(
   field: FinancialField, target: FinancialIssue['target'], code: FinancialIssue['code'],
   message: string, action: string,
@@ -86,20 +96,19 @@ export function validateFinancialInput(input: RegisteredFinancialInput): Financi
     const value = result.fields[field]
     const { period } = value.registered
     const rawYear = value.registered.year.trim()
-    const year = rawYear.replace(/^0+/, '')
+    const { year, factor } = financialPeriodContext(value.registered)
     if (period !== 'year' && period !== 'month') {
       const code = period === '' ? 'missing-period' : period === 'unknown' ? 'unknown-period' : 'unsupported-period'
       const reason = period === '' ? 'Perioden mangler' : period === 'unknown' ? 'Perioden er ukjent' : 'Perioden støttes ikke'
       value.issues.push(issue(field, 'period', code, `${field}: ${reason}.`, `Oppgi kjent måned eller år for ${field}.`))
     }
-    if (rawYear === '' || !/^\d+$/.test(rawYear) || year === '') {
+    if (year === null) {
       value.issues.push(rawYear === ''
         ? issue(field, 'year', 'missing-year', `${field}: Årsgrunnlaget mangler.`, `Oppgi hvilket år ${field} gjelder.`)
         : issue(field, 'year', 'invalid-year', `${field}: Årsgrunnlaget er ikke et gyldig år.`, `Oppgi ett positivt helt årstall for ${field}.`))
     } else {
       years.set(field, year)
-      if (value.valueStatus === 'valid' && value.decimal !== null && (period === 'month' || period === 'year')) {
-        const factor = period === 'month' ? '12' : '1'
+      if (value.valueStatus === 'valid' && value.decimal !== null && factor !== null) {
         value.normalization = { year, factor, annualValue: new Decimal(value.decimal).times(factor).toFixed() }
       }
     }

@@ -30,6 +30,10 @@ export function FinancialInput({ financial, sources, costItems, dispatch }: {
       </div>
       {fields.map(({ id, label, description, unit }) => {
         const value = financial[id]
+        const sourceErrors = validation.fields[id].issues
+          .filter((entry) => entry.code === 'source-conflict' || entry.code === 'unsupported-actual-rent')
+          .map((entry) => `source-issue-${id}-${entry.code}`).join(' ')
+        const costErrors = validation.fields[id].issues.some((entry) => entry.target === 'cost')
         return (
           <div className="financial-row" key={id} role="group" aria-labelledby={`label-${id}`}>
             <div className="field-definition">
@@ -44,7 +48,8 @@ export function FinancialInput({ financial, sources, costItems, dispatch }: {
                   inputMode="decimal"
                   autoComplete="off"
                   spellCheck={false}
-                  aria-describedby={`hint-${id} unit-${id} status-${id} source-summary-${id}`}
+                  aria-describedby={`hint-${id} unit-${id} status-${id} source-summary-${id} ${sourceErrors}${costErrors ? ' cost-issues' : ''}`.trim()}
+                  aria-invalid={sourceErrors || costErrors ? true : undefined}
                   value={value.rawValue}
                   onChange={(event) => dispatch({ type: 'register-value', field: id, rawValue: event.target.value })}
                 />
@@ -86,7 +91,7 @@ export function FinancialInput({ financial, sources, costItems, dispatch }: {
                 </div>
               </div>
             ) : <p className="meta unchanged-period">{id === 'P' ? 'Totalpris for objektet' : 'Minimumskrav i prosent'}</p>}
-            <SourceNote field={id} value={value.rawValue} sources={sources} issues={validation.fields[id].issues} dispatch={dispatch} />
+            <SourceNote field={id} value={value.rawValue} sources={sources} issues={validation.fields[id].issues} errorDescription={sourceErrors} dispatch={dispatch} />
           </div>
         )
       })}

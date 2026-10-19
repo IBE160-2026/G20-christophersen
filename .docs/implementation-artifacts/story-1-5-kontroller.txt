@@ -1,0 +1,49 @@
+Story 1.5 — faktiske kontrollutdata, 2026-10-19
+Node 24.21.0; npm 11.19.0; macOS arm64
+Baseline 04efbe3ecd1c82d0e55d2a4f0b590144dd42dd69
+
+$ npm test
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  3 passed (3)
+      Tests  83 passed (83)
+   Start at  12:48:45
+   Duration  167ms (import 54%, transform 22%, tests 20%, worker 4%)
+
+Exit: 0
+
+$ npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+Exit: 0
+
+$ npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts vitest.config.ts
+
+Exit: 0
+
+$ git diff --check
+Exit: 0
+
+Utvalgte eksakte råutdrag fra full npm run test:e2e (bygget demo og dev), kjørt før dokumentasjonen nedenfor:
+$ PATH=/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin:$PATH PLAYWRIGHT_BROWSERS_PATH=/private/tmp/ibe160-story-1-2-browsers npm run test:e2e
+vite v8.3.4 building client environment for production...
+✓ 120 modules transformed.
+✓ built in 84ms
+Running 24 tests using 4 workers
+  24 passed (6.0s)
+Running 2 tests using 2 workers
+  2 passed (1.1s)
+Exit: 0
+
+Tidligere kjøringer: første sandbox-forsøk fikk miljøets loopback-sperre. Første kjøring med lokal server ga 19 bestått / 2 feil: gammelt feltantall og fokusklipping av ny lang kildekonfliktknapp ved 320×160. Knappteksten ble forkortet og antalls-/fokusforventninger oppdatert; påfølgende 21+2 bestod. Etter tre nye dynamiske zoomkontroller bestod 24+2 som vist ovenfor. NO_COLOR/FORCE_COLOR-varsel og forventede dev-avvisninger av private/backend/.docs/.git-ressurser er miljø-/kontrollutdata, ikke feil.

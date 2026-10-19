@@ -12,3 +12,9 @@ perioder som skal forklares. Den utfører ingen bekreftelseshandling.
 `financial-validation.ts` eier kanoniske desimalstrenger og numerisk
 valideringsresultat med målrettede feltårsaker og bevart normaliseringsgrunnlag.
 Det er ingen komplett framtidig finans-/rapportkontrakt.
+
+`financial-basis.ts` binder de samme registrerte verdiene til kilde eller
+egen forutsetning, forventet/faktisk oppgitt leie, uløst alternativ kildeverdi
+og manuelt oppgitt D-/J-innhold. Kontrollresultatet beholder hele grunnlaget
+og målrettede årsaker. Kostnadsbidrag beskriver mulig delinnhold i totalene;
+de er aldri et nytt tillegg eller et estimat.

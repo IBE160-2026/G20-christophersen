@@ -63,7 +63,7 @@ function App() {
           <span className="status-label">Ubekreftet tallgrunnlag</span>
         </div>
 
-        <FinancialInput financial={session.financial} dispatch={dispatch} />
+        <FinancialInput financial={session.financial} sources={session.sources} costItems={session.costItems} dispatch={dispatch} />
       </main>
     </div>
   )

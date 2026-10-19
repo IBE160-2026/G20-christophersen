@@ -1,0 +1,14 @@
+{
+  "sources": [
+    "Egen forutsetning: Totalpris inklusive fellesgjeld, eget grunnlag",
+    "Egen forutsetning: Forventet leie for objektet i 2026 · Forventet leie, ikke dokumentert faktisk leie.",
+    "Egen forutsetning: Brukeroppgitt kostnadsoversikt",
+    "Egen forutsetning: Renter og avdrag, egen forutsetning",
+    "Egen forutsetning: Eget avkastningskrav"
+  ],
+  "cost": "Kostnadsinnhold i D og J\n\nBeskriv kostnader som inngår i totalene over. Oppgi hele postens beløp og rentedelen/avdrag separat, også når den er 0.\n\nPostene følger perioden og året for D: År · 2026. Alle beløp er NOK. Oppgitt innhold kan være et delgrunnlag.\n\nKostnadspost 1\nNavn på post 1\nSamlet beløp, post 1 (NOK)\nHerav renter/avdrag, post 1 (NOK)\nInngår allerede i, post 1\nSelvstendig post\nKommunale avgifter\n\n120000 NOK = D 100000 + J 20000 NOK\n\nFjern post 1\nKostnadspost 2\nNavn på post 2\nSamlet beløp, post 2 (NOK)\nHerav renter/avdrag, post 2 (NOK)\nInngår allerede i, post 2\nSelvstendig post\nFelleskostnader\n\n30000 NOK = D 30000 + J 0 NOK · Inngår i Felleskostnader; telles ikke på nytt.\n\nFjern post 2\nLegg til kostnadsinnhold\n\nOppgitt bidrag uten dobbelttelling: D 100000 NOK · J 20000 NOK (perioden for D).\n\nOppdelingen er innhold i registrerte D/J, ikke et tillegg. Renter og avdrag hører bare til J. Registrerte totaler og øvrige kostnader endres ikke automatisk.",
+  "totals": [
+    "400000",
+    "800000"
+  ]
+}

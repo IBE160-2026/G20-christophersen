@@ -1,7 +1,10 @@
 import type { Dispatch } from 'react'
 import type { FinancialField, RawFinancialInput } from '../../contracts/financial-input.ts'
 import { RegisteredPeriodSchema } from '../../contracts/financial-input.ts'
+import type { CostItem, FinancialSources } from '../../contracts/financial-basis.ts'
+import { validateFinancialBasis } from '../../domain/financial-basis.ts'
 import type { SessionAction } from '../state/session.ts'
+import { SourceNote, CostBreakdownInput } from './FinancialBasisInput.tsx'
 
 const fields: { id: FinancialField; label: string; description: string; unit: string }[] = [
   { id: 'P', label: 'Totalpris', description: 'Inklusive eventuell fellesgjeld, uten kjøpsomkostninger.', unit: 'NOK' },
@@ -11,10 +14,13 @@ const fields: { id: FinancialField; label: string; description: string; unit: st
   { id: 'Ymin', label: 'Minimumskrav til nettoyield', description: 'Ditt eget avkastningskrav i prosent.', unit: '%' },
 ]
 
-export function FinancialInput({ financial, dispatch }: {
+export function FinancialInput({ financial, sources, costItems, dispatch }: {
   financial: RawFinancialInput
+  sources: FinancialSources
+  costItems: CostItem[]
   dispatch: Dispatch<SessionAction>
 }) {
+  const validation = validateFinancialBasis({ values: financial, sources, costItems })
   return (
     <section className="financial-input" aria-labelledby="registration-title">
       <div className="registration-intro">
@@ -38,7 +44,7 @@ export function FinancialInput({ financial, dispatch }: {
                   inputMode="decimal"
                   autoComplete="off"
                   spellCheck={false}
-                  aria-describedby={`hint-${id} unit-${id} status-${id}`}
+                  aria-describedby={`hint-${id} unit-${id} status-${id} source-summary-${id}`}
                   value={value.rawValue}
                   onChange={(event) => dispatch({ type: 'register-value', field: id, rawValue: event.target.value })}
                 />
@@ -80,9 +86,11 @@ export function FinancialInput({ financial, dispatch }: {
                 </div>
               </div>
             ) : <p className="meta unchanged-period">{id === 'P' ? 'Totalpris for objektet' : 'Minimumskrav i prosent'}</p>}
+            <SourceNote field={id} value={value.rawValue} sources={sources} issues={validation.fields[id].issues} dispatch={dispatch} />
           </div>
         )
       })}
+      <CostBreakdownInput financial={financial} result={validation.costBreakdown} issues={validation.issues} dispatch={dispatch} />
       <div className="registration-note">
         <p>Registrering alene er ikke bekreftelse. En blank verdi er ikke 0; null krever eksplisitt bekreftelse før bruk.</p>
         <p>Kontroll og bekreftelse av tallgrunnlaget er ennå ikke tilgjengelig. Tilstandsrapport åpnes først når tallgrunnlaget er gyldig og bekreftet.</p>

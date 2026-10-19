@@ -219,6 +219,32 @@ h1 {
 .period-context { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-4); }
 .period-context label { margin-bottom: var(--space-2); }
 .unchanged-period { padding-top: var(--space-2); }
+.source-note { grid-column: 1 / -1; min-width: 0; }
+.source-controls, .cost-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.source-controls label, .cost-controls label { margin-bottom: var(--space-2); }
+.source-summary, .source-note > button, .source-conflict p + p { margin-top: var(--space-2); }
+.source-summary, .source-conflict, .cost-contribution { overflow-wrap: anywhere; }
+.secondary-action {
+  min-height: var(--control-height);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-md);
+  background: var(--surface-main);
+  text-align: left;
+  scroll-margin-block: 40px var(--space-2);
+}
+.source-conflict { padding: var(--space-4); margin-top: var(--space-3); background: var(--surface-subtle); border-radius: var(--radius-lg); }
+.source-conflict h3 { margin: 0 0 var(--space-2); font-size: 14px; font-weight: 600; }
+.source-conflict .source-controls { margin-block: var(--space-3); }
+.source-conflict button { margin-top: var(--space-2); }
+.field-issue { color: var(--status-danger); margin-top: var(--space-2); }
+.cost-breakdown { border-top: 1px solid var(--border-decorative); padding-top: var(--space-5); }
+.cost-breakdown > p { margin-top: var(--space-2); }
+.cost-item { min-width: 0; margin: var(--space-4) 0; padding: var(--space-4); border: 1px solid var(--border-control); border-radius: var(--radius-md); }
+.cost-item legend, .cost-item label { font-weight: 600; }
+.cost-item label { display: block; line-height: 1.4; }
+.cost-item input, .cost-item select { width: 100%; min-width: 0; min-height: var(--control-height); padding: var(--space-1) var(--space-2); border: 1px solid var(--border-control); border-radius: var(--radius-md); background: var(--surface-main); scroll-margin-block: 40px var(--space-2); }
+.cost-contribution { margin-block: var(--space-3); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 1050px) {
   .financial-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
@@ -228,6 +254,7 @@ h1 {
 @media (max-width: 600px) {
   .financial-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
   .financial-input { padding: var(--space-4); }
+  .source-controls, .cost-controls { grid-template-columns: minmax(0, 1fr); }
 }
 
 .skip-link {
@@ -270,4 +297,5 @@ h1 {
 
 @media (max-height: 200px) {
   .financial-row input, .financial-row select { scroll-margin-block: var(--space-2); }
+  .secondary-action, .cost-item input, .cost-item select { scroll-margin-block: var(--space-2); }
 }

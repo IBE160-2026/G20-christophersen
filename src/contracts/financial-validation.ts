@@ -9,11 +9,13 @@ export const DecimalStringSchema = z.string().regex(/^(?!-0$)-?(?:0|[1-9]\d*)(?:
 
 export const FinancialIssueSchema = z.strictObject({
   field: FinancialFieldSchema,
-  target: z.enum(['value', 'confirmation', 'period', 'year']),
+  target: z.enum(['value', 'confirmation', 'period', 'year', 'source', 'cost']),
   code: z.enum([
     'missing-value', 'not-numeric', 'must-be-positive', 'must-be-nonnegative',
     'unconfirmed-zero', 'unconfirmed-value', 'missing-period', 'unknown-period',
     'unsupported-period', 'missing-year', 'invalid-year', 'different-years',
+    'missing-source', 'missing-rent-nature', 'unsupported-actual-rent', 'source-conflict',
+    'invalid-cost', 'invalid-cost-inclusion', 'cost-exceeds-total',
   ]),
   message: z.string(),
   action: z.string(),

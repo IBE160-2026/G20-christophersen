@@ -13,6 +13,13 @@ Decimal.strict = true
 // Ingen tvetydig fjerning av alle skilletegn, valutatekst eller tallkoersjon.
 const decimalInput = /^[+-]?(?:(?:\d+|\d{1,3}(?:[ \u00a0\u202f]\d{3})+)(?:[.,]\d*)?|[.,]\d+)$/
 
+/** Samme desimalparser for registrerte verdier og oppgitt kostnadsinnhold. */
+export function parseFinancialDecimal(rawValue: string): string | null {
+  const raw = rawValue.trim()
+  if (!decimalInput.test(raw)) return null
+  return new Decimal(raw.replace(/[ \u00a0\u202f]/g, '').replace(',', '.').replace(/^\+/, '')).toFixed()
+}
+
 function issue(
   field: FinancialField, target: FinancialIssue['target'], code: FinancialIssue['code'],
   message: string, action: string,
@@ -33,14 +40,14 @@ function validateValue(
     result.issues.push(issue(field, 'value', 'missing-value', `${field}: Verdien mangler.`, `Oppgi verdien for ${field}.`))
     return result
   }
-  if (!decimalInput.test(raw)) {
+  const canonical = parseFinancialDecimal(raw)
+  if (canonical === null) {
     result.valueStatus = 'invalid'
     result.issues.push(issue(field, 'value', 'not-numeric', `${field}: Verdien er ikke et gyldig tall.`, `Oppgi et desimaltall for ${field}.`))
     return result
   }
 
-  const normalized = raw.replace(/[ \u00a0\u202f]/g, '').replace(',', '.').replace(/^\+/, '')
-  const decimal = new Decimal(normalized)
+  const decimal = new Decimal(canonical)
   result.decimal = decimal.toFixed()
   const invalidRange = field === 'P' ? decimal.lte('0') : decimal.lt('0')
   result.valueStatus = invalidRange ? 'invalid' : 'valid'
@@ -58,7 +65,8 @@ function validateValue(
 }
 
 /** Ren validering av numerisk grunnlag, bekreftelse og sammenlignbart år.
- * Kilde/kostnadsinnhold vurderes først i Story 1.5. Funksjonen bekrefter aldri.
+ * Bruk validateFinancialBasis når kilde/kostnadsinnhold også skal vurderes.
+ * Funksjonen bekrefter aldri.
  */
 export function validateFinancialInput(input: RegisteredFinancialInput): FinancialValidation {
   const registered = RegisteredFinancialInputSchema.parse(input)

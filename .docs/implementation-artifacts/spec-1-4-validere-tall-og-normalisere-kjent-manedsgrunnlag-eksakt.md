@@ -2,7 +2,7 @@
 title: 'Story 1.4 — Validere tall og normalisere kjent månedsgrunnlag eksakt'
 type: 'feature'
 created: '2026-10-19'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '1-4-validere-tall-og-normalisere-kjent-månedsgrunnlag-eksakt'
 baseline_commit: '13d111237f3b7609786e054455fd5516ef9218d2'
@@ -35,3 +35,24 @@ Ingen UI-endring, nye bekreftelseshandlinger, kilde-/kostnadskontroll, mangelbas
 - Verifikasjon: uavhengig Vitest-fasit for alle fem AC, alle felt/blank/negative/ikke-numeriske/bekreftet og ubekreftet null, måned/år/blanding/ulike år/ukjent periode, store og små presise desimaler, gjentakelse og frysing. Kjør typecheck, lint, build og eksisterende 19 demo-/2 dev-E2E; isolert npm ci etter ny lockfil. UI er uendret og krever ingen ny manuell UI-flyt. Faktiske utdata/AC-bevis lagres separat.
 - Implementert og egenverifisert 2026-10-19: 51 nye domenetester og ni eksisterende tilstandstester består. Typecheck/lint/build og 19 demo-/to dev-E2E består både i arbeidsområdet og fra isolert ren npm ci av den nye lockfilen. Første typecheck fant ubrukt testimport og unionindeksert testtilordning; begge testtypefeil er rettet uten produksjonsendring. [AC-bevis og avgrensning](story-1-4-verifikasjon.md), [faktiske råutdata](story-1-4-kontroller.txt) og [prosess/prompt](../process/arbeidsokter/2026-10-19-story-1-4.md) er lagret.
 - Sluttstatus er in-review/review. Ingen uavhengig code review er kjørt og ingen done-påstand gis. Kilde-/kostnadskontroll, samlet mangelbegrunnelse og UI-bekreftelse er fortsatt senere stories. Ingen åpent produkt-/arkitekturspørsmål er funnet. Repoets bygde demo er gjenopprettet på http://127.0.0.1:3000 (exec-session 6174). Ingen commit/staging/push fra implementeringsagenten.
+
+## Review Findings — 2026-10-19
+
+Full BMAD-review av `4bfed39` mot `13d1112`, med fire uavhengige lesende lag. Den nye mini-sprintbestillingen autoriserer review, avgrensede rettinger og done; den tidligere implementeringsfasens stopp ved review ovenfor er historikk. Ingen storydefinisjon endres.
+
+- [x] [Review][Patch] B6: Presiser at `sufficient` bare gjelder numerikk/bekreftelse/periode/år, ikke kilde-/kostnadskontroll [src/contracts/financial-validation.ts:33].
+- [x] [Review][Patch] B8: Bruk de fem AC-feltene og tre periodiske feltene som eksplisitt testgrunnlag fremfor å utlede testutvalget fra produksjonsenum [tests/unit/financial-validation.test.ts:2].
+
+### Rejected
+
+- B1 — low: schemaet godtar en manuelt fabrikkert missing/sufficient-kombinasjon; faktisk produsent gir aldri denne. Ekstra kryssfeltguards for ingen eksisterende mottaker gir unødvendig kompleksitet.
+- B2 — low: fabrikkert periode/faktor-avvik godtas strukturelt; domain setter alltid faktor 1/12 fra kjent periode. Ingen eksisterende flyt tar imot eksternt normaliseringsresultat.
+- B3 — low: fabrikkert tomt/ugyldig resultatår godtas strukturelt; domain produserer bare kanonisk positivt heltall eller null. Ingen aktuell feilbane krever nye guards.
+- B4 — low: fabrikkert sprik mellom felt-/samleissues godtas strukturelt; domain bygger samlelisten direkte fra alle felt. Ingen eksisterende mottaker bruker manuelt konstruert resultat.
+- B5 — low: fabrikkert tom/tvetydig issue godtas strukturelt; alle faktiske issue-kall har konkret mål/kode/tekst/handling. Ekstra semantiske guards ville kopiere rene domeneregler.
+- B7 — false: feil inputstruktur skal gi kontraktfeil. Direkte kall av den offentlige funksjonen med numerisk rawValue gir forventet ZodError, mens ikke-numerisk tekst gir feltresultat. Manglende JSDoc-utvidelse påviser ingen feil.
+- B9 — false: påstanden om manglende forbrukskontrakt motsies av funksjonens kontraktkommentar, domain-README, storyens Implementation Notes og AC-bevis. Å gjenta alle formater og eksempler i modul-README er ikke et AC-krav.
+
+Alle AC-bevis, råresultater og individuell triage samles i [reviewrapporten](story-1-4-review.md).
+
+Review bestått etter de to rettingene: egne 60 Vitest, typecheck/lint/build og 19 demo-/to dev-E2E består. Etter kommentar-/testretting er 60 Vitest, typecheck og lint kjørt på nytt uten feil. Ingen uløst high/medium, ingen åpen beslutning eller blocker; story og sprintnøkkel er done. Epic 1 forblir in-progress og senere stories er backlog ved faseoverlevering.

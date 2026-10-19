@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import {
-  FinancialFieldSchema, RecurringFieldSchema, RegisteredFinancialInputSchema,
-} from '../../src/contracts/financial-input.ts'
+import { RegisteredFinancialInputSchema } from '../../src/contracts/financial-input.ts'
 import type { RegisteredFinancialInput } from '../../src/contracts/financial-input.ts'
 import { DecimalStringSchema, FinancialValidationSchema } from '../../src/contracts/financial-validation.ts'
 import { validateFinancialInput } from '../../src/domain/validation.ts'
+
+// Faste felt fra Story 1.4 AC1/AC2; testutvalget følger ikke produksjonsenumene.
+const financialFields = ['P', 'L', 'D', 'J', 'Ymin'] as const
+const recurringFields = ['L', 'D', 'J'] as const
 
 // Uavhengig forhåndsdefinert fasit: F1 og årsnormaliseringsdelen av BT-7/15/16.
 // Ingen forventningsverdi beregnes med modulen eller big.js i testene.
@@ -24,7 +26,7 @@ function freezeBasis(basis: RegisteredFinancialInput) {
 }
 
 describe('Story 1.4 AC1 — FR-3, AD-7: tall, blank, grenser og eksplisitt bekreftelse', () => {
-  it.each(FinancialFieldSchema.options)('%s: blank og whitespace forblir manglende, aldri 0', (field) => {
+  it.each(financialFields)('%s: blank og whitespace forblir manglende, aldri 0', (field) => {
     for (const rawValue of ['', '  ', '\t\n', '\u00a0']) {
       const basis = annualBasis()
       basis[field].rawValue = rawValue
@@ -36,7 +38,7 @@ describe('Story 1.4 AC1 — FR-3, AD-7: tall, blank, grenser og eksplisitt bekre
     }
   })
 
-  it.each(FinancialFieldSchema.options)('%s: ikke-numerisk og feilformet input avvises helt', (field) => {
+  it.each(financialFields)('%s: ikke-numerisk og feilformet input avvises helt', (field) => {
     for (const rawValue of ['tekst', 'NaN', 'Infinity', '-Infinity', '12kr', '0x10', '1e3', '1,2,3', '1.234,56', '12 34', '1 90 000', '--1', '1_000']) {
       const basis = annualBasis()
       basis[field].rawValue = rawValue
@@ -47,7 +49,7 @@ describe('Story 1.4 AC1 — FR-3, AD-7: tall, blank, grenser og eksplisitt bekre
     }
   })
 
-  it.each(FinancialFieldSchema.options)('%s: negative tall er ugyldige uten avrunding', (field) => {
+  it.each(financialFields)('%s: negative tall er ugyldige uten avrunding', (field) => {
     const basis = annualBasis()
     basis[field].rawValue = '-0.000000000000000000001'
     const result = validateFinancialInput(basis).fields[field]
@@ -55,7 +57,7 @@ describe('Story 1.4 AC1 — FR-3, AD-7: tall, blank, grenser og eksplisitt bekre
     expect(result.issues.map(({ code }) => code)).toEqual([field === 'P' ? 'must-be-positive' : 'must-be-nonnegative'])
   })
 
-  it.each(FinancialFieldSchema.options)('%s: 0 krever bekreftelse og gjør aldri P gyldig (BT-6/10)', (field) => {
+  it.each(financialFields)('%s: 0 krever bekreftelse og gjør aldri P gyldig (BT-6/10)', (field) => {
     for (const rawValue of ['0', '0,00', '-0', '+000.000']) {
       const basis = annualBasis()
       basis[field].rawValue = rawValue
@@ -73,7 +75,7 @@ describe('Story 1.4 AC1 — FR-3, AD-7: tall, blank, grenser og eksplisitt bekre
     }
   })
 
-  it.each(FinancialFieldSchema.options)('%s: vanlig registrering er heller ingen bekreftelse', (field) => {
+  it.each(financialFields)('%s: vanlig registrering er heller ingen bekreftelse', (field) => {
     const basis = annualBasis()
     basis[field].confirmed = false
     const result = validateFinancialInput(basis).fields[field]
@@ -155,7 +157,7 @@ describe('Story 1.4 AC2/3 — FR-1/12/14, AD-7: eksakt årsnormalisering', () =>
 })
 
 describe('Story 1.4 AC4 — BT-16: konkrete periode- og årsproblemer', () => {
-  it.each(RecurringFieldSchema.options)('%s: uoppgitt, ukjent og ustøttet periode gir aldri årsverdi', (field) => {
+  it.each(recurringFields)('%s: uoppgitt, ukjent og ustøttet periode gir aldri årsverdi', (field) => {
     for (const [period, expectedCode] of [['', 'missing-period'], ['unknown', 'unknown-period'], ['week', 'unsupported-period'], ['Month', 'unsupported-period']]) {
       const basis = annualBasis()
       basis[field].period = period
@@ -170,7 +172,7 @@ describe('Story 1.4 AC4 — BT-16: konkrete periode- og årsproblemer', () => {
     }
   })
 
-  it.each(RecurringFieldSchema.options)('%s: manglende/ugyldig år gjettes ikke og smitter ikke uendrede felt', (field) => {
+  it.each(recurringFields)('%s: manglende/ugyldig år gjettes ikke og smitter ikke uendrede felt', (field) => {
     for (const year of ['', '  ', 'ukjent', '2026/2027', '2026.0', '-2026', '0000']) {
       const basis = annualBasis()
       basis[field].year = year
@@ -179,18 +181,18 @@ describe('Story 1.4 AC4 — BT-16: konkrete periode- og årsproblemer', () => {
       expect(result.fields[field]).toMatchObject({ status: 'insufficient', normalization: null, registered: { year } })
       expect(result.issues).toHaveLength(1)
       expect(result.issues[0]).toMatchObject({ field, target: 'year', code: year.trim() === '' ? 'missing-year' : 'invalid-year' })
-      for (const other of RecurringFieldSchema.options.filter((candidate) => candidate !== field)) {
+      for (const other of recurringFields.filter((candidate) => candidate !== field)) {
         expect(result.fields[other].status).toBe('sufficient')
       }
     }
   })
 
-  it.each(RecurringFieldSchema.options)('%s: ulikt år identifiserer alle involverte felt uten foretrukket år', (field) => {
+  it.each(recurringFields)('%s: ulikt år identifiserer alle involverte felt uten foretrukket år', (field) => {
     const basis = annualBasis()
     basis[field].year = '2025'
     const result = validateFinancialInput(basis)
     expect(result.commonYear).toBeNull()
-    for (const affected of RecurringFieldSchema.options) {
+    for (const affected of recurringFields) {
       expect(result.fields[affected].status).toBe('insufficient')
       expect(result.fields[affected].issues).toEqual([expect.objectContaining({
         field: affected, target: 'year', code: 'different-years', relatedFields: ['L', 'D', 'J'],
@@ -243,7 +245,7 @@ describe('Story 1.4 AC5 — NFR-1, AD-1/7/10: gjentakelse, immutabilitet og delt
       expect(repeated).toEqual(first)
       expect(repeated.fields.L.normalization?.annualValue).toBe('1.200000000000000012')
       expect(basis).toEqual(before)
-      for (const field of FinancialFieldSchema.options) expect(repeated.fields[field].registered).not.toBe(basis[field])
+      for (const field of financialFields) expect(repeated.fields[field].registered).not.toBe(basis[field])
       expect(FinancialValidationSchema.parse(repeated)).toEqual(repeated)
     }
     first.fields.L.registered.rawValue = 'endre bare resultatkopien'

@@ -30,7 +30,8 @@ const ValidatedValueSchema = z.strictObject({
 
 const ValidatedRecurringValueSchema = ValidatedValueSchema.extend({
   registered: RegisteredRecurringValueSchema,
-  // Dette er kontrollgrunnlag. Bare status:sufficient tillater gyldig bruk.
+  // Kontrollgrunnlag: sufficient gjelder bare numerikk, bekreftelse og periode/år.
+  // Kilde/kostnadsinnhold må også vurderes før senere gyldig bruk.
   normalization: z.strictObject({
     year: z.string(),
     factor: z.enum(['1', '12']),

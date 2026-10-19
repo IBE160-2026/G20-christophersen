@@ -27,7 +27,7 @@ Running 5 tests using 4 workers
   ✘  5 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes (5.7s)
 
 
-  1) tests/e2e/financial-input.spec.ts:347:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes 
+  1) tests/e2e/financial-input.spec.ts:347:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes
 
     Error: expect(locator).toHaveAttribute(expected) failed
 
@@ -66,7 +66,7 @@ Running 5 tests using 4 workers
 
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-  2) tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast 
+  2) tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast
 
     Error: expect(locator).not.toHaveAttribute() failed
 
@@ -105,7 +105,7 @@ Running 5 tests using 4 workers
 
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-  3) tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes 
+  3) tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes
 
     Error: expect(locator).toBeFocused() failed
 
@@ -144,7 +144,7 @@ Running 5 tests using 4 workers
 
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-  4) tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes 
+  4) tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes
 
     Error: expect(locator).toBeFocused() failed
 
@@ -183,7 +183,7 @@ Running 5 tests using 4 workers
 
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-  5) tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes 
+  5) tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes
 
     Error: expect(locator).toBeFocused() failed
 
@@ -223,11 +223,11 @@ Running 5 tests using 4 workers
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
   5 failed
-    tests/e2e/financial-input.spec.ts:347:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes 
-    tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast 
-    tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes 
-    tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes 
-    tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes 
+    tests/e2e/financial-input.spec.ts:347:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes
+    tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast
+    tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes
+    tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes
+    tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes
 
 exit=1
 
@@ -347,11 +347,11 @@ Running 2 tests using 2 workers
 (node:44923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)
 [WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/private/story-1-2-dev-SDnJh9/private.txt" is outside of Vite serving allow list.
-[WebServer] 
+[WebServer]
 [WebServer] - /Users/madschristophersen/IBE160/G20-christophersen
-[WebServer] 
+[WebServer]
 [WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
-[WebServer] 
+[WebServer]
 [WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
 [WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
 [WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.

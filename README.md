@@ -4,7 +4,7 @@ Gruppeprosjekt i **IBE160 Programmering med KI** ved Høgskolen i Molde, høsten
 
 Repoet inneholder gruppens applikasjon og dokumentasjon av utvikling, testing og kvalitetssikring med KI.
 
-## Property Acquisition Agent — Story 1.3
+## Property Acquisition Agent — Story 1.4
 
 Planlagt produkt er en lokal førstevurdering av ett boligutleieobjekt med
 kontrollert tallgrunnlag, tilstandsrapport og kodebasert screening.
@@ -12,9 +12,11 @@ Appen har lokal server, godkjent appskall og registrering av P/L/D/J/Ymin.
 L/D/J har eksplisitt periode og år. Feltene starter blanke og ubekreftede;
 egne råverdier beholdes i den aktive økten, også 0 og sletting. Oppdatering
 eller lukking av siden avslutter økten. Tallgrunnlag er gjeldende; senere
-trinn viser status og hvorfor de er utilgjengelige. Numerisk validering,
-årsnormalisering, kilde-/kostnadskontroll, bekreftelse, rapportanalyse og
-screening følger senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
+trinn viser status og hvorfor de er utilgjengelige. En separat ren domenemodul
+validerer tall og normaliserer kjente månedsbeløp eksakt med big.js; denne kan
+testes direkte og er ennå ikke koblet til skjermens feil-/bekreftelsesflyt.
+Kilde-/kostnadskontroll, bekreftelse, rapportanalyse og screening følger
+senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
 konto kreves for registreringen.
 
 ## Installasjon og kontroll
@@ -78,7 +80,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. Ni rene tilstandstester, nitten demotester
+port 3000, som må være ledig. Seksti rene modultester, nitten demotester
 og to dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
@@ -89,6 +91,9 @@ Registreringstestene bruker kontrollerte F1-/F3-verdier og kontrollerer
 råstrenger, blank/0/sletting, ubekreftet status, periode/år, retur uten
 datatap og tom registrering etter sideoppdatering. De kontrollerer ingen
 finansberegning eller anbefaling før disse er implementert.
+De 51 domenetestene kontrollerer alle fem felt, blank/0/negative/ikke-numeriske
+verdier, bekreftelsesgrunnlag, perioder/år, årsnormaliseringsdelen av
+BT-7/BT-15/BT-16, presise desimaler og gjentakelse uten mutasjon.
 Chromium-binæren må være installert før offline kjøring. Feilspor/skjermbilder
 legges under Git-ignorerte `test-results/`.
 
@@ -104,6 +109,8 @@ ubekreftede tilstander. Faktisk gjennomføring og avgrensning står i
 [verifikasjonen for Story 1.2](.docs/implementation-artifacts/story-1-2-verifikasjon.md).
 [Verifikasjonen for Story 1.3](.docs/implementation-artifacts/story-1-3-verifikasjon.md)
 dekker registrering og aktiv økt.
+[Verifikasjonen for Story 1.4](.docs/implementation-artifacts/story-1-4-verifikasjon.md)
+dekker den rene validerings-/normaliseringsmodulen.
 Full demo, senere funksjonstester og annen-person-bevis for S6 følger sine stories.
 
 Grunnlaget er tilpasset den [offisielle Vite react-ts-starteren](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).
@@ -119,13 +126,14 @@ og nødvendige avhengigheter er eksakt låst etter arkitekturen.
 | `src/contracts/` | Felles runtime-skjema og avledede typer. Ingen UI, server eller I/O. |
 | `src/backend/` | Lokal HTTP-server; senere dokumenter, analyseadaptere og contracts. Finans/anbefaling forblir i domain. |
 | `tests/e2e/` | Playwright-kontroll mot bygget demo og lokalt dev-skall. |
-| `tests/unit/` | Rene Vitest-kontroller av råregistrering og navigasjon. |
+| `tests/unit/` | Rene Vitest-kontroller av registrering, navigasjon og tall-/årsvalidering. |
 | `.docs/` | Autoritative planer, implementeringsbevis og prosesspor. |
 
 Importgrensene gjennomgås ved endringer, inklusive reeksporter, dynamiske
 importer og direkte I/O-bruk. Type- og lintkontroll erstatter ikke denne
-gjennomgangen mot AD-1. Contracts eier rå finansschema og avledede typer;
-domain inneholder foreløpig bare ansvarsbeskrivelse. Ingen framtidig
+gjennomgangen mot AD-1. Contracts eier rå/registrert finansschema og
+valideringsresultat med avledede typer; `domain/validation.ts` eier numerisk
+gyldighet, bekreftelsesbehov og eksakt årsnormalisering. Ingen framtidig
 rapportmodell eller finans-/screeningregel er lagt inn.
 Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,
 som er Git-ignorert. `.env` og `.env.*` holdes utenfor Git, med unntak for
@@ -138,6 +146,7 @@ under `tests/fixtures/property-cases/`.
 - [Story 1.1 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-11-etablere-reproduserbar-startstruktur-og-importgrenser)
 - [Story 1.2 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-12-starte-den-bygde-lokale-appen-med-godkjent-appskall)
 - [Story 1.3 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-13-registrere-og-bevare-finansverdier-for-ett-objekt)
+- [Story 1.4 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-14-validere-tall-og-normalisere-kjent-månedsgrunnlag-eksakt)
 - [Arkitektur og AD-1–AD-10](.docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md)
 - [SPEC og adoptert planverk](.docs/specs/spec-IBE160/SPEC.md)
 - [Sprintplan](.docs/implementation-artifacts/sprint-plan.md) og [sprintstatus](.docs/implementation-artifacts/sprint-status.yaml)
@@ -147,6 +156,8 @@ under `tests/fixtures/property-cases/`.
 - [Uavhengig review av Story 1.2](.docs/implementation-artifacts/story-1-2-review.md)
 - [Story 1.3 og implementeringsnotater](.docs/implementation-artifacts/spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt.md)
 - [Arbeidsøkt for Story 1.3](.docs/process/arbeidsokter/2026-10-17-story-1-3.md)
+- [Story 1.4 og implementeringsnotater](.docs/implementation-artifacts/spec-1-4-validere-tall-og-normalisere-kjent-manedsgrunnlag-eksakt.md)
+- [Arbeidsøkt for Story 1.4](.docs/process/arbeidsokter/2026-10-19-story-1-4.md)
 - [Lagrede brukerprompter](.docs/process/prompts/README.md)
 
 ## Medlemmer

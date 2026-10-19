@@ -45,7 +45,7 @@ development_status:
   1-4-validere-tall-og-normalisere-kjent-månedsgrunnlag-eksakt: done
   1-5-gjøre-kilder-kostnadsinnhold-og-uløste-konflikter-kontroller: done
   1-6-vurdere-kritiske-mangler-med-fast-kodebegrunnelse: done
-  1-7-kontrollere-bekrefte-og-rette-gjeldende-tallgrunnlag: backlog
+  1-7-kontrollere-bekrefte-og-rette-gjeldende-tallgrunnlag: review
   epic-1-retrospective: optional
 
   epic-2: backlog

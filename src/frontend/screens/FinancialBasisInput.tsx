@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type { Dispatch } from 'react'
-import type { FinancialField, RawFinancialInput } from '../../contracts/financial-input.ts'
+import type { FinancialField, RegisteredFinancialInput } from '../../contracts/financial-input.ts'
 import type { CostBreakdown, FinancialSources } from '../../contracts/financial-basis.ts'
 import { RentNatureSchema, SourceKindSchema } from '../../contracts/financial-basis.ts'
 import type { FinancialIssue } from '../../contracts/financial-validation.ts'
@@ -75,7 +75,7 @@ export function SourceNote({ field, value, sources, issues, errorDescription, di
 }
 
 export function CostBreakdownInput({ financial, result, issues, dispatch }: {
-  financial: RawFinancialInput; result: CostBreakdown; issues: FinancialIssue[]; dispatch: Dispatch<SessionAction>
+  financial: RegisteredFinancialInput; result: CostBreakdown; issues: FinancialIssue[]; dispatch: Dispatch<SessionAction>
 }) {
   const firstInput = useRef<HTMLInputElement>(null)
   const addButton = useRef<HTMLButtonElement>(null)

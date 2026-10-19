@@ -4,21 +4,23 @@ Gruppeprosjekt i **IBE160 Programmering med KI** ved Høgskolen i Molde, høsten
 
 Repoet inneholder gruppens applikasjon og dokumentasjon av utvikling, testing og kvalitetssikring med KI.
 
-## Property Acquisition Agent — Story 1.6 reviewet
+## Property Acquisition Agent — Story 1.7 klar for review
 
 Planlagt produkt er en lokal førstevurdering av ett boligutleieobjekt med
 kontrollert tallgrunnlag, tilstandsrapport og kodebasert screening.
 Appen har lokal server, godkjent appskall og registrering av P/L/D/J/Ymin.
 L/D/J har eksplisitt periode og år. Feltene starter blanke og ubekreftede;
 egne råverdier beholdes i den aktive økten, også 0 og sletting. Oppdatering
-eller lukking av siden avslutter økten. Tallgrunnlag er gjeldende; senere
-trinn viser status og hvorfor de er utilgjengelige. En separat ren domenemodul
-validerer tall og normaliserer kjente månedsbeløp eksakt med big.js; denne kan
-testes direkte og er ennå ikke koblet til skjermens feil-/bekreftelsesflyt.
+eller lukking av siden avslutter økten. Tallgrunnlag viser lokal validering og eksakt årsnormalisering med big.js.
+Eksplisitt bekreftelse av gyldige tall, perioder/år, kilder og kostnadsinnhold
+åpner Tilstandsrapport uten analyse. Nullverdier må også kontrolleres
+eksplisitt. Faktiske endringer opphever berørt bekreftelse; uendret retur
+bevarer kontrollstatus. Senere trinn viser status og hvorfor de er utilgjengelige.
 Kilder, kostnadsinnhold og uløste kildekonflikter kan kontrolleres i appen.
 Story 1.6 gir en separat ren vurdering av kjente kritiske mangler med faste
 begrunnelser og handlinger; uavhengig review er bestått. Tom mangelliste er ingen
-økonomisk godkjenning. Komplett bekreftelsesflyt, rapportanalyse og full screening følger
+økonomisk godkjenning. Story 1.7 kobler dette til Tallgrunnlag og er
+egenverifisert, klar for separat review. Rapportanalyse og full screening følger
 senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
 konto kreves for registreringen.
 
@@ -83,7 +85,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. 128 rene modultester, 27 demotester
+port 3000, som må være ledig. 177 rene modultester, 38 demotester
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
@@ -109,8 +111,11 @@ arbeidsinnhold med tastatur; navn/nummer/status beholdes, og navigasjonen
 dekker ikke innholdet. Tab videre gjennom verdier, perioder og år; fokus og
 feltetiketter skal forbli synlige. Prøv for eksempel P=16000000, L=1900000,
 D=400000, J=800000 og Ymin=7, velg År og skriv 2026 for L/D/J. Retur til
-Tallgrunnlag bevarer registreringen. Slett L eller skriv 0 for å se ulike
-ubekreftede tilstander. Faktisk gjennomføring og avgrensning står i
+Tallgrunnlag bevarer registreringen. Oppgi også opphav og kildebeskrivelse
+for hvert felt, og velg forventet/faktisk leie. Bruk Bekreft tallgrunnlaget:
+slettet L gir konkret feil/fokus, mens J=0 krever egen nullkontroll. Rett
+grunnen, bekreft og gå frem/tilbake; bekreftelser skal være bevart. Endre L
+og bekreft på nytt etter kontroll. Faktisk gjennomføring og avgrensning står i
 [verifikasjonen for Story 1.2](.docs/implementation-artifacts/story-1-2-verifikasjon.md).
 [Verifikasjonen for Story 1.3](.docs/implementation-artifacts/story-1-3-verifikasjon.md)
 dekker registrering og aktiv økt.
@@ -121,6 +126,8 @@ og [reviewet](.docs/implementation-artifacts/story-1-5-review.md) dekker kilde-/
 [Egenverifikasjonen for Story 1.6](.docs/implementation-artifacts/story-1-6-verifikasjon.md)
 dekker den rene mangelvurderingen. [Review av Story 1.6](.docs/implementation-artifacts/story-1-6-review.md)
 kontrollerer alle fem AC og dokumenterer retting og egne sluttkontroller.
+[Verifikasjonen for Story 1.7](.docs/implementation-artifacts/story-1-7-verifikasjon.md)
+dekker bekreftelse, feil, endring/retur, null, semantikk og faktisk zoomkontroll.
 Full demo, senere funksjonstester og annen-person-bevis for S6 følger sine stories.
 
 Grunnlaget er tilpasset den [offisielle Vite react-ts-starteren](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).

@@ -80,7 +80,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 720, height: 450 
       'value-L', 'period-L', 'year-L', 'source-kind-L', 'source-L', 'rent-nature-L', 'conflict-add-L',
       'value-D', 'period-D', 'year-D', 'source-kind-D', 'source-D', 'conflict-add-D',
       'value-J', 'period-J', 'year-J', 'source-kind-J', 'source-J', 'conflict-add-J',
-      'value-Ymin', 'source-kind-Ymin', 'source-Ymin', 'conflict-add-Ymin', 'cost-add',
+      'value-Ymin', 'source-kind-Ymin', 'source-Ymin', 'conflict-add-Ymin', 'cost-add', 'confirm-financial',
     ]
     const controls = page.locator('.financial-input input, .financial-input select, .financial-input button')
     expect(await controls.count()).toBe(expectedOrder.length)
@@ -273,3 +273,187 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 320, height: 160 
     expect(await page.locator('.workspace').evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
   })
 }
+
+async function registerF1(page: import('@playwright/test').Page) {
+  for (const [field, value] of Object.entries({ P: '16000000', L: '1900000', D: '400000', J: '800000', Ymin: '7' })) {
+    await page.locator(`#value-${field}`).fill(value)
+    await page.locator(`#source-kind-${field}`).selectOption('assumption')
+    await page.locator(`#source-${field}`).fill(`F1 kontrollert ${field}`)
+  }
+  for (const field of ['L', 'D', 'J']) {
+    await page.locator(`#period-${field}`).selectOption('year')
+    await page.locator(`#year-${field}`).fill('2026')
+  }
+  await page.locator('#rent-nature-L').selectOption('expected')
+}
+
+test('1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret retur, retting og øktslutt', async ({ page }) => {
+  const api: string[] = []
+  page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api')) api.push(request.url()) })
+  await page.goto('/')
+  await registerF1(page)
+  await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()
+  await expect(page.locator('#normalization-L')).toHaveText('Registrert 1900000 NOK × 1 = 1900000 NOK/år · 2026.')
+  await page.locator('#confirm-financial').focus()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('#confirm-financial')).toBeFocused()
+  await expect(page.locator('#confirmation-status')).toHaveText('Tallgrunnlaget er bekreftet. Tilstandsrapport er tilgjengelig.')
+  for (const field of fields) await expect(page.locator(`#status-${field}`)).toContainText('Bekreftet')
+  await page.locator('#next-step').focus()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('heading', { name: 'Tilstandsrapport', exact: true })).toBeFocused()
+  await expect(page.getByText('Ingen rapportanalyse er startet.', { exact: false })).toBeVisible()
+  await page.getByRole('button', { name: 'Tilbake til Tallgrunnlag', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Tallgrunnlag', exact: true })).toBeFocused()
+  await expect(page.locator('#source-L')).toHaveValue('F1 kontrollert L')
+  for (const field of fields) await expect(page.locator(`#status-${field}`)).toContainText('Bekreftet')
+  await page.locator('#value-L').fill('1800000')
+  await expect(page.locator('#status-L')).toContainText('Endret — må kontrolleres på nytt')
+  await expect(page.locator('#status-P')).toContainText('Bekreftet')
+  await expect(page.getByRole('button', { name: /Trinn 2/ })).toHaveAttribute('aria-disabled', 'true')
+  await page.locator('#confirm-financial').click()
+  await expect(page.getByText('Bekreftet tallgrunnlag', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: /Trinn 2/ }).click()
+  await expect(page.getByRole('heading', { name: 'Tilstandsrapport', exact: true })).toBeFocused()
+  expect(api).toEqual([])
+  await page.reload()
+  await expect(page.locator('#value-P')).toHaveValue('')
+  await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()
+})
+
+for (const scenario of [
+  { name: 'F3 manglende L', control: 'value-L', value: '', focus: 'value-L', error: /L: Verdien mangler.*Oppgi verdien for L/ },
+  { name: 'ugyldig P', control: 'value-P', value: '0', focus: 'value-P', error: /P: Totalpris må være større enn 0/ },
+  { name: 'ulike år', control: 'year-J', value: '2025', focus: 'year-L', error: /Verdiene gjelder ulike år/ },
+]) {
+  test(`1.7 AC2/AC6: ${scenario.name} viser lokale feil, første berørte felt og krever retting`, async ({ page }) => {
+    await page.goto('/')
+    await registerF1(page)
+    await page.locator(`#${scenario.control}`).fill(scenario.value)
+    await page.locator('#confirm-financial').click()
+    await expect(page.locator(`#${scenario.focus}`)).toBeFocused()
+    await expect(page.locator(`#${scenario.focus}`)).toHaveAccessibleDescription(scenario.error)
+    await expect(page.locator(`#${scenario.focus}`)).toHaveAttribute('aria-invalid', 'true')
+    await expect(page.getByRole('heading', { name: 'Innhent mer informasjon', exact: true })).toBeVisible()
+    await expect(page.locator(`#${scenario.control}`)).toHaveValue(scenario.value)
+    await expect(page.locator('#status-P')).toContainText('Ubekreftet')
+    await page.locator(`#${scenario.control}`).fill(scenario.control === 'value-L' ? '1900000' : scenario.control === 'value-P' ? '16000000' : '2026')
+    await expect(page.locator(`#${scenario.control}`)).toBeFocused()
+    await page.locator('#confirm-financial').click()
+    await expect(page.getByText('Bekreftet tallgrunnlag', { exact: true })).toBeVisible()
+  })
+}
+
+test('1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes', async ({ page }) => {
+  await page.goto('/')
+  await registerF1(page)
+  await page.locator('#value-J').fill('0')
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#zero-J')).toBeFocused()
+  await expect(page.locator('#value-J')).toHaveAccessibleDescription(/J: 0 må bekreftes/)
+  await expect(page.getByRole('heading', { name: 'Innhent mer informasjon', exact: true })).toBeVisible()
+  await page.keyboard.press('Space')
+  await expect(page.locator('#zero-J')).toBeChecked()
+  await expect(page.locator('#status-J')).toHaveText('0 registrert · Ubekreftet')
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#status-J')).toHaveText('0 registrert · Bekreftet')
+  await expect(page.getByText('Bekreftet tallgrunnlag', { exact: true })).toBeVisible()
+  await page.locator('#value-J').fill('')
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#value-J')).toBeFocused()
+  await expect(page.locator('#value-J')).toHaveAccessibleDescription(/J: Verdien mangler/)
+  await expect(page.locator('#zero-J')).toHaveCount(0)
+})
+
+test('1.7 AC2: L-konflikt består gjennom forsøk; opphav og ny kontroll må rettes eksplisitt', async ({ page }) => {
+  await page.goto('/')
+  await registerF1(page)
+  await page.locator('#conflict-add-L').click()
+  await page.locator('#conflict-value-L').fill('1400000')
+  await page.locator('#conflict-source-L').fill('Annen kilde')
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#conflict-value-L')).toBeFocused()
+  await expect(page.locator('#value-L')).toHaveAccessibleDescription(/Uløst kildekonflikt/)
+  await expect(page.locator('.local-deficiencies')).toContainText('Kontroller begge kildeverdiene for L')
+  await expect(page.locator('#conflict-value-L')).toHaveValue('1400000')
+  await page.locator('#value-L').fill('1400000')
+  await page.locator('#source-L').fill('Kontrollert annen kilde')
+  await page.locator('#conflict-remove-L').click()
+  await page.locator('#confirm-financial').click()
+  await expect(page.getByText('Bekreftet tallgrunnlag', { exact: true })).toBeVisible()
+})
+
+for (const viewport of [{ width: 1440, height: 900 }, { width: 1280, height: 800 }, { width: 720, height: 450 }, { width: 320, height: 200 }]) {
+  test(`1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved ${viewport.width}×${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport)
+    await page.goto('/')
+    await registerF1(page)
+    await page.locator('#value-J').fill('0')
+    await page.locator('#confirm-financial').focus()
+    await page.keyboard.press('Enter')
+    await expect(page.locator('#zero-J')).toBeFocused()
+    for (const id of ['zero-J', 'confirm-financial']) {
+      await page.locator(`#${id}`).focus()
+      const box = (await page.locator(`#${id}`).boundingBox())!
+      const nav = (await page.getByRole('navigation').boundingBox())!
+      expect(box.y - 5).toBeGreaterThanOrEqual(nav.y + nav.height - 0.5)
+      expect(box.y + box.height + 5).toBeLessThanOrEqual(viewport.height + 0.5)
+      await expect(page.locator(`#${id}`)).toHaveAccessibleName(/.+/)
+    }
+    await page.locator('#zero-J').focus()
+    await page.keyboard.press('Space')
+    await page.locator('#confirm-financial').focus()
+    await page.keyboard.press('Enter')
+    await expect(page.locator('#confirmation-status')).toHaveText(/Tallgrunnlaget er bekreftet/)
+    await page.keyboard.press('Tab')
+    await expect(page.locator('#next-step')).toBeFocused()
+    await page.keyboard.press('Enter')
+    await expect(page.getByRole('heading', { name: 'Tilstandsrapport', exact: true })).toBeFocused()
+    await page.getByRole('link', { name: /Tallgrunnlag/ }).focus()
+    await page.keyboard.press('Enter')
+    const heading = page.getByRole('heading', { name: 'Tallgrunnlag', exact: true })
+    await expect(heading).toBeFocused()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    const nav = (await page.getByRole('navigation').boundingBox())!
+    expect((await heading.boundingBox())!.y).toBeGreaterThanOrEqual(nav.y + nav.height)
+  })
+}
+
+test('1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast', async ({ page }, testInfo) => {
+  await page.goto('/')
+  await registerF1(page)
+  await page.locator('#value-L').fill('150000')
+  await page.locator('#period-L').selectOption('month')
+  await expect(page.locator('#normalization-L')).toHaveText('Registrert 150000 NOK × 12 = 1800000 NOK/år · 2026.')
+  await page.locator('#source-L').fill('')
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#source-L')).toBeFocused()
+  await expect(page.locator('#source-L')).toHaveAccessibleDescription(/Kilde eller egen forutsetning mangler/)
+  await page.screenshot({ path: testInfo.outputPath('tallgrunnlag-kilde-feil.png') })
+  const ratios = await page.evaluate(() => {
+    const css = (selector: string) => getComputedStyle(document.querySelector(selector)!)
+    const ratio = (a: string, b: string) => {
+      const luminance = (color: string) => {
+        const c = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map((v) => v / 255).map((v) => v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
+        return c[0] * 0.2126 + c[1] * 0.7152 + c[2] * 0.0722
+      }
+      const l = [luminance(a), luminance(b)].sort((x, y) => y - x)
+      return (l[0] + 0.05) / (l[1] + 0.05)
+    }
+    const white = css('.financial-input').backgroundColor
+    return {
+      action: ratio(css('.primary-action').color, css('.primary-action').backgroundColor),
+      error: ratio(css('#field-issues-L .field-issue').color, white),
+      issueText: ratio(css('.local-deficiencies p').color, css('.local-deficiencies').backgroundColor),
+      control: ratio(css('#value-L').borderColor, white),
+      focus: ratio(css('#source-L').outlineColor, white),
+    }
+  })
+  for (const role of ['action', 'error', 'issueText'] as const) expect(ratios[role]).toBeGreaterThanOrEqual(4.5)
+  for (const role of ['control', 'focus'] as const) expect(ratios[role]).toBeGreaterThanOrEqual(3)
+  console.log('Story 1.7 målt kontrast:', JSON.stringify(ratios))
+  await page.locator('#source-L').fill('Kontrollert forventet månedsleie')
+  await page.locator('#confirm-financial').click()
+  await page.locator('#confirmation-status').scrollIntoViewIfNeeded()
+  await page.screenshot({ path: testInfo.outputPath('tallgrunnlag-bekreftet.png') })
+})

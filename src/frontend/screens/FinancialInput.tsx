@@ -38,15 +38,20 @@ export function FinancialInput({ financial, sources, costItems, dispatch, sessio
     if (!first) return
     const costIndex = /^Kostnadspost (\d+)/.exec(first.message)?.[1]
     const costItem = costIndex ? costItems[Number(costIndex) - 1] : undefined
+    const costResult = costIndex ? attemptValidation.costBreakdown.items[Number(costIndex) - 1] : undefined
+    // Domain avgjør feilen; dette velger bare riktig kontroll for rettingen.
+    const costControl = first.code === 'invalid-cost-inclusion' ? 'included'
+      : costItem?.label.trim() === '' ? 'label'
+        : costResult?.amount === null || costResult?.amount.startsWith('-') ? 'amount' : 'debt'
     const sourceId = first.code === 'source-conflict' ? `conflict-value-${first.field}`
       : first.code === 'missing-rent-nature' ? 'rent-nature-L'
         : sources[first.field].kind === '' || first.code === 'unsupported-actual-rent' ? `source-kind-${first.field}` : `source-${first.field}`
     const id = first.target === 'period' ? `period-${first.field}` : first.target === 'year' ? `year-${first.field}`
       : first.target === 'source' ? sourceId : first.target === 'confirmation' ? `zero-${first.field}`
-        : first.target === 'cost' && costItem ? `${costItem.id}-label` : `value-${first.field}`
+        : first.target === 'cost' && costItem ? `${costItem.id}-${costControl}` : `value-${first.field}`
     document.getElementById(id)?.focus()
     // Bare et nytt eksplisitt forsøk flytter fokus, ikke løpende retting.
-  }, [session.confirmationAttempts, attemptValidation.issues, sources, costItems])
+  }, [session.confirmationAttempts, attemptValidation, sources, costItems])
   return (
     <section className="financial-input" aria-labelledby="registration-title">
       <div className="registration-intro">
@@ -132,6 +137,7 @@ export function FinancialInput({ financial, sources, costItems, dispatch, sessio
               {validation.fields[id].decimal === '0' && id !== 'P' && <label className="zero-confirmation" htmlFor={`zero-${id}`}>
                 <input type="checkbox" id={`zero-${id}`} checked={session.explicitZeros.includes(id)}
                   aria-describedby={visibleIssues.length ? `field-issues-${id}` : `status-${id}`}
+                  aria-invalid={visibleIssues.some((issue) => issue.code === 'unconfirmed-zero') || undefined}
                   onChange={(event) => dispatch({ type: 'check-zero', field: id, checked: event.target.checked })} />
                 Jeg har kontrollert at {id} er 0 {unit}.
               </label>}

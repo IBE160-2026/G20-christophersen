@@ -350,6 +350,7 @@ test('1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes', as
   await page.locator('#value-J').fill('0')
   await page.locator('#confirm-financial').click()
   await expect(page.locator('#zero-J')).toBeFocused()
+  await expect(page.locator('#zero-J')).toHaveAttribute('aria-invalid', 'true')
   await expect(page.locator('#value-J')).toHaveAccessibleDescription(/J: 0 må bekreftes/)
   await expect(page.getByRole('heading', { name: 'Innhent mer informasjon', exact: true })).toBeVisible()
   await page.keyboard.press('Space')
@@ -358,6 +359,17 @@ test('1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes', as
   await page.locator('#confirm-financial').click()
   await expect(page.locator('#status-J')).toHaveText('0 registrert · Bekreftet')
   await expect(page.getByText('Bekreftet tallgrunnlag', { exact: true })).toBeVisible()
+  await page.locator('#zero-J').uncheck()
+  await expect(page.locator('#status-J')).toHaveText('0 registrert · Ubekreftet')
+  await expect(page.getByRole('button', { name: /Trinn 2/ })).toHaveAttribute('aria-disabled', 'true')
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#zero-J')).toBeFocused()
+  await expect(page.locator('#zero-J')).not.toBeChecked()
+  await expect(page.locator('#next-step')).toHaveCount(0)
+  await page.locator('#zero-J').check()
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#status-J')).toHaveText('0 registrert · Bekreftet')
+  await expect(page.locator('#zero-J')).not.toHaveAttribute('aria-invalid')
   await page.locator('#value-J').fill('')
   await page.locator('#confirm-financial').click()
   await expect(page.locator('#value-J')).toBeFocused()
@@ -429,6 +441,9 @@ test('1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og mål
   await page.locator('#confirm-financial').click()
   await expect(page.locator('#source-L')).toBeFocused()
   await expect(page.locator('#source-L')).toHaveAccessibleDescription(/Kilde eller egen forutsetning mangler/)
+  await expect(page.locator('#source-L')).toHaveAttribute('aria-invalid', 'true')
+  await expect(page.locator('#source-kind-L')).not.toHaveAttribute('aria-invalid')
+  await expect(page.locator('#rent-nature-L')).not.toHaveAttribute('aria-invalid')
   await page.screenshot({ path: testInfo.outputPath('tallgrunnlag-kilde-feil.png') })
   const ratios = await page.evaluate(() => {
     const css = (selector: string) => getComputedStyle(document.querySelector(selector)!)
@@ -457,3 +472,31 @@ test('1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og mål
   await page.locator('#confirmation-status').scrollIntoViewIfNeeded()
   await page.screenshot({ path: testInfo.outputPath('tallgrunnlag-bekreftet.png') })
 })
+
+for (const scenario of [
+  { name: 'beløp', amount: 'abc', debt: '0', focus: 'cost-1-amount' },
+  { name: 'rentedel', amount: '120000', debt: '130000', focus: 'cost-1-debt' },
+  { name: 'inkludering', amount: '120000', debt: '20000', focus: 'cost-2-included' },
+]) {
+  test(`1.7 AC2: kostnadsfeil i ${scenario.name} fokuserer kontrollen som må rettes`, async ({ page }) => {
+    await page.goto('/')
+    await registerF1(page)
+    await page.locator('#cost-add').click()
+    await page.locator('#cost-1-label').fill('Felleskostnader')
+    await page.locator('#cost-1-amount').fill(scenario.amount)
+    await page.locator('#cost-1-debt').fill(scenario.debt)
+    if (scenario.name === 'inkludering') {
+      await page.locator('#cost-add').click()
+      await page.locator('#cost-2-label').fill('Kommunale avgifter')
+      await page.locator('#cost-2-amount').fill('30000')
+      await page.locator('#cost-2-debt').fill('0')
+      await page.locator('#cost-2-included').selectOption('cost-1')
+      await page.locator('#cost-1-remove').click()
+    }
+    await page.locator('#confirm-financial').click()
+    await expect(page.locator(`#${scenario.focus}`)).toBeFocused()
+    await expect(page.locator(`#${scenario.focus}`)).toHaveAccessibleDescription(/Kostnadspost/)
+    await expect(page.locator('#next-step')).toHaveCount(0)
+    await expect(page.locator('.local-deficiencies')).toContainText('Innhent mer informasjon')
+  })
+}

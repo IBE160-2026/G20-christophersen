@@ -136,4 +136,34 @@ describe('Story 1.7 — kontroll, bekreftelse og berørt ugyldiggjøring', () =>
     const state = registered()
     expect(sessionReducer(state, { type: 'navigate', step: 'tilstandsrapport' })).toBe(state)
   })
+  it.each([
+    { type: 'register-period', field: 'D', period: 'month' },
+    { type: 'register-year', field: 'D', year: '2025' },
+  ] satisfies SessionAction[])('AC4: D-kontekstendring opphever også J-kostnadsbekreftelsen: $type', (action) => {
+    const state = registered()
+    state.costItems = [{ id: 'a', label: 'Felles', rawAmount: '120000', rawDebt: '20000', includedIn: null }]
+    const before = sessionReducer(state, { type: 'confirm-financial' })
+    expect(isFinancialConfirmed(before)).toBe(true)
+    const after = sessionReducer(before, action)
+    expect(after.financial.J.confirmed).toBe(false)
+    expect(after.changedFields).toEqual(['D', 'J'])
+    expect(after.financialRevision).toBe(before.financialRevision + 1)
+    expect(after.financial.P).toBe(before.financial.P)
+    expect(after.financial.L).toBe(before.financial.L)
+    expect(after.costItems).toBe(before.costItems)
+  })
+  it('AC3: tilbaketrukket nullkontroll sperrer ny bruk uten å endre rågrunnlag/revisjon', () => {
+    let state = sessionReducer(registered(), { type: 'register-value', field: 'J', rawValue: '0' })
+    state = sessionReducer(state, { type: 'check-zero', field: 'J', checked: true })
+    state = sessionReducer(state, { type: 'confirm-financial' })
+    const before = state
+    state = sessionReducer(state, { type: 'check-zero', field: 'J', checked: false })
+    expect(state.explicitZeros).not.toContain('J')
+    expect(state.financial.J.confirmed).toBe(false)
+    expect(state.financial.J.rawValue).toBe('0')
+    expect(state.financialRevision).toBe(before.financialRevision)
+    expect(state.financial.P).toBe(before.financial.P)
+    expect(sessionReducer(state, { type: 'navigate', step: 'tilstandsrapport' })).toBe(state)
+    expect(isFinancialConfirmed(sessionReducer(state, { type: 'confirm-financial' }))).toBe(false)
+  })
 })

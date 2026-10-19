@@ -11,6 +11,8 @@ export function SourceNote({ field, value, sources, issues, errorDescription, di
 }) {
   const source = sources[field]
   const describedBy = `source-summary-${field} ${errorDescription}`.trim()
+  const sharedSourceError = issues.some((issue) => issue.code === 'source-conflict' || issue.code === 'unsupported-actual-rent')
+  const missingMetadata = errorDescription !== ''
   const update = (change: Partial<typeof source>) => dispatch({ type: 'register-source', field, source: { ...source, ...change } })
   const conflictButton = useRef<HTMLButtonElement>(null)
   const conflictInput = useRef<HTMLInputElement>(null)
@@ -25,7 +27,7 @@ export function SourceNote({ field, value, sources, issues, errorDescription, di
       <div className="source-controls">
         <div>
           <label htmlFor={`source-kind-${field}`}>Opphav for {field}</label>
-          <select id={`source-kind-${field}`} value={source.kind} aria-describedby={describedBy} aria-invalid={errorDescription ? true : undefined}
+          <select id={`source-kind-${field}`} value={source.kind} aria-describedby={describedBy} aria-invalid={sharedSourceError || (missingMetadata && source.kind === '') || undefined}
             onChange={(event) => update({ kind: SourceKindSchema.parse(event.target.value) })}>
             <option value="">Ikke oppgitt</option><option value="source">Oppgitt kilde</option><option value="assumption">Egen forutsetning</option>
           </select>
@@ -33,11 +35,11 @@ export function SourceNote({ field, value, sources, issues, errorDescription, di
         <div>
           <label htmlFor={`source-${field}`}>Kilde / forutsetning for {field}</label>
           <input id={`source-${field}`} type="text" autoComplete="off" value={source.description}
-            onChange={(event) => update({ description: event.target.value })} aria-describedby={describedBy} aria-invalid={errorDescription ? true : undefined} />
+            onChange={(event) => update({ description: event.target.value })} aria-describedby={describedBy} aria-invalid={sharedSourceError || (missingMetadata && source.description.trim() === '') || undefined} />
         </div>
         {field === 'L' && <div>
           <label htmlFor="rent-nature-L">Leiegrunnlag for L</label>
-          <select id="rent-nature-L" value={sources.L.rentNature} aria-describedby={describedBy} aria-invalid={errorDescription ? true : undefined}
+          <select id="rent-nature-L" value={sources.L.rentNature} aria-describedby={describedBy} aria-invalid={sharedSourceError || (missingMetadata && sources.L.rentNature === '') || undefined}
             onChange={(event) => dispatch({ type: 'register-rent-nature', rentNature: RentNatureSchema.parse(event.target.value) })}>
             <option value="">Ikke oppgitt</option><option value="expected">Forventet leie</option><option value="actual">Faktisk leie med oppgitt kilde</option>
           </select>

@@ -116,5 +116,8 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
     ? { rawValue: action.rawValue }
     : action.type === 'register-period' ? { period: action.period } : { year: action.year }
   if (Object.entries(update).every(([key, content]) => value[key as keyof typeof value] === content)) return state
-  return invalidate(state, { financial: { ...state.financial, [action.field]: { ...value, ...update } } }, [action.field])
+  // Kostnadspostenes D- og J-bidrag deler perioden/året fra D.
+  const affected: FinancialField[] = action.field === 'D' && action.type !== 'register-value' && state.costItems.length > 0
+    ? ['D', 'J'] : [action.field]
+  return invalidate(state, { financial: { ...state.financial, [action.field]: { ...value, ...update } } }, affected)
 }

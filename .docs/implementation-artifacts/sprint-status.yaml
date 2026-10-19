@@ -50,7 +50,7 @@ development_status:
 
   epic-2: in-progress
   2-1-dele-og-validere-dokument-analysekontrakten: done
-  2-2-validere-pdf-format-sidegrense-og-originalidentitet: backlog
+  2-2-validere-pdf-format-sidegrense-og-originalidentitet: review
   2-3-trekke-ut-sidemerket-tekst-med-kontrollert-lesbarhet: backlog
   2-4-hente-lagret-demo-uttrekk-bundet-til-riktig-rapport-og-versj: backlog
   2-5-gjennomføre-ett-http-analyseforløp-med-duplikatsperre: backlog

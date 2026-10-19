@@ -1,0 +1,70 @@
+{
+  "fixtureVersion": "1",
+  "provenance": "Fiktiv, forhåndsdefinert fasit fra Story 2.2 og Brief-addendum 2026-10-08. Ingen adapterretur eller modellkjøring.",
+  "financialBasis": {
+    "currency": "NOK",
+    "period": "year",
+    "year": "2026",
+    "source": "Kontrollerte brukerforutsetninger, ikke dokumenterte markedsverdier",
+    "operatingCosts": [
+      { "description": "Felleskostnader uten gjeldsbetjening", "amount": "120000" },
+      { "description": "Kommunale avgifter/eiendomsskatt", "amount": "80000" },
+      { "description": "Forsikring", "amount": "40000" },
+      { "description": "Forvaltning", "amount": "60000" },
+      { "description": "Løpende vedlikehold", "amount": "100000" }
+    ],
+    "debtService": { "interest": "600000", "principal": "200000", "outsideOperatingCosts": true },
+    "costOverlap": false
+  },
+  "cases": [
+    {
+      "caseId": "F1",
+      "documentName": "F1-tilstandsrapport.pdf",
+      "pageCount": 4,
+      "financialInputs": { "P": "16000000", "L": "1900000", "D": "400000", "J": "800000", "Ymin": "7" },
+      "findings": [
+        { "id": "F1-TG2-1", "grade": "TG2", "description": "Slitt overflate på baderomsgulv", "documentName": "F1-tilstandsrapport.pdf", "pdfPage": 2, "printedPage": null, "resolutionStatus": "not-applicable" }
+      ],
+      "expectedMetrics": { "grossYieldPercent": "11.875", "noi": "1500000", "netYieldPercent": "9.375", "cashFlowBeforeTax": "700000" },
+      "expectedRecommendation": "Gå videre",
+      "recommendationAssumptions": "Fullført analyse, kontrollert og bekreftet tilstrekkelig rapportgrunnlag og tallgrunnlag. Ingen uavklart alvorlig TG3."
+    },
+    {
+      "caseId": "F2",
+      "documentName": "F2-tilstandsrapport.pdf",
+      "pageCount": 4,
+      "financialInputs": { "P": "16000000", "L": "1400000", "D": "400000", "J": "800000", "Ymin": "7" },
+      "findings": [
+        { "id": "F2-TG2-1", "grade": "TG2", "description": "Slitt overflate på baderomsgulv", "documentName": "F2-tilstandsrapport.pdf", "pdfPage": 2, "printedPage": null, "resolutionStatus": "not-applicable" }
+      ],
+      "expectedMetrics": { "grossYieldPercent": "8.75", "noi": "1000000", "netYieldPercent": "6.25", "cashFlowBeforeTax": "200000" },
+      "expectedRecommendation": "Forkast",
+      "recommendationAssumptions": "Fullført analyse og bekreftet tilstrekkelig rapportgrunnlag/tallgrunnlag; nettoyield under 7 prosent."
+    },
+    {
+      "caseId": "F3",
+      "documentName": "F3-tilstandsrapport.pdf",
+      "pageCount": 4,
+      "financialInputs": { "P": "16000000", "L": null, "D": "400000", "J": "800000", "Ymin": "7" },
+      "findings": [
+        { "id": "F3-TG2-1", "grade": "TG2", "description": "Slitt overflate på baderomsgulv", "documentName": "F3-tilstandsrapport.pdf", "pdfPage": 2, "printedPage": null, "resolutionStatus": "not-applicable" }
+      ],
+      "expectedMetrics": { "grossYieldPercent": null, "noi": null, "netYieldPercent": null, "cashFlowBeforeTax": null },
+      "expectedRecommendation": "Innhent mer informasjon",
+      "recommendationAssumptions": "Leie mangler. Rapportgrunnlaget forutsettes kontrollert og tilstrekkelig. Ingen gyldig S5-hovedstart før tallmangelen rettes."
+    },
+    {
+      "caseId": "F4",
+      "documentName": "F4-tilstandsrapport.pdf",
+      "pageCount": 4,
+      "financialInputs": { "P": "16000000", "L": "1900000", "D": "400000", "J": "800000", "Ymin": "7" },
+      "findings": [
+        { "id": "F4-TG2-1", "grade": "TG2", "description": "Slitt overflate på baderomsgulv", "documentName": "F4-tilstandsrapport.pdf", "pdfPage": 2, "printedPage": null, "resolutionStatus": "not-applicable" },
+        { "id": "F4-TG3-1", "grade": "TG3", "description": "Alvorlig lekkasje i tak", "documentName": "F4-tilstandsrapport.pdf", "pdfPage": 4, "printedPage": 2, "resolutionStatus": "unresolved" }
+      ],
+      "expectedMetrics": { "grossYieldPercent": "11.875", "noi": "1500000", "netYieldPercent": "9.375", "cashFlowBeforeTax": "700000" },
+      "expectedRecommendation": "Innhent mer informasjon",
+      "recommendationAssumptions": "Alvorlig TG3 er uavklart; økonomiske nøkkeltall er delgrunnlag. F4 er også RT-5 med trykt side 2 på PDF-side 4."
+    }
+  ]
+}

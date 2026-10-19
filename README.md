@@ -29,6 +29,14 @@ analyseschemas og rene validatorer skiller fullføring, feil og usikre
 kilder med kodekontrollert metadata. Kontrakttestene krever ingen PDF-parser
 eller betalt API. Rapportflyten i appen følger fortsatt senere stories.
 
+Story 2.2 er implementert og klar for uavhengig review: backend kontrollerer
+faktiske PDF-bytes, sidegrensen 30 og SHA-256 med låst PDF.js legacy-build.
+Originalbytes bevares, og feil bruker kontrakten fra 2.1. Formatgodkjenning
+er et eget delutfall uten påstand om tekstlesbarhet eller fullført analyse.
+[Fiktive F1–F4-PDF-er og uavhengig fasit](tests/fixtures/property-cases/README.md)
+er kontrollert visuelt, inklusive TG3 på PDF-side 4 / trykt side 2.
+Modulen er ikke koblet til appens rapportflyt ennå; R2 er fortsatt åpen før 2.3.
+
 ## Installasjon og kontroll
 
 Bruk **Node.js 24.21.0 LTS og medfølgende npm 11.19.0**. `.nvmrc` angir
@@ -90,7 +98,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. 275 rene modultester, 41 demotester
+port 3000, som må være ledig. 275 rene modultester, 17 PDF-integrasjonstester, 41 demotester
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
@@ -106,9 +114,13 @@ verdier, bekreftelsesgrunnlag, perioder/år, årsnormaliseringsdelen av
 BT-7/BT-15/BT-16, presise desimaler og gjentakelse uten mutasjon. De dekker også
 kilder, D/J-kostnadsdeling og alle kjente samtidige mangler med identisk
 kodebegrunnelse/neste handling, inkludert kjent rapportmangel ved F2-verdier.
-90 kontrakttester for Story 2.1 dekker versjoner, obligatoriske felt,
+95 kontrakttester for Story 2.1 dekker versjoner, obligatoriske felt,
 fullført tomliste kontra feil, ufullstendige delresultater, RT-7s umulige/
 usikre kilder og forsøk på å erstatte kodekontrollert metadata.
+PDF-integrasjonene bruker faktiske 30-/31-sidersfiler, feilformat/skadet
+container, hash-/navnevarianter og tekstløs PDF. De kontrollerer også
+ressursopprydding, bytebevaring og F1–F4 mot en fasit fastlagt før adapterbruk.
+Kjør bare disse med `npm test -- tests/integration/pdf-format.test.ts`.
 Chromium-binæren må være installert før offline kjøring. Feilspor/skjermbilder
 legges under Git-ignorerte `test-results/`.
 
@@ -139,7 +151,10 @@ dekker bekreftelse, feil, endring/retur, null, semantikk og faktisk zoomkontroll
 [Review av Story 1.7](.docs/implementation-artifacts/story-1-7-review.md)
 kontrollerer alle seks AC, reviewrettinger og egne sluttkontroller.
 [Verifikasjonen for Story 2.1](.docs/implementation-artifacts/story-2-1-verifikasjon.md)
-dekker kontraktleveransens fire AC; uavhengig review gjenstår.
+dekker kontraktleveransens fire AC; [uavhengig review er bestått](.docs/implementation-artifacts/story-2-1-review.md).
+[Verifikasjonen for Story 2.2](.docs/implementation-artifacts/story-2-2-verifikasjon.md)
+viser fire AC, reelle PDF-tester og visuell kryssjekk. Uavhengig review gjenstår
+for 2.2; format-/fixturetestene beviser ingen 2.3-lesbarhet, S2 eller live-S5.
 Full demo, senere funksjonstester og annen-person-bevis for S6 følger sine stories.
 
 Grunnlaget er tilpasset den [offisielle Vite react-ts-starteren](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).
@@ -153,9 +168,11 @@ og nødvendige avhengigheter er eksakt låst etter arkitekturen.
 | `src/frontend/` | React-appskall, finansregistrering, én reducer for aktiv økt og lokale DESIGN-tokens. Bruker contracts og domain; senere egen presentasjon/PDF-visning. |
 | `src/domain/` | Rene regler og beregninger. Bruker contracts. Ingen UI, server eller I/O. |
 | `src/contracts/` | Felles runtime-skjema og avledede typer. Ingen UI, server eller I/O. |
-| `src/backend/` | Lokal HTTP-server; senere dokumenter, analyseadaptere og contracts. Finans/anbefaling forblir i domain. |
+| `src/backend/` | Lokal HTTP-server og bytesbasert PDF-format-/side-/hashvalidering; senere analyseadaptere. Bruker contracts; finans/anbefaling forblir i domain. |
 | `tests/e2e/` | Playwright-kontroll mot bygget demo og lokalt dev-skall. |
 | `tests/unit/` | Rene Vitest-kontroller av registrering, navigasjon, tall-/årsvalidering, kilde-/kostnadsgrunnlag, kjente kritiske mangler og dokument-/analysekontrakten. |
+| `tests/integration/` | PDF.js-format-/side-/hashkontroll med ekte fixturebytes og originalbevaring. |
+| `tests/fixtures/property-cases/` | Fiktive rapporter, uavhengig JSON-fasit, bytehashinventar og reproducerbar generator. |
 | `.docs/` | Autoritative planer, implementeringsbevis og prosesspor. |
 
 Importgrensene gjennomgås ved endringer, inklusive reeksporter, dynamiske
@@ -165,14 +182,14 @@ valideringsresultat med avledede typer; `domain/validation.ts` eier numerisk
 gyldighet, bekreftelsesbehov og eksakt årsnormalisering. Ingen framtidig
 rapportflyt, finansberegning eller økonomisk screeningregel er lagt inn.
 Dokument-/analyseschemas og ren kilde-/metadatavalidering eies nå også av
-contracts; faktisk PDF-/adapter-/HTTP-/frontendkobling følger sine stories.
+contracts; backend bruker nå PDF.js ved formatgrensen. Tekst-/adapter-/HTTP-/frontendkobling følger sine stories.
 `domain/financial-basis.ts` vurderer kilde-/kostnadsgrunnlaget, og
 `domain/screening.ts` samler kjente mangler til fast prioritet-1-utfall.
 Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,
 som er Git-ignorert. `.env` og `.env.*` holdes utenfor Git, med unntak for
 `.env.example` og `.env.*.example` uten hemmeligheter. `node_modules/`, bygge-
-og kontrollartefakter holdes også utenfor Git. Framtidige fiktive fixtures får egen versjonert plass
-under `tests/fixtures/property-cases/`.
+og kontrollartefakter holdes også utenfor Git. Fiktive fixtures er versjonert
+under `tests/fixtures/property-cases/`; de har ingen private originaler.
 
 ## Plan og prosess
 

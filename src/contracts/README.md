@@ -36,5 +36,10 @@ completed med findings, uncertainCandidates og limitations.
 dokumentidentitet og sideområde. Det beviser ingen semantisk fullstendighet,
 faktisk støtte i originaltekst eller brukerbekreftelse. Sidestatus er en
 rapportert uttrekksstatus; skjemaene velger ingen PDF-lesbarhetsmetode.
+Dokumentkomponenten eier trygg kodegenerert sideårsak eller null ved ukjent
+årsak; den skal aldri sende rå parserfeil, PDF-tekst eller hemmeligheter i
+årsaksfeltet. Binding bevarer denne kjente årsaken. Adapterens rå feiltekst
+brukes ikke som trygg årsak. Funn-ID bevares likt i original, resultat og
+feilmål, også når ID-en inneholder innledende/avsluttende mellomrom.
 Faktisk PDF-/bytehashberegning, adaptere, HTTP og frontend kobles i senere
 stories; R2-porten før Story 2.3 er fortsatt åpen.

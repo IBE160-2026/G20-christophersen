@@ -23,6 +23,7 @@ export const DocumentPageSchema = z.strictObject({
   pdfPage: PositionSchema,
   text: z.string(),
   status: z.enum(['readable', 'unreadable', 'incomplete', 'unknown']),
+  // Trygg kodegenerert årsak fra dokumentkomponenten, aldri rå parser-/PDF-tekst.
   // Null betyr at årsaken er ukjent, aldri en gjettet forklaring.
   reason: TextSchema.nullable(),
 })
@@ -92,7 +93,7 @@ export const PartialExtractionSchema = z.strictObject({
 export const ErrorTargetSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('document') }),
   z.strictObject({ kind: z.literal('page'), pdfPage: PositionSchema }),
-  z.strictObject({ kind: z.literal('finding'), findingId: TextSchema }),
+  z.strictObject({ kind: z.literal('finding'), findingId: OriginalTextSchema }),
 ])
 export const DocumentErrorCodeSchema = z.enum([
   'invalid-format', 'invalid-container', 'page-limit', 'unreadable-text',

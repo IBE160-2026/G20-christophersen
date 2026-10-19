@@ -47,7 +47,8 @@ export function bindAnalysisOutcome(documentInput: unknown, adapterInput: unknow
     return createFailedAnalysis(context, {
       kind: 'document', code: codes[badPage.status as keyof typeof codes],
       target: { kind: 'page', pdfPage: badPage.pdfPage },
-      reason: badPage.status === 'unknown' ? null : 'Dokumentgrunnlaget har en side uten pålitelig fullført tekstuttrekk.',
+      reason: badPage.reason ?? (badPage.status === 'unknown'
+        ? null : 'Dokumentgrunnlaget har en side uten pålitelig fullført tekstuttrekk.'),
     })
   }
   const parsed = AdapterOutcomeSchema.safeParse(adapterInput)

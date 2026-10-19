@@ -2,7 +2,7 @@
 title: 'Story 2.1 — Dele og validere dokument-/analysekontrakten'
 type: 'feature'
 created: '2026-10-19'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '2-1-dele-og-validere-dokument-analysekontrakten'
 baseline_commit: '856c72bd47e8477c2e21acb3ec4fa40fc6209125'
@@ -30,3 +30,20 @@ Runtime-schemas med avledede typer i contracts og rene felles validatorer. Ingen
 - `bindAnalysisOutcome` gir stabil trygg feil ved manglende/ugyldig adapterutfall; feilens kjente mål beholdes og sideområde kontrolleres. Strukturelt ugyldig internt dokument-/kodegrunnlag avvises eksplisitt med Zod-feil fremfor å bygges fra adaptermetadata. Det er ingen HTTP-feilhåndtering her.
 - Sluttkontroll: 90/90 målrettede kontrakttester, 270/270 samlet Vitest, typecheck/lint/build og 101/101 låste hasher bestått på Node 24.21.0/npm 11.19.0. Ingen avhengighetsendring. E2E/manuell UI ikke kjørt på nytt fordi ingen UI-/serverkode eller eksisterende appkobling er endret; dette er ren kontraktleveranse. Råutdata og AC-spor i `story-2-1-kontroller.txt` og `story-2-1-verifikasjon.md`.
 - Storyspec in-review og sprintnøkkel review; Epic 2 in-progress. Ingen integrert review/done, blocker eller produkt-/arkitekturbeslutning. R2 fortsatt open; 2.3 ikke startet. Fase 5 skal gjøre uavhengig BMAD code review før neste implementering.
+
+### Review Findings — gjenopptatt Fase 5
+
+- [x] [Review][Patch] Bevar kjent trygg sideårsak fra kodekontrollert dokumentgrunnlag i failed-resultatet (AC2).
+- [x] [Review][Patch] Bruk samme ikke-trimmende funn-ID-semantikk for feilmål og original/delresultat (AC2).
+- [x] [Review][Patch] Verifiser ikke-tomme limitations i completed-resultat (AC1/AC2).
+- [x] [Review][Patch] Verifiser spesifikk stabil dokumentfeilkode for hver ikke-lesbar sidestatus (AC2).
+
+Blind Hunter fra checkpointet og tre nye, sekvensielle, kun-lesende lag er fullført.
+Fem individuelle funn ga fire patchgrupper; ingen avviste/defer/beslutningsbehov.
+Full triage og AC-spor føres i `story-2-1-review.md`. Ingen endring av låst Intent.
+
+Sluttstatus etter separat review: **done**, AC1–AC4 bestått. Før retting feilet
+4/95 målrettede tester; etter retting 95/95 målrettede og 275/275 totale Vitest,
+lint og typecheck/build bestått. 101/101 låste hasher og frozen Intent uendret.
+Epic 2 forblir in-progress, Story 2.2 backlog, R2 open. Ingen push eller senere
+story startet. Historiske implementeringsnotater ovenfor bevarer Fase 4-statusen.

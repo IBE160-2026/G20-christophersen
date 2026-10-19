@@ -13,7 +13,7 @@ const context = {
 }
 function document() {
   return { ...context, pages: Array.from({ length: 10 }, (_, index) => ({
-    pdfPage: index + 1, text: `Side ${index + 1}: æøå`, status: 'readable', reason: null,
+    pdfPage: index + 1, text: `Side ${index + 1}: æøå`, status: 'readable', reason: null as string | null,
   })) }
 }
 function candidate(overrides: Partial<OriginalCandidate> = {}): OriginalCandidate {
@@ -95,6 +95,11 @@ describe('Story 2.1 AC2 – fullført tomliste og feil/delresultater', () => {
     expect(failed).toMatchObject({ status: 'failed', partialResult: null, error: { kind: 'analysis', code: 'interrupted' } })
     expect(failed).not.toHaveProperty('findings')
   })
+  it('bevarer kjente begrensninger også i et fullført resultat', () => {
+    const limitations = ['Tabellen har uavklart kolonnerekkefølge.', 'Et funn må kontrolleres mot originalen.']
+    const result = bindAnalysisOutcome(document(), { ...completed([candidate()]), limitations })
+    expect(result).toMatchObject({ status: 'completed', limitations })
+  })
   it('gyldig funnliste bevarer TG2/TG3 og originalen uten bekreftelse', () => {
     const originals = [candidate(), candidate({ findingId: 'wall', grade: 'TG2' })]
     const result = bound(originals)
@@ -119,12 +124,36 @@ describe('Story 2.1 AC2 – fullført tomliste og feil/delresultater', () => {
     expect(AnalysisOutcomeSchema.safeParse({ ...result, findings: [] }).success).toBe(false)
     expect(AnalysisOutcomeSchema.safeParse({ ...result, partialResult: { ...result.partialResult, completeness: 'complete' } }).success).toBe(false)
   })
-  it.each(['unreadable', 'incomplete', 'unknown'])('fullføring er sperret ved sidestatus %s', status => {
+  it('bevarer feilmålets originale funn-ID uten å slå sammen ulike ID-er', () => {
+    const result = bindAnalysisOutcome(document(), {
+      contractVersion: '1', extractionVersion: '1', status: 'failed', code: 'interrupted',
+      target: { kind: 'finding', findingId: ' roof ' },
+      partialResult: { findings: [candidate(), candidate({ findingId: ' roof ' })], limitations: [] },
+    })
+    expect(result.status).toBe('failed')
+    if (result.status !== 'failed') throw new Error('Forventet analysefeil med delresultat')
+    expect(result.error.target).toEqual({ kind: 'finding', findingId: ' roof ' })
+    expect(result.partialResult?.findings.map(finding => finding.findingId)).toEqual(['roof', ' roof '])
+    expect(AnalysisOutcomeSchema.parse(result)).toEqual(result)
+    expect(validateAnalysisOutcome(result, context).success).toBe(true)
+  })
+  it.each([
+    ['unreadable', 'unreadable-text'], ['incomplete', 'incomplete-text'], ['unknown', 'unknown-readability'],
+  ])('fullføring er sperret ved sidestatus %s med koden %s', (status, code) => {
     const input = document()
     input.pages[2]!.status = status
     const result = bindAnalysisOutcome(input, completed())
-    expect(result).toMatchObject({ status: 'failed', error: { kind: 'document', target: { kind: 'page', pdfPage: 3 } } })
+    expect(result).toMatchObject({ status: 'failed', error: { kind: 'document', code, target: { kind: 'page', pdfPage: 3 } } })
     if (result.status === 'failed' && status === 'unknown') expect(result.error.reason).toBeNull()
+  })
+  it.each(['unreadable', 'incomplete', 'unknown'])('bevarer kjent trygg kodeårsak for sidestatus %s', status => {
+    const input = document()
+    input.pages[2]!.status = status
+    input.pages[2]!.reason = 'Kjent tegnkodingsfeil gjør tekstuttrekket upålitelig.'
+    const result = bindAnalysisOutcome(input, completed())
+    expect(result).toMatchObject({ status: 'failed', partialResult: null, error: {
+      kind: 'document', target: { kind: 'page', pdfPage: 3 }, reason: input.pages[2]!.reason,
+    } })
   })
   it('dokumentfeil før kjent sideantall og ukjent årsak er egne eksplisitte tilstander', () => {
     const result = createFailedAnalysis({ ...context, pageCount: null }, {

@@ -24,7 +24,7 @@ uavhengig reviewet med alle seks AC bestått. Rapportanalyse og full screening f
 senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
 konto kreves for registreringen.
 
-Story 2.1 er implementert og klar for separat review: felles dokument-/
+Story 2.1 er implementert og uavhengig reviewet med alle fire AC bestått: felles dokument-/
 analyseschemas og rene validatorer skiller fullføring, feil og usikre
 kilder med kodekontrollert metadata. Kontrakttestene krever ingen PDF-parser
 eller betalt API. Rapportflyten i appen følger fortsatt senere stories.
@@ -90,7 +90,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. 270 rene modultester, 41 demotester
+port 3000, som må være ledig. 275 rene modultester, 41 demotester
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og

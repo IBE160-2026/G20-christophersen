@@ -2,7 +2,7 @@
 title: 'Story 1.6 — Vurdere kritiske mangler med fast kodebegrunnelse'
 type: 'feature'
 created: '2026-10-19'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '1-6-vurdere-kritiske-mangler-med-fast-kodebegrunnelse'
 baseline_commit: '88eb9b95a4d93616612ceb643b45164cb36d5b5f'
@@ -36,3 +36,27 @@ Lever egenverifisert in-review/review og stopp før 1.7. Ingen integrerte review
 - Verifikasjon planlagt: alle samtidige mangler, hver blank/ubekreftet null, ugyldighet, konflikt, periode/år/kilde/kostnad, F2 med kjent rapportmangel, tomt delgrunnlag, eksakte fulltekster, stabil ordning og frosset input/gjentakelse/uavhengige resultatkopier. Deretter full Vitest, typecheck/lint/build og eksisterende 27 demo-/to dev-E2E. Ingen manuell UI-runde trengs uten UI-endring. Faktiske kommandoer/råutdata og AC-bevis lagres separat.
 - Implementert og egenverifisert: 35 nye AC-tester, totalt 127 Vitest, typecheck/lint/build og 27 demo-/to dev-E2E består. Første typecheck fant en testfixture-typefeil, som er rettet; første E2E ble stoppet av sandboxens serversperre, og autorisert eskalert lokal kjøring bestod. Ingen UI-/produktfeil eller nytt åpent valg. [AC-bevis](story-1-6-verifikasjon.md), [råutdata](story-1-6-kontroller.txt) og [prosess/promptreferat](../process/arbeidsokter/2026-10-19-story-1-6.md) er lagret. 104/104 låste kilder er uendret. Integrert review/done/commit er avgrenset av brukerens siste implementeringsfase; sluttstatus in-review/review og 1.7 backlog. Ingen staging, commit eller push fra implementeringsagenten.
 - Hovedagentens siste presisering autoriserte retting av åpenbart foreldet README-status fra 1.4/60/19 til egenverifisert 1.6/127/27+2. Bare faktisk leveranse-/teststatus, tilhørende spor og nåværende importansvar er oppdatert, uten omstrukturering eller ny funksjonalitet.
+
+### Review Findings — 2026-10-19
+
+Full BMAD-review av `88eb9b9..1c0534c`; fire kun-lesende lag kjørt
+sekvensielt. Alle fem låste AC kontrollert mot faktisk kode. Brukerens
+mini-sprintbestilling autoriserer rutinepatcher og lokal commit.
+
+- [x] [Review][Patch] B4: Fjernet gjentatt identisk instruksjon i samlet neste handling, med alle D/J-utløsere bevart (`src/domain/screening.ts`). Ny uavhengig fullteksttest består.
+- [x] [Review][Patch] B7: Kildekontrollen er reproducerbar mot Git-baseline i [reviewbeviset](story-1-6-review.md); 104/104 filer uendret.
+- [x] [Review][Patch] B8: Presisert at målrettet implementeringskjøring mangler bevart råutdata; ny reviewkjøring gir selvstendig bevis: 36/36.
+
+Rejected:
+
+- B1 — low, avvist: Resultatskjemaet godtar blanke tekstfelt strukturelt, men ingen funksjonsgren produserer dem. Ingen mottaker av eksterne vurderingsresultater finnes. Nye semantiske vakter for en hypotetisk transport innføres ikke.
+- B2 — low, avvist: Skjemaet validerer struktur og godtar vilkårlig tekst, mens `evaluateKnownDeficiencies` er eneste autoritet for faste tekster. Ingen eksisterende mottaker bruker vilkårlig parset tekst som domain-utfall. Nye semantiske vakter ville bygge en ekstra tekstautoritet for en hypotetisk transport.
+- B3 — low, avvist: To identiske innkommende rapportobservasjoner beholdes som to utløsere. Ingen nåværende konsument eller AC krever sammenslåing, og ingen mangel skjules. Ny identitets-/duplikatpolicy ville utvide kontrakten; B4 fjerner bare gjentatt instruksjon.
+- B5 — false: Ulik vurderingsdekning er bevisst utenfor dette resultatet. AC5 krever at tom mangelliste bare gjelder mottatt delgrunnlag, og `scope`/null anbefaling uttrykker dette. Resultatet påstår ingen finanskontroll ved utelatt grunnlag.
+- B6 — low, avvist: Trimming er allerede en eksplisitt inputkontrakt, og ikke-tom årsak samt ordning er testet. En ny test som bare gjentar denne transformasjonen gir ikke selvstendig AC-bevis; ingen påvist feil eller verifikasjonsgap.
+
+Review fullført uten åpne AC-avvik, decision-needed eller defer. Egen
+sluttkjøring: 128/128 Vitest, typecheck/lint/build, 27/27 demo-E2E og 2/2
+dev-E2E. Storyspec/sprintnøkkel done; Epic 1 in-progress og 1.7 backlog.
+Se [full triage og AC-spor](story-1-6-review.md) og
+[råkontroller](story-1-6-review-kontroller.txt). Frozen intent er bevart.

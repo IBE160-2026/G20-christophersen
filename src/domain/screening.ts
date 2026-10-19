@@ -44,6 +44,6 @@ export function evaluateKnownDeficiencies(input: KnownDeficiencyInput): KnownDef
     scope: 'known-deficiencies', status: 'information-required',
     recommendation: 'Innhent mer informasjon', priority: 1, triggers,
     explanation: `Kritisk grunnlag er utilstrekkelig. ${triggers.map((entry) => entry.message).join(' ')}`,
-    nextAction: `Før ny vurdering: ${triggers.map((entry) => entry.action).join(' ')}`,
+    nextAction: `Før ny vurdering: ${[...new Set(triggers.map((entry) => entry.action))].join(' ')}`,
   }
 }

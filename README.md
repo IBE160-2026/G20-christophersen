@@ -4,7 +4,7 @@ Gruppeprosjekt i **IBE160 Programmering med KI** ved Høgskolen i Molde, høsten
 
 Repoet inneholder gruppens applikasjon og dokumentasjon av utvikling, testing og kvalitetssikring med KI.
 
-## Property Acquisition Agent — Story 1.6 egenverifisert
+## Property Acquisition Agent — Story 1.6 reviewet
 
 Planlagt produkt er en lokal førstevurdering av ett boligutleieobjekt med
 kontrollert tallgrunnlag, tilstandsrapport og kodebasert screening.
@@ -17,7 +17,7 @@ validerer tall og normaliserer kjente månedsbeløp eksakt med big.js; denne kan
 testes direkte og er ennå ikke koblet til skjermens feil-/bekreftelsesflyt.
 Kilder, kostnadsinnhold og uløste kildekonflikter kan kontrolleres i appen.
 Story 1.6 gir en separat ren vurdering av kjente kritiske mangler med faste
-begrunnelser og handlinger; den er klar for review. Tom mangelliste er ingen
+begrunnelser og handlinger; uavhengig review er bestått. Tom mangelliste er ingen
 økonomisk godkjenning. Komplett bekreftelsesflyt, rapportanalyse og full screening følger
 senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
 konto kreves for registreringen.
@@ -83,7 +83,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. 127 rene modultester, 27 demotester
+port 3000, som må være ledig. 128 rene modultester, 27 demotester
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
@@ -119,7 +119,8 @@ dekker den rene validerings-/normaliseringsmodulen.
 [Verifikasjonen for Story 1.5](.docs/implementation-artifacts/story-1-5-verifikasjon.md)
 og [reviewet](.docs/implementation-artifacts/story-1-5-review.md) dekker kilde-/kostnadskontroll.
 [Egenverifikasjonen for Story 1.6](.docs/implementation-artifacts/story-1-6-verifikasjon.md)
-dekker den rene mangelvurderingen; uavhengig review er ikke gjennomført.
+dekker den rene mangelvurderingen. [Review av Story 1.6](.docs/implementation-artifacts/story-1-6-review.md)
+kontrollerer alle fem AC og dokumenterer retting og egne sluttkontroller.
 Full demo, senere funksjonstester og annen-person-bevis for S6 følger sine stories.
 
 Grunnlaget er tilpasset den [offisielle Vite react-ts-starteren](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).

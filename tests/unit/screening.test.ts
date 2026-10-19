@@ -155,6 +155,15 @@ describe('Story 1.6 — kjente kritiske mangler, FR-16/FR-17 prioritet 1', () =>
     expect(evaluateKnownDeficiencies({ financialBasis: basis }).recommendation).toBe('Innhent mer informasjon')
   })
 
+  it('AC1/AC4: begge kostnadsutløsere bevares, men samme nødvendige retting oppgis én gang', () => {
+    const basis = financialBasis()
+    basis.costItems = [{ id: 'unfinished', label: 'Forsikring', rawAmount: '', rawDebt: '', includedIn: null }]
+    const result = evaluateKnownDeficiencies({ financialBasis: basis })
+    expect(fieldsAndCodes({ financialBasis: basis })).toEqual([['D', 'invalid-cost'], ['J', 'invalid-cost']])
+    expect(result.nextAction).toBe('Før ny vurdering: Oppgi navn og ikke-negative beløp; renter/avdrag må være oppgitt (også 0) og kan ikke overstige samlet beløp.')
+    expect(evaluateKnownDeficiencies(freezeDeep({ financialBasis: basis }))).toEqual(result)
+  })
+
   it.each(['1900000', '1400000'])('AC3: kontrollerte F1/F2-tall (L%s) opphever verken manglende eller ufullført rapportgrunnlag', (rent) => {
     for (const code of ['missing-report', 'incomplete-report'] as const) {
       const input = { financialBasis: financialBasis(rent), reportDeficiencies: [{ code, reason: 'Rapportgrunnlaget er ikke ferdig.' }] }

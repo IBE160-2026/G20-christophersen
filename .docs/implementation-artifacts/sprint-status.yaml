@@ -44,7 +44,7 @@ development_status:
   1-3-registrere-og-bevare-finansverdier-for-ett-objekt: done
   1-4-validere-tall-og-normalisere-kjent-månedsgrunnlag-eksakt: done
   1-5-gjøre-kilder-kostnadsinnhold-og-uløste-konflikter-kontroller: done
-  1-6-vurdere-kritiske-mangler-med-fast-kodebegrunnelse: review
+  1-6-vurdere-kritiske-mangler-med-fast-kodebegrunnelse: done
   1-7-kontrollere-bekrefte-og-rette-gjeldende-tallgrunnlag: backlog
   epic-1-retrospective: optional
 

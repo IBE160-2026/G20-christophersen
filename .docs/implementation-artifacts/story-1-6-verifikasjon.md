@@ -30,7 +30,7 @@ E2E bruker i tillegg
 
 | Kommando | Resultat |
 |---|---|
-| `npm test -- tests/unit/screening.test.ts` | Første målrettede kjøring: 35/35 bestått. |
+| `npm test -- tests/unit/screening.test.ts` | Implementeringsagenten oppga 35/35 bestått, men råutdata fra denne enkeltkjøringen er ikke bevart. Se separat reviewrapport for ny, selvstendig målrettet kjøring. |
 | `npm test` | Sluttkjøring: fire filer, 127/127 bestått (92 eksisterende + 35 nye). |
 | `npm run typecheck` | Bestått etter retting av testfixture: unionstilordning erstattet av oppdatering av eksisterende råverdi/bekreftelse. Førfeil og rettet kjøring er bevart i råloggen. |
 | `npm run lint` | Bestått uten varsler. |

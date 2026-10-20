@@ -88,6 +88,8 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, onPage, onZ
         : !document ? 'Laster original-PDF'
           : display?.key === key ? display.status : 'Laster originalside')
   const ready = document && valid && display?.key === key && display.status === 'Originalside tilgjengelig'
+  const busy = valid && !sourceIssue && failure?.bytes !== selected.bytes
+    && (!document || display?.key !== key || display.status === 'Laster originalside')
   return <section className="pdf-viewer" aria-label="Original-PDF">
     <p className="pdf-identity"><strong>{selected.file.name}</strong> · {pageNumber === null ? 'PDF-side ukjent' : `PDF-side ${pageNumber}`}{document ? ` av ${document.numPages}` : ''}</p>
     <div className="pdf-controls">
@@ -98,7 +100,7 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, onPage, onZ
       </select></label>
     </div>
     <p id="pdf-status" role="status" aria-live="polite" aria-atomic="true">{selected.file.name} · {pageNumber === null ? 'PDF-side ukjent' : `PDF-side ${pageNumber}`}: {reason}{reason.endsWith('.') ? '' : '.'}</p>
-    <div className="pdf-scroll" tabIndex={0} role="region" aria-label="Les originalside, rull ved behov" aria-busy={!ready && valid && !failure}>
+    <div className="pdf-scroll" tabIndex={0} role="region" aria-label="Les originalside, rull ved behov" aria-busy={busy}>
       <div ref={holder} className="pdf-canvas-holder" hidden={!ready} data-pdf-page={ready ? pageNumber : undefined} />
     </div>
   </section>

@@ -21,7 +21,7 @@ Story 1.6 gir en separat ren vurdering av kjente kritiske mangler med faste
 begrunnelser og handlinger; uavhengig review er bestått. Tom mangelliste er ingen
 økonomisk godkjenning. Story 1.7 kobler dette til Tallgrunnlag og er
 uavhengig reviewet med alle seks AC bestått. Rapportanalyse er tilgjengelig som lokal demo fra Story 2.6. Story 2.7
-leverer originalkilden til review; kontrollhandlinger og full screening følger senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
+er done etter uavhengig review av originalkilden; kontrollhandlinger og full screening følger senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
 konto kreves for registreringen.
 
 Story 2.1 er implementert og uavhengig reviewet med alle fire AC bestått: felles dokument-/
@@ -71,7 +71,7 @@ retur/finansendring. Rapportbytte eller forlatt pågående analyse ugyldiggjør
 gamle svar og forsøker abort. Dette dokumenterer ingen faktisk live-analyse.
 Se [verifikasjon](.docs/implementation-artifacts/story-2-6-verifikasjon.md).
 
-Story 2.7 er implementert til review: velg funnets overskrift for å se riktig
+Story 2.7 er done etter [uavhengig full review](.docs/implementation-artifacts/story-2-7-review.md): velg funnets overskrift for å se riktig
 fysisk PDF-side med dokumentnavn. Fra 1200 CSS px ligger funn og original
 side om side. Under grensen brukes **Åpne PDF for valgt funn**; panelet har
 **Tilbake til funnkontroll**, tastaturfokus og Esc. Valgt funn, side og zoom

@@ -3,7 +3,7 @@
 Dato: 2026-10-20. Baseline:
 `5d05698e501703c6e12d08d3b63c2f058b0873ce`.
 Bare Story 2.7 fra godkjent epics.md er implementert. Dette er build-kontroll;
-separat uavhengig BMAD-review gjenstår før done.
+separat [uavhengig BMAD-review](story-2-7-review.md) er nå fullført, og Story 2.7 er done. Tallene nedenfor beskriver build-checkpointet; sluttregresjonen etter review er 505 Vitest, 69 bygget-app + 3 dev-E2E.
 
 ## AC og faktisk bevis
 
@@ -88,3 +88,7 @@ bevises. Originalvisning bekrefter aldri et funn eller listen.
 
 Prosess: [egen arbeidsøkt](../process/arbeidsokter/2026-10-20-story-2-7.md) og
 [sekvensiell orkestratorlogg](../process/arbeidsokter/2026-10-20-mini-sprint-2-5-2-7.md).
+
+## Oppfølging etter uavhengig review
+
+Story 2.7 er done. Se [full review](story-2-7-review.md) for terminal-busy-retting, nye geometri-/rapportbytte-/devressursprøver, ferske Hel-side-bilder og full sluttregresjon. SP2 er ferdig; Epic 2 pågår og 2.8 er ikke startet.

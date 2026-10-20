@@ -476,3 +476,75 @@ test('2.7 kontrakt: usikker grad med kjent kilde og utelatt valgfri originalhash
   await expect(page.locator('[data-pdf-page="2"]')).toBeVisible()
   await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
 })
+
+test('2.7 uavhengig review: terminal renderfeil avslutter busy og ny naboside kan vises', async ({ page, baseURL }) => {
+  await originalF4(page, baseURL)
+  await page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true }).click()
+  await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+  await page.evaluate(() => {
+    const original = HTMLCanvasElement.prototype.getContext
+    HTMLCanvasElement.prototype.getContext = function (...args: Parameters<typeof original>) {
+      HTMLCanvasElement.prototype.getContext = original
+      throw new Error(`Kontrollert engangsfeil ${args[0]}`)
+    } as typeof original
+  })
+  await page.getByRole('button', { name: 'Forrige PDF-side' }).click()
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side 3: Originalside kunne ikke vises')
+  await expect(page.locator('.pdf-scroll')).toHaveAttribute('aria-busy', 'false')
+  await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Forrige PDF-side' }).click()
+  await expect(page.locator('[data-pdf-page="2"]')).toBeVisible()
+  await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
+})
+
+test('2.7 uavhengig review: Hel side passer i leseregion og 1199/1200-grensen bevarer kilde', async ({ page, baseURL }, testInfo) => {
+  await originalF4(page, baseURL)
+  const finding = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
+  await finding.focus(); await finding.press('Enter')
+  for (const [width, height] of [[1440, 900], [1280, 800], [1200, 650]]) {
+    await page.setViewportSize({ width: width!, height: height! })
+    await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+    await expect(finding).toBeFocused()
+    await expect.poll(() => page.locator('.pdf-scroll').evaluate(element => element.scrollHeight - element.clientHeight)).toBeLessThanOrEqual(2)
+    await expect.poll(() => page.locator('.pdf-scroll').evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(2)
+    await page.locator('.pdf-scroll').scrollIntoViewIfNeeded()
+    await page.screenshot({ path: testInfo.outputPath(`review-hel-side-${width}.png`) })
+  }
+  await page.setViewportSize({ width: 1199, height: 650 })
+  await expect(page.locator('.pdf-viewer')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Åpne PDF for valgt funn' }).click()
+  await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+  await expect(page.locator('#pdf-panel-title')).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('button', { name: 'Åpne PDF for valgt funn' })).toBeFocused()
+  await expect(finding).toHaveAttribute('aria-pressed', 'true')
+})
+
+test('2.7 uavhengig review: rapportbytte under ventende render frigjør gammel original og nullstiller visning', async ({ page, baseURL }) => {
+  await originalF4(page, baseURL)
+  await page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true }).click()
+  await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+  await page.evaluate(() => {
+    const original = window.requestAnimationFrame.bind(window)
+    const pending: FrameRequestCallback[] = []
+    window.requestAnimationFrame = callback => { pending.push(callback); return 0 }
+    ;(window as unknown as { releaseReviewFrames: () => void }).releaseReviewFrames = () => {
+      window.requestAnimationFrame = original
+      for (const callback of pending) original(callback)
+    }
+  })
+  await page.getByRole('button', { name: 'TG2 · Slitt overflate på baderomsgulv', exact: true }).evaluate(element => (element as HTMLButtonElement).click())
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side 2: Laster originalside')
+  await page.getByRole('button', { name: 'Tilbake til Tilstandsrapport', exact: true }).click()
+  await choose(page, 'F1-tilstandsrapport.pdf')
+  await page.evaluate(() => (window as unknown as { releaseReviewFrames: () => void }).releaseReviewFrames())
+  await expect.poll(() => page.workers().length).toBe(0)
+  await expect(page.locator('.pdf-viewer')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Start analyse' }).click(); await showList(page)
+  await expect(page.locator('.finding-select[aria-pressed="true"]')).toHaveCount(0)
+  await expect(page.locator('.source-original')).toHaveText('Velg et funn for å vise originalkilden.')
+  await page.locator('.finding-select').first().click()
+  await expect(page.locator('#pdf-status')).toContainText('F1-tilstandsrapport.pdf')
+  await expect(page.locator('#pdf-status')).toContainText('Originalside tilgjengelig')
+  await expect(page.locator('.textLayer')).not.toContainText('Alvorlig lekkasje i tak')
+})

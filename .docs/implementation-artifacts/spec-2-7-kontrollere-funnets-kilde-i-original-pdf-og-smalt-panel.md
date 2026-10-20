@@ -1,7 +1,7 @@
 ---
 title: 'Story 2.7 — Kontrollere funnets kilde i original-PDF og smalt panel'
 created: '2026-10-20'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-7-kontrollere-funnets-kilde-i-original-pdf-og-smalt-panel'
 baseline_commit: '5d05698e501703c6e12d08d3b63c2f058b0873ce'
@@ -96,4 +96,14 @@ Se [egenverifikasjon og AC-matrise](story-2-7-verifikasjon.md),
 [full sluttregresjon](story-2-7-sluttkontroller.txt).
 
 Sluttregresjon bestått: 505/505 Vitest, typecheck, lint, build og 66/66
-bygget-app + 2/2 dev-E2E. Story 2.7 er review, ikke done.
+bygget-app + 2/2 dev-E2E. Dette var implementeringens review-checkpoint. Story 2.7 er nå done etter [uavhengig full review](story-2-7-review.md) og ny full regresjon (505 Vitest, 69 bygget-app + 3 dev-E2E).
+
+### Review Findings — uavhengig full review
+
+- [x] [Review][Patch] Terminal renderfeil lot PDF-regionen bli stående `aria-busy=true`; avslutt busy når forespurt side har feilet (AC4/AC5). Egen bygget-app-prøve reproduserte feilen.
+- [x] [Review][Patch] Verifikasjonshull: mål Hel side mot leseregionens faktiske høyde/bredde på 1440/1280/1200 og prøv 1199-panelgrensen; tidligere skjermbilder beviser ikke fit.
+- [x] [Review][Patch] Verifikasjonshull: prøv den nye devressursruten med faktisk font og traversal mot private/backendgrenser.
+
+- [x] [Review][Patch] Verifikasjonshull: rapportbytte under ventende render krever null gamle workers, nullstilt valgtfunn og ny riktig original.
+
+Uavhengig review lukket også rapportbytte-/cleanup-verifikasjon under ventende render. Alle fire linser og avviste kandidater er dokumentert i [reviewrapporten](story-2-7-review.md). Ingen åpne reviewfunn eller beslutningsblocker.

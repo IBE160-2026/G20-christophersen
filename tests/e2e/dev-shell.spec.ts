@@ -34,3 +34,14 @@ test('AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler',
     await rm(probe, { recursive: true, force: true })
   }
 })
+
+test('2.7 uavhengig review: lokal PDF-ressursrute åpner ikke prosjektets private grense', async ({ request }) => {
+  const font = await request.get('/pdfjs/standard_fonts/FoxitFixed.pfb')
+  expect(font.status()).toBe(200)
+  expect((await font.body()).length).toBeGreaterThan(1000)
+  for (const target of ['/pdfjs/../.git/HEAD', '/pdfjs/%2e%2e/.docs/specs/spec-IBE160/SPEC.md', '/pdfjs/%2e%2e/%2e%2e/src/backend/server.ts']) {
+    const response = await request.get(target)
+    expect([403, 404], target).toContain(response.status())
+    expect(await response.text()).not.toContain('createAnalysisRouter')
+  }
+})

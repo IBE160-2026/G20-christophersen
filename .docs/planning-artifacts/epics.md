@@ -841,7 +841,7 @@ slik at dobbeltstart, avbrudd og feil ikke lager ekstra analyser eller falsk ful
 
 **Kravspor:** FR-6/FR-9 og grunnlag for FR-18; NFR-1/NFR-4/NFR-5; S3/S6; AD-1/AD-3–AD-6/AD-9/AD-10; SPEC CAP-2/CAP-7/CAP-8 og Dokument- og analysegrense. Dette er backend-grensen, ikke klienten i 2.6.
 
-**Avhengigheter:** 1.2, 2.1, 2.2, 2.3 og 2.4. **Avklaringspunkt:** Backendansvar dokumenterer konkrete upload-/HTTP-timeoutressurser og opprydding før HTTP-integrasjonen tas i bruk. Grenser testes mot støttet input; 30-sidersomfang og S5s medianmål endres ikke i stillhet.
+**Avhengigheter:** 1.2, 2.1, 2.2, 2.3 og 2.4. **Avklaringspunkt:** [R3 er lukket 2026-10-20](r3-http-ressurser-semester-v1.md) med Mads' eksplisitte upload-/bodygrenser, lokal PDF-/demo-frist og ressurslivsløp. Story 2.5 implementerer og tester håndhevelse, tidlig avvisning og cleanup; 30-sidersomfang og S5s medianmål bevares. Live-AI-timeout avgjøres ved R1 før Epic 4.
 
 **Acceptance Criteria:**
 

@@ -6,6 +6,7 @@ companions:
   - sporbarhet.md
   - verifikasjon-og-avklaringer.md
   - ../../planning-artifacts/r2-pdf-lesbarhet-semester-v1.md
+  - ../../planning-artifacts/r3-http-ressurser-semester-v1.md
   - ../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md
   - ../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md
   - ../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md
@@ -61,6 +62,7 @@ En privat eiendomsinvestor i Norge trenger å førstevurdere ett allerede funnet
 - AD-1–AD-10 styrer modulgrenser, React-eid økt, delt kontrakt, sidemerket PDF-uttrekk, ett HTTP-analyseforløp, duplikat-/gamlesvarvern, demo/live og lokal levering. Stakk og versjonspins adopteres fra spine; desimalstrenger og eksakte terskler brukes før separat visningsavrunding.
 - R2 skiller readable fra deterministisk bevist blank, som beholder fysisk PDF-side og ikke alene blokkerer analyse. Unreadable/unknown/incomplete blokkerer fullføring med synlige berørte sider; tekstløse fotosider kan avvises konservativt. Ingen OCR/vision, manuell semantisk klassifisering av tekstløse sider eller vilkårlig tegn-/prosentterskel. Se [godkjent R2-regel](../../planning-artifacts/r2-pdf-lesbarhet-semester-v1.md).
 - Final DESIGN/EXPERIENCE styrer de fire navngitte trinnene, stepper/status, lokale feil, original-PDF, korrigeringsutkast, TG3, historisk resultat, detaljåpning, tilgjengelighet og grafitt/petrol. Ingen skjult produktutvidelse eller konkurrerende UX-kontrakt innføres.
+- [R3 er lukket](../../planning-artifacts/r3-http-ressurser-semester-v1.md) med eksplisitte semester-v1-ressursgrenser og cleanup-livsløp før Story 2.5. Originalbytes/SHA-256, samme demo-/live-kontrakt og frontend-eid midlertidig økt bevares; ingen serverpersistens. Lokal PDF-/demo-frist er atskilt fra R1s ennå uvalgte live-timeout og S5s evalueringsmål. Portlukkingen implementerer ingen HTTP-funksjon.
 - S1–S6 og eksisterende testfasit er akseptansemål, ikke oppnådde resultater. Utsatte gjennomføringsvalg beholder eier og avklaringspunkt i [verifikasjon og avklaringer](verifikasjon-og-avklaringer.md); ingen produktantakelser brukes til å lukke dem.
 
 ## Non-goals

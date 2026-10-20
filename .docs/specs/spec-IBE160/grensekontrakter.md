@@ -62,6 +62,18 @@ Eksplisitt Start analyse gir ett ventende `POST /api/analysis`. Frontend sperrer
 
 Frontend validerer struktur og samsvar med aktiv økt, reportHash, requestId og analysegenerasjon før bruk. Forlatt analyse eller rapportbytte ugyldiggjør generasjonen; AbortController er best effort og garanterer ikke at leverandørkjøringen stopper. Timeout/transportfeil er analysefeil; HTTP 200 er ikke fullføring.
 
+[R3-beslutningen](../../planning-artifacts/r3-http-ressurser-semester-v1.md)
+konkretiserer mottaksgrensen: én faktisk PDF på maks `50 * 1024 * 1024`
+bytes, vanlige JSON-/metadata-bodyer på maks `1 * 1024 * 1024` bytes, ingen
+PDF som base64-JSON, og kun in-memory uten serverpersistens. Kun én aktiv
+analyse-request per session/flyt tillates; dette supplerer duplikatmarkøren
+som beholdes til serverstopp. Én samlet hard frist på 60 000 ms gjelder
+lokal PDF-/demo-prosessering, med reell stans og sikker cleanup ved
+normalretur/feil/abort/timeout. Byte-/tekstreferanser beholdes ikke i backend
+etter requestslutt. Fristens omfang, tidlig avvisning og testmatrise står i
+beslutningen; live-timeout velges ved R1, ikke fra S5. Håndhevelse leveres
+i Story 2.5; eksisterende runtime-kontrakter/versjoner endres ikke her.
+
 Demo bruker samme dokumentpipeline og kontrakt som live. Lagret uttrekk må passe SHA-256 av originalbytes og kontrakt-/uttrekksversjon; mismatch/manglende fixture er analysefeil uten live-fallback. Lokal konfigurasjon velger modus, demo er standard og oppretter ingen KI-klient. Hele flyten viser Demo · lagret KI-uttrekk eller Live analyse.
 
 R2s sidestatus er readable, blank, unreadable, incomplete eller unknown. Blank krever strukturelt bevist fravær av innhold etter [R2-regelen](../../planning-artifacts/r2-pdf-lesbarhet-semester-v1.md) og blokkerer ikke alene. Unreadable/unknown/incomplete blokkerer completed, og alle berørte fysiske sider oppgis. En helt blank PDF er ingen støttet tekstbasert rapport. Kontraktversjon 2 innfører blank; uttrekksformatversjon 1 beholdes.

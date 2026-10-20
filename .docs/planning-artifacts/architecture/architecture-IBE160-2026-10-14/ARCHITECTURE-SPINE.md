@@ -79,6 +79,13 @@ flowchart LR
 - **Prevents:** Doble KI-kall, gamle svar som nytt grunnlag og avbrudd fremstilt som fullføring.
 - **Rule:** Eksplisitt **Start analyse** sender ett `POST /api/analysis` med PDF og korrelasjonsidentitet; frontend går til **Analyserer** og sperrer dobbeltstart for samme pågående analyse. Backend gjør dokumentsteg, adaptervalg og resultatvalidering før terminalt svar. Frontend aksepterer kun et validert svar som matcher aktiv økt, rapporthash, forespørsel og analysegenerasjon. Å forlate analyseforløpet eller erstatte rapporten ugyldiggjør generasjonen; vanlig retur til tidligere trinn etter fullføring følger AD-2. Et sent svar kan ikke gjøre forlatt/erstattet analyse gjeldende. AbortController er best effort. Backend har en prosesslokal duplikatsperre nøstet på aktiv økt, lokal modus og backendberegnet rapporthash; ny requestId eller analysegenerasjon omgår ikke sperren. Markøren settes før adapterkall og beholdes til serverstopp, også når klientforbindelsen forsvinner; duplikater gir en tydelig feil uten nytt adapterkall. Dette er kun teknisk metadata, ingen vurderings-/jobbtilstand eller gjenopptakbart jobb-API. Ingen automatisk retry i frontend, backend eller senere SDK-konfigurasjon, ingen jobb-ID/statuspolling eller persistent jobbtilstand. Timeout/transportfeil er synlig analysefeil; HTTP 200 alene er ikke fullføring. S5 stopper først når den ferdige validerte listen er synlig, ikke ved avsluttet modellkall.
 
+R3 er [lukket 2026-10-20](../../r3-http-ressurser-semester-v1.md): vedtatte
+upload-/bodygrenser, én aktiv request per session/flyt, lokal PDF-/demo-frist
+og in-memory cleanup konkretiserer AD-5/AD-9. Cleanup frigjør requestens
+PDF-/tekstressurser, men beholder den innholdsløse duplikatmarkøren til
+serverstopp. Live-AI-timeout forblir R1; S5 er fortsatt et evalueringsmål.
+Håndhevelse og HTTP-testbevis leveres i Story 2.5.
+
 ### AD-6 — Felles demo/live-adapter og entydig rapportbinding [ADOPTED]
 
 - **Binds:** FR-6/FR-15–FR-18; NFR-3/NFR-4; S6; Q-4.
@@ -221,7 +228,7 @@ Planlagt verifikasjon ved implementering, uten krav om en ny dekningsprosent:
 | Gjenstående valg / arbeid | Eier og seneste avklaringspunkt |
 | --- | --- |
 | KI-leverandør, modell, SDK, kontekst/outputgrenser, pris og budsjett | Mads og live-integrasjon før adapterimplementering/betalte tester. Må håndtere hele støttede sidemerkede grunnlaget i ett kall uten skjult avkorting/retry. Kontrakten og demoen avhenger ikke av valget; det bygges ikke et flerleverandørrammeverk. |
-| Eksakte timeout-/uploadressursgrenser og opprydding av PDF-/tekstbuffere | Backendansvar før HTTP-/live-integrasjon. S5 er medianmål; ingen hard femminuttersgrense antas. Grenser må dokumenteres og testes mot støttet input uten å endre produktgrensen på 30 sider i stillhet. |
+| HTTP-ressursgrenser og opprydding — R3 lukket 2026-10-20 | [Godkjent R3-beslutning og testmatrise](../../r3-http-ressurser-semester-v1.md): én PDF ≤50 MiB, JSON/metadata ≤1 MiB, in-memory uten persistens, én aktiv request per session/flyt, ingen retry og hard lokal PDF-/demo-frist 60 s med sikker cleanup. Story 2.5 implementerer/verifiserer; live-timeout forblir R1 før Epic 4. 30 sider, SHA-256, demo og S5 bevares. |
 | PDF-lesbarhetskontroll og layoutbevaring — R2-beslutning lukket 2026-10-20 | [Godkjent deterministisk regel og fixtureutfall](../../r2-pdf-lesbarhet-semester-v1.md) gjelder før gyldig grunnlag. Selve ekstraksjonen, blankdetektoren og PDF-testbevis gjenstår i Story 2.3. Tabeller/kolonner, tegnkoding og blandet tekst/bilde kontrolleres mot fasit; ukjent/upålitelig lesing blir ikke falsk suksess eller OCR/vision. |
 | Detaljerte felt/schemas, prompt og endelige script-/miljøvariabelnavn | Implementering innen AD-1–AD-10. Én felles kontraktkode eier feltene; ingen uavhengige moduler kan definere konkurrerende former. Ingen produktfunksjon opprettes gjennom teknisk detaljering. |
 | Faktiske fixtures, installasjon/typekontroll, tester, S2/S5/S6-bevis og README | Implementering/evaluering. Rapporter/fasit fastsettes før KI-evaluering; kode/låsfil og rent miljø verifiserer startstakken. Dokumentkontroll er ikke produktverifikasjon. |

@@ -1,5 +1,9 @@
 # Story 2.3 — egenverifikasjon 2026-10-20
 
+Oppfølging: separat [BMAD review](story-2-3-review.md) er fullført etter retting,
+og story/sprintstatus er **done**. Egenverifikasjonen nedenfor bevares som
+historisk implementeringsbevis; reviewrapporten eier siste test-/funnstatus.
+
 Status: **in-review / review**. Dette dokumentet viser implementeringsbevis;
 separat code review og done gjenstår. Ingen senere story eller
 push er utført. Autoritet er [den godkjente storyspecen](spec-2-3-trekke-ut-sidemerket-tekst-med-kontrollert-lesbarhet.md)

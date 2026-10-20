@@ -49,3 +49,23 @@ Den første forhåndsforventningen behandlet global AcroForm/XFA som påvist lok
 innhold. Før ferdigstilling ble dette rettet til unknown etter R2s krav om kjent
 fysisk sidekobling; en ny forhåndsfasit/test ble lagt til for tom formstruktur.
 Ingen utfall eller originaltekst ble endret for å skjule et tapt rapportfunn.
+
+## Reviewtillegg 2026-10-20
+
+Forventningene ble ført i separat oracle før generering og testkjøring.
+Alle 13 eksisterende PDF-er er byteidentiske. Sju nye originaler:
+
+| PDF | Uavhengig originalfasit |
+|---|---|
+| annotated-xfa | Digital TG2-tekst og lokal annotasjon skjuler ikke global XFA; unknown. |
+| annotated-uncertain | Fem sider med bevart digital TG2-tekst: uavklart AP, uavklart XFA, Stamp med TG3-appearance, Widget med arvet Tx, Widget med Ch. Alle unknown; ingen fullføring. |
+| annotation-text-loss | To sider med digital TG2 samt FreeText TG3 med/uten AP. Begge incomplete med bevart sidetekst; annotasjonsteksten er ikke ekstraktert. |
+| text-fragments | T, G og 3 i tilstøtende fontfragmenter skal gi TG3 uten oppdiktede mellomrom. |
+| parser-diagnostics | Første side har brukbar TG2-tekst og ukjent operator: unknown fra virkelig PDF.js-diagnostikk. Neste identiske tekstside uten operator er readable. |
+| cmap-text | Sammensatt font og innebygd CMap; lesbar TG3-tekst fra bare lokal pakke. |
+| review-layout | Radvis flettede kolonner beholder TG2/TG3-raden og beskrivelsesraden. Neste side har bare digital topptekst som tekstlag, samt rasterisert TG3: readable gjelder kun toppteksten. |
+
+Root kryssjekket tekst og fysiske sider med pypdf/PyMuPDF og inspiserte
+rendret layout, fontfragmenter, CMap og annotation/AP-varianter. PDF.js
+er fortsatt eneste produktparser. Regenerering i isolert tmp-mappe ga
+alle 20 PDF-er og manifest byteidentisk. Se storyens separate reviewrapport.

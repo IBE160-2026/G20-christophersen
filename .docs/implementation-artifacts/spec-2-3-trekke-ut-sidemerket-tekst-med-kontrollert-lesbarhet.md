@@ -2,7 +2,7 @@
 title: 'Story 2.3 — Trekke ut sidemerket tekst med kontrollert lesbarhet'
 type: 'feature'
 created: '2026-10-20'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-3-trekke-ut-sidemerket-tekst-med-kontrollert-lesbarhet'
 baseline_commit: '68bb8f25dd359738254bf370094ecfaf7db7d287'
@@ -86,3 +86,32 @@ beskriver modulbruk, konservativ strukturell inspeksjon, feil-/oppryddingsbevis
 og grenser. Root rapporterte 378/378 fullsuite, type/lint/build grønt og
 41+2 E2E grønt. Lokal commit utføres av root etter overlevering.
 Separat code review/done, senere story og push er ikke utført.
+
+### Review Findings — 2026-10-20
+
+Fire BMAD-lag er fullført. Root etterprøver og retter innen Story 2.3 etter
+eksplisitt bestilling. Full triage og AC-spor: [reviewrapport](story-2-3-review.md).
+
+- [x] [Review][Patch] B1/E1/A2 (high): Annotasjon avslutter inspeksjonen før øvrige nøkler/foreldre/katalog; XFA/usikker AP kan bli readable.
+- [x] [Review][Patch] E2/A1 og oppfølging E3/A3 (high): Annotasjonstekst utelates mens siden godkjennes; kjent teksttap gir incomplete, ukontrollert AP/Widget gir unknown, tilgjengelig sidetekst beholdes.
+- [x] [Review][Patch] B2 (high): Ubetingede mellomrom endrer tilstøtende tekstfragmenter og TG3.
+- [x] [Review][Patch] B3 (high): Mutert format-snapshot kan analyseres med gammel hash; kontroller konsumert bytekopi.
+- [x] [Review][Patch] B5 (medium): Lokale PDF.js-CMaps lastes ikke selv om pakken inneholder dem.
+- [x] [Review][Patch] B6 (medium): Bevar trygge, kjente kategorier for uavklart innholdsinspeksjon i sideårsaken.
+- [x] [Review][Patch] V1 (medium): Ekte parserdiagnostikk mangler direkte regresjonsbevis; legg til faktisk PDF med ukjent operator.
+- [x] [Review][Patch] B7 (medium): Utvid uavhengig fasit med radvis kolonneinnhold.
+- [x] [Review][Patch] B8 (medium): Test digital topptekst over rasterisert TG3 uten påstand om semantisk bildelesing.
+
+#### Rejected
+
+- B4 (false): Påstått transient font-cache-cleanupfeil som etterfølges av suksess er ikke vist mulig. PDF.js beholder avviste fontpromiser til cleanup lykkes; endelig cleanup avviser igjen og returnerer unavailable. Worker avsluttes uansett.
+- B9 (low, avvist): Intern task-/cleanup-injeksjon er ikke separat dekket. Ingen faktisk brutt opprydding er vist; testkroker/refaktorering bare for dette står ikke i forhold til gevinsten. Faktisk workeravslutning og ytre feilgrener er testet.
+- B10 (low, avvist): Delt parserloader er en mulig fremtidig vedlikeholdsforbedring, men begge pinnene er identiske og hashverifisert. Ingen nåværende divergens; unngår refaktorering av done Story 2.2 i dette reviewet.
+
+### Review fullført 2026-10-20
+
+AC1–AC4 godkjent etter retting og uavhengig etterkontroll. 387/387 Vitest,
+58/58 målrettede PDF-tester, typecheck/build/lint og 41+2 E2E består.
+[Reviewrapporten](story-2-3-review.md) bevarer alle funn, avvisninger og bevis.
+Story/sprintstatus er done; Epic 2 og SP2 pågår. Story 2.4 er backlog,
+R2 closed og øvrige porter uendret. Lokal reviewcommit; ingen push.

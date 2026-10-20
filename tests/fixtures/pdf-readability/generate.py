@@ -130,6 +130,55 @@ writer = PdfWriter(clone_from=ROOT / 'readable-blank.pdf')
 writer._ID = ArrayObject([ByteStringObject(b'IBE160-story23-A'), ByteStringObject(b'IBE160-story23-B')])
 writer.encrypt('', owner_password='fictional-fixture-owner', algorithm='RC4-128')
 writer.write(ROOT / 'encrypted-content.pdf')
+
+# Review oracle was recorded separately before these originals were generated.
+annot = b'<< /Type /Annot /Subtype /Text /Rect [40 40 100 100] /Contents (Kommentar) >>'
+write('annotated-xfa.pdf', [b'/Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> /Annots [8 0 R]'],
+    [stream(text), font, b'<< /XFA 7 0 R >>', stream(b'<xfa>Fiktivt skjema</xfa>'), annot], '/AcroForm 6 0 R')
+write('annotated-uncertain.pdf', [
+    b'/Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [10 0 R] /AP 999 0 R',
+    b'/Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [10 0 R] /XFA 999 0 R',
+    b'/Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [12 0 R]',
+    b'/Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [13 0 R]',
+    b'/Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [15 0 R]',
+], [stream(text), font, annot,
+    stream(b'BT /F1 12 Tf 0 20 Td (TG3 - Lekkasje i tak) Tj ET', b'/Type /XObject /Subtype /Form /BBox [0 0 460 40] /Resources << /Font << /F1 9 0 R >> >>'),
+    b'<< /Type /Annot /Subtype /Stamp /Rect [40 400 500 440] /AP << /N 11 0 R >> >>',
+    b'<< /Type /Annot /Subtype /Widget /Parent 14 0 R /Rect [40 400 500 440] /AP << /N 11 0 R >> >>',
+    b'<< /FT /Tx /T (arvet) /V (TG3 - Lekkasje i tak) /Kids [13 0 R] >>',
+    b'<< /Type /Annot /Subtype /Widget /FT /Ch /T (valg) /V (TG3 - Lekkasje i tak) /Rect [40 400 500 440] /AP << /N 11 0 R >> >>',
+])
+write('annotation-text-loss.pdf', [
+    b'/Contents 5 0 R /Resources << /Font << /F1 6 0 R >> >> /Annots [7 0 R]',
+    b'/Contents 5 0 R /Resources << /Font << /F1 6 0 R >> >> /Annots [9 0 R]',
+], [stream(text), font,
+    b'<< /Type /Annot /Subtype /FreeText /Rect [40 400 500 440] /Contents (TG3 - Lekkasje i tak) /DA (/F1 12 Tf 0 g) /AP << /N 8 0 R >> >>',
+    stream(b'BT /F1 12 Tf 0 20 Td (TG3 - Lekkasje i tak) Tj ET', b'/Type /XObject /Subtype /Form /BBox [0 0 460 40] /Resources << /Font << /F1 6 0 R >> >>'),
+    b'<< /Type /Annot /Subtype /FreeText /Rect [40 400 500 440] /Contents (TG3 - Lekkasje i tak) /DA (/F1 12 Tf 0 g) >>',
+])
+write('text-fragments.pdf', [b'/Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >>'], [
+    stream(b'BT /F1 12 Tf 50 700 Td (Tilstandsgrad: T) Tj /F2 12 Tf (G) Tj /F1 12 Tf (3 - Lekkasje i tak) Tj ET'), font,
+    b'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
+])
+write('parser-diagnostics.pdf', [b'/Contents 5 0 R /Resources << /Font << /F1 7 0 R >> >>',
+    b'/Contents 6 0 R /Resources << /Font << /F1 7 0 R >> >>'],
+    [stream(text + b' unsupportedOperator'), stream(text), font])
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+pdfmetrics.registerFont(UnicodeCIDFont('HeiseiMin-W3'))
+cmap = Canvas(str(ROOT / 'cmap-text.pdf'), pagesize=(600, 800), invariant=1)
+cmap.setFont('HeiseiMin-W3', 12)
+cmap.drawString(40, 740, 'Tilstandsgrad: TG3 - Lekkasje i tak')
+cmap.save()
+review = Canvas(str(ROOT / 'review-layout.pdf'), pagesize=(600, 800), invariant=1)
+review.setFont('Helvetica', 12)
+for x, y, value in [(40, 740, 'TG2'), (320, 740, 'TG3'), (40, 710, 'Råte i vinduskarm'), (320, 710, 'Lekkasje ved pipe')]:
+    review.drawString(x, y, value)
+review.showPage()
+review.setFont('Helvetica', 12)
+review.drawString(40, 740, 'Digital topptekst')
+review.drawImage(ImageReader(scan), 40, 400, width=400, height=160)
+review.save()
 manifest = {path.name: sha256(path.read_bytes()).hexdigest() for path in sorted(ROOT.glob('*.pdf'))}
 (ROOT / 'sha256.json').write_text(json.dumps(manifest, indent=2) + '\n')
 print(f'Generated {len(manifest)} PDFs without reading the oracle')

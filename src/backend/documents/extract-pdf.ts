@@ -1,4 +1,5 @@
 import { Worker } from 'node:worker_threads'
+import { createHash } from 'node:crypto'
 import { AnalysisContextSchema, CONTRACT_VERSION, DocumentBasisSchema, EXTRACTION_VERSION } from '../../contracts/document-analysis.ts'
 import type { AnalysisError, DocumentBasis } from '../../contracts/document-analysis.ts'
 import { getDocumentBasisError } from '../../contracts/analysis-validation.ts'
@@ -23,7 +24,9 @@ async function terminate(worker: Worker) {
 export async function extractPdf(format: Extract<PdfFormatOutcome, { status: 'format-validated' }>, request: ExtractionRequest): Promise<PdfExtractionOutcome> {
   const context = AnalysisContextSchema.parse({ ...request, contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION,
     reportHash: format.reportHash, documentName: format.documentName, pageCount: format.pageCount })
-  const worker = createWorker(format.originalBytes, format.pageCount)
+  const bytes = Uint8Array.from(format.originalBytes)
+  if (createHash('sha256').update(bytes).digest('hex') !== context.reportHash) throw unavailable()
+  const worker = createWorker(bytes, format.pageCount)
   try {
     const pages = await new Promise<unknown>((resolve, reject) => {
       worker.once('message', (reply: { kind?: string; pages?: unknown }) => {

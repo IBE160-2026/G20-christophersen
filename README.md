@@ -40,7 +40,7 @@ er kontrollert visuelt, inklusive TG3 på PDF-side 4 / trykt side 2.
 Modulen er ikke koblet til appens rapportflyt ennå.
 [R2 er lukket med godkjent sidestatusregel](.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md):
 bevist blank side tillates, mens ulest innhold blokkerer fullført analyse.
-Story 2.3 er implementert til review: `extractPdf` leverer hele kontraktversjon 2 /
+Story 2.3 er done etter [code review](.docs/implementation-artifacts/story-2-3-review.md): `extractPdf` leverer hele kontraktversjon 2 /
 uttrekksversjon 1-grunnlaget med én tekst-/statuspost per fysisk side. Den
 [godkjente blankregelen](.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md)
 krever full strukturell inspeksjon; unreadable/unknown/incomplete og bare

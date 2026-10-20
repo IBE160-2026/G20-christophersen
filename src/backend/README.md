@@ -45,7 +45,7 @@ Story 2.2 er done etter [review](../../.docs/implementation-artifacts/story-2-2-
 Den tidligere røde sidetellingsproben er grønn; også nestede sidetrær,
 objekt-/xref-strømmer og linearisering er kontrollert. [Implementeringsvalget](../../.docs/implementation-artifacts/story-2-2-page-tree-design.md)
 beskriver den private parserkoblingen og hva en senere pinendring må kontrollere.
-R2 er lukket som beslutningsport. Story 2.3 står til review med
+R2 er lukket som beslutningsport. Story 2.3 er done etter [code review](../../.docs/implementation-artifacts/story-2-3-review.md), med
 [egenverifikasjon](../../.docs/implementation-artifacts/story-2-3-verifikasjon.md).
 
 `documents/extract-pdf.ts` tar et `format-validated`-utfall fra `validatePdf`
@@ -61,9 +61,11 @@ Den isolerte `pdf-extraction-worker.ts` verifiserer samme installerte bunt-hash
 som 2.2, traverserer faktiske blader med `getAllPageDicts(false)` og bruker
 `Page.extractTextContent` på disse bladene. Deklarert Count bestemmer aldri
 sidekoblingen. `ignoreErrors:false` er internverdien for PDF.js
-`stopAtErrors:true`. Parseren får en kopi av originalsnapshotet. Levererte
+`stopAtErrors:true`. Parseren får en kopi av originalsnapshotet; den konsumerte
+kopien må fortsatt passe rapporthashen. Leverte
 tekstchunks kopieres før PDF.js gjenbruker dem; linjeskift fra `hasEOL` og
-mellomrom mellom items bevarer kontrollerbar tekstkontekst i sideposten.
+PDF.js sine egne mellomrom bevares. Tilstøtende fragmenter ved fontbytte
+får ingen innskutte mellomrom. Standardfonter og CMaps lastes fra lokal pakke.
 Senere analyse kan bruke `document.pages` direkte uten ny PDF-tolkning.
 
 `pdf-extraction-core.ts` bruker eksakte PDF-whitespacebytes 0/9/10/12/13/32,
@@ -73,7 +75,10 @@ annotasjoner, felt, appearance, XFA og annet innhold som må tolkes. Tomme,
 typevaliderte AcroForm-dictionaries/Fields[] alene er ikke sideinnhold.
 Uavklart global felt-/XFA-kobling gir unknown; lokale annotasjoner/widgets uten
 tekst gir unreadable. Ukjente utvidelser eller ufullstendig inspeksjon gir
-unknown. Null/ødelagte referanser blir aldri blanke.
+unknown. Null/ødelagte referanser blir aldri blanke. Inspeksjonen fortsetter etter
+lokale annotasjoner. Kjent utelatt FreeText-/felttekst gir incomplete når
+sidetekst er bevart. Ukontrollert annotasjonsappearance eller Widget gjør
+en ellers lesbar side unknown; ingen annotasjonsrenderer er innført.
 
 Rå innholdsstrømmer kontrolleres også på sider med tekst. Ufiltrerte strømmer,
 ASCII85 og Flate har full verifikasjon; Flate kontrolleres med Node zlib,

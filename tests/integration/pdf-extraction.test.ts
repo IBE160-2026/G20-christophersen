@@ -190,3 +190,48 @@ describe('Story 2.3 – workeropprydding og trygge driftsfeil', () => {
     } finally { terminate.mockRestore() }
   })
 })
+
+describe('Story 2.3 review – faktisk PDF-regresjon', () => {
+  it.each(['annotated-xfa.pdf', 'annotated-uncertain.pdf', 'annotation-text-loss.pdf', 'parser-diagnostics.pdf'])('%s beholder tekst, status og fullføringssperre', async name => {
+    const { document, error } = await extractFile(name)
+    preservesPositions(document)
+    expect(document.pages.map(page => page.status)).toEqual(oracle[name])
+    document.pages.forEach(page => expect(page.text).toContain('Tilstandsgrad: TG2 - Slitt gulv'))
+    expect(error?.kind).toBe('document')
+    expect(bindAnalysisOutcome(document, completed)).toMatchObject({ status: 'failed', error })
+    if (name === 'parser-diagnostics.pdf') expect(error?.target).toEqual({ kind: 'page', pdfPage: 1 })
+  })
+  it('bevarer tilstøtende TG3-fragmenter gjennom fontbytte', async () => {
+    const { document, error } = await extractFile('text-fragments.pdf')
+    expect(error).toBeNull()
+    expect(document.pages[0]!.text.trim()).toBe('Tilstandsgrad: TG3 - Lekkasje i tak')
+  })
+  it('laster sammensatt fonts innebygde CMaps fra lokal PDF.js-pakke', async () => {
+    const { document, error } = await extractFile('cmap-text.pdf')
+    expect(error).toBeNull()
+    expect(document.pages[0]!.text.trim()).toBe('Tilstandsgrad: TG3 - Lekkasje i tak')
+  })
+  it('bevarer radvis kolonnerekkefølge og avgrenser readable til digital tekst over skann', async () => {
+    const { document, error } = await extractFile('review-layout.pdf')
+    expect(error).toBeNull()
+    expect(document.pages.map(page => page.status)).toEqual(oracle['review-layout.pdf'])
+    expect(document.pages[0]!.text).toMatch(/TG2 +TG3\nRåte i vinduskarm +Lekkasje ved pipe/)
+    expect(document.pages[1]!.text.trim()).toBe('Digital topptekst')
+    expect(document.pages[1]!.text).not.toContain('TG3')
+  })
+  it('godtar ikke mutert formatsnapshot med en annen rapporthash', async () => {
+    const format = await formatFile('readable-blank.pdf')
+    const before = format.reportHash
+    const grade = Buffer.from(format.originalBytes).indexOf('TG2')
+    expect(grade).toBeGreaterThan(0)
+    format.originalBytes[grade + 2] = '3'.charCodeAt(0)
+    await expect(extractPdf(format, request)).rejects.toThrow(/^PDF-teksten kunne ikke kontrolleres\. Prøv igjen\.$/)
+    expect(format.reportHash).toBe(before)
+  })
+  it('bevarer trygt kjent årsakskategori for uavklart dekoding og referanse', async () => {
+    const { document } = await extractFile('uncertain-content.pdf')
+    expect(document.pages[0]!.reason).toMatch(/dekoding/i)
+    expect(document.pages[1]!.reason).toMatch(/referanse|struktur/i)
+    expect(document.pages[0]!.reason).not.toBe(document.pages[1]!.reason)
+  })
+})

@@ -57,8 +57,9 @@ try {
   const handler = {
     send() {},
     async sendWithPromise(kind: string, data: { kind?: string; filename?: string }) {
-      if (kind === 'FetchBinaryData' && data.kind === 'standardFontDataUrl' && data.filename && /^[a-zA-Z0-9_.-]+$/.test(data.filename)) {
-        return Uint8Array.from(await readFile(new URL(`./standard_fonts/${data.filename}`, import.meta.resolve('pdfjs-dist/package.json'))))
+      const directory = data.kind === 'standardFontDataUrl' ? 'standard_fonts' : data.kind === 'cMapUrl' ? 'cmaps' : null
+      if (kind === 'FetchBinaryData' && directory && data.filename && /^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$/.test(data.filename)) {
+        return Uint8Array.from(await readFile(new URL(`./${directory}/${data.filename}`, import.meta.resolve('pdfjs-dist/package.json'))))
       }
       throw new Error('Unsupported parser resource request')
     },
@@ -78,38 +79,43 @@ try {
     if (raw instanceof parser.Ref && value == null) throw new Error('Unresolved reference')
     return value
   }
-  function inspectContents(dict: Dict): Inspection {
+  function inspectContents(dict: Dict): { status: Inspection; reason: string | null } {
+    const resultOf = (status: Inspection, reason: string | null = null) => ({ status, reason })
     try {
-      if (!dict.has('Contents')) return 'empty'
+      if (!dict.has('Contents')) return resultOf('empty')
       const content = resolve(dict.getRaw('Contents'))
       const streams = Array.isArray(content) ? content : [content]
       let result: Inspection = 'empty'
       for (const value of streams) {
         const stream = resolve(value)
-        if (!(stream instanceof parser.BaseStream)) return 'unknown'
-        if (xref.encrypt) return 'unknown' // Original stream bytes may still be encrypted.
+        if (!(stream instanceof parser.BaseStream)) return resultOf('unknown', 'Innholdsstrømmens struktur eller referanse kunne ikke kontrolleres.')
+        if (xref.encrypt) return resultOf('unknown', 'Kryptert innholdsstrøm kunne ikke verifiseres uavhengig.') // Original stream bytes may still be encrypted.
         const raw = stream.getOriginalStream()
         // NullStream is a forgiving recovery, not proof of an empty original stream.
-        if (!(raw instanceof parser.Stream)) return 'damaged'
+        if (!(raw instanceof parser.Stream)) return resultOf('damaged')
         const declaredLength = resolve(stream.dict.getRaw('Length'))
-        if (!Number.isInteger(declaredLength) || declaredLength !== raw.length) return 'unknown'
+        if (!Number.isInteger(declaredLength) || declaredLength !== raw.length) return resultOf('unknown', 'Innholdsstrømmens deklarerte lengde kunne ikke verifiseres.')
         const rawFilter = resolve(stream.dict.getRaw('Filter') ?? stream.dict.getRaw('F'))
         const filters = rawFilter == null ? [] : Array.isArray(rawFilter) ? rawFilter.map(resolve) : [rawFilter]
-        if (!filters.every(filter => filter instanceof parser.Name)) return 'unknown'
+        if (!filters.every(filter => filter instanceof parser.Name)) return resultOf('unknown', 'Innholdsstrømmens filterstruktur kunne ikke kontrolleres.')
         // Predictors/encryption need a separately verified decoder; never guess emptiness.
-        if (resolve(stream.dict.getRaw('DecodeParms') ?? stream.dict.getRaw('DP')) != null) return 'unknown'
+        if (resolve(stream.dict.getRaw('DecodeParms') ?? stream.dict.getRaw('DP')) != null) return resultOf('unknown', 'Innholdsstrømmens dekodingsparametre er ikke uavhengig verifisert.')
         const originalPosition = raw.pos
         raw.reset()
         const inspected = inspectStreamBytes(Uint8Array.from(raw.getBytes()), filters.map(filter => (filter as { name: string }).name))
         raw.pos = originalPosition
-        if (inspected === 'damaged') return inspected
+        if (inspected === 'damaged') return resultOf(inspected)
         if (inspected === 'unknown') result = inspected
         else if (inspected === 'content' && result !== 'unknown') result = inspected
       }
-      return result
-    } catch { return 'unknown' }
+      return resultOf(result, result === 'unknown' ? 'Innholdsstrømmens dekoding er ikke uavhengig verifisert.' : null)
+    } catch { return resultOf('unknown', 'Innholdsstrømmens struktur eller referanse kunne ikke kontrolleres.') }
   }
-  function otherContent(dict: Dict): boolean | null {
+  function otherContent(dict: Dict): { content: boolean | null; textLoss: boolean; uncertainAnnotation: boolean; reason: string | null } {
+    let content = false
+    let textLoss = false
+    let uncertainAnnotation = false
+    const unknown = () => ({ content: null, textLoss, uncertainAnnotation, reason: 'Annet sideinnhold, skjemastruktur eller referanse kunne ikke kontrolleres fullstendig.' })
     try {
       // Unknown extensions cannot silently become a blank proof. These entries are
       // page-tree/metadata/presentation only; Contents and content-bearing keys are
@@ -122,52 +128,67 @@ try {
       let current: Dict | null = dict
       const seen = new Set<Dict>()
       while (current) {
-        if (seen.has(current)) return null
+        if (seen.has(current)) return unknown()
         seen.add(current)
-        if (current.getKeys().some(key => !nonContent.has(key) && !contentKeys.includes(key))) return null
+        if (current.getKeys().some(key => !nonContent.has(key) && !contentKeys.includes(key))) return unknown()
         for (const key of contentKeys) {
           if (!current.has(key)) continue
           const value = resolve(current.getRaw(key))
           if (key === 'Annots') {
-            if (!Array.isArray(value)) return null
+            if (!Array.isArray(value)) return unknown()
             if (value.length === 0) continue
-            if (value.some(item => !(resolve(item) instanceof parser.Dict))) return null
+            for (const item of value) {
+              const annotation = resolve(item)
+              if (!(annotation instanceof parser.Dict)) return unknown()
+              const subtype = resolve(annotation.getRaw('Subtype'))
+              // Any uninspected appearance can carry selectable PDF text, not
+              // just FreeText. Widget types/values may also be inherited.
+              if (annotation.has('AP') || (subtype instanceof parser.Name && subtype.name === 'Widget')) uncertainAnnotation = true
+              const fieldType = resolve(annotation.getRaw('FT'))
+              if (subtype instanceof parser.Name && (subtype.name === 'FreeText' ||
+                (subtype.name === 'Widget' && fieldType instanceof parser.Name && fieldType.name === 'Tx'))) {
+                const annotationText = resolve(annotation.getRaw(subtype.name === 'FreeText' ? 'Contents' : 'V'))
+                // Page.extractTextContent reads Contents, never annotation appearances/values.
+                if (typeof annotationText === 'string' && annotationText.trim()) textLoss = true
+                else uncertainAnnotation = true
+              }
+            }
           }
-          if (value == null) return null
-          return true
+          if (value == null) return unknown()
+          content = true
         }
         const parent = current.has('Parent') ? resolve(current.getRaw('Parent')) : null
-        if (parent !== null && !(parent instanceof parser.Dict)) return null
+        if (parent !== null && !(parent instanceof parser.Dict)) return unknown()
         current = parent as Dict | null
       }
       const root = xref.getCatalogObj()
-      if (!(root instanceof parser.Dict)) return null
+      if (!(root instanceof parser.Dict)) return unknown()
       const catalogMetadata = new Set(['Type', 'Pages', 'Version', 'PageLabels', 'Names', 'Dests',
         'PageLayout', 'PageMode', 'Outlines', 'ViewerPreferences', 'OpenAction', 'Metadata', 'MarkInfo',
         'StructTreeRoot', 'Lang', 'OutputIntents', 'Perms', 'AcroForm', 'XFA', 'NeedsRendering'])
-      if (root.getKeys().some(key => !catalogMetadata.has(key))) return null
-      if (root.has('XFA')) return null // Global XFA has no trustworthy physical-page mapping.
-      if (root.has('NeedsRendering') && resolve(root.getRaw('NeedsRendering')) !== false) return null
+      if (root.getKeys().some(key => !catalogMetadata.has(key))) return unknown()
+      if (root.has('XFA')) return unknown() // Global XFA has no trustworthy physical-page mapping.
+      if (root.has('NeedsRendering') && resolve(root.getRaw('NeedsRendering')) !== false) return unknown()
       if (root.has('AcroForm')) {
         const form = resolve(root.getRaw('AcroForm'))
-        if (!(form instanceof parser.Dict)) return null
+        if (!(form instanceof parser.Dict)) return unknown()
         const defaults = new Set(['Fields', 'NeedAppearances', 'SigFlags', 'CO', 'DR', 'DA', 'Q'])
-        if (form.getKeys().some(key => !defaults.has(key))) return null
+        if (form.getKeys().some(key => !defaults.has(key))) return unknown()
         const fields = form.has('Fields') ? resolve(form.getRaw('Fields')) : []
-        if (!Array.isArray(fields) || fields.length > 0) return null
+        if (!Array.isArray(fields) || fields.length > 0) return unknown()
         // Empty form scaffolding does not paint a page. Non-empty/global fields
         // need a mapping we have not established, so remain unknown above.
         for (const key of form.getKeys().filter(key => key !== 'Fields')) {
           const value = resolve(form.getRaw(key))
-          if (key === 'CO' && (!Array.isArray(value) || value.length > 0)) return null
-          if (key === 'DR' && !(value instanceof parser.Dict)) return null
-          if (key === 'DA' && typeof value !== 'string') return null
-          if (key === 'NeedAppearances' && typeof value !== 'boolean') return null
-          if (['SigFlags', 'Q'].includes(key) && typeof value !== 'number') return null
+          if (key === 'CO' && (!Array.isArray(value) || value.length > 0)) return unknown()
+          if (key === 'DR' && !(value instanceof parser.Dict)) return unknown()
+          if (key === 'DA' && typeof value !== 'string') return unknown()
+          if (key === 'NeedAppearances' && typeof value !== 'boolean') return unknown()
+          if (['SigFlags', 'Q'].includes(key) && typeof value !== 'number') return unknown()
         }
       }
-      return false
-    } catch { return null }
+      return { content, textLoss, uncertainAnnotation, reason: null }
+    } catch { return unknown() }
   }
   const documentMessages = [...messages]
   for (const [pageIndex, [dict, ref]] of leaves) {
@@ -184,10 +205,17 @@ try {
     const other = otherContent(dict)
     const task = new parser.WorkerTask(`Extract physical page ${pageIndex + 1}`)
     try {
-      pages.push(await extractPage(pageIndex + 1, page, inspection, other, handler, task, () => {
+      const extracted = await extractPage(pageIndex + 1, page, inspection.status, other.content, handler, task, () => {
+        if (other.textLoss) return 'loss'
         if (messages.some(message => /ignoring|Invalid stream|not available|failed/i.test(message))) return 'loss'
         return messages.length ? 'uncertain' : null
-      }))
+      })
+      if (extracted.status === 'readable' && other.uncertainAnnotation) {
+        extracted.status = 'unknown'
+        extracted.reason = 'Annotasjonens tekstgrunnlag kunne ikke kontrolleres fullstendig.'
+      }
+      if (extracted.status === 'unknown') extracted.reason = inspection.reason ?? other.reason ?? extracted.reason
+      pages.push(extracted)
     } finally { task.terminate(); task.finish(); await manager.cleanup() }
   }
   reply = { kind: 'extracted', pages }

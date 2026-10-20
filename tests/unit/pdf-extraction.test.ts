@@ -16,7 +16,7 @@ describe('Story 2.3 – kontrollerte ekstraksjonsfeil og statusrekkefølge', () 
       throw new Error('DO-NOT-EXPOSE extraction internals')
     })
     const result = await extractPage(4, page, 'content', false, {}, {}, silent)
-    expect(result).toMatchObject({ pdfPage: 4, text: 'TG3\nLekkasje i tak ', status: 'incomplete' })
+    expect(result).toMatchObject({ pdfPage: 4, text: 'TG3\nLekkasje i tak', status: 'incomplete' })
     expect(result.reason).not.toMatch(/DO-NOT-EXPOSE|internals/)
   })
   it('kjent avvist lesing uten tekst er unreadable med fysisk side', async () => {

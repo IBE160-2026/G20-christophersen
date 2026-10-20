@@ -12,6 +12,13 @@
   "catalog-empty-form.pdf": ["blank"],
   "catalog-empty-dict.pdf": ["blank"],
   "encrypted-content.pdf": ["unknown", "blank"],
+  "annotated-xfa.pdf": ["unknown"],
+  "annotated-uncertain.pdf": ["unknown", "unknown", "unknown", "unknown", "unknown"],
+  "annotation-text-loss.pdf": ["incomplete", "incomplete"],
+  "text-fragments.pdf": ["readable"],
+  "parser-diagnostics.pdf": ["unknown", "readable"],
+  "cmap-text.pdf": ["readable"],
+  "review-layout.pdf": ["readable", "readable"],
   "layout.pdf": [
     {"pdfPage": 1, "text": ["TG2", "Slitt overflate på baderomsgulv", "TG3", "Alvorlig lekkasje i tak", "æ ø å Æ Ø Å"]},
     {"pdfPage": 2, "text": ["Venstre kolonne", "Tilstandsgrad: TG2", "Råte i vinduskarm", "Høyre kolonne", "Tilstandsgrad: TG3", "Lekkasje ved pipe"]},

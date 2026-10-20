@@ -32,7 +32,7 @@
 # development_status er gruppert per epic, ikke etter implementeringsrekkefølge.
 # BMADs generiske statusanbefaling håndhever ikke avhengigheter eller porter.
 generated: 10-16-2026 18:23
-last_updated: 10-20-2026 09:27
+last_updated: 10-20-2026 09:50
 project: IBE160
 project_key: NOKEY
 tracking_system: file-system
@@ -51,7 +51,7 @@ development_status:
   epic-2: in-progress
   2-1-dele-og-validere-dokument-analysekontrakten: done
   2-2-validere-pdf-format-sidegrense-og-originalidentitet: done
-  2-3-trekke-ut-sidemerket-tekst-med-kontrollert-lesbarhet: review
+  2-3-trekke-ut-sidemerket-tekst-med-kontrollert-lesbarhet: done
   2-4-hente-lagret-demo-uttrekk-bundet-til-riktig-rapport-og-versj: backlog
   2-5-gjennomføre-ett-http-analyseforløp-med-duplikatsperre: backlog
   2-6-velge-rapport-og-ta-imot-bare-gjeldende-analyseutfall: backlog

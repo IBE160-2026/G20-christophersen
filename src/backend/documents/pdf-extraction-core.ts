@@ -65,7 +65,8 @@ export async function extractPage(pdfPage: number, page: TextPage, inspection: I
         items.push(...chunk.items.filter(item => typeof item.str === 'string').map(item => ({ str: item.str, hasEOL: item.hasEOL })))
       } } })
   } catch { rejected = true }
-  const text = items.map(item => item.str + (item.hasEOL ? '\n' : ' ')).join('')
+  // PDF.js already supplies word/gap spaces; font changes can split one word.
+  const text = items.map(item => item.str + (item.hasEOL ? '\n' : '')).join('')
   const hasText = text.trim().length > 0
   const diagnostic = diagnostics()
   if ((rejected || inspection === 'damaged' || diagnostic === 'loss') && hasText) {

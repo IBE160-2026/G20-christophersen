@@ -1,0 +1,76 @@
+%PDF-1.7
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R  >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 5 /Kids [3 0 R 4 0 R 5 0 R 6 0 R 7 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [10 0 R] /AP 999 0 R >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [10 0 R] /XFA 999 0 R >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [12 0 R] >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [13 0 R] >>
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> /Annots [15 0 R] >>
+endobj
+8 0 obj
+<< /Length 62  >>
+stream
+BT /F1 12 Tf 50 700 Td (Tilstandsgrad: TG2 - Slitt gulv) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+10 0 obj
+<< /Type /Annot /Subtype /Text /Rect [40 40 100 100] /Contents (Kommentar) >>
+endobj
+11 0 obj
+<< /Length 49 /Type /XObject /Subtype /Form /BBox [0 0 460 40] /Resources << /Font << /F1 9 0 R >> >> >>
+stream
+BT /F1 12 Tf 0 20 Td (TG3 - Lekkasje i tak) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Annot /Subtype /Stamp /Rect [40 400 500 440] /AP << /N 11 0 R >> >>
+endobj
+13 0 obj
+<< /Type /Annot /Subtype /Widget /Parent 14 0 R /Rect [40 400 500 440] /AP << /N 11 0 R >> >>
+endobj
+14 0 obj
+<< /FT /Tx /T (arvet) /V (TG3 - Lekkasje i tak) /Kids [13 0 R] >>
+endobj
+15 0 obj
+<< /Type /Annot /Subtype /Widget /FT /Ch /T (valg) /V (TG3 - Lekkasje i tak) /Rect [40 400 500 440] /AP << /N 11 0 R >> >>
+endobj
+xref
+0 16
+0000000000 65535 f 
+0000000015 00000 n 
+0000000065 00000 n 
+0000000146 00000 n 
+0000000301 00000 n 
+0000000457 00000 n 
+0000000600 00000 n 
+0000000743 00000 n 
+0000000886 00000 n 
+0000000999 00000 n 
+0000001096 00000 n 
+0000001190 00000 n 
+0000001378 00000 n 
+0000001472 00000 n 
+0000001582 00000 n 
+0000001664 00000 n 
+trailer
+<< /Size 16 /Root 1 0 R >>
+startxref
+1803
+%%EOF

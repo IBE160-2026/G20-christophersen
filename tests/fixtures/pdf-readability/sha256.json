@@ -1,15 +1,22 @@
 {
+  "annotated-uncertain.pdf": "598495fdd668c3b5906fba44d3a7c33e16730b6936a996d04b9f0450655d49d8",
+  "annotated-xfa.pdf": "fca712fac494a9e9a2fc9ae2accd9e55c2730c25b5745116697e187a3cb74750",
+  "annotation-text-loss.pdf": "b29003d01eea3fa65b26e73626bf4df604c454bb82070f7ff26dfb4eac71aed6",
   "blank-variants.pdf": "910058e1d955bddbc33577941c6f8d0be7cd7cf4124314fd387a5e623c82533c",
   "catalog-empty-dict.pdf": "cadcbd544822274e5e83c7aefd93b1a287b27ed09e4f5785d326d823ad3d2289",
   "catalog-empty-form.pdf": "cce18e737fa16cf46bfaad5ac536c240bf37e9d4e4fcb846c0cdb98a720180a4",
   "catalog-form.pdf": "9e67dbd482c0dd1a279ab712ac7a3b3cb2c17ee77bccbcba7b48438b6d17d5d0",
   "catalog-xfa.pdf": "ebb21f410aa098c99cdeec2f3b6b6f9f5a933ef1b3d34d4f1cc4cdbbb20c5aee",
+  "cmap-text.pdf": "82f26ec7d6a2328ae6db00c74cb8fa7b128a9871da90c5cacd75f75187f75784",
   "encrypted-content.pdf": "c5d4bd3c14a48a8b6d1d7c7584a72e6adf52267d8922dc5c529ff7a76e07a25d",
   "layout.pdf": "2ffcc8d057b5565173a3e44d6c99458ce5f5257d2731fe5d0ca099c747bafe55",
   "mixed-status.pdf": "cce40b8cb2f0150126dee30097c0f1f9aa9de03270d97e18aaef7fb0410a4211",
   "nested-count.pdf": "e56ebee54eaddbd6a40a0ba825785b2c7f8e74223bf04f81450a4fb98aec914a",
+  "parser-diagnostics.pdf": "0079abd125dc0cef3fd8fc31572514ec36f8652e1e8c95165b33dd002dd40d6e",
   "readable-blank.pdf": "aa4badf3131810d6ca21e96e480709337a78603cdfd39ecc49ccbeac7c453dc4",
+  "review-layout.pdf": "497f5ca294419e95d6fb954e3e41ec6612553bf06007d076227d750035a44c12",
   "structural-content.pdf": "cb624dcc41ee9b50fb2e8316171d83d23d7ef6c6d6d262136a8a5b69157ea0e9",
+  "text-fragments.pdf": "4aa11933d23d2faa409396facc05600f7532f9c6572b5c32ef38a8f319298b00",
   "textless-content.pdf": "c8de465f1bb20890071258c97cfd069cddd625725f8a314e2882acdd82de3992",
   "uncertain-content.pdf": "fa4b0685fc83a4c37d83f7a79c8c77916c1004a7619e9b80cda6096154ae3390"
 }

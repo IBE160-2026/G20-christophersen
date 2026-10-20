@@ -27,7 +27,7 @@ konto kreves for registreringen.
 Story 2.1 er implementert og uavhengig reviewet med alle fire AC bestått: felles dokument-/
 analyseschemas og rene validatorer skiller fullføring, feil og usikre
 kilder med kodekontrollert metadata. Kontrakttestene krever ingen PDF-parser
-eller betalt API. Rapportflyten kobles til denne kontrakten i Story 2.6.
+eller betalt API. Rapportflyten bruker denne kontrakten fra Story 2.6.
 
 Story 2.2 er ferdig etter [uavhengig review](.docs/implementation-artifacts/story-2-2-review.md): backend kontrollerer
 faktiske PDF-bytes, faktisk sidemengde mot grensen 30 og SHA-256 med låst PDF.js legacy-build.
@@ -60,7 +60,7 @@ Story 2.5 kobler nå format, alle fysiske sider og demo til ett
 prosesslokal duplikatsperre og én hard lokal 60 s-frist. PDF-grensen er
 50 MiB inklusive likhet; JSON/metadata har egen 1 MiB-grense. Ingen innhold
 skrives til disk. Se [HTTP-form, feil og ressurslivsløp](src/backend/README.md#http-analyse--story-25).
-Story 2.6 er implementert til review: bekreft tallgrunnlaget, velg én PDF i
+Story 2.6 er done etter [uavhengig review](.docs/implementation-artifacts/story-2-6-review.md): bekreft tallgrunnlaget, velg én PDF i
 Tilstandsrapport og velg **Start analyse**. Bruk for eksempel
 `tests/fixtures/property-cases/F4-tilstandsrapport.pdf`; bare de uendrede
 F1–F4-originalene har tilhørende lagret demouttrekk. Ingen analyse starter ved
@@ -132,7 +132,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. Vitest-modul-/PDF-integrasjonstester, 53 tester av bygget app
+port 3000, som må være ledig. Vitest-modul-/PDF-integrasjonstester, 57 tester av bygget app
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
@@ -231,7 +231,7 @@ valideringsresultat med avledede typer; `domain/validation.ts` eier numerisk
 gyldighet, bekreftelsesbehov og eksakt årsnormalisering. Ingen framtidig
 rapportflyt, finansberegning eller økonomisk screeningregel er lagt inn.
 Dokument-/analyseschemas og ren kilde-/metadatavalidering eies nå også av
-contracts; backend bruker PDF.js ved format- og tekstgrensen. Demo-adapter og HTTP-kobling er levert; frontendkobling følger Story 2.6.
+contracts; backend bruker PDF.js ved format- og tekstgrensen. Demo-adapter og HTTP-kobling er levert; frontendkobling er levert i Story 2.6.
 `domain/financial-basis.ts` vurderer kilde-/kostnadsgrunnlaget, og
 `domain/screening.ts` samler kjente mangler til fast prioritet-1-utfall.
 Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,

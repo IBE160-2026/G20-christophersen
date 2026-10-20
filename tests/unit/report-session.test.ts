@@ -192,3 +192,43 @@ describe('Story 2.6 — ren rapporttilstand og klientforløp', () => {
     expect(reportReducer(report, { type: 'report-start', correlation })).toBe(report)
   })
 })
+
+describe('Story 2.6 — uavhengige fase-3-raceprøver', () => {
+  it('gammel transportfeil etter best effort-abort påvirker verken nyere request eller dens startlås', async () => {
+    const requests: { init: RequestInit; resolve: (r: Response) => void; reject: (e: Error) => void }[] = []
+    const fetcher = vi.fn((_url: string | URL | Request, init?: RequestInit) => new Promise<Response>((resolve, reject) => { requests.push({ init: init!, resolve, reject }) }))
+    const h = harness(fetcher)
+    await h.client.select(file, h.getState())
+    const old = h.client.start(true, h.getState())
+    await h.client.select(new File([bytes], 'nyere.pdf'), h.getState())
+    const current = h.client.start(true, h.getState())
+    expect(requests[0]!.init.signal?.aborted).toBe(true)
+    requests[0]!.reject(new Error('sent transportavslag'))
+    await old
+    expect(h.getState()).toMatchObject({ generation: 2, status: 'analysing', error: null })
+    await h.client.start(true, h.getState())
+    expect(fetcher).toHaveBeenCalledTimes(2)
+    const headers = requests[1]!.init.headers as Record<string, string>
+    const requestId = headers['X-Request-Id']!
+    requests[1]!.resolve(new Response(JSON.stringify({ ...response(), correlation: { sessionId: headers['X-Session-Id'], requestId, generation: 2 }, outcome: { ...response().outcome, requestId, documentName: 'nyere.pdf' } })))
+    await current
+    expect(h.getState()).toMatchObject({ status: 'completed', selected: { file: { name: 'nyere.pdf' } } })
+  })
+  it('avbrudd under JSON-lesing forkaster gammel feil/fullføring og frigjør bare eget finally', async () => {
+    let finishJson!: (value: unknown) => void
+    const oldResponse = new Response()
+    vi.spyOn(oldResponse, 'json').mockImplementation(() => new Promise(resolve => { finishJson = resolve }))
+    const fetcher = vi.fn().mockResolvedValueOnce(oldResponse).mockRejectedValueOnce(new Error('ny transportfeil'))
+    const h = harness(fetcher)
+    await h.client.select(file, h.getState())
+    const old = h.client.start(true, h.getState())
+    await vi.waitFor(() => expect(finishJson).toBeDefined())
+    h.dispatch({ type: 'report-abandon' }); h.client.abort()
+    await h.client.start(true, h.getState())
+    expect(h.getState()).toMatchObject({ generation: 2, status: 'failed', error: 'transport-failure' })
+    const newer = h.getState()
+    finishJson(response()); await old
+    expect(h.getState()).toBe(newer)
+    expect(fetcher).toHaveBeenCalledTimes(2)
+  })
+})

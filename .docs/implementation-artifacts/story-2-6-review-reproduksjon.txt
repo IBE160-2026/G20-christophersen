@@ -1,0 +1,127 @@
+$ red — uavhengig reviewprøve
+[WebServer] (node:38375) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:38382) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/e2e/report-analysis.spec.ts:197:1 › 2.6 review AC6: fullført rapporttrinn og én kunngjøring ved tastaturretur (6.7s)
+(node:38410) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 tests/e2e/report-analysis.spec.ts:224:1 › 2.6 review AC6: kun seksjonskant synlig teller ikke som synlig listestart (6.3s)
+
+
+  1) tests/e2e/report-analysis.spec.ts:197:1 › 2.6 review AC6: fullført rapporttrinn og én kunngjøring ved tastaturretur 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('button', { name: /Tilstandsrapport Trinn 2/ })
+    Expected substring: "Fullført"
+    Received string:    "2TilstandsrapportTrinn 2 · Gjenstår · Tilgjengelig"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('button', { name: /Tilstandsrapport Trinn 2/ }) with timeout 5000ms
+      - waiting for getByRole('button', { name: /Tilstandsrapport Trinn 2/ })
+        14 × locator resolved to <button type="button" class="step-control">…</button>
+           - unexpected value "2TilstandsrapportTrinn 2 · Gjenstår · Tilgjengelig"
+
+
+      212 |   await expect(page.getByRole('heading', { name: 'Kontroller funn', exact: true })).toBeFocused()
+      213 |   await expect(page.locator('#report-announcement')).toContainText('funnlisten er klar')
+    > 214 |   await expect(page.getByRole('button', { name: /Tilstandsrapport Trinn 2/ })).toContainText('Fullført')
+          |                                                                                ^
+      215 |   const back = page.getByRole('button', { name: 'Tilbake til Tilstandsrapport', exact: true })
+      216 |   await back.focus(); await back.press('Enter')
+      217 |   await expect(page.getByRole('heading', { name: 'Tilstandsrapport', exact: true })).toBeFocused()
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:214:80
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-6-review-9a27a-nngjøring-ved-tastaturretur/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-6-review-9a27a-nngjøring-ved-tastaturretur/error-context.md
+
+    Error Context: test-results/report-analysis-2-6-review-9a27a-nngjøring-ved-tastaturretur/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-6-review-9a27a-nngjøring-ved-tastaturretur/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-6-review-9a27a-nngjøring-ved-tastaturretur/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/report-analysis.spec.ts:224:1 › 2.6 review AC6: kun seksjonskant synlig teller ikke som synlig listestart 
+
+    Error: expect(locator).not.toHaveAttribute() failed
+
+    Locator:  locator('.report-findings')
+    Expected: not have attribute
+    Received: have attribute
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "not toHaveAttribute" locator('.report-findings') with timeout 5000ms
+      - waiting for locator('.report-findings')
+        14 × locator resolved to <section class="report-findings" aria-labelledby="findings-title" data-list-visible-generation="1">…</section>
+           - unexpected value "attribute present"
+
+
+      238 |   })
+      239 |   expect(geometry.titleTop).toBeGreaterThan(geometry.bottom)
+    > 240 |   await expect(page.locator('.report-findings')).not.toHaveAttribute('data-list-visible-generation')
+          |                                                      ^
+      241 |   await page.locator('#findings-title').scrollIntoViewIfNeeded()
+      242 |   await expect(page.locator('.report-findings')).toHaveAttribute('data-list-visible-generation', /\d+/)
+      243 | })
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:240:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-6-review-5e7a7--ikke-som-synlig-listestart/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-6-review-5e7a7--ikke-som-synlig-listestart/error-context.md
+
+    Error Context: test-results/report-analysis-2-6-review-5e7a7--ikke-som-synlig-listestart/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-6-review-5e7a7--ikke-som-synlig-listestart/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-6-review-5e7a7--ikke-som-synlig-listestart/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests/e2e/report-analysis.spec.ts:197:1 › 2.6 review AC6: fullført rapporttrinn og én kunngjøring ved tastaturretur 
+    tests/e2e/report-analysis.spec.ts:224:1 › 2.6 review AC6: kun seksjonskant synlig teller ikke som synlig listestart 
+
+$ green — uavhengig reviewprøve
+[WebServer] (node:38907) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:38908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/report-analysis.spec.ts:197:1 › 2.6 review AC6: fullført rapporttrinn og én kunngjøring ved tastaturretur (1.3s)
+  ✓  2 tests/e2e/report-analysis.spec.ts:224:1 › 2.6 review AC6: kun seksjonskant synlig teller ikke som synlig listestart (1.3s)
+
+  2 passed (3.6s)
+
+$ unit — uavhengig reviewprøve
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/report-session.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  1 passed (1)
+      Tests  28 passed (28)
+   Start at  19:25:59
+   Duration  350ms (tests 69%, import 17%, transform 13%, worker 1%)
+

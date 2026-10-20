@@ -1,6 +1,6 @@
 # Story 2.6 — implementeringsverifikasjon 2026-10-20
 
-Status: **review**, ikke separat godkjent done. Baseline:
+Historisk implementeringscheckpoint: **review**. Oppfølging 2026-10-20: **done** etter [separat uavhengig review](story-2-6-review.md), to AC6-rettinger og full regresjon (500 Vitest, 57 bygget-app + 2 dev-E2E). Resultatene nedenfor beskriver implementeringscommiten før reviewrettingene. Baseline:
 `f0f394d50a451d3359553685d3be6f3af2fab3a3` (Story 2.5 done).
 Autoritet: epics.md 2.6 AC1–AC6, låst arkitektur/SPEC/grensekontrakter,
 final UX og eksisterende HTTP-/PDF-/demo-/analysekontrakter. Ingen backend-,
@@ -65,3 +65,5 @@ S5-måloppnåelse eller S6 annen-person-kjøring. R1/R4 er uendret.
 Nøyaktig neste steg: en ny subagent kjører full uavhengig BMAD code review av
 Story 2.6 mot alle AC og faktisk kode. Rett bare 2.6-forhold; done først etter
 bestått review. Ingen push.
+
+Gjeldende checkpoint etter fase 3: Story 2.6 done. Reviewrapporten overtar neste-steg-anbefalingen i den historiske implementeringsloggen. 2.7 backlog; Epic 2/SP2 pågår.

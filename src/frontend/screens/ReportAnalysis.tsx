@@ -9,20 +9,20 @@ export function ReportAnalysis({ session, dispatch, client }: {
   session: SessionState; dispatch: Dispatch<SessionAction>; client: ReportClient
 }) {
   const report = session.report
-  const list = useRef<HTMLElement>(null)
+  const list = useRef<HTMLHeadingElement>(null)
   const outcome = report.outcome
   const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
   const deficiencies = reportDeficiencies(report)
   useEffect(() => {
     const element = list.current
     if (session.currentStep !== 'kontroller-funn' || report.status !== 'completed' || !element) return
-    // Bare faktisk skjæringsflate i den rullbare arbeidsflaten teller som synlig liste.
+    // Først synlig listestart, ikke seksjonens kant/padding, gir ferdiglistehendelse.
     const observer = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting && entry.intersectionRect.height > 0 && entry.intersectionRect.width > 0)) {
+      if (entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= 1)) {
         dispatch({ type: 'report-list-visible', generation: report.generation })
         observer.disconnect()
       }
-    }, { root: element.closest('.workspace') })
+    }, { root: element.closest('.workspace'), threshold: 1 })
     observer.observe(element)
     return () => observer.disconnect()
   }, [report.status, report.generation, session.currentStep, dispatch])
@@ -48,9 +48,9 @@ export function ReportAnalysis({ session, dispatch, client }: {
       {outcome.error.target?.kind === 'page' && <p>Berørt PDF-side: {outcome.error.target.pdfPage}</p>}
       {outcome.error.target?.kind === 'finding' && <p>Berørt funn: {outcome.error.target.findingId}</p>}
     </div>}
-    {(session.currentStep === 'kontroller-funn' || outcome?.status === 'failed') && extraction && <section ref={list} className="report-findings" aria-labelledby="findings-title"
+    {(session.currentStep === 'kontroller-funn' || outcome?.status === 'failed') && extraction && <section className="report-findings" aria-labelledby="findings-title"
       data-list-visible-generation={report.listVisibleGeneration ?? undefined}>
-      <h2 id="findings-title">{outcome?.status === 'failed' ? 'Delresultat — ufullstendig analyse' : 'Funnliste — ikke bekreftet'}</h2>
+      <h2 ref={list} id="findings-title">{outcome?.status === 'failed' ? 'Delresultat — ufullstendig analyse' : 'Funnliste — ikke bekreftet'}</h2>
       {outcome?.status === 'completed' && extraction.findings.length === 0 && extraction.uncertainCandidates.length === 0
         && <p>Analyse fullført — ingen TG2/TG3 funnet. Listen må fortsatt kontrolleres og bekreftes.</p>}
       <ol className="finding-list">

@@ -192,3 +192,89 @@ test('2.6 AC6: liste utenfor liten arbeidsflate er ikke synlig før den rulles i
   await expect(page.locator('#report-announcement')).toContainText('funnlisten er klar')
   expect(await page.locator('.workspace').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
 })
+
+// Uavhengig fase-3-review: observer det brukeren faktisk ser, ikke bare state.
+test('2.6 review AC6: fullført rapporttrinn og én kunngjøring ved tastaturretur', async ({ page }) => {
+  await enter(page)
+  await choose(page, 'empty.pdf')
+  await page.evaluate(() => {
+    const node = document.querySelector('#report-announcement')!
+    const messages: string[] = []
+    ;(window as unknown as { reviewMessages: string[] }).reviewMessages = messages
+    new MutationObserver(() => { if (node.textContent) messages.push(node.textContent) }).observe(node, { childList: true, characterData: true, subtree: true })
+  })
+  const start = page.getByRole('button', { name: 'Start analyse' })
+  await start.focus(); await start.press('Space')
+  await expect(page.locator('#analysis-status')).toContainText('Uttrekk mottatt')
+  await expect(start).toBeFocused()
+  const open = page.getByRole('button', { name: 'Gå til Kontroller funn' })
+  await open.focus(); await open.press('Enter')
+  await expect(page.getByRole('heading', { name: 'Kontroller funn', exact: true })).toBeFocused()
+  await expect(page.locator('#report-announcement')).toContainText('funnlisten er klar')
+  await expect(page.getByRole('button', { name: /Tilstandsrapport Trinn 2/ })).toContainText('Fullført')
+  const back = page.getByRole('button', { name: 'Tilbake til Tilstandsrapport', exact: true })
+  await back.focus(); await back.press('Enter')
+  await expect(page.getByRole('heading', { name: 'Tilstandsrapport', exact: true })).toBeFocused()
+  await open.focus(); await open.press('Enter')
+  await expect(page.locator('#report-announcement')).toContainText('funnlisten er klar')
+  const messages = await page.evaluate(() => (window as unknown as { reviewMessages: string[] }).reviewMessages)
+  expect(messages.filter(text => text === 'Analyse fullført — funnlisten er klar.')).toHaveLength(1)
+})
+
+test('2.6 review AC6: kun seksjonskant synlig teller ikke som synlig listestart', async ({ page }) => {
+  await enter(page)
+  await choose(page, 'empty.pdf')
+  await page.getByRole('button', { name: 'Start analyse' }).click()
+  await expect(page.getByRole('button', { name: 'Gå til Kontroller funn' })).toBeVisible()
+  await page.setViewportSize({ width: 640, height: 400 })
+  await page.getByRole('button', { name: 'Gå til Kontroller funn' }).click()
+  await expect(page.locator('.report-findings')).not.toHaveAttribute('data-list-visible-generation')
+  const geometry = await page.evaluate(async () => {
+    const root = document.querySelector('.workspace')!
+    const section = document.querySelector('.report-findings')!
+    root.scrollTop += section.getBoundingClientRect().top - root.getBoundingClientRect().bottom + 1
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+    return { bottom: root.getBoundingClientRect().bottom, titleTop: document.querySelector('#findings-title')!.getBoundingClientRect().top }
+  })
+  expect(geometry.titleTop).toBeGreaterThan(geometry.bottom)
+  await expect(page.locator('.report-findings')).not.toHaveAttribute('data-list-visible-generation')
+  await page.evaluate(async () => {
+    const root = document.querySelector('.workspace')!
+    root.scrollTop += document.querySelector('#findings-title')!.getBoundingClientRect().top - root.getBoundingClientRect().bottom + 1
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+  })
+  await expect(page.locator('.report-findings')).not.toHaveAttribute('data-list-visible-generation')
+  await page.locator('#findings-title').scrollIntoViewIfNeeded()
+  await expect(page.locator('.report-findings')).toHaveAttribute('data-list-visible-generation', /\d+/)
+})
+
+for (const failure of ['transport', 'invalid-json'] as const) {
+  test(`2.6 review AC2/4/6: ${failure} kunngjøres én gang uten retry eller fokusflytting`, async ({ page }) => {
+    await enter(page); await choose(page)
+    let calls = 0
+    await page.route('**/api/analysis', async route => {
+      calls++
+      if (failure === 'transport') await route.abort('failed')
+      else await route.fulfill({ status: 200, body: '{ugyldig' })
+    })
+    await page.evaluate(() => {
+      const node = document.querySelector('#report-announcement')!
+      const messages: string[] = []
+      ;(window as unknown as { reviewMessages: string[] }).reviewMessages = messages
+      new MutationObserver(() => { if (node.textContent) messages.push(node.textContent) }).observe(node, { childList: true, characterData: true, subtree: true })
+    })
+    const start = page.getByRole('button', { name: 'Start analyse' })
+    await start.focus(); await start.press('Enter')
+    const code = failure === 'transport' ? 'transport-failure' : 'invalid-response'
+    await expect(page.locator('#analysis-status')).toContainText(code)
+    await expect(start).toBeFocused()
+    await expect(page.locator('.local-deficiencies')).toContainText('Innhent mer informasjon')
+    await expect(page.locator('.report-findings')).toHaveCount(0)
+    await page.getByRole('link', { name: /Tallgrunnlag/ }).click()
+    await page.locator('#next-step').click()
+    await expect(page.locator('#analysis-status')).toContainText(code)
+    const messages = await page.evaluate(() => (window as unknown as { reviewMessages: string[] }).reviewMessages)
+    expect(messages.filter(text => text.includes(`(${code})`))).toHaveLength(1)
+    expect(calls).toBe(1)
+  })
+}

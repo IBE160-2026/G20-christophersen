@@ -2,7 +2,7 @@
 title: 'Story 2.6 — Velge rapport og ta imot bare gjeldende analyseutfall'
 type: 'feature'
 created: '2026-10-20'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-6-velge-rapport-og-ta-imot-bare-gjeldende-analyseutfall'
 baseline_commit: 'f0f394d50a451d3359553685d3be6f3af2fab3a3'
@@ -97,3 +97,21 @@ selv; først når listestart faktisk krysser den synlige arbeidsflaten, registre
 ferdiglistehendelsen én gang per generasjon. Det betyr at den ferdige validerte
 listen er tilgjengelig og synlig for kontroll, ikke at alle linjer i en lang
 liste må være synlige samtidig. Ingen timer, tidsmåling eller telemetri finnes.
+
+## Independent Review — 2026-10-20
+
+Full uavhengig BMAD-review er bestått etter to smale AC6-rettinger og
+fire nye E2E-/to nye klientprøver. Se [full review og AC-bevis](story-2-6-review.md).
+
+### Review Findings
+
+- [x] [Review][Patch] Fullført tidligere trinn 2 hadde feil «Gjenstår»-status — viser nå Fullført etter faktisk synlighetskvittering, uten å bekrefte listen.
+- [x] [Review][Patch] Synlig seksjonskant kunne gi ferdiglistehendelse før listestart — observer hele den korte listetittelen innen arbeidsflaten; egen rød/grønn geometri-E2E.
+- [x] [Review][Patch] Verifikasjon av sent negativt utfall/JSON etter abort manglet — to uavhengige klientprøver beviser generasjons- og finally-vern.
+- [x] [Review][Patch] Antall statuskunngjøringer og fokus ved feil var ikke direkte observert — egne DOM-observer-/tastaturprøver ved completed/transport/ugyldig 200 og retur.
+
+Rejected: B3 false — backend eier godkjent lokal frist; B4 false — original/uttrekk bevares ved retur; B5 false — finally beskytter controller-identitet; B6 false — hash/lesefeil generasjonsavvises; B7 false — backend håndhever autoritativ bytegrense; B10 false — vedvarende live-region gjentar ikke uendret fullføring. Se konkret evidens per kandidat i reviewrapporten.
+
+500/500 Vitest, typecheck, lint, build og 57/57 bygget-app + 2/2 dev-E2E
+består. Null uavklarte beslutninger eller utsatte 2.6-funn. Story 2.6 done;
+2.7 er neste naturlige story, fortsatt backlog ved dette checkpointet.

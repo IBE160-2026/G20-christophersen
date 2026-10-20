@@ -20,14 +20,14 @@ Kilder, kostnadsinnhold og uløste kildekonflikter kan kontrolleres i appen.
 Story 1.6 gir en separat ren vurdering av kjente kritiske mangler med faste
 begrunnelser og handlinger; uavhengig review er bestått. Tom mangelliste er ingen
 økonomisk godkjenning. Story 1.7 kobler dette til Tallgrunnlag og er
-uavhengig reviewet med alle seks AC bestått. Rapportanalyse og full screening følger
-senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
+uavhengig reviewet med alle seks AC bestått. Rapportanalyse er tilgjengelig som lokal demo fra Story 2.6; kildevisning,
+kontrollhandlinger og full screening følger senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
 konto kreves for registreringen.
 
 Story 2.1 er implementert og uavhengig reviewet med alle fire AC bestått: felles dokument-/
 analyseschemas og rene validatorer skiller fullføring, feil og usikre
 kilder med kodekontrollert metadata. Kontrakttestene krever ingen PDF-parser
-eller betalt API. Rapportflyten i appen følger fortsatt senere stories.
+eller betalt API. Rapportflyten kobles til denne kontrakten i Story 2.6.
 
 Story 2.2 er ferdig etter [uavhengig review](.docs/implementation-artifacts/story-2-2-review.md): backend kontrollerer
 faktiske PDF-bytes, faktisk sidemengde mot grensen 30 og SHA-256 med låst PDF.js legacy-build.
@@ -37,7 +37,7 @@ sidereferanser og sideegenskaper avvises. Formatgodkjenning
 er et eget delutfall uten påstand om tekstlesbarhet eller fullført analyse.
 [Fiktive F1–F4-PDF-er og uavhengig fasit](tests/fixtures/property-cases/README.md)
 er kontrollert visuelt, inklusive TG3 på PDF-side 4 / trykt side 2.
-Modulen er ikke koblet til appens rapportflyt ennå.
+Modulen brukes nå av appens rapportflyt gjennom HTTP-pipelinen.
 [R2 er lukket med godkjent sidestatusregel](.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md):
 bevist blank side tillates, mens ulest innhold blokkerer fullført analyse.
 Story 2.3 er done etter [code review](.docs/implementation-artifacts/story-2-3-review.md): `extractPdf` leverer hele kontraktversjon 2 /
@@ -60,7 +60,16 @@ Story 2.5 kobler nå format, alle fysiske sider og demo til ett
 prosesslokal duplikatsperre og én hard lokal 60 s-frist. PDF-grensen er
 50 MiB inklusive likhet; JSON/metadata har egen 1 MiB-grense. Ingen innhold
 skrives til disk. Se [HTTP-form, feil og ressurslivsløp](src/backend/README.md#http-analyse--story-25).
-Frontendkobling følger Story 2.6; dette dokumenterer ingen faktisk live-analyse.
+Story 2.6 er implementert til review: bekreft tallgrunnlaget, velg én PDF i
+Tilstandsrapport og velg **Start analyse**. Bruk for eksempel
+`tests/fixtures/property-cases/F4-tilstandsrapport.pdf`; bare de uendrede
+F1–F4-originalene har tilhørende lagret demouttrekk. Ingen analyse starter ved
+filvalg. Åpne **Kontroller funn** etter mottatt uttrekk for å se alle funn,
+usikkerheter og lokale mangler. Listen er fortsatt ubekreftet; original-PDF
+og kontrollhandlingene følger senere stories. Uendret uttrekk beholdes ved
+retur/finansendring. Rapportbytte eller forlatt pågående analyse ugyldiggjør
+gamle svar og forsøker abort. Dette dokumenterer ingen faktisk live-analyse.
+Se [verifikasjon](.docs/implementation-artifacts/story-2-6-verifikasjon.md).
 
 ## Installasjon og kontroll
 
@@ -88,8 +97,8 @@ port i stillhet. Manglende build gir beskjed om å kjøre `npm run build`.
 
 Installasjon krever nett til npm-registeret. Etter installasjon kan både
 build og demo kjøres med eksternt nett sperret. Modusmerket
-«Demo · lagret KI-uttrekk» følger godkjent UX; rapport/lagret uttrekk kommer i
-senere stories og er ikke tilgjengelig gjennom dette appskallet.
+«Demo · lagret KI-uttrekk» følger godkjent UX gjennom rapportflyten.
+Lagret uttrekk bruker den samme lokale dokumentpipelinen; ingen nøkkel kreves.
 
 npm 11.19.0 kan på macOS varsle om
 installasjonsscriptet til den valgfrie avhengigheten `fsevents@2.3.3`;
@@ -123,7 +132,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. Vitest-modul-/PDF-integrasjonstester, 41 demotester
+port 3000, som må være ledig. Vitest-modul-/PDF-integrasjonstester, 53 tester av bygget app
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og

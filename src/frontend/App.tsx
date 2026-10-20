@@ -1,9 +1,17 @@
-import { useEffect, useReducer, useRef } from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
+import { ReportClient } from './analysis/report-client.ts'
+import { analysisStatus } from './state/report.ts'
+import { ReportAnalysis } from './screens/ReportAnalysis.tsx'
 import { FinancialInput } from './screens/FinancialInput.tsx'
 import { createInitialSession, isFinancialConfirmed, sessionReducer } from './state/session.ts'
 
 function App() {
   const [session, dispatch] = useReducer(sessionReducer, undefined, createInitialSession)
+  const [client] = useState(() => new ReportClient(dispatch))
+  useEffect(() => {
+    if (session.report.status !== 'analysing') client.abort()
+  }, [session.report.generation, session.report.status, client])
+  useEffect(() => () => client.abort(), [client])
   const heading = useRef<HTMLHeadingElement>(null)
   const previousStep = useRef(session.currentStep)
   const confirmed = isFinancialConfirmed(session)
@@ -39,13 +47,13 @@ function App() {
             { number: 3, name: 'Kontroller funn', reason: 'Krever fullført rapportanalyse og synlig funnliste.' },
             { number: 4, name: 'Resultat', reason: 'Krever bekreftet tallgrunnlag og kontrollert, bekreftet funnliste.' },
           ].map((step) => {
-            const available = step.number === 2 && confirmed
-            const current = step.number === 2 && !financialStep
+            const available = confirmed && (step.number === 2 || (step.number === 3 && session.report.status === 'completed'))
+            const current = (step.number === 2 && session.currentStep === 'tilstandsrapport') || (step.number === 3 && session.currentStep === 'kontroller-funn')
             return <li className={`step${current ? ' step-current' : ''}`} key={step.number}>
               <button className="step-control" type="button" aria-current={current ? 'step' : undefined}
                 aria-disabled={available ? undefined : 'true'} aria-describedby={available ? undefined : `step-${step.number}-reason`}
                 onClick={() => { if (available) {
-                  dispatch({ type: 'navigate', step: 'tilstandsrapport' })
+                  dispatch({ type: 'navigate', step: step.number === 3 ? 'kontroller-funn' : 'tilstandsrapport' })
                   if (current) heading.current?.focus()
                 } }}>
                 <span className="step-number" aria-hidden="true">{step.number}</span>
@@ -57,20 +65,17 @@ function App() {
           })}
         </ol>
       </nav>
+      <p style={{ position: 'absolute' }} className="visually-hidden" id="report-announcement" role="status" aria-live="polite" aria-atomic="true">{['completed', 'failed', 'analysing'].includes(session.report.status) ? analysisStatus(session.report) : ''}</p>
       <main className="workspace" tabIndex={0} aria-labelledby={session.currentStep}>
         <div className="screen-heading">
           <div>
-            <h1 id={session.currentStep} tabIndex={-1} ref={heading}>{financialStep ? 'Tallgrunnlag' : 'Tilstandsrapport'}</h1>
-            <p>{financialStep ? 'Samle og kontroller tall, perioder og kilder for ett boligutleieobjekt.' : 'Tallgrunnlaget er bekreftet. Ingen rapportanalyse er startet.'}</p>
+            <h1 id={session.currentStep} tabIndex={-1} ref={heading}>{financialStep ? 'Tallgrunnlag' : session.currentStep === 'kontroller-funn' ? 'Kontroller funn' : 'Tilstandsrapport'}</h1>
+            <p>{financialStep ? 'Samle og kontroller tall, perioder og kilder for ett boligutleieobjekt.' : 'Velg rapport og kontroller gjeldende analysegrunnlag.'}</p>
           </div>
           <span className="status-label">{status}</span>
         </div>
         {financialStep ? <FinancialInput financial={session.financial} sources={session.sources} costItems={session.costItems} session={session} dispatch={dispatch} />
-          : <section className="financial-input" aria-labelledby="report-next-title">
-            <h2 id="report-next-title">Rapportgrunnlag</h2>
-            <p>Rapportvalg og analyse er ennå ikke tilgjengelig.</p>
-            <button className="secondary-action" type="button" onClick={() => dispatch({ type: 'navigate', step: 'tallgrunnlag' })}>Tilbake til Tallgrunnlag</button>
-          </section>}
+          : <ReportAnalysis session={session} dispatch={dispatch} client={client} />}
       </main>
     </div>
   )

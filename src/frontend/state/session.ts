@@ -1,3 +1,5 @@
+import { createReportState, reportReducer } from './report.ts'
+import type { ReportAction, ReportState } from './report.ts'
 import type {
   FinancialField, RegisteredFinancialInput, RecurringField, RegisteredPeriod,
 } from '../../contracts/financial-input.ts'
@@ -11,14 +13,15 @@ export interface SessionState {
   sources: FinancialSources
   costItems: CostItem[]
   nextCostId: number
-  currentStep: 'tallgrunnlag' | 'tilstandsrapport'
+  currentStep: 'tallgrunnlag' | 'tilstandsrapport' | 'kontroller-funn'
+  report: ReportState
   financialRevision: number
   changedFields: FinancialField[]
   explicitZeros: FinancialField[]
   confirmationAttempts: number
 }
 
-export type SessionAction =
+export type SessionAction = ReportAction
   | { type: 'register-value'; field: FinancialField; rawValue: string }
   | { type: 'register-period'; field: RecurringField; period: RegisteredPeriod }
   | { type: 'register-year'; field: RecurringField; year: string }
@@ -44,7 +47,7 @@ export function createInitialSession(): SessionState {
     sources: { P: source(), L: { ...source(), rentNature: '' }, D: source(), J: source(), Ymin: source() },
     costItems: [],
     nextCostId: 1,
-    currentStep: 'tallgrunnlag',
+    currentStep: 'tallgrunnlag', report: createReportState(),
     financialRevision: 0, changedFields: [], explicitZeros: [], confirmationAttempts: 0,
   }
 }
@@ -78,9 +81,12 @@ function invalidate(state: SessionState, update: Partial<SessionState>, fields: 
 }
 
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {
+  if (action.type === 'report-start' && (!isFinancialConfirmed(state) || state.currentStep === 'tallgrunnlag')) return state
+  if (action.type.startsWith('report-')) return { ...state, report: reportReducer(state.report, action as ReportAction) }
   if (action.type === 'navigate') {
-    if (action.step === state.currentStep || (action.step === 'tilstandsrapport' && !isFinancialConfirmed(state))) return state
-    return { ...state, currentStep: action.step }
+    if (action.step === state.currentStep || (action.step !== 'tallgrunnlag' && !isFinancialConfirmed(state))
+      || (action.step === 'kontroller-funn' && state.report.status !== 'completed')) return state
+    return { ...state, currentStep: action.step, report: reportReducer(state.report, { type: 'report-abandon' }) }
   }
   if (action.type === 'confirm-financial') {
     const candidate = confirmationCandidate(state)
@@ -111,6 +117,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
     return invalidate(state, { costItems, nextCostId: state.nextCostId + (action.type === 'add-cost' ? 1 : 0) }, ['D', 'J'])
   }
 
+  if (action.type !== 'register-value' && action.type !== 'register-period' && action.type !== 'register-year') return state
   const value = state.financial[action.field]
   const update = action.type === 'register-value'
     ? { rawValue: action.rawValue }

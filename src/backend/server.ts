@@ -1,4 +1,5 @@
 import express, { type ErrorRequestHandler } from 'express'
+import { createAnalysisRouter } from './http/analysis-route.ts'
 import { access, readFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
 import { fileURLToPath } from 'node:url'
@@ -29,7 +30,10 @@ async function start() {
     next()
   })
 
-  // Reserver samme origin for senere API; ingen analyse er implementert her.
+  const analysis = createAnalysisRouter()
+  app.use('/api', analysis)
+
+  // Andre API-er er ikke tilgjengelige i semester-v1.
   app.use('/api', (_request, response) => {
     response.status(404).type('text').send('API-ruten er ikke tilgjengelig.')
   })
@@ -78,9 +82,12 @@ async function start() {
   app.use(safeError)
 
   async function stop() {
-    await vite?.close()
+    const closed = new Promise<void>(resolve => server.close(() => resolve()))
     server.closeAllConnections()
-    server.close(() => process.exit(0))
+    await analysis.stop()
+    await vite?.close()
+    await closed
+    process.exit(0)
   }
   process.once('SIGINT', () => { void stop() })
   process.once('SIGTERM', () => { void stop() })

@@ -55,8 +55,12 @@ svar gir eksplisitt feil uten live-fallback. Dokumentsperren fra 2.3 gjelder
 før oppslag. Demo-modulen trenger verken API-nøkkel eller ekstern tjeneste.
 Se [modulbruk og opphav](src/backend/README.md) og
 [testbevis](.docs/implementation-artifacts/story-2-4-verifikasjon.md).
-Modulen er foreløpig ikke koblet til HTTP eller appens rapportflyt; dette
-følger senere stories. Den dokumenterer ingen faktisk live-analyse.
+Story 2.5 kobler nå format, alle fysiske sider og demo til ett
+`POST /api/analysis` med binær multipart-fil, aktiv sessionlås, varig
+prosesslokal duplikatsperre og én hard lokal 60 s-frist. PDF-grensen er
+50 MiB inklusive likhet; JSON/metadata har egen 1 MiB-grense. Ingen innhold
+skrives til disk. Se [HTTP-form, feil og ressurslivsløp](src/backend/README.md#http-analyse--story-25).
+Frontendkobling følger Story 2.6; dette dokumenterer ingen faktisk live-analyse.
 
 ## Installasjon og kontroll
 
@@ -77,8 +81,8 @@ npm run demo
 
 Åpne **http://127.0.0.1:3000**. Forventet: `v24.21.0`, `11.19.0`, vellykket
 installasjon/build og synlig registrering av finansverdier. Demo serveres fra `dist/` av én
-Express-prosess på loopback. Samme adresse er reservert for senere `/api`;
-API-ruter svarer foreløpig 404. Reporot og private dokumenter serveres ikke.
+Express-prosess på loopback. `POST /api/analysis` tilbyr lokal demoanalyse;
+andre API-ruter svarer 404. Reporot og private dokumenter serveres ikke.
 Stopp med **Ctrl+C**. Port 3000 må være ledig; serveren velger ikke en annen
 port i stillhet. Manglende build gir beskjed om å kjøre `npm run build`.
 
@@ -147,6 +151,10 @@ håndskrevet fasit og tester sidestatus, fullføringssperre, delvis tekst og
 opprydding: `npm test -- tests/integration/pdf-extraction.test.ts tests/unit/pdf-extraction.test.ts`.
 [Fixturebeskrivelsen](tests/fixtures/pdf-readability/README.md) forklarer
 hvordan originaler og forventede utfall kan etterprøves uavhengig.
+Story 2.5s HTTP-tester kjøres med
+`npm test -- tests/integration/http-analysis.test.ts tests/unit/http-receive-pdf.test.ts`.
+De krever lokal loopback og omfatter ekte 50 MiB-/1 MiB-grenser samt en
+reell 60-sekunders timeoutprøve med parser-/adapterheng og sen retur.
 Chromium-binæren må være installert før offline kjøring. Feilspor/skjermbilder
 legges under Git-ignorerte `test-results/`.
 
@@ -202,7 +210,7 @@ og nødvendige avhengigheter er eksakt låst etter arkitekturen.
 | `src/backend/` | Lokal HTTP-server og bytesbasert PDF-format-/side-/hashvalidering og sidemerket tekstuttrekk samt lokal demo-adapter. Bruker contracts; finans/anbefaling forblir i domain. |
 | `tests/e2e/` | Playwright-kontroll mot bygget demo og lokalt dev-skall. |
 | `tests/unit/` | Rene Vitest-kontroller av registrering, navigasjon, tall-/årsvalidering, kilde-/kostnadsgrunnlag, kjente kritiske mangler og dokument-/analysekontrakten. |
-| `tests/integration/` | PDF.js-format-/side-/hash-/lesbarhetskontroll med ekte fixturebytes og originalbevaring. |
+| `tests/integration/` | PDF.js-format-/side-/hash-/lesbarhetskontroll og faktisk HTTP med ekte fixturebytes, grenser, duplikater og prosessavslutning. |
 | `tests/fixtures/property-cases/` | Fiktive rapporter, uavhengig JSON-fasit, bytehashinventar og reproducerbar generator. |
 | `tests/fixtures/pdf-readability/` | Fiktive blank-/layout-/innholds-/feiloriginaler, håndskrevet sidestatus-/tekstfasit og reproducerbar generator. |
 | `.docs/` | Autoritative planer, implementeringsbevis og prosesspor. |
@@ -214,7 +222,7 @@ valideringsresultat med avledede typer; `domain/validation.ts` eier numerisk
 gyldighet, bekreftelsesbehov og eksakt årsnormalisering. Ingen framtidig
 rapportflyt, finansberegning eller økonomisk screeningregel er lagt inn.
 Dokument-/analyseschemas og ren kilde-/metadatavalidering eies nå også av
-contracts; backend bruker PDF.js ved format- og tekstgrensen. Adapter-/HTTP-/frontendkobling følger sine stories.
+contracts; backend bruker PDF.js ved format- og tekstgrensen. Demo-adapter og HTTP-kobling er levert; frontendkobling følger Story 2.6.
 `domain/financial-basis.ts` vurderer kilde-/kostnadsgrunnlaget, og
 `domain/screening.ts` samler kjente mangler til fast prioritet-1-utfall.
 Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,

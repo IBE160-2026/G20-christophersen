@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test'
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { relative, resolve } from 'node:path'
 import { get } from 'node:http'
+import { createHash } from 'node:crypto'
+import { AnalysisHttpResponseSchema } from '../../src/contracts/analysis-http.ts'
 
 test('AC1/AC3: bygget skall starter med riktig status og sperret videregang', async ({ page }) => {
   const errors: string[] = []
@@ -248,3 +250,20 @@ for (const viewport of [
     await testInfo.attach('Appskall', { path: screenshot, contentType: 'image/png' })
   })
 }
+
+
+test('Story 2.5: faktisk demoserver analyserer én multipart-PDF med backendhash og korrelasjon', async ({ request }) => {
+  const name = 'F1-tilstandsrapport.pdf'
+  const bytes = await readFile(new URL(`../fixtures/property-cases/${name}`, import.meta.url))
+  const correlation = { sessionId: 'production-http-smoke', requestId: 'production-request', generation: 7 }
+  const response = await request.post('/api/analysis', {
+    headers: { 'X-Session-Id': correlation.sessionId, 'X-Request-Id': correlation.requestId, 'X-Analysis-Generation': String(correlation.generation) },
+    multipart: { file: { name, mimeType: 'application/pdf', buffer: bytes } },
+  })
+  expect(response.status()).toBe(200)
+  const body = AnalysisHttpResponseSchema.parse(await response.json())
+  expect(body).toMatchObject({ kind: 'analysis', correlation, outcome: {
+    status: 'completed', requestId: correlation.requestId, reportHash: createHash('sha256').update(bytes).digest('hex'),
+    mode: 'demo', documentName: name, pageCount: 4, findings: [{ findingId: 'F1-TG2-1', grade: 'TG2' }],
+  } })
+})

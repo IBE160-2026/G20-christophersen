@@ -2,7 +2,7 @@
 title: 'Story 2.5 — Gjennomføre ett HTTP-analyseforløp med duplikatsperre'
 type: 'feature'
 created: '2026-10-20'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-5-gjennomføre-ett-http-analyseforløp-med-duplikatsperre'
 baseline_commit: '03011d5f914a45b3f3f5f8f9488e9c714c9c72c6'
@@ -115,3 +115,26 @@ bevist overstor PDF før filbytes. Ingen senere story, persistens,
 leverandør, retry eller ny produkt-/arkitekturregel er innført.
 Se [full verifikasjon](story-2-5-verifikasjon.md). Storyen forblir
 in-review/review etter bestillingen; ingen automatisk done eller push.
+
+
+## Uavhengig BMAD-review 2026-10-20
+
+Storyen er **done** etter [full AC-/R3-review](story-2-5-review.md) av
+implementeringscommit `2c69adda8ae6b5a4a70b795ec33e6f0edfcc667e`.
+Ingen produksjonsfeil eller beslutningsblocker ble bekreftet. Reviewen lukket
+konkrete verifikasjonshull med fem nye tester av IPC-/frist-/abort-race,
+delvis upload/serverstopp og atomisk adaptermarkør. Produktkode, kontrakter,
+fixtures og låst arkitektur er uendret. Tidligere in-review-utsagn ovenfor er
+historiske leveransespor; gjeldende status er done.
+
+### Review Findings
+
+- [x] [Review][Patch] V1: Absolutt frist før timercallback hadde ikke separat IPC-race-bevis — ny test leverer gyldig completed ved nøyaktig 60 000 ms og krever timeout, fysisk close før settlement samt ryddede lyttere/bytes.
+- [x] [Review][Patch] V2: Kølagt terminalretur etter abort hadde ikke separat foreldreprøve — ny test krever 499, ingen sent completed, beholdt markør og full cleanup.
+- [x] [Review][Patch] V3: Feilbundet IPC-kontekst sammen med kastende diagnostikk hadde ikke eget feilinjektert bevis — ny test krever trygg 500, ingen adaptertillatelse/markør og ryddede bytes/lyttere.
+- [x] [Review][Patch] V4: Serverstopp under delvis upload var ikke direkte verifisert — ny HTTP-prøve krever at tolv konkurrerende requests avvises, upload stenges uten prosessstart og nye requests etter stop gir 503.
+
+Alle fire funn gjelder verifikasjon, ikke påvist feil i produksjonsatferden.
+To faktiske samtidige prosesser mot samme markør er dessuten prøvd uavhengig:
+én completed, én duplicate-analysis og begge prosesser fysisk avsluttet.
+Ingen decision-needed, defer, uløste funn eller senere stories er innført.

@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react'
+import { sourceTarget } from '../pdf/source-page.ts'
+import { SourceReview } from '../pdf/SourceReview.tsx'
 import type { Dispatch } from 'react'
 import type { ReportClient } from '../analysis/report-client.ts'
 import { reportDeficiencies, analysisStatus } from '../state/report.ts'
@@ -13,6 +15,12 @@ export function ReportAnalysis({ session, dispatch, client }: {
   const outcome = report.outcome
   const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
   const deficiencies = reportDeficiencies(report)
+  const selectedFinding = extraction?.findings.find(finding => finding.findingId === report.view.findingId)
+  const selectedCandidate = extraction?.uncertainCandidates.find(candidate => candidate.findingId === report.view.findingId)
+  const summary = selectedFinding ? `${selectedFinding.grade} · ${selectedFinding.description}` : selectedCandidate ? `Usikkert funn · ${selectedCandidate.original.description}` : null
+  const target = (source: unknown) => sourceTarget(source, { hash: report.selected?.hash ?? '', documentName: report.selected?.file.name.trim() ?? '' })
+  const sourceIssue = selectedCandidate ? target(selectedCandidate.original.source).issue : null
+  const onView = (view: typeof report.view) => dispatch({ type: 'report-view', generation: report.generation, view })
   useEffect(() => {
     const element = list.current
     if (session.currentStep !== 'kontroller-funn' || report.status !== 'completed' || !element) return
@@ -53,20 +61,22 @@ export function ReportAnalysis({ session, dispatch, client }: {
       <h2 ref={list} id="findings-title">{outcome?.status === 'failed' ? 'Delresultat — ufullstendig analyse' : 'Funnliste — ikke bekreftet'}</h2>
       {outcome?.status === 'completed' && extraction.findings.length === 0 && extraction.uncertainCandidates.length === 0
         && <p>Analyse fullført — ingen TG2/TG3 funnet. Listen må fortsatt kontrolleres og bekreftes.</p>}
+      <SourceReview report={report} summary={summary} sourceIssue={sourceIssue} onView={onView}>
       <ol className="finding-list">
         {extraction.findings.map(finding => <li key={finding.findingId}>
-          <h3>{finding.grade} · {finding.description}</h3>
+          <h3><button className="finding-select" type="button" aria-pressed={report.view.findingId === finding.findingId} onClick={() => onView({ ...report.view, findingId: finding.findingId, pdfPage: finding.source.pdfPage })}>{finding.grade} · {finding.description}</button></h3>
           <p>{finding.source.documentName} · PDF-side {finding.source.pdfPage} · {finding.findingId}</p>
           <p>Opprinnelig KI-uttrekk · Ikke kontrollert</p>
         </li>)}
         {extraction.uncertainCandidates.map(candidate => <li key={candidate.findingId}>
-          <h3>Usikkert funn · {candidate.original.description}</h3>
+          <h3><button className="finding-select" type="button" aria-pressed={report.view.findingId === candidate.findingId} onClick={() => onView({ ...report.view, findingId: candidate.findingId, pdfPage: target(candidate.original.source).page })}>Usikkert funn · {candidate.original.description}</button></h3>
           <p>Opprinnelig grad: {candidate.original.grade ?? 'Ikke oppgitt'} · {candidate.findingId}</p>
           <p>Oppgitt dokument: {candidate.original.source?.documentName ?? 'Ikke oppgitt'} · Oppgitt PDF-side: {candidate.original.source?.pdfPage ?? 'Ikke oppgitt'} (usikker kilde)</p>
           <ul>{candidate.issues.map(issue => <li key={issue.code}>{issue.code}: {issue.reason}</li>)}</ul>
           <ul>{candidate.original.uncertainties.map((text, index) => <li key={index}>{text}</li>)}</ul>
         </li>)}
       </ol>
+      </SourceReview>
       {extraction.limitations.length > 0 && <div><h3>Begrensninger</h3><ul>{extraction.limitations.map((text, index) => <li key={index}>{text}</li>)}</ul></div>}
       <p>Fullført analyse er ikke brukerens kontroll eller bekreftelse av funnlisten.</p>
     </section>}

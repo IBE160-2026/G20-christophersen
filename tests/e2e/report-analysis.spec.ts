@@ -278,3 +278,201 @@ for (const failure of ['transport', 'invalid-json'] as const) {
     expect(calls).toBe(1)
   })
 }
+
+async function originalF4(page: Page, baseURL: string | undefined) {
+  await enter(page, baseURL)
+  await page.locator('#report-file').setInputFiles(fileURLToPath(new URL('../fixtures/property-cases/F4-tilstandsrapport.pdf', import.meta.url)))
+  await expect(page.locator('#analysis-status')).toContainText('Rapport valgt')
+  await page.getByRole('button', { name: 'Start analyse' }).click(); await showList(page)
+}
+
+test('2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/zoom og beholdt fokus', async ({ page, baseURL }) => {
+  const external: string[] = []
+  const workers: string[] = []
+  let calls = 0
+  page.on('request', request => {
+    if (!request.url().startsWith(baseURL!)) external.push(request.url())
+    if (request.url().includes('pdf.worker')) workers.push(request.url())
+    if (request.url().endsWith('/api/analysis')) calls++
+  })
+  await page.route('**/*', route => route.request().url().startsWith(baseURL!) ? route.continue() : route.abort())
+  await originalF4(page, baseURL)
+  const finding = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
+  await finding.focus(); await finding.press('Enter')
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side 4: Originalside tilgjengelig')
+  await expect(finding).toBeFocused()
+  await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+  await expect(page.locator('.textLayer')).toContainText('Alvorlig lekkasje i tak')
+  await expect(page.locator('.textLayer')).toContainText('Trykt side 2')
+  await expect(page.locator('.pdf-identity')).toHaveText('F4-tilstandsrapport.pdf · PDF-side 4 av 4')
+  await expect(page.getByRole('button', { name: 'Neste PDF-side' })).toBeDisabled()
+  await page.getByRole('button', { name: 'Forrige PDF-side' }).click()
+  await expect(page.locator('[data-pdf-page="3"]')).toBeVisible()
+  await page.getByLabel('PDF-zoom').selectOption('2')
+  await expect(page.locator('#pdf-status')).toContainText('Originalside tilgjengelig')
+  await expect(page.getByLabel('PDF-zoom')).toHaveValue('2')
+  await page.getByLabel('PDF-zoom').selectOption('1')
+  await expect(page.locator('#pdf-status')).toContainText('Originalside tilgjengelig')
+  const ratio = await page.locator('.source-review').evaluate(element => {
+    const [a, b] = [...element.children].map(node => node.getBoundingClientRect())
+    return { ratio: a!.width / (a!.width + b!.width), gap: b!.left - a!.right }
+  })
+  expect(ratio.ratio).toBeCloseTo(0.44, 2); expect(ratio.gap).toBe(24)
+  expect(calls).toBe(1); expect(external).toEqual([]); expect(workers.length).toBeGreaterThan(0)
+})
+
+test('2.7 AC3/5: smalt panel har headingfokus, fokusfelle, Esc/retur og bevart valg/posisjon', async ({ page, baseURL }) => {
+  await page.setViewportSize({ width: 850, height: 700 })
+  await originalF4(page, baseURL)
+  const finding = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
+  await finding.click()
+  await expect(page.locator('.pdf-viewer')).toHaveCount(0)
+  const open = page.getByRole('button', { name: 'Åpne PDF for valgt funn' })
+  await open.focus(); await open.press('Enter')
+  await expect(page.locator('#pdf-panel-title')).toBeFocused()
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side 4: Originalside tilgjengelig')
+  await page.locator('#pdf-panel-title').press('Shift+Tab')
+  await expect(page.getByRole('region', { name: 'Les originalside, rull ved behov' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Tilbake til funnkontroll', exact: true })).toBeFocused()
+  await page.getByRole('button', { name: 'Forrige PDF-side' }).click()
+  await expect(page.locator('[data-pdf-page="3"]')).toBeVisible()
+  // Native modal-dialog holder tastaturfokus også ved wrap-around.
+  await page.getByRole('region', { name: 'Les originalside, rull ved behov' }).focus(); await page.keyboard.press('Tab')
+  expect(await page.evaluate(() => document.querySelector('dialog')?.contains(document.activeElement))).toBe(true)
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).not.toBeVisible(); await expect(open).toBeFocused()
+  await expect(finding).toHaveAttribute('aria-pressed', 'true')
+  const position = await page.locator('.workspace').evaluate(element => element.scrollTop)
+  await open.press('Enter')
+  // Panelet åpnes på bevart gjeldende side etter lokal nabosidelesing.
+  await expect(page.locator('[data-pdf-page="3"]')).toBeVisible()
+  await page.getByRole('button', { name: 'Tilbake til funnkontroll', exact: true }).click()
+  await expect(open).toBeFocused()
+  expect(await page.locator('.workspace').evaluate(element => element.scrollTop)).toBe(position)
+  await expect(page.locator('#report-announcement')).toHaveText('Analyse fullført — funnlisten er klar.')
+})
+
+test('2.7 AC4 RT-7/8: usikker kilde gjettes ikke og workerfeil er synlig uten ny analyse', async ({ page }) => {
+  await enter(page); await choose(page, 'uncertain.pdf')
+  await page.getByRole('button', { name: 'Start analyse' }).click(); await showList(page)
+  await page.getByRole('button', { name: 'Usikkert funn · Usikker vegg', exact: true }).click()
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side ukjent: Kildens PDF-side er ikke kjent')
+  await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  await page.route('**/pdf.worker*', route => route.abort())
+  // Ny worker etter unmount, beholdt økt/uttrekk og original.
+  await page.getByRole('button', { name: 'Tilbake til Tilstandsrapport', exact: true }).click()
+  await showList(page)
+  await page.getByRole('button', { name: 'TG3 · Kontrollert lekkasje', exact: true }).click()
+  await expect(page.locator('#pdf-status')).toContainText('Original-PDF kunne ikke åpnes')
+  await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  await expect(page.locator('#analysis-status')).toContainText('Analyse fullført')
+})
+
+test('2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og originalen kan gjenbrukes', async ({ page, baseURL }) => {
+  await originalF4(page, baseURL)
+  const a = page.getByRole('button', { name: 'TG2 · Slitt overflate på baderomsgulv', exact: true })
+  const b = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
+  await b.click(); await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+  await page.evaluate(() => {
+    const original = window.requestAnimationFrame.bind(window)
+    const pending: FrameRequestCallback[] = []
+    window.requestAnimationFrame = callback => { pending.push(callback); return 0 }
+    ;(window as unknown as { releasePdfFrames: () => void }).releasePdfFrames = () => {
+      window.requestAnimationFrame = original
+      for (const callback of pending) original(callback)
+    }
+  })
+  await a.evaluate(element => (element as HTMLButtonElement).click())
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side 2: Laster originalside')
+  await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  await b.evaluate(element => (element as HTMLButtonElement).click())
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side 4: Laster originalside')
+  await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  await a.evaluate(element => (element as HTMLButtonElement).click())
+  await page.evaluate(() => (window as unknown as { releasePdfFrames: () => void }).releasePdfFrames())
+  await expect(page.locator('[data-pdf-page="2"]')).toBeVisible()
+  await expect(page.locator('[data-pdf-page="4"]')).toHaveCount(0)
+  await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
+  await page.getByRole('button', { name: 'Tilbake til Tilstandsrapport', exact: true }).click()
+  await showList(page)
+  await expect(a).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.locator('[data-pdf-page="2"]')).toBeVisible()
+})
+
+test('2.7 AC4: faktisk renderfeil skjuler gammel side, beholder dokument/side og starter ikke analyse', async ({ page, baseURL }) => {
+  await originalF4(page, baseURL)
+  await page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true }).click()
+  await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+  await page.evaluate(() => {
+    HTMLCanvasElement.prototype.getContext = () => { throw new Error('Kontrollert canvasfeil') }
+  })
+  await page.getByRole('button', { name: 'Forrige PDF-side' }).click()
+  await expect(page.locator('#pdf-status')).toContainText('F4-tilstandsrapport.pdf · PDF-side 3: Originalside kunne ikke vises')
+  await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  await expect(page.locator('#analysis-status')).toHaveText('Analyse fullført — funnlisten er klar.')
+})
+
+test('2.7 AC4 RT-7: kjent men ugyldig kildeside viser faktisk mangel uten gjettet navigasjon', async ({ page }) => {
+  await enter(page); await choose(page, 'invalid-page.pdf')
+  await page.getByRole('button', { name: 'Start analyse' }).click(); await showList(page)
+  await page.getByRole('button', { name: 'Usikkert funn · Kontrollert lekkasje', exact: true }).click()
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side 999: Oppgitt PDF-side er utenfor originaldokumentet')
+  await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Forrige PDF-side' })).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'Neste PDF-side' })).toBeDisabled()
+})
+
+test('2.7 cleanup/lasting: ventende worker gir ærlig status og frigjøres ved trinnretur', async ({ page, baseURL }) => {
+  let release!: () => void
+  const held = new Promise<void>(resolve => { release = resolve })
+  await page.route('**/pdf.worker*', async route => { await held; await route.continue().catch(() => undefined) })
+  await originalF4(page, baseURL)
+  const finding = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
+  await finding.click()
+  await expect(page.locator('#pdf-status')).toContainText('PDF-side 4: Laster original-PDF')
+  await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  await expect(finding).toBeFocused()
+  await page.getByRole('button', { name: 'Tilbake til Tilstandsrapport', exact: true }).click()
+  release()
+  await expect(page.locator('.pdf-viewer')).toHaveCount(0)
+  await expect.poll(() => page.workers().length).toBe(0)
+  await showList(page)
+  await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+  await page.getByRole('button', { name: 'Tilbake til Tilstandsrapport', exact: true }).click()
+  await expect.poll(() => page.workers().length).toBe(0)
+})
+
+test('2.7 visuell QA: 1440, 1280, smalt panel og sterk zoom bevarer kilder/kontroller', async ({ page, baseURL }, testInfo) => {
+  await originalF4(page, baseURL)
+  await page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true }).click()
+  for (const [width, height] of [[1440, 900], [1280, 800]]) {
+    await page.setViewportSize({ width: width!, height: height! })
+    await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+    await page.locator('.source-review').scrollIntoViewIfNeeded()
+    await page.screenshot({ path: testInfo.outputPath(`original-${width}.png`) })
+    expect(await page.locator('.workspace').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  }
+  for (const [width, height] of [[850, 700], [320, 400]]) {
+    await page.setViewportSize({ width: width!, height: height! })
+    const open = page.getByRole('button', { name: 'Åpne PDF for valgt funn' })
+    await open.click()
+    await expect(page.locator('#pdf-panel-title')).toBeFocused()
+    await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
+    await page.getByLabel('PDF-zoom').selectOption('2')
+    await expect(page.locator('#pdf-status')).toContainText('Originalside tilgjengelig')
+    expect(await page.locator('dialog').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+    await page.screenshot({ path: testInfo.outputPath(`panel-${width}.png`) })
+    await page.keyboard.press('Escape'); await expect(open).toBeFocused()
+    expect(await page.locator('.workspace').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  }
+})
+
+test('2.7 kontrakt: usikker grad med kjent kilde og utelatt valgfri originalhash viser riktig originalside', async ({ page }) => {
+  await enter(page); await choose(page, 'uncertain-source.pdf')
+  await page.getByRole('button', { name: 'Start analyse' }).click(); await showList(page)
+  await page.getByRole('button', { name: 'Usikkert funn · Kontrollert lekkasje', exact: true }).click()
+  await expect(page.locator('#pdf-status')).toContainText('uncertain-source.pdf · PDF-side 2: Originalside tilgjengelig')
+  await expect(page.locator('[data-pdf-page="2"]')).toBeVisible()
+  await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
+})

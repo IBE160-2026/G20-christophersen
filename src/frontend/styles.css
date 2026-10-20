@@ -323,3 +323,24 @@ h1 {
 .report-analysis > button + button { margin-left: var(--space-2); }
 
 .primary-action[aria-disabled="true"] { color: var(--text-secondary); background: var(--surface-subtle); border-color: var(--border-control); cursor: not-allowed; }
+
+/* Story 2.7: fysisk originalside ved valgt funn. */
+.source-review { min-width: 0; margin-block: var(--space-4); }
+.source-review-wide { display: grid; grid-template-columns: minmax(0, 44fr) minmax(0, 56fr); gap: 24px; align-items: start; }
+.source-findings, .source-original { min-width: 0; }
+.source-original { border-left: 1px solid var(--border-decorative); padding-left: var(--space-4); }
+.finding-select { padding: var(--space-2); width: 100%; text-align: left; color: var(--text-primary); background: var(--surface-main); border: 1px solid var(--border-control); border-radius: var(--radius-md); font: inherit; min-height: var(--control-height); }
+.finding-select[aria-pressed="true"] { border: 2px solid var(--accent-primary); background: var(--surface-subtle); }
+.pdf-controls { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin-block: var(--space-3); }
+.pdf-controls label { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
+.pdf-controls select { min-height: var(--control-height); color: var(--text-primary); background: var(--surface-main); border: 1px solid var(--border-control); }
+.pdf-controls button:disabled { color: var(--text-secondary); background: var(--surface-subtle); cursor: not-allowed; }
+.pdf-identity, #pdf-status { overflow-wrap: anywhere; margin-block: var(--space-3); }
+.pdf-scroll { overflow: auto; max-height: 75vh; background: var(--surface-subtle); border: 1px solid var(--border-control); }
+.pdf-canvas-holder { min-width: 0; padding: 8px; }
+.pdf-page { position: relative; background: white; }
+.pdf-page canvas { display: block; }
+.pdf-dialog { box-sizing: border-box; width: min(100% - 24px, 1000px); max-height: calc(100dvh - 24px); padding: var(--space-4); border: 2px solid var(--accent-primary); border-radius: var(--radius-md); color: var(--text-primary); background: var(--surface-main); overflow: auto; }
+.pdf-dialog::backdrop { background: rgb(31 41 46 / 60%); }
+.pdf-dialog h2 { margin-top: 0; }
+.pdf-dialog .pdf-scroll { max-height: 65dvh; }

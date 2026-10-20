@@ -16,9 +16,11 @@ export interface ReportState {
   active: AnalysisHttpCorrelation | null
   outcome: AnalysisOutcome | null
   error: string | null
+  view: { findingId: string | null; pdfPage: number | null; zoom: number }
   listVisibleGeneration: number | null
 }
 export type ReportAction =
+  | { type: 'report-view'; generation: number; view: ReportState['view'] }
   | { type: 'report-selecting'; generation: number }
   | { type: 'report-selected'; generation: number; selected: SelectedReport }
   | { type: 'report-start'; correlation: AnalysisHttpCorrelation }
@@ -27,12 +29,14 @@ export type ReportAction =
   | { type: 'report-abandon' }
   | { type: 'report-list-visible'; generation: number }
 export function createReportState(): ReportState {
-  return { generation: 0, status: 'missing', selected: null, active: null, outcome: null, error: null, listVisibleGeneration: null }
+  return { view: { findingId: null, pdfPage: null, zoom: 1 }, generation: 0, status: 'missing', selected: null, active: null, outcome: null, error: null, listVisibleGeneration: null }
 }
 function fail(state: ReportState, code: string): ReportState {
   return { ...state, status: 'failed', active: null, outcome: null, error: code, listVisibleGeneration: null }
 }
 export function reportReducer(state: ReportState, action: ReportAction): ReportState {
+  if (action.type === 'report-view') return action.generation === state.generation && state.selected
+    ? { ...state, view: action.view } : state
   if (action.type === 'report-selecting') return action.generation > state.generation
     ? { ...createReportState(), generation: action.generation, status: 'selecting' } : state
   if (action.type === 'report-selected') return action.generation === state.generation && state.status === 'selecting'

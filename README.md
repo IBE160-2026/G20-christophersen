@@ -20,8 +20,8 @@ Kilder, kostnadsinnhold og uløste kildekonflikter kan kontrolleres i appen.
 Story 1.6 gir en separat ren vurdering av kjente kritiske mangler med faste
 begrunnelser og handlinger; uavhengig review er bestått. Tom mangelliste er ingen
 økonomisk godkjenning. Story 1.7 kobler dette til Tallgrunnlag og er
-uavhengig reviewet med alle seks AC bestått. Rapportanalyse er tilgjengelig som lokal demo fra Story 2.6; kildevisning,
-kontrollhandlinger og full screening følger senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
+uavhengig reviewet med alle seks AC bestått. Rapportanalyse er tilgjengelig som lokal demo fra Story 2.6. Story 2.7
+leverer originalkilden til review; kontrollhandlinger og full screening følger senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
 konto kreves for registreringen.
 
 Story 2.1 er implementert og uavhengig reviewet med alle fire AC bestått: felles dokument-/
@@ -65,11 +65,21 @@ Tilstandsrapport og velg **Start analyse**. Bruk for eksempel
 `tests/fixtures/property-cases/F4-tilstandsrapport.pdf`; bare de uendrede
 F1–F4-originalene har tilhørende lagret demouttrekk. Ingen analyse starter ved
 filvalg. Åpne **Kontroller funn** etter mottatt uttrekk for å se alle funn,
-usikkerheter og lokale mangler. Listen er fortsatt ubekreftet; original-PDF
-og kontrollhandlingene følger senere stories. Uendret uttrekk beholdes ved
+usikkerheter og lokale mangler. Listen er fortsatt ubekreftet. Velg et funn for å vise original-PDF;
+kontrollhandlingene følger senere stories. Uendret uttrekk beholdes ved
 retur/finansendring. Rapportbytte eller forlatt pågående analyse ugyldiggjør
 gamle svar og forsøker abort. Dette dokumenterer ingen faktisk live-analyse.
 Se [verifikasjon](.docs/implementation-artifacts/story-2-6-verifikasjon.md).
+
+Story 2.7 er implementert til review: velg funnets overskrift for å se riktig
+fysisk PDF-side med dokumentnavn. Fra 1200 CSS px ligger funn og original
+side om side. Under grensen brukes **Åpne PDF for valgt funn**; panelet har
+**Tilbake til funnkontroll**, tastaturfokus og Esc. Valgt funn, side og zoom
+bevares ved retur. **Forrige/Neste PDF-side** og **PDF-zoom** leser originalen
+lokalt uten ny analyse. Ukjent/ugyldig kilde og visningsfeil forklares ved
+PDF-visningen. Worker, tegnkart, fonter og nødvendige visningsressurser
+leveres fra samme lokale installasjon. Se [AC-/testbevis](.docs/implementation-artifacts/story-2-7-verifikasjon.md).
+Listen er fortsatt ubekreftet, og 2.8 er ikke startet.
 
 ## Installasjon og kontroll
 
@@ -229,9 +239,9 @@ importer og direkte I/O-bruk. Type- og lintkontroll erstatter ikke denne
 gjennomgangen mot AD-1. Contracts eier rå/registrert finansschema og
 valideringsresultat med avledede typer; `domain/validation.ts` eier numerisk
 gyldighet, bekreftelsesbehov og eksakt årsnormalisering. Ingen framtidig
-rapportflyt, finansberegning eller økonomisk screeningregel er lagt inn.
+rapportretting, finansberegning eller økonomisk screeningregel er lagt inn.
 Dokument-/analyseschemas og ren kilde-/metadatavalidering eies nå også av
-contracts; backend bruker PDF.js ved format- og tekstgrensen. Demo-adapter og HTTP-kobling er levert; frontendkobling er levert i Story 2.6.
+contracts; backend bruker PDF.js ved format- og tekstgrensen. Demo-adapter og HTTP-kobling er levert; frontendkobling er levert i Story 2.6 og originalvisning i Story 2.7.
 `domain/financial-basis.ts` vurderer kilde-/kostnadsgrunnlaget, og
 `domain/screening.ts` samler kjente mangler til fast prioritet-1-utfall.
 Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,

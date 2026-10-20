@@ -1,0 +1,21 @@
+{
+  "provenance": "Håndskrevet før første generering/uttrekk. Fiktive originaler definert i generate.py; ingen adapter eller produktimport.",
+  "blank-variants.pdf": ["blank", "blank", "blank", "blank", "blank", "blank"],
+  "textless-content.pdf": ["unreadable", "unreadable", "unreadable", "unreadable", "unreadable", "unreadable"],
+  "mixed-status.pdf": ["readable", "blank", "unreadable", "unknown", "unreadable"],
+  "uncertain-content.pdf": ["unknown", "unknown", "unknown", "unknown", "incomplete"],
+  "nested-count.pdf": ["readable", "readable", "readable"],
+  "readable-blank.pdf": ["readable", "blank"],
+  "structural-content.pdf": ["unknown", "unknown", "unknown", "unreadable", "unknown"],
+  "catalog-form.pdf": ["unknown"],
+  "catalog-xfa.pdf": ["unknown"],
+  "catalog-empty-form.pdf": ["blank"],
+  "catalog-empty-dict.pdf": ["blank"],
+  "encrypted-content.pdf": ["unknown", "blank"],
+  "layout.pdf": [
+    {"pdfPage": 1, "text": ["TG2", "Slitt overflate på baderomsgulv", "TG3", "Alvorlig lekkasje i tak", "æ ø å Æ Ø Å"]},
+    {"pdfPage": 2, "text": ["Venstre kolonne", "Tilstandsgrad: TG2", "Råte i vinduskarm", "Høyre kolonne", "Tilstandsgrad: TG3", "Lekkasje ved pipe"]},
+    {"pdfPage": 3, "text": ["Tilstandsgrad: TG2", "Slitt kledning mot sør", "Digital tekst over fiktivt rasterbilde"]},
+    {"pdfPage": 4, "text": ["A"]}
+  ]
+}

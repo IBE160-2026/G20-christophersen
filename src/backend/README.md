@@ -38,12 +38,60 @@ worker-opprydding, originalbevaring og F1–F4-fasit. Kjør
 suiten. [Fixturebeskrivelsen](../../tests/fixtures/property-cases/README.md)
 og [verifikasjonen](../../.docs/implementation-artifacts/story-2-2-verifikasjon.md)
 viser opphav og kontroll. Modulen er foreløpig ikke koblet til serverruter.
-Tekstuttrekk/blankdeteksjon og PDF-lesbarhetstester følger i Story 2.3
-etter den [godkjente R2-regelen](../../.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md).
+Tekstuttrekk/blankdeteksjon er implementert i Story 2.3 etter den
+[godkjente R2-regelen](../../.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md).
 
 Story 2.2 er done etter [review](../../.docs/implementation-artifacts/story-2-2-review.md).
 Den tidligere røde sidetellingsproben er grønn; også nestede sidetrær,
 objekt-/xref-strømmer og linearisering er kontrollert. [Implementeringsvalget](../../.docs/implementation-artifacts/story-2-2-page-tree-design.md)
 beskriver den private parserkoblingen og hva en senere pinendring må kontrollere.
-R2 er lukket som beslutningsport; ingen ekstraktor/blankdetektor er implementert,
-og Story 2.3 er fortsatt backlog.
+R2 er lukket som beslutningsport. Story 2.3 står til review med
+[egenverifikasjon](../../.docs/implementation-artifacts/story-2-3-verifikasjon.md).
+
+`documents/extract-pdf.ts` tar et `format-validated`-utfall fra `validatePdf`
+og `{ requestId, mode }`. Kall `await extractPdf(format, { requestId, mode })`.
+Resultatet har `document` (kontraktens komplette `DocumentBasis`) og `error`
+(kontraktens dokumentfeil eller null). Kontroller `error` før senere adapterbruk;
+alle sidene og eventuell delvis tekst beholdes også ved dokumentfeil. Den rene
+`getDocumentBasisError` i contracts eier samme dokumentgrense som
+`bindAnalysisOutcome`, uten adapterkall. Parser-/workerdriftsfeil gir fast trygg
+driftsmelding; det gjettes ingen skadet PDF-årsak ved driftsfeil.
+
+Den isolerte `pdf-extraction-worker.ts` verifiserer samme installerte bunt-hash
+som 2.2, traverserer faktiske blader med `getAllPageDicts(false)` og bruker
+`Page.extractTextContent` på disse bladene. Deklarert Count bestemmer aldri
+sidekoblingen. `ignoreErrors:false` er internverdien for PDF.js
+`stopAtErrors:true`. Parseren får en kopi av originalsnapshotet. Levererte
+tekstchunks kopieres før PDF.js gjenbruker dem; linjeskift fra `hasEOL` og
+mellomrom mellom items bevarer kontrollerbar tekstkontekst i sideposten.
+Senere analyse kan bruke `document.pages` direkte uten ny PDF-tolkning.
+
+`pdf-extraction-core.ts` bruker eksakte PDF-whitespacebytes 0/9/10/12/13/32,
+ikke tegn-/prosentgrenser. Blankbevis krever manglende Contents, tom liste eller
+fullt dekodede whitespace-strømmer, kjente side-/katalognøkler og fravær av
+annotasjoner, felt, appearance, XFA og annet innhold som må tolkes. Tomme,
+typevaliderte AcroForm-dictionaries/Fields[] alene er ikke sideinnhold.
+Uavklart global felt-/XFA-kobling gir unknown; lokale annotasjoner/widgets uten
+tekst gir unreadable. Ukjente utvidelser eller ufullstendig inspeksjon gir
+unknown. Null/ødelagte referanser blir aldri blanke.
+
+Rå innholdsstrømmer kontrolleres også på sider med tekst. Ufiltrerte strømmer,
+ASCII85 og Flate har full verifikasjon; Flate kontrolleres med Node zlib,
+inkludert checksum, avslutning og konsumert input. Andre filtre,
+predictor-/DecodeParms-varianter, krypterte råstrømmer og uavklart struktur gir unknown når komplett
+verifikasjon ikke kan etableres. Dette er en konservativ tilstrekkelig
+blank-/pålitelighetsregel. PDF.js-info/advarsler holdes internt og oversettes
+konservativt til kjent tap eller ukjent pålitelighet. Litt gjenværende tekst
+opphever aldri kjent tap: incomplete prioriteres. Vellykket tekstuttrekk uten
+kjente feil er readable for tekstlaget, også med bilde; rasterinnhold hevdes
+ikke semantisk lest. OCR, rendering/vision og KI-fallback brukes ikke.
+
+Hver side avslutter oppgaven og frigjør parsercacher. Dokumentet termineres og
+ryddes ved både suksess og feil; den ytre `finally` avslutter alltid Node-workeren,
+inkludert ved ugyldig melding eller avvist parser-/oppryddingsarbeid. Workerens
+isolasjon frigjør også side-/modulreferanser. Ingen nye ressurs-/timeoutgrenser
+er lagt til. HTTP, adaptere, demo-oppslag og frontend er fortsatt senere arbeid.
+
+Kjør `npm test -- tests/integration/pdf-extraction.test.ts tests/unit/pdf-extraction.test.ts`.
+[Lesbarhetsfixturene](../../tests/fixtures/pdf-readability/README.md) har
+reproduserbare fiktive originaler, uavhengig fasit og byteinventar.

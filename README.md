@@ -40,7 +40,13 @@ er kontrollert visuelt, inklusive TG3 på PDF-side 4 / trykt side 2.
 Modulen er ikke koblet til appens rapportflyt ennå.
 [R2 er lukket med godkjent sidestatusregel](.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md):
 bevist blank side tillates, mens ulest innhold blokkerer fullført analyse.
-Kontraktversjon 2 støtter dette skillet; ekstraktor/blankdetektor i Story 2.3 er ikke startet.
+Story 2.3 er implementert til review: `extractPdf` leverer hele kontraktversjon 2 /
+uttrekksversjon 1-grunnlaget med én tekst-/statuspost per fysisk side. Den
+[godkjente blankregelen](.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md)
+krever full strukturell inspeksjon; unreadable/unknown/incomplete og bare
+blanke sider gir dokumentfeil før adapterbruk. Readable gjelder tekstlaget,
+ikke semantisk lesing av bilder. Se [modulbruk](src/backend/README.md) og
+[AC-/testbevis](.docs/implementation-artifacts/story-2-3-verifikasjon.md).
 
 ## Installasjon og kontroll
 
@@ -103,7 +109,7 @@ npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. 275 rene modultester, 42 PDF-integrasjonstester, 41 demotester
+port 3000, som må være ledig. Vitest-modul-/PDF-integrasjonstester, 41 demotester
 og 2 dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
@@ -125,7 +131,12 @@ usikre kilder og forsøk på å erstatte kodekontrollert metadata.
 PDF-integrasjonene bruker faktiske 30-/31-sidersfiler, feilformat/skadet
 container, hash-/navnevarianter og tekstløs PDF. De kontrollerer også
 ressursopprydding, bytebevaring og F1–F4 mot en fasit fastlagt før adapterbruk.
-Kjør bare disse med `npm test -- tests/integration/pdf-format.test.ts`.
+Kjør formatkontrollen med `npm test -- tests/integration/pdf-format.test.ts`.
+Story 2.3 bruker egne faktiske blank-/layout-/raster-/form-/feilfixtures med
+håndskrevet fasit og tester sidestatus, fullføringssperre, delvis tekst og
+opprydding: `npm test -- tests/integration/pdf-extraction.test.ts tests/unit/pdf-extraction.test.ts`.
+[Fixturebeskrivelsen](tests/fixtures/pdf-readability/README.md) forklarer
+hvordan originaler og forventede utfall kan etterprøves uavhengig.
 Chromium-binæren må være installert før offline kjøring. Feilspor/skjermbilder
 legges under Git-ignorerte `test-results/`.
 
@@ -163,7 +174,8 @@ viser egenverifikasjon av fire AC, reelle PDF-tester og visuell kryssjekk.
 etter retting av manipulert sidetelling og ny full regresjon.
 Den [avgrensede koblingen til PDF.js](.docs/implementation-artifacts/story-2-2-page-tree-design.md)
 er bundet til eksakt installert parserbunt. Format-/fixturetestene beviser
-ingen 2.3-lesbarhet, S2 eller live-S5.
+ikke tekstlesbarhet alene. [Story 2.3-verifikasjonen](.docs/implementation-artifacts/story-2-3-verifikasjon.md)
+dekker lokal deterministisk ekstraksjon og R2; dette beviser ingen S2 eller live-S5.
 Full demo, senere funksjonstester og annen-person-bevis for S6 følger sine stories.
 
 Grunnlaget er tilpasset den [offisielle Vite react-ts-starteren](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).
@@ -177,11 +189,12 @@ og nødvendige avhengigheter er eksakt låst etter arkitekturen.
 | `src/frontend/` | React-appskall, finansregistrering, én reducer for aktiv økt og lokale DESIGN-tokens. Bruker contracts og domain; senere egen presentasjon/PDF-visning. |
 | `src/domain/` | Rene regler og beregninger. Bruker contracts. Ingen UI, server eller I/O. |
 | `src/contracts/` | Felles runtime-skjema og avledede typer. Ingen UI, server eller I/O. |
-| `src/backend/` | Lokal HTTP-server og bytesbasert PDF-format-/side-/hashvalidering; senere analyseadaptere. Bruker contracts; finans/anbefaling forblir i domain. |
+| `src/backend/` | Lokal HTTP-server og bytesbasert PDF-format-/side-/hashvalidering og sidemerket tekstuttrekk; senere analyseadaptere. Bruker contracts; finans/anbefaling forblir i domain. |
 | `tests/e2e/` | Playwright-kontroll mot bygget demo og lokalt dev-skall. |
 | `tests/unit/` | Rene Vitest-kontroller av registrering, navigasjon, tall-/årsvalidering, kilde-/kostnadsgrunnlag, kjente kritiske mangler og dokument-/analysekontrakten. |
-| `tests/integration/` | PDF.js-format-/side-/hashkontroll med ekte fixturebytes og originalbevaring. |
+| `tests/integration/` | PDF.js-format-/side-/hash-/lesbarhetskontroll med ekte fixturebytes og originalbevaring. |
 | `tests/fixtures/property-cases/` | Fiktive rapporter, uavhengig JSON-fasit, bytehashinventar og reproducerbar generator. |
+| `tests/fixtures/pdf-readability/` | Fiktive blank-/layout-/innholds-/feiloriginaler, håndskrevet sidestatus-/tekstfasit og reproducerbar generator. |
 | `.docs/` | Autoritative planer, implementeringsbevis og prosesspor. |
 
 Importgrensene gjennomgås ved endringer, inklusive reeksporter, dynamiske
@@ -191,7 +204,7 @@ valideringsresultat med avledede typer; `domain/validation.ts` eier numerisk
 gyldighet, bekreftelsesbehov og eksakt årsnormalisering. Ingen framtidig
 rapportflyt, finansberegning eller økonomisk screeningregel er lagt inn.
 Dokument-/analyseschemas og ren kilde-/metadatavalidering eies nå også av
-contracts; backend bruker nå PDF.js ved formatgrensen. Tekst-/adapter-/HTTP-/frontendkobling følger sine stories.
+contracts; backend bruker PDF.js ved format- og tekstgrensen. Adapter-/HTTP-/frontendkobling følger sine stories.
 `domain/financial-basis.ts` vurderer kilde-/kostnadsgrunnlaget, og
 `domain/screening.ts` samler kjente mangler til fast prioritet-1-utfall.
 Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,

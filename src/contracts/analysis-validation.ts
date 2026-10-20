@@ -3,7 +3,7 @@ import {
   getCandidateIssues,
 } from './document-analysis.ts'
 import type {
-  AnalysisContext, AnalysisError, AnalysisOutcome, CheckableFinding, OriginalCandidate,
+  AnalysisContext, AnalysisError, AnalysisOutcome, CheckableFinding, DocumentBasis, OriginalCandidate,
   UncertainCandidate,
 } from './document-analysis.ts'
 
@@ -33,6 +33,33 @@ export function createFailedAnalysis(contextInput: unknown, errorInput: Analysis
   return AnalysisOutcomeSchema.parse({ ...context, status: 'failed', error: errorInput, partialResult: null })
 }
 
+/** Shared document gate, usable before any adapter is invoked. */
+export function getDocumentBasisError(document: DocumentBasis): Extract<AnalysisError, { kind: 'document' }> | null {
+  const badPages = document.pages.filter(page => page.status !== 'readable' && page.status !== 'blank')
+  const badPage = badPages[0]
+  if (badPage) {
+    const codes = { unreadable: 'unreadable-text', incomplete: 'incomplete-text', unknown: 'unknown-readability' } as const
+    const reason = badPage.reason ?? (badPage.status === 'unknown'
+      ? null : 'Dokumentgrunnlaget har en side uten pålitelig fullført tekstuttrekk.')
+    return {
+      kind: 'document', code: codes[badPage.status as keyof typeof codes],
+      target: { kind: 'page', pdfPage: badPage.pdfPage },
+      reason: badPages.length > 1
+        ? `Berørte PDF-sider: ${badPages.map(page => page.pdfPage).join(', ')}.${badPages
+          .filter(page => page.reason !== null)
+          .map(page => ` PDF-side ${page.pdfPage}: ${page.reason}`).join('')}`
+        : reason,
+    }
+  }
+  if (!document.pages.some(page => page.status === 'readable')) {
+    return {
+      kind: 'document', code: 'unreadable-text', target: { kind: 'document' },
+      reason: 'PDF-en har bare blanke sider og er ikke en tekstbasert tilstandsrapport.',
+    }
+  }
+  return null
+}
+
 // Ren grensefunksjon. Ingen adapterkall, bytehash, PDF-lesing eller klienttilstand.
 export function bindAnalysisOutcome(documentInput: unknown, adapterInput: unknown): AnalysisOutcome {
   const document = DocumentBasisSchema.parse(documentInput)
@@ -41,28 +68,8 @@ export function bindAnalysisOutcome(documentInput: unknown, adapterInput: unknow
     requestId: document.requestId, reportHash: document.reportHash, documentName: document.documentName,
     mode: document.mode, pageCount: document.pageCount,
   })
-  const badPages = document.pages.filter(page => page.status !== 'readable' && page.status !== 'blank')
-  const badPage = badPages[0]
-  if (badPage) {
-    const codes = { unreadable: 'unreadable-text', incomplete: 'incomplete-text', unknown: 'unknown-readability' } as const
-    const reason = badPage.reason ?? (badPage.status === 'unknown'
-      ? null : 'Dokumentgrunnlaget har en side uten pålitelig fullført tekstuttrekk.')
-    return createFailedAnalysis(context, {
-      kind: 'document', code: codes[badPage.status as keyof typeof codes],
-      target: { kind: 'page', pdfPage: badPage.pdfPage },
-      reason: badPages.length > 1
-        ? `Berørte PDF-sider: ${badPages.map(page => page.pdfPage).join(', ')}.${badPages
-          .filter(page => page.reason !== null)
-          .map(page => ` PDF-side ${page.pdfPage}: ${page.reason}`).join('')}`
-        : reason,
-    })
-  }
-  if (!document.pages.some(page => page.status === 'readable')) {
-    return createFailedAnalysis(context, {
-      kind: 'document', code: 'unreadable-text', target: { kind: 'document' },
-      reason: 'PDF-en har bare blanke sider og er ikke en tekstbasert tilstandsrapport.',
-    })
-  }
+  const documentError = getDocumentBasisError(document)
+  if (documentError) return createFailedAnalysis(context, documentError)
   const parsed = AdapterOutcomeSchema.safeParse(adapterInput)
   if (!parsed.success) {
     return createFailedAnalysis(context, { kind: 'analysis', code: 'invalid-response', target: null,

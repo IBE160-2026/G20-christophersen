@@ -13,7 +13,7 @@ implementationStarted: false
 
 # Sprintplan — Property Acquisition Agent
 
-Oppfølging 2026-10-20: [R2 er lukket med godkjent regel](../planning-artifacts/r2-pdf-lesbarhet-semester-v1.md); Story 2.3 er done etter [code review](story-2-3-review.md), og Story 2.4 er implementert til review med [hash-/versjonsbundet lokal demo](story-2-4-verifikasjon.md). Story 2.5 er fortsatt backlog og er ikke startet. SP2 og Epic 2 pågår. Samlet readiness er fortsatt CONCERNS; R1/R3/R4 er uendret. De øvrige planleggingsutsagnene fra 2026-10-16 nedenfor er historikk; gjeldende porter og oppnådde storystatuser står i sprint-status.yaml.
+Oppfølging 2026-10-20: [R2 er lukket med godkjent regel](../planning-artifacts/r2-pdf-lesbarhet-semester-v1.md); Story 2.3 er done etter [code review](story-2-3-review.md), og Story 2.4 er done etter [full code review](story-2-4-review.md) av hash-/versjonsbundet lokal demo. Story 2.5 er fortsatt backlog og er ikke startet. SP2 og Epic 2 pågår. Samlet readiness er fortsatt CONCERNS; R1/R3/R4 er uendret. De øvrige planleggingsutsagnene fra 2026-10-16 nedenfor er historikk; gjeldende porter og oppnådde storystatuser står i sprint-status.yaml.
 
 Planen fordeler de fem godkjente epicene og 37 storyene på åtte leveransesprinter og angir en avhengighetsgyldig implementeringsrekkefølge. **Readiness forblir CONCERNS.** R2 må lukkes før Story 2.3, R3 før Story 2.5, R1 før hele Epic 4 og R4s respektive person-/miljøavklaringer før faktisk S5/S6. Sprintplanlegging lukker ingen av portene.
 

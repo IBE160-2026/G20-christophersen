@@ -2,7 +2,7 @@
 title: 'Story 2.4 — Hente lagret demo-uttrekk bundet til riktig rapport og versjon'
 type: 'feature'
 created: '2026-10-20'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-4-hente-lagret-demo-uttrekk-bundet-til-riktig-rapport-og-versj'
 baseline_commit: 'fa91c3fbb027be992194f7deb022de60a50acba6'
@@ -115,3 +115,17 @@ rettingene: 49/49 målrettede tester under OS-sperret nettverk/tomt nøkkelmilj�
 436/436 fullsuite og type/lint/build grønt. E2E-regresjon: 41+2 bestått.
 Ingen utsatt produktfeil eller nye åpne spørsmål. Spec beholdes in-review og
 sprintstatus review etter brukerens bestilling; ingen automatisk done.
+
+### Full code review 2026-10-20
+
+Separat bestilt BMAD code review av `7b1897402b732e46c21de35bdffcc37dad79d6e9`
+er fullført. Alle fire reviewlag består uten verifiserte funn. AC1–AC4 er
+kontrollert mot kode, faktiske PDF-er og egne negative lagringsprøver.
+49/49 målrettede tester med OS-nettverkssperre og tomt miljø, 13/13 egne
+positive/negative scenarier, 436/436 regresjonstester, lint/type/build og
+41+2 E2E består. Ingen produktretting var nødvendig.
+
+Brukerens nye reviewbestilling autoriserer done etter bestått full review;
+den tidligere implementeringsbestillingens review-stopp er historikk.
+Story 2.4 settes til done. Epic 2/SP2 pågår; Story 2.5 forblir backlog og
+R3 er fortsatt åpen. Se [full reviewrapport](story-2-4-review.md).

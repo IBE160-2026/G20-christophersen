@@ -1,5 +1,9 @@
 # Story 2.4 — verifikasjon 2026-10-20
 
+Oppfølging: Story 2.4 er **done** etter separat bestilt
+[full code review](story-2-4-review.md). Leveransen til review og resultatene
+nedenfor beskriver implementeringsøkten; reviewrapporten fører sluttstatus.
+
 Implementert innen [Story 2.4 AC1–AC4](../planning-artifacts/epics.md#story-24-hente-lagret-demo-uttrekk-bundet-til-riktig-rapport-og-versjon),
 AD-1/AD-4/AD-6/AD-10, SPEC CAP-2/CAP-8 og eksisterende kontrakter 2/1.
 Baseline er `fa91c3fbb027be992194f7deb022de60a50acba6` (Story 2.3 done).

@@ -1,0 +1,26 @@
+{
+  "reportHash": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+  "contractVersion": "2",
+  "extractionVersion": "1",
+  "outcome": {
+    "contractVersion": "2",
+    "extractionVersion": "1",
+    "status": "completed",
+    "findings": [
+      {
+        "findingId": "F1-TG2-1",
+        "description": "Slitt overflate på baderomsgulv",
+        "grade": "TG2",
+        "source": {
+          "documentName": "F1-tilstandsrapport.pdf",
+          "reportHash": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+          "pdfPage": 2
+        },
+        "uncertainties": []
+      }
+    ],
+    "limitations": [
+      "Kontrollert, fiktivt lagret demo-uttrekk; ingen ny eller gjennomført live-analyse."
+    ]
+  }
+}

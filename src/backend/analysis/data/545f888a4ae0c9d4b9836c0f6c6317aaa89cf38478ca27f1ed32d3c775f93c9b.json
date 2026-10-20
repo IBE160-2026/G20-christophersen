@@ -1,0 +1,37 @@
+{
+  "reportHash": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+  "contractVersion": "2",
+  "extractionVersion": "1",
+  "outcome": {
+    "contractVersion": "2",
+    "extractionVersion": "1",
+    "status": "completed",
+    "findings": [
+      {
+        "findingId": "F4-TG2-1",
+        "description": "Slitt overflate på baderomsgulv",
+        "grade": "TG2",
+        "source": {
+          "documentName": "F4-tilstandsrapport.pdf",
+          "reportHash": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+          "pdfPage": 2
+        },
+        "uncertainties": []
+      },
+      {
+        "findingId": "F4-TG3-1",
+        "description": "Alvorlig lekkasje i tak",
+        "grade": "TG3",
+        "source": {
+          "documentName": "F4-tilstandsrapport.pdf",
+          "reportHash": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+          "pdfPage": 4
+        },
+        "uncertainties": []
+      }
+    ],
+    "limitations": [
+      "Kontrollert, fiktivt lagret demo-uttrekk; ingen ny eller gjennomført live-analyse."
+    ]
+  }
+}

@@ -48,6 +48,16 @@ blanke sider gir dokumentfeil før adapterbruk. Readable gjelder tekstlaget,
 ikke semantisk lesing av bilder. Se [modulbruk](src/backend/README.md) og
 [AC-/testbevis](.docs/implementation-artifacts/story-2-3-verifikasjon.md).
 
+Story 2.4 er implementert til review: en smal analyseadapter tar hele
+`DocumentBasis`, og standard demo leser lokale, fiktive F1–F4-svar bundet til
+originalenes SHA-256 og kontrakt-/uttrekksversjon. Manglende eller feilbundet
+svar gir eksplisitt feil uten live-fallback. Dokumentsperren fra 2.3 gjelder
+før oppslag. Demo-modulen trenger verken API-nøkkel eller ekstern tjeneste.
+Se [modulbruk og opphav](src/backend/README.md) og
+[testbevis](.docs/implementation-artifacts/story-2-4-verifikasjon.md).
+Modulen er foreløpig ikke koblet til HTTP eller appens rapportflyt; dette
+følger senere stories. Den dokumenterer ingen faktisk live-analyse.
+
 ## Installasjon og kontroll
 
 Bruk **Node.js 24.21.0 LTS og medfølgende npm 11.19.0**. `.nvmrc` angir
@@ -189,7 +199,7 @@ og nødvendige avhengigheter er eksakt låst etter arkitekturen.
 | `src/frontend/` | React-appskall, finansregistrering, én reducer for aktiv økt og lokale DESIGN-tokens. Bruker contracts og domain; senere egen presentasjon/PDF-visning. |
 | `src/domain/` | Rene regler og beregninger. Bruker contracts. Ingen UI, server eller I/O. |
 | `src/contracts/` | Felles runtime-skjema og avledede typer. Ingen UI, server eller I/O. |
-| `src/backend/` | Lokal HTTP-server og bytesbasert PDF-format-/side-/hashvalidering og sidemerket tekstuttrekk; senere analyseadaptere. Bruker contracts; finans/anbefaling forblir i domain. |
+| `src/backend/` | Lokal HTTP-server og bytesbasert PDF-format-/side-/hashvalidering og sidemerket tekstuttrekk samt lokal demo-adapter. Bruker contracts; finans/anbefaling forblir i domain. |
 | `tests/e2e/` | Playwright-kontroll mot bygget demo og lokalt dev-skall. |
 | `tests/unit/` | Rene Vitest-kontroller av registrering, navigasjon, tall-/årsvalidering, kilde-/kostnadsgrunnlag, kjente kritiske mangler og dokument-/analysekontrakten. |
 | `tests/integration/` | PDF.js-format-/side-/hash-/lesbarhetskontroll med ekte fixturebytes og originalbevaring. |

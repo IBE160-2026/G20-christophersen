@@ -1,0 +1,149 @@
+Story 2.4 – siste kommandoutdata, 2026-10-20
+Node 24.21.0 / npm 11.19.0
+Baseline: fa91c3fbb027be992194f7deb022de60a50acba6
+Typecheck og lint bestått separat; build inngår i E2E-utdata nedenfor.
+TCP-probe under samme OS-profil: network probe: EPERM, exit 0.
+
+Kommando: npm test
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  11 passed (11)
+      Tests  436 passed (436)
+   Start at  14:09:34
+   Duration  13.56s (tests 94%, import 5%, transform 1%)
+
+
+Kommando: Målrettede demo-tester under OS-sperret nettverk og renset miljø; se eksakt kommando i story-2-4-verifikasjon.md
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ✓ tests/unit/demo-analysis.test.ts (35 tests) 50ms
+ ✓ tests/integration/demo-analysis.test.ts (14 tests) 5410ms
+   ✓ Story 2.4 AC1/AC3 – ekte PDF-pipeline og lokale lagrede svar (8)
+     ✓ standard demo virker i ny prosess uten miljønøkler og med nettfunksjoner sperret 935ms
+     ✓ F1-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 431ms
+     ✓ F2-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 359ms
+     ✓ F3-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 325ms
+     ✓ F4-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 307ms
+     ✓ samme PDF gir identisk resultat ved gjentakelse og etter mutert retur 313ms
+     ✓ samme adapter holder samtidige F1/F4-kall og returmutasjoner adskilt 609ms
+     ✓ identiske bytes med nytt navn finner samme hash uten å skrive om originalkilden 311ms
+   ✓ Story 2.4 AC2 – riktig rapport, ingen cache fra annen PDF (6)
+     ✓ F2 under F1-navn får F2-hash og aldri F1-uttrekket 316ms
+     ✓ text-30-pages.pdf gir manglende demosvar selv under F1-navn 329ms
+
+ Test Files  2 passed (2)
+      Tests  49 passed (49)
+   Start at  14:09:38
+   Duration  5.86s (tests 92%, import 5%, transform 3%)
+
+
+Kommando: npm run test:e2e (PLAYWRIGHT_BROWSERS_PATH=/private/tmp/ibe160-story-1-2-browsers)
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 122 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:   0.35 kB
+dist/assets/index-CXn3PL4y.css    8.74 kB │ gzip:   2.19 kB
+dist/assets/index-DLfg82t6.js   345.76 kB │ gzip: 105.28 kB
+
+✓ built in 85ms
+[WebServer] (node:83304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 41 tests using 4 workers
+
+(node:83306) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83307) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83305) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 tests/e2e/app-shell.spec.ts:68:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (106ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   3 tests/e2e/app-shell.spec.ts:120:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (554ms)
+  ✓   1 tests/e2e/app-shell.spec.ts:45:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (556ms)
+  ✓   2 tests/e2e/app-shell.spec.ts:6:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (965ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (969ms)
+  ✓   6 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (540ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (821ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (672ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (719ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (624ms)
+  ✓  11 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (582ms)
+  ✓  13 tests/e2e/financial-input.spec.ts:5:1 › 1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplisitt periode/år (372ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:178:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (689ms)
+  ✓  14 tests/e2e/financial-input.spec.ts:24:1 › 1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjengelig retur (897ms)
+  ✓  15 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 1440×900 (1.4s)
+  ✓  18 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 (785ms)
+  ✓  17 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 (1.5s)
+  ✓  16 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 (1.9s)
+  ✓  20 tests/e2e/financial-input.spec.ts:117:1 › 1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflikt uten automatisk valg (772ms)
+  ✓  21 tests/e2e/financial-input.spec.ts:160:1 › 1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholder brukeropphav etter retting (475ms)
+  ✓  19 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 (1.1s)
+  ✓  22 tests/e2e/financial-input.spec.ts:183:1 › 1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og bevarte D/J-totaler (618ms)
+  ✓  26 tests/e2e/financial-input.spec.ts:260:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 1440×900 (390ms)
+  ✓  27 tests/e2e/financial-input.spec.ts:260:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 320×160 (374ms)
+  ✓  23 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 1440×900 (1.3s)
+  ✓  24 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 360×225 (1.4s)
+  ✓  25 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 (1.5s)
+  ✓  29 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: F3 manglende L viser lokale feil, første berørte felt og krever retting (634ms)
+  ✓  28 tests/e2e/financial-input.spec.ts:290:1 › 1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret retur, retting og øktslutt (816ms)
+  ✓  30 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: ugyldig P viser lokale feil, første berørte felt og krever retting (650ms)
+  ✓  31 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: ulike år viser lokale feil, første berørte felt og krever retting (715ms)
+  ✓  33 tests/e2e/financial-input.spec.ts:380:1 › 1.7 AC2: L-konflikt består gjennom forsøk; opphav og ny kontroll må rettes eksplisitt (815ms)
+  ✓  34 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1440×900 (679ms)
+  ✓  32 tests/e2e/financial-input.spec.ts:347:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes (966ms)
+  ✓  35 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1280×800 (618ms)
+  ✓  36 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 720×450 (658ms)
+  ✓  37 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 320×200 (652ms)
+Story 1.7 målt kontrast: {"action":6.701109538539959,"error":7.104296467437304,"issueText":11.601821357499892,"control":3.8101786636538826,"focus":6.701109538539959}
+  ✓  38 tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast (830ms)
+  ✓  39 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes (663ms)
+  ✓  40 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes (680ms)
+  ✓  41 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes (594ms)
+
+  41 passed (9.5s)
+[WebServer] (node:83430) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:83432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83433) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/private/story-1-2-dev-5fmpxc/private.txt" is outside of Vite serving allow list.
+[WebServer]
+[WebServer] - /Users/madschristophersen/IBE160/G20-christophersen
+[WebServer]
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+[WebServer]
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+  ✓  2 tests/e2e/dev-shell.spec.ts:21:1 › AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler (44ms)
+  ✓  1 tests/e2e/dev-shell.spec.ts:5:1 › AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil (369ms)
+
+  2 passed (1.1s)

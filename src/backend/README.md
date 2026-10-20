@@ -38,10 +38,12 @@ worker-opprydding, originalbevaring og F1–F4-fasit. Kjør
 suiten. [Fixturebeskrivelsen](../../tests/fixtures/property-cases/README.md)
 og [verifikasjonen](../../.docs/implementation-artifacts/story-2-2-verifikasjon.md)
 viser opphav og kontroll. Modulen er foreløpig ikke koblet til serverruter.
-Tekst-/lesbarhetsmetode følger 2.3 etter avklaring av R2.
+Tekstuttrekk/blankdeteksjon og PDF-lesbarhetstester følger i Story 2.3
+etter den [godkjente R2-regelen](../../.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md).
 
 Story 2.2 er done etter [review](../../.docs/implementation-artifacts/story-2-2-review.md).
 Den tidligere røde sidetellingsproben er grønn; også nestede sidetrær,
 objekt-/xref-strømmer og linearisering er kontrollert. [Implementeringsvalget](../../.docs/implementation-artifacts/story-2-2-page-tree-design.md)
 beskriver den private parserkoblingen og hva en senere pinendring må kontrollere.
-R2 er fortsatt åpen, og ingen tekst-/lesbarhetsmetode er valgt.
+R2 er lukket som beslutningsport; ingen ekstraktor/blankdetektor er implementert,
+og Story 2.3 er fortsatt backlog.

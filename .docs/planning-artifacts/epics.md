@@ -773,7 +773,7 @@ slik at ufullstendig eller feilplassert tekst ikke brukes som et pålitelig grun
 
 **Kravspor:** FR-6–FR-9; NFR-1; S3/S4 og dokumentgrunnlag for S2; AD-3/AD-4/AD-10; SPEC CAP-2 og sidemerket grunnlag. UX-DR11/UX-DR24/UX-DR25 konsumerer feil/usikkerhet senere.
 
-**Avhengigheter:** 2.1 og 2.2. **Avklaringspunkt:** Dokumentansvar velger/dokumenterer konkret lesbarhets-/layoutkontroll før uttrekk godtas som gyldig, innen eksisterende Deferred. Ingen ny støttebegrensning eller OCR bestemmes gjennom storyen.
+**Avhengigheter:** 2.1 og 2.2. **Avklaringspunkt:** [R2 er lukket 2026-10-20](r2-pdf-lesbarhet-semester-v1.md) med deterministisk semester-v1-regel og forhåndsdefinerte fixtureutfall. Storyen implementerer og verifiserer denne metoden innen eksisterende Deferred; ingen OCR, vision eller manuell semantisk klassifisering av tekstløse sider.
 
 **Acceptance Criteria:**
 
@@ -787,17 +787,17 @@ slik at ufullstendig eller feilplassert tekst ikke brukes som et pålitelig grun
 **Then** side/tekst/grad-/beskrivelseskontekst kan kontrolleres etter den dokumenterte lesbarhetsmetoden
 **And** sideantall eller gyldig kontrakt alene regnes ikke som dokumentasjon på korrekt lesing. **(AC2)**
 
-**Given** manglende tekstlag, kjent uleselig/ufullstendig tekst eller ukjent/upålitelig lesing
+**Given** sideinnhold uten brukbart tekstlag som ikke er deterministisk bevist blankt, kjent uleselig/ufullstendig tekst eller ukjent/upålitelig lesing
 **When** dokumentpipelinen vurderer grunnlaget
-**Then** dette gir dokumentfeil med kjent berørt side/årsak når tilgjengelig
-**And** tomtekst, eventuelle delresultater eller en bildebasert side presenteres ikke som fullstendig vellykket lesing; ingen OCR startes. **(AC3)**
+**Then** unreadable/unknown/incomplete blokkerer fullført dokumentanalyse med dokumentfeil og alle berørte fysiske sider, samt kjent årsak når tilgjengelig
+**And** tomtekst, delresultater eller bildeinnhold fremstilles ikke som analysert; tekstløse foto-/plantegnings-/skannesider kan avvises konservativt, uten OCR, vision eller manuell semantisk klassifisering. **(AC3)**
 
 **Given** blanke sider, blandet tekst/bilde eller tegnkodings-/layoutproblemer
 **When** lesbarhetskontrollen prøves mot forhåndsdefinert originalfasit
-**Then** valgte kriterier og faktisk forventet utfall per fixture er dokumentert
-**And** en vilkårlig tekstlengde eller antatt «ufarlig» blankside brukes ikke som skjult godkjenning av ukjent grunnlag. **(AC4)**
+**Then** R2s strukturelle blankregel og forventet utfall per fixture er dokumentert: bare deterministisk bevist fravær av tekst og annet innhold gir blank, som beholder fysisk side og ikke alene blokkerer analyse
+**And** readable krever brukbart tekstlag; blank blandes ikke med unreadable/unknown, tvil gir unknown, og ingen vilkårlig tegn-/prosentterskel eller antatt «ufarlig» foto-/blankside godkjenner ukjent grunnlag. En helt blank PDF er fortsatt ingen støttet tekstbasert tilstandsrapport. **(AC4)**
 
-**Testkrav:** Faktiske PDF-bytes med kjent side→tekst, tabeller/kolonner, blanke sider, manglende tekstlag, blandet tekst/bilde og tegnkoding. RT-2/RT-5/RT-9s dokumentdel; ingen adapter kalles for kjent utilstrekkelig grunnlag. Test bare dokumentkomponenten og fasiten her, uten å hevde at S2s semantiske modelltreff er målt.
+**Testkrav:** Faktiske PDF-bytes med kjent side→tekst, tabeller/kolonner, blanke sider med/uten strøm, whitespace-strøm, annotasjoner/form/appearance, tekstløst foto/vektor/plantegning/skannet TG3, manglende tekstlag, blandet tekst/bilde og tegnkoding etter R2-fasit. Blank må skilles fra ulest innhold og fysisk side bevares etter blank/feil. RT-2/RT-5/RT-9s dokumentdel; ingen adapter kalles for kjent utilstrekkelig grunnlag. Test bare dokumentkomponenten og fasiten her, uten å hevde at S2s semantiske modelltreff er målt.
 
 ### Story 2.4: Hente lagret demo-uttrekk bundet til riktig rapport og versjon
 

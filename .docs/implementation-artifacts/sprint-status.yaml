@@ -32,7 +32,7 @@
 # development_status er gruppert per epic, ikke etter implementeringsrekkefølge.
 # BMADs generiske statusanbefaling håndhever ikke avhengigheter eller porter.
 generated: 10-16-2026 18:23
-last_updated: 10-19-2026
+last_updated: 10-20-2026 08:55
 project: IBE160
 project_key: NOKEY
 tracking_system: file-system
@@ -106,11 +106,12 @@ planned_sprints:
   SP8: ['4.4', '4.5', '5.5']
 clarification_gates:
   R2:
-    status: open
+    status: closed
     owner: Dokumentansvar
     before_stories: ['2.3']
-    subject: Konkret PDF-lesbarhetsmetode og forventede fixtureutfall
-    decision_record: null
+    subject: Godkjent PDF.js-regel; bevist blank tillates, ulest innhold blokkerer fullføring
+    closed_on: 2026-10-20
+    decision_record: .docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md
   R3:
     status: open
     owner: Backendansvar

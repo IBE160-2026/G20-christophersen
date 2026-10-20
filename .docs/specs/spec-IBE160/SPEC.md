@@ -5,6 +5,7 @@ companions:
   - grensekontrakter.md
   - sporbarhet.md
   - verifikasjon-og-avklaringer.md
+  - ../../planning-artifacts/r2-pdf-lesbarhet-semester-v1.md
   - ../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md
   - ../../planning-artifacts/briefs/brief-IBE160-2026-09-15/addendum.md
   - ../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md
@@ -19,7 +20,7 @@ sources:
 
 # Property Acquisition Agent — spesifikasjon for v1
 
-Denne SPEC-en og alle filene i `companions:` utgjør den samlede kontrakten som neste BMAD-fase skal lese. SPEC er destillert fra beslutningsloggen med siterte kilder; de adopterte dokumentene beholder eierskapet til krav, UX og arkitektur. Final ARCHITECTURE-SPINE er en obligatorisk kompanjong med uendrede AD-1–AD-10.
+Denne SPEC-en og alle filene i `companions:` utgjør den samlede kontrakten som neste BMAD-fase skal lese. SPEC er destillert fra beslutningsloggen med siterte kilder; de adopterte dokumentene beholder eierskapet til krav, UX og arkitektur. Final ARCHITECTURE-SPINE er en obligatorisk kompanjong med stabile AD-1–AD-10; R2-kompanjongen konkretiserer den utsatte lesbarhetsregelen 2026-10-20.
 
 ## Why
 
@@ -58,6 +59,7 @@ En privat eiendomsinvestor i Norge trenger å førstevurdere ett allerede funnet
 - NOK og samme år gjelder. P inkluderer eventuell fellesgjeld uten kjøpsomkostninger; D er eierbetalt drift, J renter/avdrag uten dobbelttelling. P > 0; L/D/J/Ymin ≥ 0; null bekreftes eksplisitt. Bare kjent månedsbeløp annualiseres med 12. Detaljer og uendrede formler står i PRD og [grensekontrakter](grensekontrakter.md).
 - Prioriteten er kritisk utilstrekkelig grunnlag eller uavklart alvorlig TG3 → **Innhent mer informasjon**; ellers nettoyield < Ymin eller kontantstrøm < 0 → **Forkast**; ellers → **Gå videre**. Likhet godtas; alle utløsere på avgjørende nivå vises. Kode eier beregninger, begrunnelse og neste handling.
 - AD-1–AD-10 styrer modulgrenser, React-eid økt, delt kontrakt, sidemerket PDF-uttrekk, ett HTTP-analyseforløp, duplikat-/gamlesvarvern, demo/live og lokal levering. Stakk og versjonspins adopteres fra spine; desimalstrenger og eksakte terskler brukes før separat visningsavrunding.
+- R2 skiller readable fra deterministisk bevist blank, som beholder fysisk PDF-side og ikke alene blokkerer analyse. Unreadable/unknown/incomplete blokkerer fullføring med synlige berørte sider; tekstløse fotosider kan avvises konservativt. Ingen OCR/vision, manuell semantisk klassifisering av tekstløse sider eller vilkårlig tegn-/prosentterskel. Se [godkjent R2-regel](../../planning-artifacts/r2-pdf-lesbarhet-semester-v1.md).
 - Final DESIGN/EXPERIENCE styrer de fire navngitte trinnene, stepper/status, lokale feil, original-PDF, korrigeringsutkast, TG3, historisk resultat, detaljåpning, tilgjengelighet og grafitt/petrol. Ingen skjult produktutvidelse eller konkurrerende UX-kontrakt innføres.
 - S1–S6 og eksisterende testfasit er akseptansemål, ikke oppnådde resultater. Utsatte gjennomføringsvalg beholder eier og avklaringspunkt i [verifikasjon og avklaringer](verifikasjon-og-avklaringer.md); ingen produktantakelser brukes til å lukke dem.
 

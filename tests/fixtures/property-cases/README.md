@@ -53,4 +53,4 @@ For uavhengig inspeksjon/rendering kan samme midlertidige miljø installere
 
 Dette sjekker fixtureinnhold og lager kontaktark; det implementerer ingen
 lesbarhetsmetode. [Verifikasjonen](../../../.docs/implementation-artifacts/story-2-2-verifikasjon.md)
-beskriver faktisk visuell kryssjekk og bevisgrenser. R2 er fortsatt åpen.
+beskriver faktisk visuell kryssjekk og bevisgrenser. R2 er lukket som beslutningsport 2026-10-20; faktiske tekst-/blankdeteksjonstester gjenstår i Story 2.3.

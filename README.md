@@ -37,7 +37,10 @@ sidereferanser og sideegenskaper avvises. Formatgodkjenning
 er et eget delutfall uten påstand om tekstlesbarhet eller fullført analyse.
 [Fiktive F1–F4-PDF-er og uavhengig fasit](tests/fixtures/property-cases/README.md)
 er kontrollert visuelt, inklusive TG3 på PDF-side 4 / trykt side 2.
-Modulen er ikke koblet til appens rapportflyt ennå; R2 er fortsatt åpen før 2.3.
+Modulen er ikke koblet til appens rapportflyt ennå.
+[R2 er lukket med godkjent sidestatusregel](.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md):
+bevist blank side tillates, mens ulest innhold blokkerer fullført analyse.
+Kontraktversjon 2 støtter dette skillet; ekstraktor/blankdetektor i Story 2.3 er ikke startet.
 
 ## Installasjon og kontroll
 

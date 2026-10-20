@@ -41,14 +41,26 @@ export function bindAnalysisOutcome(documentInput: unknown, adapterInput: unknow
     requestId: document.requestId, reportHash: document.reportHash, documentName: document.documentName,
     mode: document.mode, pageCount: document.pageCount,
   })
-  const badPage = document.pages.find(page => page.status !== 'readable')
+  const badPages = document.pages.filter(page => page.status !== 'readable' && page.status !== 'blank')
+  const badPage = badPages[0]
   if (badPage) {
     const codes = { unreadable: 'unreadable-text', incomplete: 'incomplete-text', unknown: 'unknown-readability' } as const
+    const reason = badPage.reason ?? (badPage.status === 'unknown'
+      ? null : 'Dokumentgrunnlaget har en side uten pålitelig fullført tekstuttrekk.')
     return createFailedAnalysis(context, {
       kind: 'document', code: codes[badPage.status as keyof typeof codes],
       target: { kind: 'page', pdfPage: badPage.pdfPage },
-      reason: badPage.reason ?? (badPage.status === 'unknown'
-        ? null : 'Dokumentgrunnlaget har en side uten pålitelig fullført tekstuttrekk.'),
+      reason: badPages.length > 1
+        ? `Berørte PDF-sider: ${badPages.map(page => page.pdfPage).join(', ')}.${badPages
+          .filter(page => page.reason !== null)
+          .map(page => ` PDF-side ${page.pdfPage}: ${page.reason}`).join('')}`
+        : reason,
+    })
+  }
+  if (!document.pages.some(page => page.status === 'readable')) {
+    return createFailedAnalysis(context, {
+      kind: 'document', code: 'unreadable-text', target: { kind: 'document' },
+      reason: 'PDF-en har bare blanke sider og er ikke en tekstbasert tilstandsrapport.',
     })
   }
   const parsed = AdapterOutcomeSchema.safeParse(adapterInput)
@@ -59,6 +71,15 @@ export function bindAnalysisOutcome(documentInput: unknown, adapterInput: unknow
   const adapter = parsed.data
   const result = adapter.status === 'completed' ? adapter : adapter.partialResult
   const extraction = result === null ? null : { ...classify(result.findings, context), limitations: result.limitations }
+  const blankSourceFinding = extraction?.findings.find(finding =>
+    document.pages[finding.source.pdfPage - 1]?.status === 'blank')
+  if (blankSourceFinding) {
+    return createFailedAnalysis(context, {
+      kind: 'analysis', code: 'invalid-response',
+      target: { kind: 'finding', findingId: blankSourceFinding.findingId },
+      reason: 'Adapteren oppga et kontrollerbart funn på en deterministisk blank PDF-side.',
+    })
+  }
   const outcome = adapter.status === 'completed'
     ? { ...context, status: 'completed', validationScope: 'structure-and-source', ...extraction }
     : { ...context, status: 'failed', error: { kind: 'analysis', code: adapter.code, target: adapter.target,

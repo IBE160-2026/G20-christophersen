@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const CONTRACT_VERSION = '1' as const
+export const CONTRACT_VERSION = '2' as const
 export const EXTRACTION_VERSION = '1' as const
 const TextSchema = z.string().trim().min(1)
 const OriginalTextSchema = z.string().refine(value => value.trim().length > 0, 'Ikke-tom originaltekst kreves.')
@@ -22,10 +22,16 @@ export const AnalysisContextSchema = z.strictObject({
 export const DocumentPageSchema = z.strictObject({
   pdfPage: PositionSchema,
   text: z.string(),
-  status: z.enum(['readable', 'unreadable', 'incomplete', 'unknown']),
+  status: z.enum(['readable', 'blank', 'unreadable', 'incomplete', 'unknown']),
   // Trygg kodegenerert årsak fra dokumentkomponenten, aldri rå parser-/PDF-tekst.
   // Null betyr at årsaken er ukjent, aldri en gjettet forklaring.
   reason: TextSchema.nullable(),
+}).superRefine((page, ctx) => {
+  // Bare strukturell konsistens; dokumentkomponenten må bevise blank/lesbarhet.
+  if ((page.status === 'blank' && page.text.trim().length > 0)
+    || (page.status === 'readable' && page.text.trim().length === 0)) {
+    ctx.addIssue({ code: 'custom', path: ['text'], message: 'Tekst og sidestatus må samsvare.' })
+  }
 })
 
 export const DocumentBasisSchema = AnalysisContextSchema.extend({

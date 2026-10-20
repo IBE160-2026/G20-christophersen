@@ -11,9 +11,18 @@ finalValidation: coverage-and-structure-pass
 epicsWorkflowClosure: complete
 epicsWorkflowClosed: 2026-10-16
 implementationStarted: false
+lastReadinessUpdate: 2026-10-20
 ---
 
 # Implementation readiness — Property Acquisition Agent
+
+## Oppfølging av R2 — lukket 2026-10-20
+
+**R2 er lukket som beslutningsport; samlet vurdering er fortsatt CONCERNS.** [R2-beslutningen](r2-pdf-lesbarhet-semester-v1.md) fastsetter deterministisk PDF.js-ekstraksjon i Node, fysisk side og separate uendrede originalbytes, uten OCR/vision/AI-fallback. Readable krever brukbart tekstlag; bare strukturelt bevist fravær av innhold gir blank, som ikke alene blokkerer. Unreadable/unknown/incomplete blokkerer fullført analyse med alle berørte fysiske sider. Konservativ avvisning av legitime tekstløse fotosider er uttrykkelig godkjent av Mads. Ingen manuell semantisk klassifisering eller vilkårlig tegn-/prosentterskel innføres.
+
+Regelen er konsistent med tekstbasert rapportscope, FR-6/FR-9 og vern mot falsk fullføring: en bevist blank side inneholder ikke ulest rapportinnhold, mens en helt blank PDF fortsatt er ustøttet. Story 2.3 AC3/AC4, AD-3/Deferred og SPEC er presisert uten nye krav-/AC-ID-er eller endret produktkrav. Kontraktversjon 2 skiller blank fra blokkerende statuser. Forhåndsdefinerte PDF-fixtureutfall står i beslutningen; faktiske ekstraksjons-/blankdeteksjonstester gjenstår i 2.3. Ingen slik implementering eller lesbarhetsgodkjenning påstås fra portlukkingen.
+
+Den første oppfølgingen samme dag beholdt R2 åpen med regelforslag; den er erstattet av Mads' nye godkjente regel. R1/R3/R4 er uendret, 2.1/2.2 er done og Story 2.3 er fortsatt backlog. Ingen beslutningsblokkering gjenstår før klargjøring av 2.3 etter egen bestilling. Resten av dokumentet bevarer readiness-kontrollen fra 2026-10-16, inklusive daværende implementeringsstatus; tabellens R2-rad viser nå gjeldende status.
 
 **Vurdering: CONCERNS.** Kravdekningen, storystrukturen og implementeringsrekkefølgen er tilstrekkelig planlagt. Ingen udekkede v1-krav, nye funksjoner uten kilde eller skjulte avhengigheter til senere stories er funnet. Hele planen kan likevel ikke implementeres fortløpende uten avklaringer: eksisterende gjennomføringsporter for PDF-lesbarhet, HTTP-ressurser og valgt live-oppsett må lukkes før berørt arbeid. Faktiske personer og miljø må også være tilgjengelige for måling/kjørbarhetsbevis.
 
@@ -113,7 +122,7 @@ Dette er dokumenterte porter, ikke nye produktkrav eller tillatelse til å endre
 | ID / prioritet | Hvor og hva gjenstår | Ansvarlig / senest før | Hva lukker punktet |
 |---|---|---|---|
 | R1 — høy for live | Epic 4s gjennomføringsport og 4.1/4.2/4.4: leverandør, eksakt modell/SDK, kontekst/output, pris/budsjett og live-timeouter er ikke valgt her. | Mads + live-integrasjon, før Epic 4 implementeres og før betalte tester. | Dokumentert valgt oppsett med datert pris-/kostnadsgrunnlag, kapasitet for hele støttede rapportgrunnlaget i ett kall, avtalt budsjett og testbare timeout-/retryinnstillinger. Ingen ny leverandørplattform eller hard S5-timeout. |
-| R2 — høy for dokumentgrunnlag | 2.3/AD-3/Deferred: konkret lesbarhets-/layoutkontroll og forventet utfall ved blanke sider, blandet tekst/bilde, tabeller/kolonner og tegnkoding gjenstår. | Dokumentansvar, før uttrekk godtas som gyldig grunnlag i 2.3. | Nedskrevet metode og uavhengige fixtureutfall som skiller pålitelig uttrekk fra kjent/ukjent utilstrekkelig lesing, uten OCR eller skjult støtteinnskrenkning. |
+| R2 — **lukket 2026-10-20** | [Godkjent deterministisk PDF.js-regel](r2-pdf-lesbarhet-semester-v1.md) med konservativ blankdeteksjon, blokkerende unreadable/unknown/incomplete og forventede fixtureutfall. | Dokumentansvar + Mads, før Story 2.3. | Beslutningen er avstemt mot Story 2.3, AD-3/AD-4, SPEC og kontraktversjon 2. PDF-ekstraktor/blankdetektor og faktiske fixturetester er fortsatt 2.3-arbeid, ikke bevis fra portlukkingen. |
 | R3 — middels | 2.5/AD-5/Deferred: konkrete upload-/HTTP-ressurser, timeouter og bufferopprydding gjenstår. | Backendansvar, før HTTP-integrasjonen tas i bruk i 2.5; avstemmes mot live-oppsettet før 4.1–4.3. | Dokumenterte verdier/ressurslivsløp og kontrollerte tester for normalforløp, timeout, klientavbrudd, støttet input og beholdt duplikatmarkør. Ingen stilltiende endring av 30-sidersscope. |
 | R4 — middels, ekstern | 4.5 og 5.4: faktisk person til menneskelig kontroll/manuell referanse og en annen person/rent miljø til S6 må organiseres. | Mads/evalueringsansvarlig, før de respektive målingene/kjøringene. | Avtalt faktisk gjennomføring og senere reelle måle-/kjørebevis. Agentens egen kjøring eller en utfylt plan er ikke bestått S5/S6. |
 

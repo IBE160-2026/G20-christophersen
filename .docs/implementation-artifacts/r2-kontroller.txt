@@ -1,0 +1,105 @@
+R2-kontraktkontroll 2026-10-20 — Node 24.21.0 / npm 11.19.0
+
+Før endring: vitest run tests/unit/document-analysis.test.ts (exit=1)
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 95 passed (104)
+   Start at  08:47:06
+   Duration  227ms (import 44%, tests 27%, transform 26%, worker 2%)
+
+
+$ npm test (exit=0)
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  7 passed (7)
+      Tests  326 passed (326)
+   Start at  08:50:17
+   Duration  6.59s (tests 82%, import 15%, transform 2%)
+
+
+$ npm run build (exit=0)
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 122 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:   0.35 kB
+dist/assets/index-CXn3PL4y.css    8.74 kB │ gzip:   2.19 kB
+dist/assets/index-DLfg82t6.js   345.76 kB │ gzip: 105.28 kB
+
+✓ built in 109ms
+
+$ npm run lint (exit=0)
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts vitest.config.ts
+
+
+Sprintformat: sprint_plan.py validate — valid=true, problems=[], legacy_mapped=[]
+
+Reviewrettinger — tre nye regresjoner før retting (exit=1):
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 104 passed (107)
+   Start at  08:54:54
+   Duration  221ms (import 42%, tests 29%, transform 26%, worker 2%)
+
+
+$ npm test etter siste kodeendring (exit=0)
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  7 passed (7)
+      Tests  329 passed (329)
+   Start at  08:56:11
+   Duration  6.54s (tests 83%, import 12%, transform 4%)
+
+
+$ npm run build etter siste kodeendring (exit=0)
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 122 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:   0.35 kB
+dist/assets/index-CXn3PL4y.css    8.74 kB │ gzip:   2.19 kB
+dist/assets/index-DLfg82t6.js   345.76 kB │ gzip: 105.28 kB
+
+✓ built in 110ms
+
+$ npm run lint etter siste kodeendring (exit=0)
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts vitest.config.ts
+
+
+Uavhengig etterkontroll: 107/107 kontraktstester; begge konkrete kodefunn lukket.
+Sprintformat etter lukking: valid=true, problems=[], legacy_mapped=[]
+Final audit: 140 local links, 25 scoped files; protected requirements/code/PDF bytes unchanged; other story/gate states preserved; git diff --check passed.

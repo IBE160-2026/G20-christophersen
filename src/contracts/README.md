@@ -35,11 +35,18 @@ completed med findings, uncertainCandidates og limitations.
 `checkable`/`structure-and-source` betyr bare kontroll av struktur,
 dokumentidentitet og sideområde. Det beviser ingen semantisk fullstendighet,
 faktisk støtte i originaltekst eller brukerbekreftelse. Sidestatus er en
-rapportert uttrekksstatus; skjemaene velger ingen PDF-lesbarhetsmetode.
+rapportert uttrekksstatus. Kontraktversjon 2 innfører `blank` etter
+[R2-regelen](../../.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md);
+uttrekksformatversjon 1 beholdes. Bare deterministisk bevist fravær av
+innhold gir blank. Skjemaet avviser blank med tekst/readable uten tekst;
+det utfører ingen blankdeteksjon. Binding tillater readable/blank og
+blokkerer unreadable/incomplete/unknown med alle berørte fysiske sider.
+En helt blank PDF er ingen støttet tekstbasert rapport.
 Dokumentkomponenten eier trygg kodegenerert sideårsak eller null ved ukjent
 årsak; den skal aldri sende rå parserfeil, PDF-tekst eller hemmeligheter i
 årsaksfeltet. Binding bevarer denne kjente årsaken. Adapterens rå feiltekst
 brukes ikke som trygg årsak. Funn-ID bevares likt i original, resultat og
 feilmål, også når ID-en inneholder innledende/avsluttende mellomrom.
 Faktisk PDF-/bytehashberegning, adaptere, HTTP og frontend kobles i senere
-stories; R2-porten før Story 2.3 er fortsatt åpen.
+stories. R2 er lukket som beslutningsport; Story 2.3 er fortsatt backlog.
+Ingen ekstraktor, OCR/vision eller manuell semantisk klassifisering er lagt til.

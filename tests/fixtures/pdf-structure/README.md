@@ -24,4 +24,4 @@ Valgfri regenerering fra reporoten i det midlertidige forfattermiljøet:
 
 Miljøet bruker Python 3.12.14, PyMuPDF 1.26.6, pikepdf 10.17.0 og pypdf 6.1.3.
 `sha256.json` er byteinventar, ikke semantisk fasit. Verktøyene er ikke nye
-produktavhengigheter. R2 er fortsatt åpen.
+produktavhengigheter. R2 er lukket som beslutningsport 2026-10-20; faktiske tekst-/blankdeteksjonstester gjenstår i Story 2.3.

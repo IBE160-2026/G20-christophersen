@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
-  AnalysisContextSchema, AnalysisOutcomeSchema, DocumentBasisSchema,
+  AnalysisContextSchema, AnalysisOutcomeSchema, DocumentBasisSchema, DocumentPageSchema,
+  CONTRACT_VERSION, EXTRACTION_VERSION,
 } from '../../src/contracts/document-analysis.ts'
 import type { OriginalCandidate } from '../../src/contracts/document-analysis.ts'
 import {
@@ -8,7 +9,7 @@ import {
 } from '../../src/contracts/analysis-validation.ts'
 
 const context = {
-  contractVersion: '1', extractionVersion: '1', requestId: 'request-1',
+  contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION, requestId: 'request-1',
   reportHash: 'a'.repeat(64), documentName: 'Fiktiv rapport.pdf', mode: 'demo', pageCount: 10,
 }
 function document() {
@@ -21,7 +22,7 @@ function candidate(overrides: Partial<OriginalCandidate> = {}): OriginalCandidat
     source: { documentName: context.documentName, pdfPage: 4 }, uncertainties: [], ...overrides }
 }
 function completed(findings: OriginalCandidate[] = []) {
-  return { contractVersion: '1', extractionVersion: '1', status: 'completed', findings, limitations: [] }
+  return { contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION, status: 'completed', findings, limitations: [] }
 }
 function bound(findings: OriginalCandidate[] = []) {
   return bindAnalysisOutcome(document(), completed(findings))
@@ -34,9 +35,9 @@ describe('Story 2.1 AC1 – felles versjonert dokument-/terminalkontrakt', () =>
       expect(AnalysisOutcomeSchema.safeParse(bindAnalysisOutcome({ ...document(), mode }, completed())).success).toBe(true)
     }
   })
-  it('bevarer tekst på alle filposisjoner uten lengdeheuristikk', () => {
+  it('bevarer kort tekst på alle filposisjoner uten lengdeheuristikk', () => {
     const input = document()
-    input.pages[0]!.text = ''
+    input.pages[0]!.text = 'Å'
     expect(DocumentBasisSchema.parse(input).pages).toEqual(input.pages)
   })
   it.each(['contractVersion', 'extractionVersion', 'requestId', 'reportHash', 'documentName', 'mode', 'pageCount', 'pages'])(
@@ -47,7 +48,7 @@ describe('Story 2.1 AC1 – felles versjonert dokument-/terminalkontrakt', () =>
     },
   )
   it.each([
-    { contractVersion: '2' }, { extractionVersion: 'gammel' }, { requestId: '' },
+    { contractVersion: 'unsupported' }, { extractionVersion: 'gammel' }, { requestId: '' },
     { reportHash: 'rapport.pdf' }, { mode: 'mock' }, { pageCount: 0 }, { pageCount: 31 },
     { pageCount: null }, { pageCount: 2.5 },
   ])('avviser ugyldig dokumentmetadata %j', change => {
@@ -74,7 +75,7 @@ describe('Story 2.1 AC1 – felles versjonert dokument-/terminalkontrakt', () =>
     },
   )
   it.each([undefined, null, {}, { status: 'pending' }, { status: 'success' },
-    { ...completed(), contractVersion: '2' }, { ...completed(), extractionVersion: '2' },
+    { ...completed(), contractVersion: 'unsupported' }, { ...completed(), extractionVersion: 'unsupported' },
     { ...completed(), findings: null }, { ...completed(), findings: undefined },
     { ...completed(), limitations: undefined }])('manglende/ugyldig adapterutfall %j blir feil', input => {
     const result = bindAnalysisOutcome(document(), input)
@@ -90,7 +91,7 @@ describe('Story 2.1 AC2 – fullført tomliste og feil/delresultater', () => {
     delete missing.findings
     expect(bindAnalysisOutcome(document(), missing).status).toBe('failed')
     const failed = bindAnalysisOutcome(document(), {
-      contractVersion: '1', extractionVersion: '1', status: 'failed', code: 'interrupted', target: null, partialResult: null,
+      contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION, status: 'failed', code: 'interrupted', target: null, partialResult: null,
     })
     expect(failed).toMatchObject({ status: 'failed', partialResult: null, error: { kind: 'analysis', code: 'interrupted' } })
     expect(failed).not.toHaveProperty('findings')
@@ -113,7 +114,7 @@ describe('Story 2.1 AC2 – fullført tomliste og feil/delresultater', () => {
   })
   it('avbrutt analyse beholder merkede ufullstendige delresultater', () => {
     const result = bindAnalysisOutcome(document(), {
-      contractVersion: '1', extractionVersion: '1', status: 'failed', code: 'interrupted', target: { kind: 'finding', findingId: 'unknown' },
+      contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION, status: 'failed', code: 'interrupted', target: { kind: 'finding', findingId: 'unknown' },
       partialResult: { findings: [candidate(), candidate({ findingId: 'unknown', grade: null })], limitations: ['Avbrutt'] },
     })
     expect(result.status).toBe('failed')
@@ -126,7 +127,7 @@ describe('Story 2.1 AC2 – fullført tomliste og feil/delresultater', () => {
   })
   it('bevarer feilmålets originale funn-ID uten å slå sammen ulike ID-er', () => {
     const result = bindAnalysisOutcome(document(), {
-      contractVersion: '1', extractionVersion: '1', status: 'failed', code: 'interrupted',
+      contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION, status: 'failed', code: 'interrupted',
       target: { kind: 'finding', findingId: ' roof ' },
       partialResult: { findings: [candidate(), candidate({ findingId: ' roof ' })], limitations: [] },
     })
@@ -265,14 +266,14 @@ describe('Story 2.1 AC4 – kodekontrollert metadata og trygg retur', () => {
   })
   it.each([
     { requestId: 'annen' }, { reportHash: 'b'.repeat(64) }, { documentName: 'Annen.pdf' },
-    { mode: 'live' }, { pageCount: 9 }, { contractVersion: '2' }, { extractionVersion: '2' },
+    { mode: 'live' }, { pageCount: 9 }, { contractVersion: 'unsupported' }, { extractionVersion: 'unsupported' },
   ])('samme felles returvalidering avviser feil forventet metadata %j', change => {
     expect(validateAnalysisOutcome(bound(), context).success).toBe(true)
     expect(validateAnalysisOutcome({ ...bound(), ...change }, context).success).toBe(false)
   })
   it('sender aldri rå adapterfeil eller hemmeligheter som trygg feilårsak', () => {
     const secret = 'sk-privat-testhemmelighet /private/rapport.pdf intern stack'
-    const result = bindAnalysisOutcome(document(), { contractVersion: '1', extractionVersion: '1',
+    const result = bindAnalysisOutcome(document(), { contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION,
       status: 'failed', code: 'adapter-failure', target: null, reason: secret, partialResult: null })
     expect(result.status).toBe('failed')
     expect(JSON.stringify(result)).not.toContain(secret)
@@ -283,12 +284,88 @@ describe('Story 2.1 AC4 – kodekontrollert metadata og trygg retur', () => {
     expect(AnalysisOutcomeSchema.safeParse({ ...bound(), semanticallyComplete: true }).success).toBe(false)
   })
   it('avviser et kjent feilmål utenfor rapportens sideantall', () => {
-    const result = bindAnalysisOutcome(document(), { contractVersion: '1', extractionVersion: '1',
+    const result = bindAnalysisOutcome(document(), { contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION,
       status: 'failed', code: 'interrupted', target: { kind: 'page', pdfPage: 99 }, partialResult: null })
     expect(result).toMatchObject({ status: 'failed', error: { code: 'invalid-response', target: null } })
   })
   it('validerer kodekonteksten og nekter å bygge identitet fra adapteren', () => {
     expect(AnalysisContextSchema.safeParse({ ...context, reportHash: null }).success).toBe(false)
     expect(() => bindAnalysisOutcome({ ...document(), requestId: '' }, completed())).toThrow()
+  })
+})
+
+
+describe('R2 – blank er gyldig, ulest innhold sperrer fullføring', () => {
+  it.each(['demo', 'live'])('blank side beholder fysisk posisjon og tillater fullføring i %s', mode => {
+    const input = document()
+    input.pages[2] = { pdfPage: 3, text: '', status: 'blank', reason: 'Strukturelt bevist blank side.' }
+    const parsed = DocumentBasisSchema.parse({ ...input, mode })
+    expect(parsed.pages).toEqual(input.pages)
+    expect(parsed.pages.map(page => page.pdfPage)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    expect(bindAnalysisOutcome(parsed, completed([candidate()]))).toMatchObject({
+      status: 'completed', findings: [{ source: { pdfPage: 4 } }],
+    })
+  })
+  it('blank med tekst og readable uten tekst er motstridende statuser', () => {
+    const page = document().pages[0]!
+    expect(DocumentPageSchema.safeParse({ ...page, status: 'blank' }).success).toBe(false)
+    for (const text of ['', ' \n\t']) {
+      expect(DocumentPageSchema.safeParse({ ...page, text }).success).toBe(false)
+      expect(DocumentPageSchema.safeParse({ ...page, text, status: 'blank' }).success).toBe(true)
+    }
+  })
+  it.each(['unreadable', 'unknown', 'incomplete'])('blank fritager ikke en annen side med %s', status => {
+    const input = document()
+    input.pages[0] = { pdfPage: 1, text: '', status: 'blank', reason: null }
+    input.pages[6] = { pdfPage: 7, text: '', status, reason: null }
+    expect(bindAnalysisOutcome(input, completed())).toMatchObject({
+      status: 'failed', partialResult: null, error: { kind: 'document', target: { kind: 'page', pdfPage: 7 } },
+    })
+  })
+  it('feilen oppgir alle blokkerende fysiske sider og utelater blank', () => {
+    const input = document()
+    input.pages[0] = { pdfPage: 1, text: '', status: 'blank', reason: null }
+    for (const [index, status] of [[2, 'unknown'], [6, 'unreadable'], [9, 'incomplete']] as const) {
+      input.pages[index] = { pdfPage: index + 1, text: '', status, reason: null }
+    }
+    const result = bindAnalysisOutcome(input, completed([candidate()]))
+    expect(result).toMatchObject({ status: 'failed', partialResult: null, error: {
+      kind: 'document', code: 'unknown-readability', target: { kind: 'page', pdfPage: 3 },
+      reason: 'Berørte PDF-sider: 3, 7, 10.',
+    } })
+    expect(result).not.toHaveProperty('findings')
+  })
+  it('bevarer kjente sideårsaker også etter en første side med ukjent årsak', () => {
+    const input = document()
+    input.pages[1] = { pdfPage: 2, text: '', status: 'unknown', reason: null }
+    input.pages[2] = { pdfPage: 3, text: 'Resttekst', status: 'incomplete', reason: 'Kjent teksttap.' }
+    input.pages[4] = { pdfPage: 5, text: '', status: 'unreadable', reason: 'Tekstuttrekk feilet.' }
+    expect(bindAnalysisOutcome(input, completed())).toMatchObject({ status: 'failed', error: {
+      reason: 'Berørte PDF-sider: 2, 3, 5. PDF-side 3: Kjent teksttap. PDF-side 5: Tekstuttrekk feilet.',
+    } })
+  })
+  it.each(['completed', 'failed'])('et kontrollerbart funn på bevist blank side avvises også ved %s adapterutfall', status => {
+    const input = document()
+    input.pages[3] = { pdfPage: 4, text: '', status: 'blank', reason: null }
+    const adapter = status === 'completed' ? completed([candidate()]) : {
+      contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION,
+      status, code: 'interrupted', target: null,
+      partialResult: { findings: [candidate()], limitations: [] },
+    }
+    expect(bindAnalysisOutcome(input, adapter)).toMatchObject({ status: 'failed', partialResult: null, error: {
+      kind: 'analysis', code: 'invalid-response', target: { kind: 'finding', findingId: 'roof' },
+    } })
+  })
+  it('en helt blank PDF blir ikke en støttet tekstbasert rapport eller vellykket tomliste', () => {
+    const input = document()
+    input.pages = input.pages.map(page => ({ ...page, text: '', status: 'blank' }))
+    expect(DocumentBasisSchema.safeParse(input).success).toBe(true)
+    expect(bindAnalysisOutcome(input, completed())).toMatchObject({ status: 'failed', error: {
+      kind: 'document', code: 'unreadable-text', target: { kind: 'document' },
+    } })
+  })
+  it('en eldre kontraktversjon kan ikke omgå blank-/fullføringsbetydningen', () => {
+    expect(DocumentBasisSchema.safeParse({ ...document(), contractVersion: '1' }).success).toBe(false)
+    expect(validateAnalysisOutcome({ ...bound(), contractVersion: '1' }, context).success).toBe(false)
   })
 })

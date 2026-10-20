@@ -7,7 +7,7 @@ paradigm: functional core / imperative shell
 scope: Låst v1 som lokal desktop-webapp med én sekvensiell rapportanalysepipeline
 status: final
 created: 2026-10-14
-updated: 2026-10-15
+updated: 2026-10-20
 binds: [UJ-1, FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7, FR-8, FR-9, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-17, FR-18, NFR-1, NFR-2, NFR-3, NFR-4, NFR-5, S1, S2, S3, S4, S5, S6]
 sources:
   - ../../briefs/brief-IBE160-2026-09-15/brief.md
@@ -65,7 +65,7 @@ flowchart LR
 
 - **Binds:** FR-6–FR-9; S2/S4; UX PDF-kontroll.
 - **Prevents:** Tap av sider, OCR som skjult utvidelse og tekstuttrekk brukt som erstatning for originalen.
-- **Rule:** Backend dokumentkomponent tar én PDF, validerer format og høyst 30 sider og returnerer eksplisitt `pages` med én post per PDF-posisjon `1..pageCount`, tekst og uttrekksstatus. PDF uten brukbart tekstlag eller med kjent upålitelig/ufullstendig lesing gir dokumentfeil; feil blir ikke vellykket tomtekst. Ingen OCR eller skjult bortfiltrering av sider/funn. Alle sider sendes samlet til analyseadapteren i ett live-kall. Originalbytes beholdes separat i frontend for innebygd visning, automatisk PDF-side ved funnvalg, hel side og nabosider. Filposisjon fra 1 er autoritativ; trykt sidetall er bare merket tillegg. Tabell-/kolonne-/lesbarhetsrisiko kontrolleres mot original og rapportfasit; antall sider eller gyldig JSON beviser ikke riktig TG-uttrekk.
+- **Rule:** Backend dokumentkomponent tar én PDF, validerer format og høyst 30 sider og returnerer eksplisitt `pages` med én post per PDF-posisjon `1..pageCount`, tekst og uttrekksstatus. Rapportinnhold uten brukbart tekstlag eller med kjent upålitelig/ufullstendig lesing gir dokumentfeil; feil blir ikke vellykket tomtekst. [R2-regelen](../../r2-pdf-lesbarhet-semester-v1.md) skiller readable fra deterministisk bevist blank (gyldig, blokkerer ikke alene); unreadable/unknown/incomplete blokkerer completed med alle berørte fysiske sider. Bare bevist fravær av innhold gir blank; tvil gir unknown. Tekstløse foto-/bildesider kan avvises konservativt. En helt blank PDF er ingen støttet tekstbasert rapport. Ingen OCR, vision, manuell semantisk klassifisering av tekstløse sider eller vilkårlig tegn-/prosentterskel. Ingen skjult bortfiltrering av sider/funn. Alle sider sendes samlet til analyseadapteren i ett live-kall. Originalbytes beholdes separat i frontend for innebygd visning, automatisk PDF-side ved funnvalg, hel side og nabosider. Filposisjon fra 1 er autoritativ; trykt sidetall er bare merket tillegg. Tabell-/kolonne-/lesbarhetsrisiko kontrolleres mot original og rapportfasit; antall sider eller gyldig JSON beviser ikke riktig TG-uttrekk.
 
 ### AD-4 — Én delt, validert kontrakt og eksplisitt fullføring
 
@@ -222,7 +222,7 @@ Planlagt verifikasjon ved implementering, uten krav om en ny dekningsprosent:
 | --- | --- |
 | KI-leverandør, modell, SDK, kontekst/outputgrenser, pris og budsjett | Mads og live-integrasjon før adapterimplementering/betalte tester. Må håndtere hele støttede sidemerkede grunnlaget i ett kall uten skjult avkorting/retry. Kontrakten og demoen avhenger ikke av valget; det bygges ikke et flerleverandørrammeverk. |
 | Eksakte timeout-/uploadressursgrenser og opprydding av PDF-/tekstbuffere | Backendansvar før HTTP-/live-integrasjon. S5 er medianmål; ingen hard femminuttersgrense antas. Grenser må dokumenteres og testes mot støttet input uten å endre produktgrensen på 30 sider i stillhet. |
-| Konkret PDF-lesbarhetskontroll og layoutbevaring | Dokumentkomponenten før den brukes som gyldig grunnlag. Blank side, tabeller, tegnkoding og blandet tekst/bilde undersøkes med fasit; ukjent/upålitelig lesing må ikke bli falsk suksess eller automatisk OCR. |
+| PDF-lesbarhetskontroll og layoutbevaring — R2-beslutning lukket 2026-10-20 | [Godkjent deterministisk regel og fixtureutfall](../../r2-pdf-lesbarhet-semester-v1.md) gjelder før gyldig grunnlag. Selve ekstraksjonen, blankdetektoren og PDF-testbevis gjenstår i Story 2.3. Tabeller/kolonner, tegnkoding og blandet tekst/bilde kontrolleres mot fasit; ukjent/upålitelig lesing blir ikke falsk suksess eller OCR/vision. |
 | Detaljerte felt/schemas, prompt og endelige script-/miljøvariabelnavn | Implementering innen AD-1–AD-10. Én felles kontraktkode eier feltene; ingen uavhengige moduler kan definere konkurrerende former. Ingen produktfunksjon opprettes gjennom teknisk detaljering. |
 | Faktiske fixtures, installasjon/typekontroll, tester, S2/S5/S6-bevis og README | Implementering/evaluering. Rapporter/fasit fastsettes før KI-evaluering; kode/låsfil og rent miljø verifiserer startstakken. Dokumentkontroll er ikke produktverifikasjon. |
 | Hosting, varig lagring, innlogging, samarbeid, OCR og utvidet analyse | Utenfor godkjent v1. Krever senere produktbeslutning; gir ingen arkitekturforpliktelse nå. |

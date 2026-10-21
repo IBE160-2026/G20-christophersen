@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { sourceTarget } from '../pdf/source-page.ts'
 import { SourceReview } from '../pdf/SourceReview.tsx'
+import { FindingControl } from './FindingControl.tsx'
 import type { Dispatch } from 'react'
 import type { ReportClient } from '../analysis/report-client.ts'
-import { reportDeficiencies, analysisStatus } from '../state/report.ts'
+import { reportDeficiencies, analysisStatus, currentFinding } from '../state/report.ts'
 import type { SessionAction, SessionState } from '../state/session.ts'
 import { isFinancialConfirmed } from '../state/session.ts'
 
@@ -15,11 +16,11 @@ export function ReportAnalysis({ session, dispatch, client }: {
   const outcome = report.outcome
   const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
   const deficiencies = reportDeficiencies(report)
-  const selectedFinding = extraction?.findings.find(finding => finding.findingId === report.view.findingId)
+  const selectedFinding = report.view.findingId ? currentFinding(report, report.view.findingId) : null
   const selectedCandidate = extraction?.uncertainCandidates.find(candidate => candidate.findingId === report.view.findingId)
   const summary = selectedFinding ? `${selectedFinding.grade} · ${selectedFinding.description}` : selectedCandidate ? `Usikkert funn · ${selectedCandidate.original.description}` : null
   const target = (source: unknown) => sourceTarget(source, { hash: report.selected?.hash ?? '', documentName: report.selected?.file.name.trim() ?? '' })
-  const sourceIssue = selectedCandidate ? target(selectedCandidate.original.source).issue : null
+  const sourceIssue = !selectedFinding && selectedCandidate ? target(selectedCandidate.original.source).issue : null
   const onView = (view: typeof report.view) => dispatch({ type: 'report-view', generation: report.generation, view })
   useEffect(() => {
     const element = list.current
@@ -63,18 +64,24 @@ export function ReportAnalysis({ session, dispatch, client }: {
         && <p>Analyse fullført — ingen TG2/TG3 funnet. Listen må fortsatt kontrolleres og bekreftes.</p>}
       <SourceReview report={report} summary={summary} sourceIssue={sourceIssue} onView={onView}>
       <ol className="finding-list">
-        {extraction.findings.map(finding => <li key={finding.findingId}>
+        {[...extraction.findings, ...extraction.uncertainCandidates].map(candidate => {
+          const finding = currentFinding(report, candidate.findingId)
+          const control = report.findingControls.find(item => item.findingId === candidate.findingId)
+          return <li key={candidate.findingId}>
+          {finding ? <>
           <h3><button className="finding-select" type="button" aria-pressed={report.view.findingId === finding.findingId} onClick={() => onView({ ...report.view, findingId: finding.findingId, pdfPage: finding.source.pdfPage })}>{finding.grade} · {finding.description}</button></h3>
           <p>{finding.source.documentName} · PDF-side {finding.source.pdfPage} · {finding.findingId}</p>
-          <p>Opprinnelig KI-uttrekk · Ikke kontrollert</p>
-        </li>)}
-        {extraction.uncertainCandidates.map(candidate => <li key={candidate.findingId}>
+          <p>{control?.correction ? 'Brukerkorrigert' : 'Opprinnelig KI-uttrekk'} · {control?.confirmedRevision === (control?.revision ?? 0) ? 'Kontrollert og bekreftet mot originalrapporten' : 'Ikke kontrollert'}</p>
+          </> : <>
           <h3><button className="finding-select" type="button" aria-pressed={report.view.findingId === candidate.findingId} onClick={() => onView({ ...report.view, findingId: candidate.findingId, pdfPage: target(candidate.original.source).page })}>Usikkert funn · {candidate.original.description}</button></h3>
           <p>Opprinnelig grad: {candidate.original.grade ?? 'Ikke oppgitt'} · {candidate.findingId}</p>
           <p>Oppgitt dokument: {candidate.original.source?.documentName ?? 'Ikke oppgitt'} · Oppgitt PDF-side: {candidate.original.source?.pdfPage ?? 'Ikke oppgitt'} (usikker kilde)</p>
-          <ul>{candidate.issues.map(issue => <li key={issue.code}>{issue.code}: {issue.reason}</li>)}</ul>
+          {candidate.kind === 'uncertain' && <ul>{candidate.issues.map(issue => <li key={issue.code}>{issue.code}: {issue.reason}</li>)}</ul>}
           <ul>{candidate.original.uncertainties.map((text, index) => <li key={index}>{text}</li>)}</ul>
-        </li>)}
+          </>}
+          {control?.draft && <p>Redigert utkast — ikke brukt</p>}
+          {report.status === 'completed' && report.view.findingId === candidate.findingId && <FindingControl report={report} candidate={candidate} dispatch={dispatch} />}
+        </li>})}
       </ol>
       </SourceReview>
       {extraction.limitations.length > 0 && <div><h3>Begrensninger</h3><ul>{extraction.limitations.map((text, index) => <li key={index}>{text}</li>)}</ul></div>}

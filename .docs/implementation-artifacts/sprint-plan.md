@@ -156,3 +156,5 @@ Parseren varsler om fem generelle overskrifter i epics.md (linje 38, 263, 286, 2
 **Sprint Planning er ferdig og kontrollert 2026-10-16.** Alle 37 stories forekommer én gang, alle 117 direkte avhengigheter er oppfylt av planrekkefølgen, statusfilen er gyldig og synkron med epicene, og de 14 låste kildene samt epics/readiness er SHA-256-uendret. Midlertidig regenerering bevarer sprint-/portmetadata. Dette er dokument-/plankontroll; produktets S1–S6 er fortsatt ikke verifisert.
 
 Planleggingens sluttkontroll og prosesspor dokumenteres i [arbeidsøkten](../process/arbeidsokter/2026-10-16-sprint-planning.md). Ingen installasjon av produktstakk, appkode, fixtures, produkttester, leverandørkall eller implementeringsstart inngår i sprintplanleggingen.
+
+Oppfølging 2026-10-21: Story 2.8 er implementert og satt til **review**, med bevart original, separat utkast og eksplisitt Bruk/Avbryt. Se [verifikasjon](story-2-8-verifikasjon.md). Full uavhengig BMAD-review gjenstår før done eller start av 2.9. Epic 2 pågår; 2.9–2.11 er fortsatt backlog.

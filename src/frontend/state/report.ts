@@ -3,6 +3,8 @@ import type { AnalysisHttpCorrelation } from '../../contracts/analysis-http.ts'
 import type { AnalysisOutcome } from '../../contracts/document-analysis.ts'
 import { evaluateKnownDeficiencies } from '../../domain/screening.ts'
 import type { KnownReportDeficiency } from '../../contracts/screening.ts'
+import type { FindingControl, FindingDraft } from '../../contracts/finding-control.ts'
+import { validateFindingCorrection } from '../../domain/finding-control.ts'
 
 export interface SelectedReport {
   file: File
@@ -18,8 +20,13 @@ export interface ReportState {
   error: string | null
   view: { findingId: string | null; pdfPage: number | null; zoom: number }
   listVisibleGeneration: number | null
+  findingControls: FindingControl[]
+  listRevision: number
+  listConfirmationRevision: number | null
 }
 export type ReportAction =
+  | { type: 'report-finding-edit' | 'report-finding-apply' | 'report-finding-cancel' | 'report-finding-confirm'; generation: number; findingId: string }
+  | { type: 'report-finding-draft'; generation: number; findingId: string; field: keyof FindingDraft; value: string }
   | { type: 'report-view'; generation: number; view: ReportState['view'] }
   | { type: 'report-selecting'; generation: number }
   | { type: 'report-selected'; generation: number; selected: SelectedReport }
@@ -29,12 +36,49 @@ export type ReportAction =
   | { type: 'report-abandon' }
   | { type: 'report-list-visible'; generation: number }
 export function createReportState(): ReportState {
-  return { view: { findingId: null, pdfPage: null, zoom: 1 }, generation: 0, status: 'missing', selected: null, active: null, outcome: null, error: null, listVisibleGeneration: null }
+  return { view: { findingId: null, pdfPage: null, zoom: 1 }, generation: 0, status: 'missing', selected: null, active: null, outcome: null, error: null, listVisibleGeneration: null,
+    findingControls: [], listRevision: 0, listConfirmationRevision: null }
 }
 function fail(state: ReportState, code: string): ReportState {
   return { ...state, status: 'failed', active: null, outcome: null, error: code, listVisibleGeneration: null }
 }
 export function reportReducer(state: ReportState, action: ReportAction): ReportState {
+  if ('findingId' in action) {
+    const outcome = state.outcome
+    if (state.status !== 'completed' || outcome?.status !== 'completed' || action.generation !== state.generation
+      || state.selected?.hash !== outcome.reportHash || state.selected.file.name.trim() !== outcome.documentName) return state
+    const candidate = [...outcome.findings, ...outcome.uncertainCandidates].find(item => item.findingId === action.findingId)
+    if (!candidate) return state
+    const control = state.findingControls.find(item => item.findingId === action.findingId)
+      ?? { findingId: action.findingId, revision: 0, correction: null, draft: null, confirmedRevision: null, errors: {} }
+    const current = currentFinding(state, action.findingId)
+    let next: FindingControl = control
+    if (action.type === 'report-finding-edit') {
+      if (control.draft) return state
+      const original = candidate.original
+      next = { ...control, errors: {}, draft: { grade: current?.grade ?? (original.grade === 'TG2' || original.grade === 'TG3' ? original.grade : ''),
+        description: current?.description ?? original.description,
+        pdfPage: current ? String(current.source.pdfPage) : typeof original.source?.pdfPage === 'number' && Number.isInteger(original.source.pdfPage) ? String(original.source.pdfPage) : '' } }
+    } else if (action.type === 'report-finding-draft') {
+      if (!control.draft) return state
+      next = { ...control, draft: { ...control.draft, [action.field]: action.value }, errors: {} }
+    } else if (action.type === 'report-finding-cancel') {
+      if (!control.draft) return state
+      next = { ...control, draft: null, errors: {} }
+    } else if (action.type === 'report-finding-confirm') {
+      if (!current || control.confirmedRevision === control.revision) return state
+      next = { ...control, confirmedRevision: control.revision }
+    } else if (action.type === 'report-finding-apply') {
+      if (!control.draft) return state
+      const validation = validateFindingCorrection(control.draft, outcome)
+      next = validation.correction
+        ? { ...control, correction: validation.correction, draft: null, errors: {}, revision: control.revision + 1, confirmedRevision: null }
+        : { ...control, errors: validation.errors }
+    }
+    return { ...state, findingControls: [...state.findingControls.filter(item => item.findingId !== action.findingId), next],
+      ...(next.revision !== control.revision ? { listRevision: state.listRevision + 1, listConfirmationRevision: null,
+        view: state.view.findingId === action.findingId ? { ...state.view, pdfPage: next.correction!.source.pdfPage } : state.view } : {}) }
+  }
   if (action.type === 'report-view') return action.generation === state.generation && state.selected
     ? { ...state, view: action.view } : state
   if (action.type === 'report-selecting') return action.generation > state.generation
@@ -64,6 +108,15 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
   return { ...state, status: outcome.status, active: null, outcome, error: outcome.status === 'failed' ? outcome.error.code : null }
 }
 
+/** Gjeldende brukt grunnlag, uten utkast og uten å omskrive analyseutfallet. */
+export function currentFinding(state: ReportState, findingId: string) {
+  const outcome = state.outcome
+  const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
+  const correction = state.findingControls.find(item => item.findingId === findingId)?.correction
+  if (correction) return { findingId, ...correction }
+  return extraction?.findings.find(item => item.findingId === findingId) ?? null
+}
+
 /** Bare kjente mangler; completed er aldri brukerens listebekreftelse. */
 export function reportDeficiencies(state: ReportState) {
   const reportDeficiencies: KnownReportDeficiency[] = []
@@ -72,7 +125,7 @@ export function reportDeficiencies(state: ReportState) {
   else {
     reportDeficiencies.push({ code: 'incomplete-report', reason: 'Funnlisten er ennå ikke kontrollert og bekreftet av deg.' })
     if (state.outcome?.status === 'completed') {
-      for (const candidate of state.outcome.uncertainCandidates) for (const issue of candidate.issues) {
+      for (const candidate of state.outcome.uncertainCandidates.filter(item => !currentFinding(state, item.findingId))) for (const issue of candidate.issues) {
         reportDeficiencies.push({ code: 'incomplete-report', reason: `${candidate.findingId}: ${issue.reason}` })
       }
       for (const limitation of state.outcome.limitations) reportDeficiencies.push({ code: 'incomplete-report', reason: limitation })

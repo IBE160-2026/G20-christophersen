@@ -344,3 +344,14 @@ h1 {
 .pdf-dialog::backdrop { background: rgb(31 41 46 / 60%); }
 .pdf-dialog h2 { margin-top: 0; }
 .pdf-dialog .pdf-scroll { max-height: 65dvh; }
+
+/* Story 2.8: original, brukt korrigering og separat utkast. */
+.finding-control { margin-block: var(--space-4); }
+.finding-control h4 { margin-block: var(--space-3) var(--space-2); }
+.finding-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.origin-detail { border-top: 1px solid var(--border-decorative); margin-top: var(--space-3); }
+.finding-edit { min-width: 0; padding: var(--space-3); margin-block: var(--space-4); border: 2px solid var(--accent-primary); border-radius: var(--radius-md); }
+.finding-edit legend { font-weight: 600; }
+.finding-edit-field { display: grid; gap: var(--space-2); margin-block: var(--space-3); }
+.finding-edit input, .finding-edit select, .finding-edit textarea { width: 100%; min-width: 0; min-height: var(--control-height); padding: var(--space-2); font: inherit; color: var(--text-primary); background: var(--surface-main); border: 1px solid var(--border-control); border-radius: var(--radius-md); }
+.finding-edit [aria-invalid="true"] { border-color: var(--status-danger); }

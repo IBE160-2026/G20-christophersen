@@ -50,3 +50,7 @@ feilmål, også når ID-en inneholder innledende/avsluttende mellomrom.
 Faktisk PDF-/bytehashberegning, adaptere, HTTP og frontend kobles i senere
 stories. R2 er lukket som beslutningsport; Story 2.3 er fortsatt backlog.
 Ingen ekstraktor, OCR/vision eller manuell semantisk klassifisering er lagt til.
+
+Story 2.8: `finding-control.ts` eier separat brukt korrigering med gjenbrukt
+kilde-/gradform fra analysekontrakten, rått redigeringsutkast og revisjonsbundet
+enkeltfunnkontroll. Adapteroriginalen omskrives aldri av brukerkontroll.

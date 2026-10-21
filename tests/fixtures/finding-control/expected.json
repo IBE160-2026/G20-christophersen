@@ -1,0 +1,9 @@
+{
+  "documentName": "rt11.pdf",
+  "pageCount": 5,
+  "findings": [
+    { "grade": "TG2", "description": "Slitt takoverflate", "pdfPage": 5 },
+    { "grade": "TG2", "description": "Slitt gulv", "pdfPage": 2 }
+  ],
+  "incorrectControlResponse": { "findingId": "rt11", "grade": "TG3", "description": "Feil uttrekk av tak", "pdfPage": 4 }
+}

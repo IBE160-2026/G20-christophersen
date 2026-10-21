@@ -19,3 +19,7 @@ Ingen total endres automatisk og ingen økonomisk anbefaling gis.
 Senere kontroll må bruke hele finansgrunnlaget, ikke tolke numerisk
 tilstrekkelighet fra `validation.ts` som tilstrekkelig kilde-/kostnadsgrunnlag.
 Full mangelvurdering, finans, terskler og screening følger sine stories.
+
+Story 2.8: `finding-control.ts` validerer brukerens korrigering mot kjent
+rapportidentitet og fysisk sideområde med det delte korrigeringsskjemaet.
+Det validerer struktur/kilde, ikke semantisk støtte eller teknisk tilstandsgrad.

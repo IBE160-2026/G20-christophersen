@@ -4,6 +4,12 @@ Dato: 2026-10-21. Baseline `9971a7d2cb2d623c89e73676d2094fc8a5987f23`.
 Dette er implementeringsagentens kontroll, ikke den påkrevde uavhengige
 BMAD-reviewen. Story leveres ved **in-review/review** til en ny reviewer.
 
+**Oppfølging etter uavhengig review:** Story 3.2 er nå **done**. Ny agent
+fullførte fire sekvensielle BMAD-lag, la til 16 negative reviewerprøver og
+kjørte én siste fullregresjon: 732/732 Vitest, 89/89 bygget-app, 3/3 dev-E2E
+og typecheck/lint/build grønt. [Reviewrapport og endelige rålogger](story-3-2-review.md)
+eier sluttbeviset; tallene nedenfor er implementeringscheckpointets historikk.
+
 ## Krav–kode–test
 
 | AC / låst spor | Implementert atferd og uavhengig fasit |

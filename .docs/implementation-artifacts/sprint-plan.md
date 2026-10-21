@@ -206,3 +206,13 @@ Epic 3 **in-progress**, 3.1 **done** og 3.3–3.9 backlog. Neste tillatte steg
 er kun separat uavhengig BMAD-review av 3.2 og endelig stopp før 3.3.
 Ingen ny beslutning eller endring av porter.
 3.3 skal ikke startes.
+
+Gjeldende sluttstatus 2026-10-21 etter Story 3.2-review: **3.2 done** etter
+[uavhengig full BMAD-review](story-3-2-review.md), fire sekvensielle lag,
+16 ekstra reviewerprøver og én avsluttende full regresjon på endelig kode.
+732/732 Vitest, 89/89 bygget-app, 3/3 dev-E2E og typecheck/lint/build består.
+Epic 2 er **done**, Epic 3 **in-progress**, 3.1/3.2 **done** og 3.3–3.9
+**backlog**. Ingen ny blocker eller produkt-/arkitekturbeslutning; R1/R4
+og senere porter er uendret. Brukerens større implementeringsrunde er
+stoppet her som bestilt. Neste handling i denne runden er bare samlet
+sluttrapport og dokumenterende sluttrevisjon; ingen 3.3-implementering.

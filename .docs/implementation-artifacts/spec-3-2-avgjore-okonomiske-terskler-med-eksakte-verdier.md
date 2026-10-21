@@ -2,7 +2,7 @@
 title: 'Story 3.2 — Avgjøre økonomiske terskler med eksakte verdier'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '3-2-avgjøre-økonomiske-terskler-med-eksakte-verdier'
 baseline_commit: '9971a7d2cb2d623c89e73676d2094fc8a5987f23'
@@ -31,4 +31,22 @@ Gitt samme finansgrunnlag, når funksjonene kjøres gjentatt, skal utfallet vær
 - Design: hver funksjon tar hele FinancialBasis, returnerer beslutning og eget metrikkgrunnlag. Yield inkluderer registrert Ymin, kilde og eksakt prosentverdi, også ved mangler. Vurderbare beslutninger viser eksakt venstre/høyre side og operator; ikke-vurderbare har null sammenlikning og alle relevante valideringsårsaker. Egen big.js-konstruktør hindrer global presisjonskonfigurasjon. Senere screening må fortsatt bruke felles mangelvurdering uavhengig av terskelutfall.
 - Undersøkelsen omfatter ferdig 3.1-spec/review, faktisk finans-/valideringskode og kontrakter, Story 3.2 AC, Epic 3-kontekst, PRD-addendum BT/AT, SPEC/grensekontrakt, sprintporter og arkitekturens kildeavstemming mot sensorveiledning og faglærertilbakemelding. Vanlig deterministisk kode, kjent fasit, sporbarhet og avgrenset v1 videreføres uten nye kurskrav.
 - Implementert og egenverifisert: 67 nye terskelprøver, 217/217 målrettet og 716/716 full Vitest. Typecheck/lint og E2E-kommandoens typecheck/build, 89/89 bygget-app og 3/3 dev-E2E består sekvensielt. En TypeScript-feil i parametrisk testtilordning ble rettet før sluttregresjonen. Ingen produksjonsfeil eller scopeendring. Se [AC-/testbevis](story-3-2-verifikasjon.md), [Vitest-rålogg](story-3-2-kontroller.txt) og [build/E2E-rålogg](story-3-2-e2e-kontroller.txt).
-- Sluttcheckpoint: in-review/review, Epic 2 done og Epic 3 in-progress; 3.3–3.9 backlog. Integrert review/done utsettes til ny uavhengig reviewer i samsvar med brukerens bestilling. Ingen blocker eller ulåst beslutning, ingen push. Neste steg er bare full uavhengig BMAD-review av 3.2, deretter sluttrapport og stopp før 3.3.
+- Implementeringscheckpointet var in-review/review, med separat uavhengig review før done i samsvar med brukerens bestilling. Den nye reviewagenten har nå fullført fire sekvensielle BMAD-lag, egne negative/grenseprøver og siste fullregresjon. 16 ekstra tester består; produksjonskode og låste regler er uendret. Sluttstatus er **done**, Epic 2 done og Epic 3 in-progress; 3.3–3.9 backlog. 732/732 Vitest, 89/89 bygget-app, 3/3 dev-E2E og typecheck/lint/build er grønt. Se [full review og sluttbevis](story-3-2-review.md). Ingen blocker, ulåst beslutning eller push. Brukerens arbeidsrunde stopper her før 3.3.
+
+### Review Findings
+
+Fire uavhengige BMAD-lag er kjørt sekvensielt over implementeringsdiffen.
+Blind Hunters åtte kandidater er vurdert enkeltvis; øvrige lag fant ingen
+konkrete feil. Brukeren har allerede autorisert nødvendige Story 3.2-rettinger.
+
+- [x] [Review][Patch][low] #5 — to terskelprøver for `cost-exceeds-total` i D og J kontrollerer berørte årsaker og fortsatt tilgjengelig yield ved bare J-overløp.
+- [x] [Review][Patch][low] #6 — tre terskelprøver for sirkulær, manglende og tvetydig kostnadsinkludering gir konkrete årsaker uten sammenlikning.
+- [x] [Review][Patch][low] #7 — presist yieldbrudd og negativ cash er kontrollert under endret global big.js-konfigurasjon; innstillingene gjenopprettes i finally.
+- [x] [Review][Patch][low] #8 — ti nye prøver etterprøver manglende/ustøttet periode, ugyldig år og manglende støtte for faktisk leie med relevant terskelisolasjon.
+
+#### Rejected
+
+- #1, low: Det strukturelle skjemaet tillater andre metrikktyper, men eneste produksjonsprodusent velger eksplisitt netYield/cashFlowBeforeTax og sjekker ratio/amount før avgjørelse. Ingen inngang eller nåværende konsument stoler på eksterne terskelobjekter. Semantiske guards ville utvide reglene uten demonstrert feilende programsti.
+- #2, low: Skjemaet alene korrelerer ikke tilgjengelighet på tvers av objekter; produsentene returnerer unavailable før sammenlikning ved utilstrekkelig grunnlag. Det finnes ingen annen produsent eller inngående terskeldata. Ekstra kontraktforgrening avvises som unødvendig kompleksitet i denne leveransen.
+- #3, low: Skjemaet validerer sammenlikningsstruktur, ikke aritmetikken på nytt. Den eneste produsenten setter status direkte fra eksakt gte, og konkret fasit tester utfallet. En ny regelkopi i contracts er ikke nødvendig for nåværende kallere.
+- #4, low: Begge separate funksjoner gjentar full validering via 3.1; dette er reelt ekstraarbeid, men ingen målt ytelsesfeil eller feilaktig utfall er vist. Endret finans-API eller cache gir mer kompleksitet enn den ubetydelige lokale kostnaden forsvarer.

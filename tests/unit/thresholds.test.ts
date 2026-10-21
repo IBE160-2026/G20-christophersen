@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import Big from 'big.js'
 import type { FinancialBasis } from '../../src/contracts/financial-basis.ts'
 import type { FinancialField } from '../../src/contracts/financial-input.ts'
 import { CashFlowThresholdSchema, NetYieldThresholdSchema } from '../../src/contracts/thresholds.ts'
@@ -304,5 +305,84 @@ describe('kontrollgrunnlag, renhet og kontraktgrense', () => {
     const input = basis(); Object.assign(input.values.Ymin, { rawValue: null })
     expect(() => evaluateNetYieldThreshold(input)).toThrow()
     expect(() => evaluateCashFlowThreshold(input)).toThrow()
+  })
+})
+
+describe('uavhengig review — årsaker, isolasjon og bibliotekskonfigurasjon', () => {
+  it.each([
+    ['D', '400001', '0', ['D']],
+    ['J', '800001', '800001', ['J']],
+  ] as const)('%s-kostnad over totalen gir bare relevante årsaker', (field, amount, debt, issueFields) => {
+    const input = basis()
+    input.costItems = [{ id: 'over', label: 'Oppgitt kostnadsdel', rawAmount: amount, rawDebt: debt, includedIn: null }]
+    const result = evaluate(input)
+    expect(result.cash.decision.status).toBe('unavailable')
+    expect(result.cash.decision.comparison).toBeNull()
+    expect(result.cash.decision.issues.map(({ field, code }) => [field, code]))
+      .toEqual(issueFields.map((field) => [field, 'cost-exceeds-total']))
+    expect(result.cash.decision.issues[0]).toMatchObject({ target: 'cost', action: expect.stringContaining(field) })
+    if (field === 'D') {
+      expect(result.yield.decision.status).toBe('unavailable')
+      expect(result.yield.decision.comparison).toBeNull()
+      expect(result.yield.decision.issues.map(({ field, code }) => [field, code]))
+        .toEqual([['D', 'cost-exceeds-total']])
+    } else {
+      expect(result.yield.decision).toEqual({
+        status: 'passed', comparison: { left: '150000000', operator: '>=', right: '112000000' }, issues: [],
+      })
+    }
+  })
+  it.each(['cycle', 'missing-parent', 'duplicate-id'] as const)('ugyldig inkludering %s gjør begge terskler ikke-vurderbare', (problem) => {
+    const input = basis()
+    input.costItems = [
+      { id: 'a', label: 'Felleskostnad', rawAmount: '100', rawDebt: '0', includedIn: null },
+      { id: 'b', label: 'Avgift', rawAmount: '100', rawDebt: '0', includedIn: 'a' },
+    ]
+    if (problem === 'cycle') input.costItems[0]!.includedIn = 'b'
+    if (problem === 'missing-parent') input.costItems[1]!.includedIn = 'mangler'
+    if (problem === 'duplicate-id') input.costItems[1]!.id = 'a'
+    const result = evaluate(input)
+    for (const name of ['yield', 'cash'] as const) {
+      expect(result[name].decision.status).toBe('unavailable')
+      expect(result[name].decision.comparison).toBeNull()
+      expect(result[name].decision.issues).toContainEqual(expect.objectContaining({
+        field: 'D', target: 'cost', code: 'invalid-cost-inclusion', action: expect.any(String),
+      }))
+    }
+    expect(result.cash.decision.issues).toContainEqual(expect.objectContaining({
+      field: 'J', target: 'cost', code: 'invalid-cost-inclusion', action: expect.any(String),
+    }))
+  })
+  for (const field of ['L', 'D', 'J'] as const) {
+    it.each([
+      ['period', '', 'missing-period'], ['period', 'week', 'unsupported-period'],
+      ['year', '2026.5', 'invalid-year'],
+    ] as const)(`${field} %s=%s forplanter %s uten å skjule annen gyldig terskel`, (key, value, code) => {
+      const input = basis(); input.values[field][key] = value
+      expectInsufficient(input, field, code)
+    })
+  }
+  it('faktisk leie uten kildegrunnlag gjør begge terskler ikke-vurderbare', () => {
+    const input = basis(); input.sources.L.rentNature = 'actual'
+    // Beskrivelsen finnes, men er uttrykkelig en egen forutsetning, ikke en kilde.
+    expectInsufficient(input, 'L', 'unsupported-actual-rent')
+  })
+  it('global big.js-konfigurasjon påvirker verken presist yieldbrudd eller cashfortegn', () => {
+    const saved = { DP: Big.DP, RM: Big.RM, NE: Big.NE, PE: Big.PE, strict: Big.strict }
+    const input = basis()
+    input.values.L.rawValue = '1519999.999999999999999999999999999'
+    input.values.J.rawValue = '1119999.9999999999999999999999999991'
+    try {
+      Big.DP = 0; Big.RM = 0; Big.NE = -1; Big.PE = 1; Big.strict = false
+      const result = expectStatuses(input, 'breached', 'breached')
+      expect(result.yield.decision.comparison).toEqual({
+        left: '111999999.9999999999999999999999999', operator: '>=', right: '112000000',
+      })
+      expect(result.cash.decision.comparison).toEqual({
+        left: '-0.0000000000000000000000000001', operator: '>=', right: '0',
+      })
+    } finally {
+      Object.assign(Big, saved)
+    }
   })
 })

@@ -112,6 +112,28 @@ describe('Story 3.3 AC1 — uavhengig F1/F2/BT-fasit og norsk normalformat', () 
     expect(result.noi.displayValue).toBe('9\u00a0007\u00a0199\u00a0254\u00a0740\u00a0994')
     expect(result.noi.detail?.displayValue).toBe('9\u00a0007\u00a0199\u00a0254\u00a0740\u00a0993,5')
   })
+  it.each([
+    ['118744.9', '0', '11,874'], ['118745', '0', '11,875'], ['118745.1', '0', '11,875'],
+    ['0', '118744.9', '−11,874'], ['0', '118745', '−11,875'], ['0', '118745.1', '−11,875'],
+  ])('review: yield fra L=%s og D=%s avrundes selvstendig til %s', (rent, expenses, expected) => {
+    const input = basis(); input.values.P.rawValue = '1000000'
+    input.values.L.rawValue = rent; input.values.D.rawValue = expenses; input.values.J.rawValue = '0'
+    const result = presented(input)
+    expect(result.netYield.displayValue).toBe(expected)
+    if (expenses === '0') expect(result.grossYield.displayValue).toBe(expected)
+  })
+  it('review: bekreftet L/D/J/Ymin=0 gir fire synlige nuller og to beståtte terskler', () => {
+    const input = basis()
+    for (const field of ['L', 'D', 'J', 'Ymin'] as const) input.values[field].rawValue = '0'
+    const result = presented(input)
+    expect(keys.map((key) => result[key].displayValue)).toEqual(['0,000', '0', '0,000', '0'])
+    for (const key of keys) {
+      expect(result[key].statusLabel).toBe('Beregnet')
+      expect(result[key].rounding).toBeNull()
+    }
+    expect(result.netYield.threshold?.decision.status).toBe('passed')
+    expect(result.cashFlowBeforeTax.threshold?.decision.status).toBe('passed')
+  })
 })
 
 describe('Story 3.3 AC2 — eksakte brudd skjules ikke av avrunding', () => {
@@ -182,6 +204,24 @@ describe('Story 3.3 AC2 — eksakte brudd skjules ikke av avrunding', () => {
     expect(result.threshold?.decision.status).toBe('breached')
     expect(result.rounding?.code).toBe('hidden-net-yield-breach')
   })
+  it.each(['7', ''])('review AC1: svært liten negativ nettoyield beholder betydningen med Ymin=%s', (minimum) => {
+    const input = basis(); input.values.L.rawValue = '399999.999999999999'; input.values.Ymin.rawValue = minimum
+    const result = presented(input, minimum === '').netYield
+    expect(result.displayValue).toBe('0,000')
+    expect(result.detail).toEqual({ displayValue: '−0,00000000000000000625000000000000', decimalPlaces: 32, approximate: false })
+    expect(result.rounding).toEqual({
+      code: 'negative-rounded-to-zero',
+      explanation: 'Nettoyield er negativ før avrunding. Visningen 0,000 % skjuler fortegnet; detaljen viser verdien med nødvendig presisjon. Reglene bruker det uavrundede grunnlaget.',
+    })
+    expect(result.threshold?.decision.status).toBe(minimum === '' ? 'unavailable' : 'breached')
+  })
+  it('review AC1: negativ yield som allerede har lesbar detalj får forklaring ved hovedvisning null', () => {
+    const input = basis(); input.values.L.rawValue = '399984'
+    expect(presented(input).netYield).toMatchObject({
+      displayValue: '0,000', detail: { displayValue: '−0,00010000', decimalPlaces: 8 },
+      rounding: { code: 'negative-rounded-to-zero' },
+    })
+  })
   it('uendelig yielddesimal er merket tilnærmet og beholder eksakt teller/nevner', () => {
     const input = basis(); input.values.P.rawValue = '3'; input.values.L.rawValue = '1'; input.values.D.rawValue = '0'; input.values.J.rawValue = '0'
     const result = presented(input).netYield
@@ -240,6 +280,17 @@ describe('Story 3.3 AC3 — Ikke beregnbart og kjent Delgrunnlag', () => {
     expect(next.netYield.displayValue).toBeNull()
     expect(next.netYield.metric.issues[0]?.code).toBe('unconfirmed-value')
   })
+  it('review: avvikende J-år bevarer egne gyldige år og alle mismatchårsaker uten cashverdi', () => {
+    const input = basis(); input.values.J.year = '2027'
+    const result = presented(input, true)
+    for (const key of ['grossYield', 'noi', 'netYield'] as const) {
+      expect(result[key]).toMatchObject({ year: '2026', statusLabel: 'Beregnet', partialLabel: 'Delgrunnlag' })
+    }
+    expect(result.cashFlowBeforeTax).toMatchObject({ year: null, displayValue: null, detail: null, statusLabel: 'Ikke beregnbart' })
+    expect(result.cashFlowBeforeTax.metric.issues.map(({ field, code }) => [field, code]))
+      .toEqual([['L', 'different-years'], ['D', 'different-years'], ['J', 'different-years']])
+    expect(result.cashFlowBeforeTax.metric.basis.inputs.find(({ field }) => field === 'J')?.normalization?.year).toBe('2027')
+  })
 })
 
 describe('Story 3.3 AC4 — ekte terskelintegrasjon, determinisme og enveisgrense', () => {
@@ -251,6 +302,8 @@ describe('Story 3.3 AC4 — ekte terskelintegrasjon, determinisme og enveisgrens
     ['BT-9 null', '1900000', '1500000', 'passed', 'passed'],
     ['skjult cash', '1900000', '1500000.01', 'passed', 'breached'],
     ['begge brudd', '1519999', '1119999.000000000000000000000001', 'breached', 'breached'],
+    ['utvidet 32-desimaldetalj', '1519999.999999999999999999999999', '800000', 'breached', 'passed'],
+    ['svært liten negativ yield', '399999.999999999999', '800000', 'breached', 'breached'],
   ])('%s: terskelavgjørelser og eksakte finansverdier er identiske før/etter gjentatt formatering', (_name, rent, debt, yieldStatus, cashStatus) => {
     const input = basis(); input.values.L.rawValue = rent!; input.values.J.rawValue = debt!
     const original = structuredClone(input); freezeDeep(input)

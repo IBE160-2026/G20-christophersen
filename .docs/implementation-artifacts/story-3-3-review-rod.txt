@@ -1,0 +1,75 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/financial-presentation.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/financial-presentation.test.ts (39 tests | 3 failed) 57ms
+   ❯ Story 3.3 AC2 — eksakte brudd skjules ikke av avrunding (13)
+     × review AC1: svært liten negativ nettoyield beholder betydningen med Ymin=7 5ms
+     × review AC1: svært liten negativ nettoyield beholder betydningen med Ymin= 2ms
+     × review AC1: negativ yield som allerede har lesbar detalj får forklaring ved hovedvisning null 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/financial-presentation.test.ts > Story 3.3 AC2 — eksakte brudd skjules ikke av avrunding > review AC1: svært liten negativ nettoyield beholder betydningen med Ymin=7
+ FAIL  tests/unit/financial-presentation.test.ts > Story 3.3 AC2 — eksakte brudd skjules ikke av avrunding > review AC1: svært liten negativ nettoyield beholder betydningen med Ymin=
+AssertionError: expected { displayValue: '0,00000000', …(2) } to deeply equal { …(3) }
+
+- Expected
++ Received
+
+  {
+-   "approximate": false,
+-   "decimalPlaces": 32,
+-   "displayValue": "−0,00000000000000000625000000000000",
++   "approximate": true,
++   "decimalPlaces": 8,
++   "displayValue": "0,00000000",
+  }
+
+ ❯ tests/unit/financial-presentation.test.ts:189:27
+    187|     const result = presented(input, minimum === '').netYield
+    188|     expect(result.displayValue).toBe('0,000')
+    189|     expect(result.detail).toEqual({ displayValue: '−0,0000000000000000…
+       |                           ^
+    190|     expect(result.rounding).toEqual({
+    191|       code: 'negative-rounded-to-zero',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/unit/financial-presentation.test.ts > Story 3.3 AC2 — eksakte brudd skjules ikke av avrunding > review AC1: negativ yield som allerede har lesbar detalj får forklaring ved hovedvisning null
+AssertionError: expected { name: 'Nettoyield', unit: '%', …(8) } to match object { displayValue: '0,000', …(2) }
+(15 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -2,9 +2,7 @@
+    "detail": {
+      "decimalPlaces": 8,
+      "displayValue": "−0,00010000",
+    },
+    "displayValue": "0,000",
+-   "rounding": {
+-     "code": "negative-rounded-to-zero",
+-   },
++   "rounding": null,
+  }
+
+ ❯ tests/unit/financial-presentation.test.ts:198:39
+    196|   it('review AC1: negativ yield som allerede har lesbar detalj får for…
+    197|     const input = basis(); input.values.L.rawValue = '399984'
+    198|     expect(presented(input).netYield).toMatchObject({
+       |                                       ^
+    199|       displayValue: '0,000', detail: { displayValue: '−0,00010000', de…
+    200|       rounding: { code: 'negative-rounded-to-zero' },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 36 passed (39)
+   Start at  15:07:26
+   Duration  248ms (tests 39%, import 34%, transform 25%, worker 2%)

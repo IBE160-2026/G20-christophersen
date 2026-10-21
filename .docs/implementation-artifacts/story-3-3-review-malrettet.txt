@@ -1,0 +1,12 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/financial-presentation.test.ts tests/unit/finance.test.ts tests/unit/thresholds.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  3 passed (3)
+      Tests  199 passed (199)
+   Start at  15:08:00
+   Duration  266ms (tests 46%, import 33%, transform 19%, worker 2%)

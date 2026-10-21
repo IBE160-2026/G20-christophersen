@@ -74,11 +74,14 @@ function formatMetric(
   result.displayValue = norwegian(normal)
   const hiddenBreach = threshold?.decision.status === 'breached' && minimum !== null
     && new Decimal(normal).gte(amountAt(minimum, 3))
+  const negative = new Decimal(numerator).lt('0')
+  const negativeRoundedToZero = negative && new Decimal(normal).eq('0')
   let decimals = 8
   let detail = percentAt(numerator, denominator, decimals)
   // Her velges bare lesbar detaljpresisjon. Det mottatte eksakte terskel-
   // utfallet avgjøres aldri på nytt og endres ikke av sammenlikningen.
-  while (threshold?.decision.status === 'breached' && minimum !== null && new Decimal(detail).gte(minimum)) {
+  while ((threshold?.decision.status === 'breached' && minimum !== null && new Decimal(detail).gte(minimum))
+    || (negative && new Decimal(detail).eq('0'))) {
     decimals *= 2
     detail = percentAt(numerator, denominator, decimals)
   }
@@ -90,6 +93,11 @@ function formatMetric(
     result.rounding = {
       code: 'hidden-net-yield-breach',
       explanation: 'Nettoyield er under avkastningskravet før avrunding. Hovedvisningen skjuler forskjellen; regelen bruker uavrundet grunnlag uten toleransemargin. Se detaljverdien og det eksakte kravet.',
+    }
+  } else if (negativeRoundedToZero) {
+    result.rounding = {
+      code: 'negative-rounded-to-zero',
+      explanation: `${name} er negativ før avrunding. Visningen 0,000 % skjuler fortegnet; detaljen viser verdien med nødvendig presisjon. Reglene bruker det uavrundede grunnlaget.`,
     }
   }
   return result

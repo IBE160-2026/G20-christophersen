@@ -15,6 +15,8 @@ Ikke beregnbart har null visningsverdi/detalj og beholder konkrete årsaker.
 Delgrunnlag velger ingen anbefaling. Når avrundet yield skjuler et mottatt
 brudd, følger lesbar detalj og forklaring om uavrundet regelgrunnlag. Et
 negativt beløp som vises som null får eksakt negativ detalj og forklaring.
+Negativ yield som vises som null får også lesbar negativ detalj og forklaring,
+uavhengig av om avkastningskravet er positivt, null eller ikke vurderbart.
 Mottatt terskelutfall kopieres uendret; formaterte tall er aldri regelinput.
 
 Alle kontrollobjekter klones slik at endring av presentasjonsdata heller ikke

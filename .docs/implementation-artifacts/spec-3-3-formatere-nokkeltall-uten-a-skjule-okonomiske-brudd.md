@@ -2,7 +2,7 @@
 title: 'Story 3.3 — Formatere nøkkeltall uten å skjule økonomiske brudd'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '3-3-formatere-nøkkeltall-uten-å-skjule-økonomiske-brudd'
 baseline_commit: 'c3c2214db47fe6b76459c8d6a2413b976131cc49'
@@ -32,3 +32,26 @@ Test faktisk norsk format, F1/F2, negative BT-11, BT-8/9, BT-15, BT-3/5/6 og sv�
 - Kurs-/feedback-kontroll: faglærertilbakemeldingen og eksisterende sidehenviste kursuttrekk er lest. Orkestratoren har dessuten kontrollert alle sju sensor-PDF-sider direkte med macOS PDFKit i denne økten. Sporbar plan–kode, avgrensede commits, meningsfulle fasittester og separat dokumentert review videreføres uten nye kurskrav.
 - Implementert og egenverifisert: 36 nye presentasjonstester; 186/186 målrettede og 768/768 full Vitest. Typecheck/lint er grønt på endelig kode. Build, 89/89 bygget-app og 3/3 dev-E2E består før siste additive metadataendring uten UI-konsument. Den presiseringen bevarer også opprinnelig Ymin/kilde; full Vitest/typecheck/lint ble kjørt igjen etterpå. Første kjørings tre testoppsett-/forventningsfeil er rettet mot eksisterende autoritet, uten endring av finansregler. Se [AC-/testbevis](story-3-3-verifikasjon.md), [Vitest-rålogg](story-3-3-kontroller.txt) og [E2E-rålogg](story-3-3-e2e-kontroller.txt).
 - Implementeringscheckpoint: **in-review/review** med lokal implementeringscommit. Integrert review/done er uttrykkelig utsatt til en ny uavhengig BMAD-reviewagent etter brukerens sekvensielle bestilling. 3.4–3.9 er fortsatt backlog. Ingen ny beslutning, blocker, endret port eller push.
+
+## Tasks/Subtasks — uavhengig review
+
+### Review Findings
+
+Fire context-free BMAD-lag ble kjørt ett om gangen, uten filendringer mens et lag var aktivt. Brukerens bestilling autoriserer retting/done; ingen ny mellomgodkjenning er nødvendig. Individuell triage av alle 12 kandidater finnes i [reviewbeviset](story-3-3-review.md).
+
+- [x] [Review][Patch][medium] B1/E1/A1: Bevar svært liten negativ nettoyield også mot positivt eller manglende Ymin; utvid negativ detalj og forklar avrundet null. `src/presentation/finance.ts:75`. Tre røde reproduksjonsprøver er grønne etter retting.
+- [x] [Review][Patch][medium] B6: Kjør AC4-integrasjonens før/etter- og mutasjonskontroll gjennom automatisk utvidet detaljpresisjon. To nye integrasjonsrader.
+- [x] [Review][Patch][medium] B7/V1: Test yieldens selvstendige roundHalfUp-bane med uavhengige positive/negative halvveisfasiter. Seks grenseprøver.
+- [x] [Review][Patch][low] B8: Test fire eksplisitt bekreftede nullresultater uten falske brudd-/avrundingsforklaringer. Egen hel nullfixture.
+- [x] [Review][Patch][low] B9: Test at forskjellig J-år lar tilgjengelige metrikker beholde eget år og bevarer kontantstrømmens mismatchårsaker. Egen delgrunnlagsprøve.
+
+#### Rejected
+
+- B2 — low: big.js har en faktisk grense ved 1 000 000 desimalplasser, og dobling kan overskride den for et avvik som krever over 524 288 plasser. Dette krever input med over en halv million relevante desimaler, utenfor vanlig bruk; en ny grense/fallback-policy og ekstra grener er ikke en rimelig retting i denne storyen. Ingen skjult toleranse eller ny inputgrense innføres.
+- B3 — low: Skjemaet kan godta manuelt konstruert motstrid mellom status og visningsfelt. Den eneste produsenten bygger feltene fra samme metrikksstatus og returnerer før tall ved utilgjengelighet; det finnes ingen innlesings-/persistensgrense eller konsument som konstruerer slike objekt. Mer kryssfeltvalidering ville her kontrollere tilstander produsenten ikke lager.
+- B4 — low: Det generiske metrikkskjemaet tillater manuelt ombyttede navn/enheter/terskler. Formatterens fire faste kall binder hvert navn og terskel til riktig domeneobjekt, med konkrete AC-tester; ingen ekstern presentasjonsinput finnes. Fire nye spesialskjemaer gir ingen demonstrert brukerretting nå.
+- B5 — low: Uavhengige klonede metrikkrepresentasjoner kan muteres til å avvike etter retur. Ved produksjon er de like; ingen nåværende konsument endrer dem, og kildegrunnlag/terskel er isolert. Readonly-/alias-/likhetsregler ville kreve ekstra kontraktkompleksitet for manuelt muterte DTO-er og er ikke AC4s inputisolasjonskrav.
+
+### Endelig reviewcheckpoint
+
+Ny uavhengig reviewer har godkjent AC1–AC4 etter lokal retting og egen verifikasjon: **199/199 målrettede**, **781/781 full Vitest**, typecheck/lint og diffkontroll bestått. [Reviewbevis med individuell triage og rålogger](story-3-3-review.md) og [arbeidsøkt](../process/arbeidsokter/2026-10-21-story-3-3-review.md). Ingen åpne high/medium-funn, decision_needed eller defer. Status er **done/done**. Epic 3 er fortsatt in-progress og 3.4–3.9 backlog før overlevering til orkestratoren. Ingen ny produkt-/arkitekturbeslutning eller push.

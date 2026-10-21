@@ -37,10 +37,19 @@ export function assessFindingList(basis: FindingListBasis): FindingListAssessmen
     if (target?.kind === 'finding') reportDeficiencies.push({ code: 'incomplete-report', reason: `Berørt funn: ${target.findingId}.` })
   }
   const pendingFindingIds: string[] = []
+  let missingTg3Basis = false
   if (extraction) {
     for (const candidate of [...extraction.findings, ...extraction.uncertainCandidates]) {
       const control = completed ? basis.controls.find(item => item.findingId === candidate.findingId) : undefined
       if (control?.rejection) continue
+      // Den separate TG3-projeksjonen kan ikke skjule et kjent aktivt forhold.
+      // Ved delresultat gjelder originalfunnet; brukerkontroll krever completed.
+      const current = control?.correction ?? (candidate.kind === 'checkable' ? candidate : null)
+      if (current?.grade === 'TG3' && !basis.tg3Findings.some(item => item.findingId === candidate.findingId && sameTg3Basis(item.current, current))) {
+        missingTg3Basis = true
+        reportDeficiencies.push({ code: 'unresolved-tg3',
+          reason: `${candidate.findingId}: ${current.description} (${current.source.documentName}, PDF-side ${current.source.pdfPage}). Separat TG3-grunnlag mangler eller gjelder et annet rapportforhold. Registrer gjeldende status og avklaringsgrunnlag for dette forholdet.` })
+      }
       if ((!control?.correction && candidate.kind === 'uncertain') || control?.confirmedRevision !== (control?.revision ?? 0)) pendingFindingIds.push(candidate.findingId)
       if (candidate.kind === 'uncertain' && !control?.correction) {
         for (const issue of candidate.issues) reportDeficiencies.push({ code: 'incomplete-report', reason: `${candidate.findingId}: ${issue.reason}` })
@@ -52,7 +61,7 @@ export function assessFindingList(basis: FindingListBasis): FindingListAssessmen
   const canConfirm = Boolean(completed && pendingFindingIds.length === 0)
   const confirmed = canConfirm && basis.listConfirmationRevision === basis.listRevision
   if (completed && !confirmed) reportDeficiencies.push({ code: 'incomplete-report', reason: 'Funnlisten er ennå ikke kontrollert og bekreftet av deg.' })
-  const tg3Handled = basis.tg3Findings.every(({ current, resolution }) => validateTg3Resolution(current, resolution).applicable
+  const tg3Handled = !missingTg3Basis && basis.tg3Findings.every(({ current, resolution }) => validateTg3Resolution(current, resolution).applicable
     || (resolution?.status === 'unresolved' && sameTg3Basis(resolution.binding, current)))
   return { canConfirm, confirmed, pendingFindingIds, tg3Handled, controlCompleted: confirmed && tg3Handled, reportDeficiencies }
 }

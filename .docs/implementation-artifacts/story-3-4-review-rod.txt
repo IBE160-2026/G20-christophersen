@@ -1,0 +1,66 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/complete-screening.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/complete-screening.test.ts (72 tests | 3 failed) 60ms
+   ❯ uavhengig review — rapport og separat TG3-grunnlag må samsvare (6)
+     × aktivt TG3 med missing projeksjon kan aldri gi tilstrekkelig teknisk grunnlag 6ms
+     × aktivt TG3 med different-current projeksjon kan aldri gi tilstrekkelig teknisk grunnlag 1ms
+     × kjent TG3 i failed delresultat bevares som egen utløser også uten separat projeksjon 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/complete-screening.test.ts > uavhengig review — rapport og separat TG3-grunnlag må samsvare > aktivt TG3 med missing projeksjon kan aldri gi tilstrekkelig teknisk grunnlag
+ FAIL  tests/unit/complete-screening.test.ts > uavhengig review — rapport og separat TG3-grunnlag må samsvare > aktivt TG3 med different-current projeksjon kan aldri gi tilstrekkelig teknisk grunnlag
+AssertionError: expected { scope: 'screening', …(10) } to match object { priority: 1, …(1) }
+(17 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "priority": 1,
+-   "recommendation": "Innhent mer informasjon",
++   "priority": 3,
++   "recommendation": "Gå videre",
+  }
+
+ ❯ tests/unit/complete-screening.test.ts:440:20
+    438|       tg3Findings: basis.reportBasis.tg3Findings })
+    439|     const result = evaluateScreening(basis)
+    440|     expect(result).toMatchObject({ priority: 1, recommendation: 'Innhe…
+       |                    ^
+    441|     expect(result.triggers).toContainEqual(expect.objectContaining({ c…
+    442|       reason: expect.stringContaining('tak: Alvorlig lekkasje i tak (f…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/unit/complete-screening.test.ts > uavhengig review — rapport og separat TG3-grunnlag må samsvare > kjent TG3 i failed delresultat bevares som egen utløser også uten separat projeksjon
+AssertionError: expected [ 'incomplete-report' ] to deeply equal [ 'incomplete-report', …(1) ]
+
+- Expected
++ Received
+
+  [
+    "incomplete-report",
+-   "unresolved-tg3",
+  ]
+
+ ❯ tests/unit/complete-screening.test.ts:460:52
+    458|     const result = evaluateScreening(basis)
+    459|     expect(result.priority).toBe(1)
+    460|     expect(result.triggers.map(item => item.code)).toEqual(['incomplet…
+       |                                                    ^
+    461|   })
+    462|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 69 passed (72)
+   Start at  15:31:28
+   Duration  261ms (tests 38%, import 34%, transform 27%, worker 2%)

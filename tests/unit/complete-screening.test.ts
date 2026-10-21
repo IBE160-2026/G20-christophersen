@@ -8,6 +8,8 @@ import { evaluateKnownDeficiencies, evaluateScreening } from '../../src/domain/s
 import { assessFindingList } from '../../src/domain/finding-control.ts'
 import { calculateFinancialMetrics } from '../../src/domain/finance.ts'
 import { evaluateCashFlowThreshold, evaluateNetYieldThreshold } from '../../src/domain/thresholds.ts'
+import { createReportState, currentTg3Findings, reportDeficiencies, reportReducer } from '../../src/frontend/state/report.ts'
+import type { ReportState } from '../../src/frontend/state/report.ts'
 
 // Uavhengige inndata/forventninger fra låst PRD-addendum AT/BT/FR-5 og briefets varianter.
 const hash = 'a'.repeat(64)
@@ -418,5 +420,79 @@ describe('Story 3.4 AC5 — determinisme, alle utløsere og isolert input', () =
     expect(calculateFinancialMetrics(basis.financialBasis)).toEqual(metrics)
     expect(evaluateNetYieldThreshold(basis.financialBasis)).toEqual(yieldThreshold)
     expect(evaluateCashFlowThreshold(basis.financialBasis)).toEqual(cashThreshold)
+  })
+})
+
+
+describe('uavhengig review — rapport og separat TG3-grunnlag må samsvare', () => {
+  it.each(['missing', 'different-current'] as const)('aktivt TG3 med %s projeksjon kan aldri gi tilstrekkelig teknisk grunnlag', variant => {
+    const basis = addTg3(input(), tg3('tak', true))
+    if (variant === 'missing') basis.reportBasis.tg3Findings = []
+    else {
+      const finding = basis.reportBasis.tg3Findings[0]!
+      finding.current.description = 'Et annet forhold'
+      finding.resolution!.binding = structuredClone(finding.current)
+    }
+    const local = evaluateKnownDeficiencies({ financialBasis: basis.financialBasis,
+      reportDeficiencies: assessFindingList(basis.reportBasis).reportDeficiencies,
+      tg3Findings: basis.reportBasis.tg3Findings })
+    const result = evaluateScreening(basis)
+    expect(result).toMatchObject({ priority: 1, recommendation: 'Innhent mer informasjon' })
+    expect(result.triggers).toContainEqual(expect.objectContaining({ code: 'unresolved-tg3',
+      reason: expect.stringContaining('tak: Alvorlig lekkasje i tak (f4.pdf, PDF-side 4)') }))
+    expect(assessFindingList(basis.reportBasis).controlCompleted).toBe(false)
+    expect(result.triggers).toEqual(local.triggers)
+    expect(result.nextAction).toBe(local.nextAction)
+  })
+
+  it('kjent TG3 i failed delresultat bevares som egen utløser også uten separat projeksjon', () => {
+    const basis = addTg3(input())
+    const completed = basis.reportBasis.outcome!
+    if (completed.status !== 'completed') throw new Error('Fixture')
+    basis.reportBasis.status = 'failed'
+    basis.reportBasis.error = 'interrupted'
+    basis.reportBasis.outcome = { ...completed, status: 'failed',
+      error: { kind: 'analysis', code: 'interrupted', target: null, reason: null },
+      partialResult: { completeness: 'incomplete', findings: completed.findings, uncertainCandidates: [], limitations: [] } }
+    basis.reportBasis.tg3Findings = []
+    const result = evaluateScreening(basis)
+    expect(result.priority).toBe(1)
+    expect(result.triggers.map(item => item.code)).toEqual(['incomplete-report', 'unresolved-tg3'])
+  })
+
+  it.each(['resolved', 'corrected-tg2', 'rejected'] as const)('ekte reportReducer og TG3-selektor: %s gir korrekt full screening', variant => {
+    const basis = addTg3(input())
+    let state: ReportState = { ...createReportState(), generation: 1, status: 'completed',
+      selected: { file: new File(['%PDF'], 'f4.pdf'), bytes: new Uint8Array(), hash },
+      outcome: basis.reportBasis.outcome }
+    const act = (type: 'report-finding-edit' | 'report-finding-apply' | 'report-finding-confirm' | 'report-finding-reject') => {
+      state = reportReducer(state, { type, generation: 1, findingId: 'tak' })
+    }
+    if (variant === 'rejected') act('report-finding-reject')
+    else if (variant === 'corrected-tg2') {
+      act('report-finding-edit')
+      state = reportReducer(state, { type: 'report-finding-draft', generation: 1, findingId: 'tak', field: 'grade', value: 'TG2' })
+      act('report-finding-apply')
+    }
+    if (variant !== 'rejected') act('report-finding-confirm')
+    state = reportReducer(state, { type: 'report-list-confirm', generation: 1, reportHash: hash,
+      documentName: 'f4.pdf', listRevision: state.listRevision })
+    if (variant === 'resolved') {
+      const unhandled = { ...basis, reportBasis: { ...basis.reportBasis, controls: state.findingControls,
+        listRevision: state.listRevision, listConfirmationRevision: state.listConfirmationRevision, tg3Findings: currentTg3Findings(state) } }
+      expect(evaluateScreening(unhandled).priority).toBe(1)
+      for (const [field, value] of [['status', 'resolved'], ['reason', 'Kontrollert for førstevurdering.'], ['basis', 'Fagkontroll ref T-42.']] as const) {
+        state = reportReducer(state, { type: 'report-tg3-register', generation: 1, findingId: 'tak', field, value })
+      }
+    }
+    basis.reportBasis = { status: state.status, outcome: state.outcome, error: state.error,
+      reportIdentity: { reportHash: state.selected!.hash, documentName: state.selected!.file.name },
+      controls: state.findingControls, listRevision: state.listRevision,
+      listConfirmationRevision: state.listConfirmationRevision, tg3Findings: currentTg3Findings(state) }
+    expect(reportDeficiencies(state).status).toBe('no-known-deficiencies')
+    expect(evaluateScreening(basis)).toMatchObject({ priority: 3, recommendation: 'Gå videre' })
+    expect(basis.reportBasis.outcome?.status).toBe('completed')
+    if (basis.reportBasis.outcome?.status === 'completed') expect(basis.reportBasis.outcome.findings[0]!.grade).toBe('TG3')
+    expect(basis.reportBasis.tg3Findings).toHaveLength(variant === 'resolved' ? 1 : 0)
   })
 })

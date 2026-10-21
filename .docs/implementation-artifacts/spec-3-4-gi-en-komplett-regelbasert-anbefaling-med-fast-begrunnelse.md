@@ -2,7 +2,7 @@
 title: 'Story 3.4 — Gi én komplett regelbasert anbefaling med fast begrunnelse'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '3-4-gi-én-komplett-regelbasert-anbefaling-med-fast-begrunnelse'
 baseline_commit: '4cd8532ae00fec30093a5ade7390d13920edaeae'
@@ -35,3 +35,29 @@ Test alle logiske utfall i AT-1–15 og AT-18–20, relevante BT-3–6/17/18, al
 - Implementert: `evaluateScreening` bruker faktisk den eksisterende autoritetskjeden og returnerer bare utløsere fra avgjørende nivå. Eksakte metrikker/terskler og en isolert grunnlagskopi følger alle tre utfall; `partialBasis` er sann bare ved prioritet 1. Ingen revisjonsstatus, snapshotlivsløp, UI, backend- eller presentasjonskobling er innført.
 - Egenverifikasjon: **66 nye fullscreeningtester**, **461/461 målrettede Vitest-prøver** over ti testfiler samt typecheck/lint/diffkontroll bestått. Første kjøring hadde 57/59 bestått; to testforventninger kalte den eksisterende negativkoden `negative-value` i stedet for `must-be-nonnegative`. Dette var en testfeil som er rettet mot den felles autoriteten uten produksjonsendring. [AC-/testbevis](story-3-4-verifikasjon.md), [rålogg](story-3-4-kontroller.txt) og [arbeidsøkt](../process/arbeidsokter/2026-10-21-story-3-4.md).
 - Checkpoint: **in-review/review**. Ingen integrert review/done; en ny uavhengig BMAD-reviewagent overtar etter lokal implementeringscommit, som uttrykkelig bestilt. Sluttregresjon/E2E utføres av orkestratoren etter review. Ingen ny produkt-/arkitekturbeslutning, portendring eller push; 3.5–3.9 forblir backlog.
+
+
+## Review Findings
+
+Full uavhengig BMAD-review med fire sekvensielle context-free lag er fullført.
+Alle ni kandidater er triagert individuelt i [reviewrapporten](story-3-4-review.md).
+Ingen ny produkt-/arkitekturbeslutning eller autoritativ kravendring.
+
+- [x] [Review][Patch] G1: Aktivt kjent TG3 kan ikke skjules av manglende/motstridende separat grunnlag. Felles `assessFindingList` bruker eksisterende bindingslikhet og gir samme navngitte avklaringsmangel til lokal og full screening. Failed delresultat bevarer kjent TG3 som egen utløser.
+- [x] [Review][Patch] G2: Ekte reportReducer-/TG3-selektor prøves fram til full screening med avklart TG3, brukt TG2-korrigering og avvist funn. Originalen bevares; ingen UI-/endringsflyt eller revisjonsbinding regnes levert.
+
+### Rejected
+
+- B2 — low: completed/error-konflikt finnes ikke i faktisk reducerflyt; ingen ny gren for håndlaget tilstand.
+- B3 — low: rejection/revision oppdateres atomisk og senere handlinger sperres; ingen nåbar gammel rejection.
+- B4 — false: eksakte aktuelle verdier/grenser ligger i triggerens ekte terskelobjekt; synlig avrundingsforklaring tilhører senere presentasjon.
+- B5 — low: faktisk produsent binder økonomikode til samme terskelstatus; ingen konsument konstruerer motstridende utdata.
+- B6 — low: produsenten returnerer alltid minst ett brudd eller to beståtte vilkår og teknisk grunnlag; ingen feil tomliste er demonstrert.
+- B7 — low: ingen målt ytelsesfeil; ombygging av finans-/terskel-API-er er unødvendig kompleksitet.
+
+Gjeldende checkpoint: **done** etter reviewerens fullstendige sekvensielle
+sluttregresjon på endelig kode: **853/853 Vitest**, **89/89 bygget-app**,
+**3/3 dev-E2E**, typecheck/lint/build og diffkontroll bestått. Seks reviewerprøver
+ble lagt til; tre negative prøver var røde før produksjonsretting. Ingen kode-
+eller testendring etter grønn sluttregresjon. [Rålogger og AC-bevis](story-3-4-review.md).
+3.3 forblir done, Epic 3 in-progress, 3.5+ backlog. Ingen push.

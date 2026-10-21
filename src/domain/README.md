@@ -56,3 +56,8 @@ mangler på prioritet 1 beholdes med eksisterende handling/orden. Gyldige tall
 følger som delgrunnlag også når prioritet 1 avgjør. En isolert kopi av mottatt
 grunnlag bevarer rapportfunn og brukerens TG3-avklaring. Dette er ingen
 snapshot-/revisjonsbinding eller UI-kobling; de følger i senere stories.
+
+Felles rapportvurdering kontrollerer også at hvert kjent aktivt TG3 har et
+samsvarende separat TG3-grunnlag. Manglende eller motstridende projeksjon gir
+en navngitt avklaringsmangel, også for kjente TG3 i failed delresultat. Brukt
+TG2-korrigering og avvisning respekteres; ukjent avklaring gjettes aldri.

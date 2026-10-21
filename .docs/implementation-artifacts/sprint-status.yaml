@@ -65,7 +65,7 @@ development_status:
   epic-3: in-progress
   3-1-beregne-fire-nøkkeltall-fra-hvert-sitt-gyldige-årsgrunnlag: done
   3-2-avgjøre-økonomiske-terskler-med-eksakte-verdier: done
-  3-3-formatere-nøkkeltall-uten-å-skjule-økonomiske-brudd: backlog
+  3-3-formatere-nøkkeltall-uten-å-skjule-økonomiske-brudd: review
   3-4-gi-én-komplett-regelbasert-anbefaling-med-fast-begrunnelse: backlog
   3-5-binde-resultat-til-revisjoner-og-gjøre-tidligere-resultat-hi: backlog
   3-6-gjøre-hvert-nøkkeltall-og-beregningsgrunnlag-lesbart: backlog

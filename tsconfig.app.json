@@ -19,5 +19,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/frontend", "src/domain", "src/contracts"]
+  "include": ["src/frontend", "src/domain", "src/contracts", "src/presentation"]
 }

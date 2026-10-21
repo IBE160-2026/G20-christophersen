@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { ReportClient } from './analysis/report-client.ts'
-import { analysisStatus } from './state/report.ts'
+import { analysisStatus, findingListAssessment } from './state/report.ts'
 import { ReportAnalysis } from './screens/ReportAnalysis.tsx'
 import { FinancialInput } from './screens/FinancialInput.tsx'
 import { createInitialSession, isFinancialConfirmed, sessionReducer } from './state/session.ts'
@@ -16,6 +16,7 @@ function App() {
   const previousStep = useRef(session.currentStep)
   const confirmed = isFinancialConfirmed(session)
   const financialStep = session.currentStep === 'tallgrunnlag'
+  const reportControl = findingListAssessment(session.report)
   const status = confirmed ? 'Bekreftet tallgrunnlag' : session.changedFields.length ? 'Endret — må oppdateres' : 'Ubekreftet tallgrunnlag'
   useEffect(() => {
     if (previousStep.current !== session.currentStep) heading.current?.focus()
@@ -48,7 +49,8 @@ function App() {
             { number: 4, name: 'Resultat', reason: 'Krever bekreftet tallgrunnlag og kontrollert, bekreftet funnliste.' },
           ].map((step) => {
             const available = confirmed && (step.number === 2 || (step.number === 3 && session.report.status === 'completed'))
-            const completed = step.number === 2 && session.report.status === 'completed' && session.report.listVisibleGeneration === session.report.generation
+            const completed = (step.number === 2 && session.report.status === 'completed' && session.report.listVisibleGeneration === session.report.generation)
+              || (step.number === 3 && reportControl.controlCompleted)
             const current = (step.number === 2 && session.currentStep === 'tilstandsrapport') || (step.number === 3 && session.currentStep === 'kontroller-funn')
             return <li className={`step${current ? ' step-current' : ''}`} key={step.number}>
               <button className="step-control" type="button" aria-current={current ? 'step' : undefined}
@@ -59,7 +61,7 @@ function App() {
                 } }}>
                 <span className="step-number" aria-hidden="true">{step.number}</span>
                 <span><span className="step-name">{step.name}</span>
-                  <span className="step-status">Trinn {step.number} · {current ? 'Gjeldende' : completed ? 'Fullført' : available ? 'Gjenstår · Tilgjengelig' : 'Gjenstår · Utilgjengelig'}</span></span>
+                  <span className="step-status">Trinn {step.number} · {current ? `Gjeldende${completed ? ' · Fullført' : ''}` : completed ? 'Fullført' : available ? 'Gjenstår · Tilgjengelig' : 'Gjenstår · Utilgjengelig'}</span></span>
               </button>
               {!available && <p className="step-reason meta" id={`step-${step.number}-reason`}>{step.reason}</p>}
             </li>

@@ -59,7 +59,7 @@ development_status:
   2-8-kontrollere-og-korrigere-funn-med-bevart-original-og-utkast: done
   2-9-avvise-feilaktig-ki-funn-med-bevart-opphav: done
   2-10-registrere-og-validere-separat-tg3-avklaring: done
-  2-11-bekrefte-gjeldende-funnliste-med-tydelig-tilstrekkelighet: backlog
+  2-11-bekrefte-gjeldende-funnliste-med-tydelig-tilstrekkelighet: review
   epic-2-retrospective: optional
 
   epic-3: backlog

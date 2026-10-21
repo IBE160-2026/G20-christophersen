@@ -109,7 +109,12 @@ describe('Story 2.6 — ren rapporttilstand og klientforløp', () => {
     const result = receive(failed)
     expect(result.status).toBe('failed')
     expect(result.outcome?.status === 'failed' && result.outcome.partialResult?.findings).toHaveLength(1)
-    expect(reportDeficiencies(result).triggers).toMatchObject([{ code: 'incomplete-report' }])
+    // AT18/2.11: Behold samtlige kjente mangler, også TG3 fra delresultatet.
+    expect(reportDeficiencies(result).triggers).toMatchObject([
+      { code: 'incomplete-report', reason: `Dokument-/analysefeil (${kind === 'document' ? 'unreadable-text' : 'timeout'}).` },
+      { code: 'incomplete-report', reason: 'Kun delresultat' },
+      { code: 'unresolved-tg3' },
+    ])
     expect(reportReducer(result, { type: 'report-list-visible', generation: 1 }).listVisibleGeneration).toBeNull()
   })
   it('forlatt analyse og rapportbytte gjør sent completed og feil ubrukelige', () => {

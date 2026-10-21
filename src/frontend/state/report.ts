@@ -2,9 +2,8 @@ import { AnalysisHttpResponseSchema } from '../../contracts/analysis-http.ts'
 import type { AnalysisHttpCorrelation } from '../../contracts/analysis-http.ts'
 import type { AnalysisOutcome } from '../../contracts/document-analysis.ts'
 import { evaluateKnownDeficiencies } from '../../domain/screening.ts'
-import type { KnownReportDeficiency } from '../../contracts/screening.ts'
 import type { FindingControl, FindingDraft } from '../../contracts/finding-control.ts'
-import { validateFindingCorrection } from '../../domain/finding-control.ts'
+import { assessFindingList, validateFindingCorrection } from '../../domain/finding-control.ts'
 import { sameTg3Basis } from '../../domain/tg3-resolution.ts'
 import type { Tg3Field, Tg3Resolution, Tg3Finding } from '../../contracts/tg3-resolution.ts'
 import { sourceTarget } from '../pdf/source-page.ts'
@@ -30,6 +29,7 @@ export interface ReportState {
   listConfirmationRevision: number | null
 }
 export type ReportAction =
+  | { type: 'report-list-confirm'; generation: number; reportHash: string; documentName: string; listRevision: number }
   | { type: 'report-tg3-register'; generation: number; findingId: string; field: Tg3Field; value: string }
   | { type: 'report-finding-edit' | 'report-finding-apply' | 'report-finding-cancel' | 'report-finding-confirm' | 'report-finding-reject'; generation: number; findingId: string }
   | { type: 'report-finding-draft'; generation: number; findingId: string; field: keyof FindingDraft; value: string }
@@ -49,6 +49,10 @@ function fail(state: ReportState, code: string): ReportState {
   return { ...state, status: 'failed', active: null, outcome: null, error: code, listVisibleGeneration: null }
 }
 export function reportReducer(state: ReportState, action: ReportAction): ReportState {
+  if (action.type === 'report-list-confirm') return action.generation === state.generation && action.reportHash === state.selected?.hash
+    && action.documentName === state.selected.file.name.trim() && action.listRevision === state.listRevision
+    && findingListAssessment(state).canConfirm && !findingListAssessment(state).confirmed
+    ? { ...state, listConfirmationRevision: state.listRevision } : state
   if ('findingId' in action) {
     const outcome = state.outcome
     if (state.status !== 'completed' || outcome?.status !== 'completed' || action.generation !== state.generation
@@ -143,29 +147,29 @@ export function currentFinding(state: ReportState, findingId: string) {
 
 /** Aktive TG3 med separat registrering; anvendbarhet tolkes bare i domain. */
 export function currentTg3Findings(state: ReportState): Tg3Finding[] {
-  if (state.status !== 'completed' || state.outcome?.status !== 'completed') return []
-  return [...state.outcome.findings, ...state.outcome.uncertainCandidates].flatMap(candidate => {
-    const current = currentFinding(state, candidate.findingId)
+  const outcome = state.outcome
+  const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
+  if (!extraction) return []
+  return [...extraction.findings, ...extraction.uncertainCandidates].flatMap(candidate => {
+    // Et delresultats kjente TG3 beholdes som mangel, uten å godta brukerkontroll.
+    const current = outcome?.status === 'completed' ? currentFinding(state, candidate.findingId)
+      : candidate.kind === 'checkable' ? candidate : null
     return current?.grade === 'TG3' ? [{ findingId: candidate.findingId, current: { grade: current.grade, description: current.description, source: current.source },
-      resolution: state.tg3Resolutions.find(item => item.findingId === candidate.findingId)?.resolution ?? null }] : []
+      resolution: outcome?.status === 'completed' ? state.tg3Resolutions.find(item => item.findingId === candidate.findingId)?.resolution ?? null : null }] : []
   })
+}
+
+/** Felles kontrollautoritet, uten frontend-spesifikk gyldighetstolkning. */
+export function findingListAssessment(state: ReportState) {
+  return assessFindingList({ status: state.status, outcome: state.outcome, error: state.error,
+    reportIdentity: state.selected ? { reportHash: state.selected.hash, documentName: state.selected.file.name.trim() } : null,
+    controls: state.findingControls, listRevision: state.listRevision, listConfirmationRevision: state.listConfirmationRevision,
+    tg3Findings: currentTg3Findings(state) })
 }
 
 /** Bare kjente mangler; completed er aldri brukerens listebekreftelse. */
 export function reportDeficiencies(state: ReportState) {
-  const reportDeficiencies: KnownReportDeficiency[] = []
-  if (state.status === 'missing' || state.error === 'missing-report') reportDeficiencies.push({ code: 'missing-report', reason: 'Velg én tekstbasert PDF på høyst 30 sider.' })
-  else if (state.status !== 'completed') reportDeficiencies.push({ code: 'incomplete-report', reason: state.error ? `Dokument-/analysefeil (${state.error}).` : 'Rapportanalysen er ikke fullført.' })
-  else {
-    reportDeficiencies.push({ code: 'incomplete-report', reason: 'Funnlisten er ennå ikke kontrollert og bekreftet av deg.' })
-    if (state.outcome?.status === 'completed') {
-      for (const candidate of state.outcome.uncertainCandidates.filter(item => !currentFinding(state, item.findingId) && !state.findingControls.some(control => control.findingId === item.findingId && control.rejection))) for (const issue of candidate.issues) {
-        reportDeficiencies.push({ code: 'incomplete-report', reason: `${candidate.findingId}: ${issue.reason}` })
-      }
-      for (const limitation of state.outcome.limitations) reportDeficiencies.push({ code: 'incomplete-report', reason: limitation })
-    }
-  }
-  return evaluateKnownDeficiencies({ reportDeficiencies, tg3Findings: currentTg3Findings(state) })
+  return evaluateKnownDeficiencies({ reportDeficiencies: findingListAssessment(state).reportDeficiencies, tg3Findings: currentTg3Findings(state) })
 }
 
 export function analysisStatus(report: ReportState) {

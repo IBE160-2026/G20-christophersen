@@ -4,9 +4,10 @@ import { sourceTarget } from '../pdf/source-page.ts'
 import { SourceReview } from '../pdf/SourceReview.tsx'
 import { Tg3Resolution, PreviousTg3Resolution } from './Tg3Resolution.tsx'
 import { FindingControl } from './FindingControl.tsx'
+import { FindingListControl } from './FindingListControl.tsx'
 import type { Dispatch } from 'react'
 import type { ReportClient } from '../analysis/report-client.ts'
-import { reportDeficiencies, analysisStatus, currentFinding } from '../state/report.ts'
+import { reportDeficiencies, analysisStatus, currentFinding, findingListAssessment } from '../state/report.ts'
 import type { SessionAction, SessionState } from '../state/session.ts'
 import { isFinancialConfirmed } from '../state/session.ts'
 
@@ -19,6 +20,7 @@ export function ReportAnalysis({ session, dispatch, client }: {
   const outcome = report.outcome
   const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
   const deficiencies = reportDeficiencies(report)
+  const listAssessment = findingListAssessment(report)
   const selectedFinding = report.view.findingId ? currentFinding(report, report.view.findingId) : null
   const selectedCandidate = [...(extraction?.findings ?? []), ...(extraction?.uncertainCandidates ?? [])].find(candidate => candidate.findingId === report.view.findingId)
   const selectedRejected = report.findingControls.some(control => control.findingId === report.view.findingId && control.rejection)
@@ -63,9 +65,9 @@ export function ReportAnalysis({ session, dispatch, client }: {
     </div>}
     {(session.currentStep === 'kontroller-funn' || outcome?.status === 'failed') && extraction && <section className="report-findings" aria-labelledby="findings-title"
       data-list-visible-generation={report.listVisibleGeneration ?? undefined}>
-      <h2 ref={list} id="findings-title">{outcome?.status === 'failed' ? 'Delresultat — ufullstendig analyse' : 'Funnliste — ikke bekreftet'}</h2>
+      <h2 ref={list} id="findings-title">{outcome?.status === 'failed' ? 'Delresultat — ufullstendig analyse' : listAssessment.confirmed ? 'Funnliste — bekreftet' : 'Funnliste — ikke bekreftet'}</h2>
       {outcome?.status === 'completed' && extraction.findings.length === 0 && extraction.uncertainCandidates.length === 0
-        && <p>Analyse fullført — ingen TG2/TG3 funnet. Listen må fortsatt kontrolleres og bekreftes.</p>}
+        && <p>Analyse fullført — ingen TG2/TG3 funnet. {listAssessment.confirmed ? 'Den tomme listen er kontrollert og bekreftet av deg.' : 'Listen må fortsatt kontrolleres og bekreftes.'}</p>}
       <SourceReview report={report} summary={summary} sourceIssue={sourceIssue} onView={onView}>
       <ol className="finding-list">
         {[...extraction.findings, ...extraction.uncertainCandidates].map(candidate => {
@@ -100,12 +102,14 @@ export function ReportAnalysis({ session, dispatch, client }: {
       </SourceReview>
       {extraction.limitations.length > 0 && <div><h3>Begrensninger</h3><ul>{extraction.limitations.map((text, index) => <li key={index}>{text}</li>)}</ul></div>}
       <p>Fullført analyse er ikke brukerens kontroll eller bekreftelse av funnlisten.</p>
+      {outcome?.status === 'completed' && <FindingListControl report={report} dispatch={dispatch} />}
     </section>}
     {deficiencies.status === 'information-required' && <aside className="local-deficiencies" aria-labelledby="report-deficiencies-title">
       <h2 id="report-deficiencies-title">{deficiencies.recommendation}</h2>
       <ul>{deficiencies.triggers.map((trigger, index) => <li key={index}>{trigger.message}</li>)}</ul>
       <p>{deficiencies.nextAction}</p>
     </aside>}
+    {deficiencies.status === 'no-known-deficiencies' && <p className="report-sufficiency">Ingen kjent rapportmangel i det kontrollerte grunnlaget. Dette er ingen screeninganbefaling.</p>}
     {report.status === 'completed' && session.currentStep !== 'kontroller-funn' && <button className="secondary-action" type="button" onClick={() => dispatch({ type: 'navigate', step: 'kontroller-funn' })}>Gå til Kontroller funn</button>}
     {session.currentStep === 'kontroller-funn' && <button className="secondary-action" type="button" onClick={() => dispatch({ type: 'navigate', step: 'tilstandsrapport' })}>Tilbake til Tilstandsrapport</button>}
     <button className="secondary-action" type="button" onClick={() => dispatch({ type: 'navigate', step: 'tallgrunnlag' })}>Tilbake til Tallgrunnlag</button>

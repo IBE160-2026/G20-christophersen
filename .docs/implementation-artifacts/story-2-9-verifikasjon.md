@@ -1,8 +1,9 @@
 # Story 2.9 — implementeringscheckpoint og egenverifikasjon
 
 Dato: 2026-10-21. Baseline: `63627cee85b771f6207c431338eca7a734a9ee24`.
-Spec er in-review og sprint 2.9 review. Dette er implementeringens egenkontroll;
-ny uavhengig review gjenstår før done.
+Historisk implementeringscheckpoint: spec in-review og sprint 2.9 review.
+Dette var implementeringens egenkontroll før uavhengig review. Gjeldende status
+er done etter [full uavhengig review](story-2-9-review.md).
 
 | AC / matrise | Faktisk implementering og bevis |
 |---|---|
@@ -50,3 +51,14 @@ PDF.js-bundlen. Ingen ny avhengighet, betalt API eller produkt-/arkitekturvalg.
 Scope er bare 2.9. TG3-avklaring (2.10), listebekreftelse (2.11) og Epic 3 er
 ikke implementert. Dette beviser kontrollert uttrekksavvisning, ikke live-KI-kvalitet
 eller ekstern brukertest. [Arbeidsøkt](../process/arbeidsokter/2026-10-21-story-2-9.md).
+
+## Uavhengig review og gjeldende status
+
+2.9 er done etter fire sekvensielle reviewlag. Avvist ubrukt utkast vises nå
+som lesbar historisk tekst, med historisk merkede valideringsfeil og uten
+aktive redigeringsfelt. Verdiene/feilmetadataene bevares uendret.
+Fire nye negative unit-prøver, én ny E2E og utvidet RT-12 kontrollerer andre
+usikre kandidater, feil originalkilde etter retting/avvisning, faktisk Tab,
+én statuskunngjøring, historiske korrigeringsverdier og synlig kortskjermfokus.
+Full sluttregresjon: 538/538 Vitest, 80/80 bygget-app og 3/3 dev-E2E,
+typecheck/lint/build bestått. [Funn og bevis](story-2-9-review.md).

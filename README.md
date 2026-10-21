@@ -86,7 +86,12 @@ Bare **Bruk korrigering** endrer gjeldende funn og krever ny kontroll;
 **Avbryt** forkaster utkastet og beholder tidligere gjeldende versjon/status.
 Opprinnelig KI-uttrekk og kilde bevares. Funn-/trinnretur og PDF-panellukking
 bevarer ubrukt utkast uten ny analyse. Listen er fortsatt ubekreftet;
-avvisning, separat TG3-avklaring og listebekreftelse gjenstår i 2.9–2.11.
+separat TG3-avklaring og listebekreftelse gjenstår i 2.10–2.11.
+Story 2.9 er done etter [uavhengig full review](.docs/implementation-artifacts/story-2-9-review.md).
+Velg **Avvis** for et feilaktig KI-uttrekk. Original grad/tekst/kilde beholdes
+som brukeravvist og inngår ikke i aktive rapportfunn; brukt korrigering og
+ubrukt utkast bevares som historikk. Avvisning krever senere ny listebekreftelse
+og betyr ingen TG3-avklaring, utbedring eller teknisk godkjenning. Ingen ny analyse.
 
 ## Installasjon og kontroll
 

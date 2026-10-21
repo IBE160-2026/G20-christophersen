@@ -157,4 +157,13 @@ Parseren varsler om fem generelle overskrifter i epics.md (linje 38, 263, 286, 2
 
 Planleggingens sluttkontroll og prosesspor dokumenteres i [arbeidsøkten](../process/arbeidsokter/2026-10-16-sprint-planning.md). Ingen installasjon av produktstakk, appkode, fixtures, produkttester, leverandørkall eller implementeringsstart inngår i sprintplanleggingen.
 
-Gjeldende oppfølging 2026-10-21: Story 2.8 er **done** etter [full uavhengig BMAD-review](story-2-8-review.md). Fire reproduserte UX-feil er rettet: vedvarende feltfeil, retur uten fokusstjeling, korte kontrollkunngjøringer og synlig fokus etter Bruk/Avbryt på kort skjerm. Nye negative/isolasjonsprøver og full sluttregresjon består: 527/527 Vitest, 76/76 bygget-app og 3/3 dev-E2E samt type/lint/build. Se også [egenverifikasjon](story-2-8-verifikasjon.md). Epic 2 pågår; 2.1–2.8 er done, 2.9–2.11 er backlog, og Epic 3 er ikke startet. Neste tillatte steg er bare Story 2.9 med ny implementeringsagent og deretter ny uavhengig reviewagent.
+Historisk oppfølging 2026-10-21 etter 2.8: Story 2.8 er **done** etter [full uavhengig BMAD-review](story-2-8-review.md). Fire reproduserte UX-feil er rettet: vedvarende feltfeil, retur uten fokusstjeling, korte kontrollkunngjøringer og synlig fokus etter Bruk/Avbryt på kort skjerm. Nye negative/isolasjonsprøver og full sluttregresjon består: 527/527 Vitest, 76/76 bygget-app og 3/3 dev-E2E samt type/lint/build. Se også [egenverifikasjon](story-2-8-verifikasjon.md). Epic 2 pågår; 2.1–2.8 er done, 2.9–2.11 er backlog, og Epic 3 er ikke startet. Neste tillatte steg er bare Story 2.9 med ny implementeringsagent og deretter ny uavhengig reviewagent.
+
+Gjeldende oppfølging 2026-10-21 etter 2.9: Story 2.9 er **done** etter
+[full uavhengig BMAD-review](story-2-9-review.md). Avvist utkasthistorikk er
+rettet til fullt lesbar tekst uten aktive feiloppgaver. Fire nye negative
+unit-prøver, faktisk Tab/status-/kortskjermkontroll og full regresjon består:
+538/538 Vitest, 80/80 bygget-app, 3/3 dev-E2E og type/lint/build.
+Epic 2 er in-progress; 2.1–2.9 done, 2.10/2.11 backlog. Epic 3 er backlog.
+Neste tillatte steg er bare 2.10 med ny implementeringsagent og separat review.
+Readiness og porter er uendret; ingen ny blocker eller beslutning.

@@ -281,3 +281,38 @@ describe('Story 2.9 — eksplisitt brukeravvisning med bevart opphav', () => {
     expect(reject(replacement)).toBe(replacement)
   })
 })
+
+
+describe('Story 2.9 — uavhengige negative prøver', () => {
+  it('avvisning av én usikker kandidat fjerner ikke en annens mangel eller rapportbegrensninger', () => {
+    const before = completed(true)
+    if (before.outcome?.status !== 'completed') throw new Error('test fixture')
+    const first = before.outcome.uncertainCandidates[0]!
+    const second = { ...first, findingId: 'other-uncertain', original: { ...first.original, findingId: 'other-uncertain' } }
+    const state = { ...before, outcome: { ...before.outcome, uncertainCandidates: [first, second], limitations: ['Rapportbegrensning beholdes'] } }
+    const rejected = reportReducer(state, { type: 'report-finding-reject', generation: 1, findingId: 'rt11' })
+    const reasons = reportDeficiencies(rejected).triggers.map(item => item.message)
+    expect(reasons.some(reason => reason.includes('rt11:'))).toBe(false)
+    for (const issue of second.issues) expect(reasons).toContain(`Rapportgrunnlaget er ufullført: other-uncertain: ${issue.reason}`)
+    expect(reasons).toContain('Rapportgrunnlaget er ufullført: Rapportbegrensning beholdes')
+    expect(rejected.outcome).toBe(state.outcome)
+    expect(rejected.findingControls.some(item => item.findingId === second.findingId)).toBe(false)
+  })
+  it.each([
+    { source: { ...original.source, reportHash: 'b'.repeat(64) }, expectedPage: null },
+    { source: { ...original.source, documentName: 'other.pdf' }, expectedPage: null },
+    { source: { ...original.source, pdfPage: 99 }, expectedPage: 99 },
+  ])('avvisning etter retting gjenoppretter ærlig originalkilde: $source', ({ source, expectedPage }) => {
+    const before = completed()
+    const outcome = bindAnalysisOutcome({ ...context, pages: Array.from({ length: 5 }, (_, index) => ({ pdfPage: index + 1, text: 'Originaltekst', status: 'readable' as const, reason: null })) },
+      { contractVersion: '2', extractionVersion: '1', status: 'completed', findings: [{ ...original, source }], limitations: [] })
+    const state = act(draft({ ...before, outcome, view: { findingId: 'rt11', pdfPage: null, zoom: 1 } }), 'report-finding-apply')
+    expect(currentFinding(state, 'rt11')?.source.pdfPage).toBe(5)
+    const rejected = reportReducer(state, { type: 'report-finding-reject', generation: 1, findingId: 'rt11' })
+    expect(rejected.view.pdfPage).toBe(expectedPage)
+    expect(currentFinding(rejected, 'rt11')).toBeNull()
+    expect(rejected.outcome).toBe(outcome)
+    expect(outcome.status === 'completed' && outcome.uncertainCandidates[0]?.original.source).toEqual(source)
+    expect(rejected.findingControls[0]?.correction).toBe(state.findingControls[0]?.correction)
+  })
+})

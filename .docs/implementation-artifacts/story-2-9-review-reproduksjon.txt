@@ -1,0 +1,139 @@
+Kontroll: red
+[WebServer] (node:70140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:70141) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/e2e/report-analysis.spec.ts:883:1 › 2.9 uavhengig review: avvist langt ugyldig utkast er lesbar historikk uten aktive feil og med synlig fokus (6.9s)
+
+
+  1) tests/e2e/report-analysis.spec.ts:883:1 › 2.9 uavhengig review: avvist langt ugyldig utkast er lesbar historikk uten aktive feil og med synlig fokus
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Bevart ubrukt utkast', exact: true })
+    Expected substring: "Ubrukt linje 1: egen tekst bevart ved avvisning.
+    Ubrukt linje 2: egen tekst bevart ved avvisning.
+    Ubrukt linje 3: egen tekst bevart ved avvisning.
+    Ubrukt linje 4: egen tekst bevart ved avvisning.
+    Ubrukt linje 5: egen tekst bevart ved avvisning.
+    Ubrukt linje 6: egen tekst bevart ved avvisning.
+    Ubrukt linje 7: egen tekst bevart ved avvisning.
+    Ubrukt linje 8: egen tekst bevart ved avvisning.
+    Ubrukt linje 9: egen tekst bevart ved avvisning.
+    Ubrukt linje 10: egen tekst bevart ved avvisning.
+    Ubrukt linje 11: egen tekst bevart ved avvisning.
+    Ubrukt linje 12: egen tekst bevart ved avvisning.
+    Ubrukt linje 13: egen tekst bevart ved avvisning.
+    Ubrukt linje 14: egen tekst bevart ved avvisning.
+    Ubrukt linje 15: egen tekst bevart ved avvisning."
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'Bevart ubrukt utkast', exact: true }) with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Bevart ubrukt utkast', exact: true })
+
+
+      899 |   })).toBe(true)
+      900 |   const archived = page.getByRole('region', { name: 'Bevart ubrukt utkast', exact: true })
+    > 901 |   await expect(archived).toContainText(description)
+          |                          ^
+      902 |   await expect(archived).toContainText('Fysisk PDF-side: 99')
+      903 |   await expect(archived).toContainText('Tidligere validering av utkastet')
+      904 |   await expect(archived.locator('input, textarea, select, [aria-invalid], [role="alert"]')).toHaveCount(0)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:901:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-9-uavhen-a7be6-ve-feil-og-med-synlig-fokus/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-9-uavhen-a7be6-ve-feil-og-med-synlig-fokus/error-context.md
+
+    Error Context: test-results/report-analysis-2-9-uavhen-a7be6-ve-feil-og-med-synlig-fokus/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-9-uavhen-a7be6-ve-feil-og-med-synlig-fokus/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-9-uavhen-a7be6-ve-feil-og-med-synlig-fokus/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/report-analysis.spec.ts:883:1 › 2.9 uavhengig review: avvist langt ugyldig utkast er lesbar historikk uten aktive feil og med synlig fokus
+
+Kontroll: unit
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/finding-control.test.ts (33 tests | 1 failed) 21ms
+   ❯ Story 2.9 — uavhengige negative prøver (4)
+     × avvisning av én usikker kandidat fjerner ikke en annens mangel eller rapportbegrensninger 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/finding-control.test.ts > Story 2.9 — uavhengige negative prøver > avvisning av én usikker kandidat fjerner ikke en annens mangel eller rapportbegrensninger
+AssertionError: expected [ …(5) ] to include 'other-uncertain: Eksplisitt TG2 eller…'
+ ❯ tests/unit/finding-control.test.ts:296:56
+    294|     const reasons = reportDeficiencies(rejected).triggers.map(item => …
+    295|     expect(reasons.some(reason => reason.includes('rt11:'))).toBe(fals…
+    296|     for (const issue of second.issues) expect(reasons).toContain(`othe…
+       |                                                        ^
+    297|     expect(reasons).toContain('Rapportbegrensning beholdes')
+    298|     expect(rejected.outcome).toBe(state.outcome)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 32 passed (33)
+   Start at  12:17:09
+   Duration  196ms (import 41%, transform 37%, tests 19%, worker 2%)
+
+
+Kontroll: unit-green
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  1 passed (1)
+      Tests  33 passed (33)
+   Start at  12:17:43
+   Duration  172ms (import 46%, transform 32%, tests 19%, worker 3%)
+
+
+Kontroll: targeted
+[WebServer] (node:70618) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 4 workers
+
+(node:70627) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70625) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:70626) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/report-analysis.spec.ts:874:1 › 2.9 AC3: eksplisitt avvisning av usikker kandidat bevarer kildeusikkerhet og rapportbegrensning (2.8s)
+  ✓  2 tests/e2e/report-analysis.spec.ts:888:1 › 2.9 uavhengig review: avvist langt ugyldig utkast er lesbar historikk uten aktive feil og med synlig fokus (2.9s)
+  ✓  4 tests/e2e/report-analysis.spec.ts:829:1 › 2.9 AC1/4 RT-12: historisk retting og ubrukt utkast bevares, smalt kildepanel og retur stjeler ikke fokus (3.2s)
+  ✓  3 tests/e2e/report-analysis.spec.ts:772:1 › 2.9 AC1–4 RT-12: dokumentfasit, tastatur-Avvis, bevart original, andre funn og retur med ett POST (3.4s)
+
+  4 passed (4.8s)
+
+Kontroll: announcement
+[WebServer] (node:70903) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:70904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/report-analysis.spec.ts:772:1 › 2.9 AC1–4 RT-12: dokumentfasit, tastatur-Avvis, bevart original, andre funn og retur med ett POST (2.0s)
+
+  1 passed (3.0s)

@@ -2,7 +2,7 @@
 title: 'Story 2.9 — Avvise feilaktig KI-funn med bevart opphav'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-9-avvise-feilaktig-ki-funn-med-bevart-opphav'
 baseline_commit: '63627cee85b771f6207c431338eca7a734a9ee24'
@@ -66,3 +66,18 @@ Ingen intensjonsgap eller irreversible handlinger. Fotavtrykket er eksisterende 
 `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, bygget-app-E2E og dev-E2E. Bruk eksisterende Chromium med PLAYWRIGHT_BROWSERS_PATH=/private/tmp/ibe160-story-1-2-browsers. Dokumenter faktisk kjørt omfang og AC-spor. Ingen betalt API eller ny avhengighet.
 
 Implementeringscheckpoint 2026-10-21: 534/534 Vitest, 79/79 bygget-app-E2E, 3/3 dev-E2E og typecheck/lint/build bestått. Se [verifikasjon](story-2-9-verifikasjon.md) og [arbeidsøkt](../process/arbeidsokter/2026-10-21-story-2-9.md). Neste port er ny uavhengig review.
+
+### Review Findings
+
+- [x] [Review][Patch] B1/B2 (medium): Avvist ubrukt utkast vises som deaktivert redigeringsskjema; lang beskrivelse kan ikke tastaturrulles, og tidligere feil gir fortsatt aktive rettingsinstruksjoner. Vis samme bevarte verdier som lesbar historikk med tydelig historisk feilopphav. `src/frontend/screens/FindingControl.tsx`.
+- [x] [Review][Patch] B4–B9 (medium verifikasjonsgap): Etterprøv faktisk Tab-rekkefølge, synlig kortskjermfokus, status uten gjenavspilling, historisk korrigeringsinnhold, isolasjon av andre usikre kandidater og avvisning etter korrigert ugyldig originalkilde. Ingen nye produktregler.
+
+Rejected: B3 (low): Ingen egen null-aktive-oppsummering er påkrevd i 2.9; hver avvist rad er eksplisitt ikke aktiv, og faktisk tom analyse skilles allerede korrekt. En ny aggregert listetilstand krever ekstra kontrollflyt og er ingen nødvendig direkte feilretting her.
+
+Edge Case Hunter returnerte `[]` og bekreftet deretter uttrykkelig fullført instrukslesing og tracing uten funn. Øvrige lag returnerte eksplisitt fullført uten funn. Alle fire lag ble kjørt sekvensielt; ingen egne filendringer mens de kjørte.
+
+Uavhengig review bestått 2026-10-21: Fire sekvensielle BMAD-lag, én rettet
+historikkfeilgruppe og utvidet negativ/tastatur-/fokusverifikasjon. Full sluttregresjon:
+538/538 Vitest, 80/80 bygget-app-E2E, 3/3 dev-E2E, typecheck/lint/build bestått.
+Se [full review med alle kandidater og AC-bevis](story-2-9-review.md).
+Story og sprint 2.9 er done. Ingen ny beslutning eller senere story implementert.

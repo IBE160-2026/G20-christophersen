@@ -72,7 +72,17 @@ export function FindingControl({ report, candidate, dispatch, onRejected }: {
       <p>{control.correction.grade} · {control.correction.description}</p>
       <p>{control.correction.source.documentName} · PDF-side {control.correction.source.pdfPage} · SHA-256: {control.correction.source.reportHash}</p>
     </section>}
-    {draft && <fieldset ref={form} disabled={rejected} className="finding-edit"><legend>Redigert utkast — ikke brukt</legend>
+    {draft && rejected && <section className="finding-edit" aria-label="Bevart ubrukt utkast">
+      <h4>Redigert utkast — ikke brukt</h4>
+      <p>Utkastet er bevart som historikk og inngår ikke i aktive rapportfunn.</p>
+      <p>Grad fra rapporten: {draft.grade || 'Ikke valgt'}</p>
+      <p style={{ whiteSpace: 'pre-wrap' }}>Beskrivelse fra rapporten: {draft.description}</p>
+      <p>Fysisk PDF-side: {draft.pdfPage || 'Ikke oppgitt'}</p>
+      {Object.keys(control.errors).length > 0 && <div><p>Tidligere validering av utkastet — ingen aktiv rettingsoppgave:</p>
+        <ul>{Object.entries(control.errors).map(([field, message]) => <li key={field}>{message}</li>)}</ul>
+      </div>}
+    </section>}
+    {draft && !rejected && <fieldset ref={form} className="finding-edit"><legend>Redigert utkast — ikke brukt</legend>
       <p>Utkastet påvirker ikke gjeldende funnliste. Kontroller grad, beskrivelse og fysisk PDF-side mot {report.outcome?.documentName}.</p>
       {(['grade', 'description', 'pdfPage'] as const).map(field => {
         const label = field === 'grade' ? 'Grad fra rapporten' : field === 'description' ? 'Beskrivelse fra rapporten' : 'Fysisk PDF-side'
@@ -85,8 +95,8 @@ export function FindingControl({ report, candidate, dispatch, onRejected }: {
         </div>
       })}
       {control.errors.source && <p role="alert" className="field-issue">{control.errors.source}</p>}
-      {!rejected && <div className="finding-actions"><button type="button" className="primary-action" onClick={() => action('report-finding-apply')}>Bruk korrigering</button>
-        <button type="button" className="secondary-action" onClick={() => action('report-finding-cancel')}>Avbryt</button></div>}
+      <div className="finding-actions"><button type="button" className="primary-action" onClick={() => action('report-finding-apply')}>Bruk korrigering</button>
+        <button type="button" className="secondary-action" onClick={() => action('report-finding-cancel')}>Avbryt</button></div>
     </fieldset>}
   </section>
 }

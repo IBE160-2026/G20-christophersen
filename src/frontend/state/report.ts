@@ -160,11 +160,15 @@ export function currentTg3Findings(state: ReportState): Tg3Finding[] {
 }
 
 /** Felles kontrollautoritet, uten frontend-spesifikk gyldighetstolkning. */
-export function findingListAssessment(state: ReportState) {
-  return assessFindingList({ status: state.status, outcome: state.outcome, error: state.error,
+export function findingListBasis(state: ReportState) {
+  return { status: state.status, outcome: state.outcome, error: state.error,
     reportIdentity: state.selected ? { reportHash: state.selected.hash, documentName: state.selected.file.name.trim() } : null,
     controls: state.findingControls, listRevision: state.listRevision, listConfirmationRevision: state.listConfirmationRevision,
-    tg3Findings: currentTg3Findings(state) })
+    tg3Findings: currentTg3Findings(state) }
+}
+
+export function findingListAssessment(state: ReportState) {
+  return assessFindingList(findingListBasis(state))
 }
 
 /** Bare kjente mangler; completed er aldri brukerens listebekreftelse. */

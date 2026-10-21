@@ -7,6 +7,8 @@ import { FinancialFieldSchema } from '../../contracts/financial-input.ts'
 import { validateFinancialBasis } from '../../domain/financial-basis.ts'
 import { parseFinancialDecimal } from '../../domain/validation.ts'
 import type { CostItem, FinancialSource, FinancialSources, RentNature } from '../../contracts/financial-basis.ts'
+import type { ResultChange, ResultSnapshot } from '../../contracts/result.ts'
+import { calculateResultSnapshot, describeResultChange, resultBinding, sameResultBinding } from './result.ts'
 
 export interface SessionState {
   financial: RegisteredFinancialInput
@@ -19,9 +21,12 @@ export interface SessionState {
   changedFields: FinancialField[]
   explicitZeros: FinancialField[]
   confirmationAttempts: number
+  resultSnapshot: ResultSnapshot | null
+  resultChanges: ResultChange[]
 }
 
 export type SessionAction = ReportAction
+  | { type: 'calculate-result' }
   | { type: 'register-value'; field: FinancialField; rawValue: string }
   | { type: 'register-period'; field: RecurringField; period: RegisteredPeriod }
   | { type: 'register-year'; field: RecurringField; year: string }
@@ -49,6 +54,7 @@ export function createInitialSession(): SessionState {
     nextCostId: 1,
     currentStep: 'tallgrunnlag', report: createReportState(),
     financialRevision: 0, changedFields: [], explicitZeros: [], confirmationAttempts: 0,
+    resultSnapshot: null, resultChanges: [],
   }
 }
 
@@ -81,6 +87,14 @@ function invalidate(state: SessionState, update: Partial<SessionState>, fields: 
 }
 
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {
+  if (action.type === 'calculate-result') return { ...state, resultSnapshot: calculateResultSnapshot(state), resultChanges: [] }
+  const next = reduceSession(state, action)
+  if (!state.resultSnapshot || sameResultBinding(resultBinding(state), resultBinding(next))) return next
+  const change = describeResultChange(action, state)
+  return { ...next, resultChanges: [...state.resultChanges.filter(item => item.kind !== change.kind || item.target !== change.target || item.message !== change.message), change] }
+}
+
+function reduceSession(state: SessionState, action: SessionAction): SessionState {
   if (action.type === 'report-start' && (!isFinancialConfirmed(state) || state.currentStep === 'tallgrunnlag')) return state
   if (action.type.startsWith('report-')) return { ...state, report: reportReducer(state.report, action as ReportAction) }
   if (action.type === 'navigate') {

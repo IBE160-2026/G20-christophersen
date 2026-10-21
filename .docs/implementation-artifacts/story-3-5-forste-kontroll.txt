@@ -1,0 +1,30 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/result-snapshot.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/result-snapshot.test.ts (55 tests | 1 failed) 69ms
+   ❯ Story 3.5 — snapshot og revisjonsbundet gyldighet (55)
+     × AC1: senere mutasjon av aktivt finans-/rapport-/kontroll-/TG3-grunnlag endrer aldri snapshotets provenance 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/result-snapshot.test.ts > Story 3.5 — snapshot og revisjonsbundet gyldighet > AC1: senere mutasjon av aktivt finans-/rapport-/kontroll-/TG3-grunnlag endrer aldri snapshotets provenance
+TypeError: Cannot assign to read only property 'description' of object '#<Object>'
+ ❯ tests/unit/result-snapshot.test.ts:367:48
+    365|     state.costItems[0]!.label = 'Mutert kostnad'
+    366|     if (state.report.outcome?.status !== 'completed') throw new Error(…
+    367|     state.report.outcome.findings[0]!.original.description = 'Mutert o…
+       |                                                ^
+    368|     state.report.findingControls.find(control => control.correction)!.…
+    369|     state.report.tg3Resolutions[0]!.resolution.basis = 'Mutert avklari…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 54 passed (55)
+   Start at  15:52:09
+   Duration  283ms (tests 36%, transform 32%, import 31%, worker 1%)

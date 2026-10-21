@@ -1,0 +1,31 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/integration/http-analysis.test.ts (22 tests | 1 failed) 91190ms
+   ❯ Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp (22)
+     × eide inputbytes tømmes ved suksess, adapterfeil, duplikatavvisning og abort 5028ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > eide inputbytes tømmes ved suksess, adapterfeil, duplikatavvisning og abort
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/http-analysis.test.ts:304:3
+    302|   }, 70_000)
+    303|
+    304|   it('eide inputbytes tømmes ved suksess, adapterfeil, duplikatavvisni…
+       |   ^
+    305|     const markers = new Set<string>()
+    306|     const input = async () => ({ bytes: await fixture(), documentName:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 26 passed (27)
+      Tests  1 failed | 909 passed (910)
+   Start at  15:54:40
+   Duration  91.52s (tests 97%, import 2%, transform 1%)

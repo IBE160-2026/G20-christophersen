@@ -62,3 +62,11 @@ utløsere, fast tekst/neste handling, eksakte nøkkeltall/terskler og bevart
 grunnlag. Prioritet 1 gjenbruker de eksisterende kritiske mangeltypene;
 økonomiske utløsere peker på de delte terskelkontraktene. Ingen lokaliserte
 visningstall, KI-tekst eller snapshotgyldighet innføres i regelinput.
+
+Story 3.5: `result.ts` eier binding og tilstander for siste resultatsnapshot i
+den aktive frontendøkten. Snapshotet har hele screeningutfallet med eksakt
+økonomi, kontrollgrunnlag og provenance. Finans-, liste-, TG3- og rapportrevisjon
+suppleres med rapportidentitet/generasjon og faktiske bekreftelser. Frontend
+lager en isolert, dypt fryst kopi; endringsårsaker/oppdateringsbehov holdes
+separat. Ubrukt utkast er selektormetadata og aldri anvendt screeninginput.
+Ingen varig historikk eller ny produktflate innføres.

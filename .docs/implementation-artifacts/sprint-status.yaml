@@ -62,8 +62,8 @@ development_status:
   2-11-bekrefte-gjeldende-funnliste-med-tydelig-tilstrekkelighet: done
   epic-2-retrospective: optional
 
-  epic-3: backlog
-  3-1-beregne-fire-nøkkeltall-fra-hvert-sitt-gyldige-årsgrunnlag: backlog
+  epic-3: in-progress
+  3-1-beregne-fire-nøkkeltall-fra-hvert-sitt-gyldige-årsgrunnlag: review
   3-2-avgjøre-økonomiske-terskler-med-eksakte-verdier: backlog
   3-3-formatere-nøkkeltall-uten-å-skjule-økonomiske-brudd: backlog
   3-4-gi-én-komplett-regelbasert-anbefaling-med-fast-begrunnelse: backlog

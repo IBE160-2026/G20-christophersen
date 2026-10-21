@@ -1,8 +1,8 @@
 import Big from 'big.js'
-import { FinancialFieldSchema } from '../contracts/financial-input.ts'
+import { FinancialFieldSchema, RecurringFieldSchema } from '../contracts/financial-input.ts'
 import { FinancialBasisSchema } from '../contracts/financial-basis.ts'
 import type { FinancialBasis, FinancialBasisValidation, CostBreakdown } from '../contracts/financial-basis.ts'
-import type { FinancialField } from '../contracts/financial-input.ts'
+import type { FinancialField, RecurringField } from '../contracts/financial-input.ts'
 import type { FinancialIssue } from '../contracts/financial-validation.ts'
 import { financialPeriodContext, parseFinancialDecimal, validateFinancialInput } from './validation.ts'
 
@@ -10,10 +10,12 @@ const Decimal = Big()
 Decimal.strict = true
 
 /** Én ren vurdering av numerikk, opphav og kjent kostnadsinnhold. Ingen screening. */
-export function validateFinancialBasis(input: FinancialBasis): FinancialBasisValidation {
+export function validateFinancialBasis(
+  input: FinancialBasis, yearFields: readonly RecurringField[] = RecurringFieldSchema.options,
+): FinancialBasisValidation {
   const registeredBasis = FinancialBasisSchema.parse(input)
   const result: FinancialBasisValidation = {
-    ...validateFinancialInput(registeredBasis.values),
+    ...validateFinancialInput(registeredBasis.values, yearFields),
     registeredBasis,
     costBreakdown: { items: [], D: null, J: null, annualD: null, annualJ: null },
   }

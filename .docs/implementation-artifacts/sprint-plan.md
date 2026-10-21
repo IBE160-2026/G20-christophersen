@@ -179,3 +179,12 @@ Ingen 3.3, full screening eller Resultat-flate er startet.
 
 Sluttregresjon etter Epic 2-done bestått: 582/582 unit, 89/89 bygget-app,
 3/3 dev-E2E og typecheck/lint/build. Ingen ny blocker eller beslutning.
+
+Gjeldende oppfølging 2026-10-21 ved Story 3.1-review: Epic 2 er fortsatt done.
+Story 3.1 er implementert som ren finansmodul og satt til **review**, med
+[AC-/testbevis](story-3-1-verifikasjon.md). 646/646 Vitest, 89/89 bygget-app,
+3/3 dev-E2E og typecheck/lint/build er grønne. Epic 3 er **in-progress**;
+3.2–3.9 forblir backlog. Neste tillatte steg er separat uavhengig BMAD-review
+av 3.1. Bare dersom den blir done uten blocker kan 3.2 starte, og brukerens
+kjede stopper der før 3.3. Ingen ny beslutning, endring av låst scope eller
+endring av R1/R4-portene.

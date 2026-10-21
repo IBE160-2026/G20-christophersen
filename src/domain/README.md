@@ -18,7 +18,18 @@ Ingen total endres automatisk og ingen økonomisk anbefaling gis.
 
 Senere kontroll må bruke hele finansgrunnlaget, ikke tolke numerisk
 tilstrekkelighet fra `validation.ts` som tilstrekkelig kilde-/kostnadsgrunnlag.
-Full mangelvurdering, finans, terskler og screening følger sine stories.
+Terskler og komplett screening følger sine stories.
+
+Story 3.1 leverer `finance.ts`: `calculateFinancialMetrics` returnerer
+bruttoyield, NOI, nettoyield og kontantstrøm før skatt med egen gyldighet
+fra `validateFinancialBasis`. Felles årsvalidering kan få de relevante
+årsfeltene; standardkall vurderer fortsatt hele L/D/J-grunnlaget.
+Nøkkeltallene bruker P/L, L/D, P/L/D og L/D/J, og manglende Ymin endrer
+ingen beregning. Yield beholder eksakt teller/nevner; beløp er kanoniske
+desimalstrenger i NOK/år. Ikke-beregnbare tall har null verdi og konkrete
+feltårsaker. Formler, registrerte input, kilder, årsnormalisering og
+kostnadsinnhold følger resultatet for senere kontrollvisning. Ingen
+divisjon, format, terskelavgjørelse, rapportinput eller anbefaling inngår.
 
 Story 2.8: `finding-control.ts` validerer brukerens korrigering mot kjent
 rapportidentitet og fysisk sideområde med det delte korrigeringsskjemaet.

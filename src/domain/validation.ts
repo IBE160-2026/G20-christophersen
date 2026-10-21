@@ -78,7 +78,9 @@ function validateValue(
  * Bruk validateFinancialBasis når kilde/kostnadsinnhold også skal vurderes.
  * Funksjonen bekrefter aldri.
  */
-export function validateFinancialInput(input: RegisteredFinancialInput): FinancialValidation {
+export function validateFinancialInput(
+  input: RegisteredFinancialInput, yearFields: readonly RecurringField[] = RecurringFieldSchema.options,
+): FinancialValidation {
   const registered = RegisteredFinancialInputSchema.parse(input)
   const result: FinancialValidation = {
     fields: {
@@ -114,17 +116,19 @@ export function validateFinancialInput(input: RegisteredFinancialInput): Financi
     }
   }
 
-  const distinctYears = new Set(years.values())
+  // Beregninger sammenligner bare sine egne årsavhengigheter. Standardkallet
+  // vurderer fortsatt hele tallgrunnlaget for kontroll og mangelvurdering.
+  const relatedFields = RecurringFieldSchema.options.filter((field) => yearFields.includes(field) && years.has(field))
+  const distinctYears = new Set(relatedFields.map((field) => years.get(field)))
   if (distinctYears.size > 1) {
-    const relatedFields = RecurringFieldSchema.options.filter((field) => years.has(field))
     const context = relatedFields.map((field) => `${field}=${years.get(field)}`).join(', ')
     for (const field of relatedFields) {
       result.fields[field].issues.push(issue(field, 'year', 'different-years',
         `${field}: Verdiene gjelder ulike år (${context}).`,
         'Kontroller og oppgi sammenlignbart årsgrunnlag; ingen verdi flyttes automatisk til et annet år.', [...relatedFields]))
     }
-  } else if (years.size === RecurringFieldSchema.options.length) {
-    result.commonYear = years.get('L') ?? null
+  } else if (yearFields.length > 0 && yearFields.every((field) => years.has(field))) {
+    result.commonYear = years.get(yearFields[0]!) ?? null
   }
   for (const field of FinancialFieldSchema.options) {
     const value = result.fields[field]

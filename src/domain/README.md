@@ -18,7 +18,7 @@ Ingen total endres automatisk og ingen økonomisk anbefaling gis.
 
 Senere kontroll må bruke hele finansgrunnlaget, ikke tolke numerisk
 tilstrekkelighet fra `validation.ts` som tilstrekkelig kilde-/kostnadsgrunnlag.
-Terskler og komplett screening følger sine stories.
+Den komplette screeningen bruker samme autoritet, som beskrevet nedenfor.
 
 Story 3.1 leverer `finance.ts`: `calculateFinancialMetrics` returnerer
 bruttoyield, NOI, nettoyield og kontantstrøm før skatt med egen gyldighet
@@ -43,3 +43,16 @@ bestått/brutt/ikke-vurderbart, eksakte sammenlikningsverdier og relevante
 feltårsaker; metrikkgrunnlag og Ymin med kilde følger for etterprøving.
 Funksjonene velger ingen anbefaling og erstatter ikke senere screeningens
 kritisk-mangelvurdering. Ingen presentasjonsformat eller rapportinput inngår.
+
+Story 3.4 fullfører `screening.ts`: `evaluateScreening` krever både hele
+finansgrunnlaget og det eksisterende rene `FindingListBasis`. Rapportstatus,
+enkeltkontroll og listebekreftelse vurderes av `assessFindingList`; alle
+kritiske mangler og forholdsbundet TG3 anvendes gjennom den samme
+`evaluateKnownDeficiencies` som lokale flater bruker. Først når disse er
+tilstrekkelige, velges Forkast ved ett/begge økonomiske brudd, ellers Gå videre
+til grundigere vurdering/befaring. Økonomiske utløsere følger fast yield-/cash-
+orden, med faste koder/tekster og eksakte terskelobjekter fra 3.2. Alle kjente
+mangler på prioritet 1 beholdes med eksisterende handling/orden. Gyldige tall
+følger som delgrunnlag også når prioritet 1 avgjør. En isolert kopi av mottatt
+grunnlag bevarer rapportfunn og brukerens TG3-avklaring. Dette er ingen
+snapshot-/revisjonsbinding eller UI-kobling; de følger i senere stories.

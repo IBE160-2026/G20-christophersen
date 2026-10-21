@@ -1,0 +1,83 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/complete-screening.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/complete-screening.test.ts (59 tests | 2 failed) 47ms
+   ❯ Story 3.4 AC1/4/6 — kritisk grunnlag overstyrer økonomien (23)
+     × AT-12/brief: negativ D gir valideringsfeil 5ms
+     × AT-12/brief: negativ J gir valideringsfeil 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/complete-screening.test.ts > Story 3.4 AC1/4/6 — kritisk grunnlag overstyrer økonomien > AT-12/brief: negativ D gir valideringsfeil
+AssertionError: expected [ { kind: 'financial', …(6) } ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "negative-value",
+  "field": "D",
+}
+
++ Received:
+[
+  {
+    "action": "Oppgi D større enn eller lik 0.",
+    "code": "must-be-nonnegative",
+    "field": "D",
+    "kind": "financial",
+    "message": "D: Verdien kan ikke være negativ.",
+    "relatedFields": [],
+    "target": "value",
+  },
+]
+
+ ❯ tests/unit/complete-screening.test.ts:187:47
+    185|     const basis = input(); basis.financialBasis.values[field].rawValue…
+    186|     expect(evaluateScreening(basis).priority).toBe(1)
+    187|     expect(evaluateScreening(basis).triggers).toContainEqual(expect.ob…
+       |                                               ^
+    188|   })
+    189|   it.each(['P', 'L', 'D', 'J', 'Ymin'] as FinancialField[])('AT-12: ub…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/complete-screening.test.ts > Story 3.4 AC1/4/6 — kritisk grunnlag overstyrer økonomien > AT-12/brief: negativ J gir valideringsfeil
+AssertionError: expected [ { kind: 'financial', …(6) } ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "negative-value",
+  "field": "J",
+}
+
++ Received:
+[
+  {
+    "action": "Oppgi J større enn eller lik 0.",
+    "code": "must-be-nonnegative",
+    "field": "J",
+    "kind": "financial",
+    "message": "J: Verdien kan ikke være negativ.",
+    "relatedFields": [],
+    "target": "value",
+  },
+]
+
+ ❯ tests/unit/complete-screening.test.ts:187:47
+    185|     const basis = input(); basis.financialBasis.values[field].rawValue…
+    186|     expect(evaluateScreening(basis).priority).toBe(1)
+    187|     expect(evaluateScreening(basis).triggers).toContainEqual(expect.ob…
+       |                                               ^
+    188|   })
+    189|   it.each(['P', 'L', 'D', 'J', 'Ymin'] as FinancialField[])('AT-12: ub…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 57 passed (59)
+   Start at  15:19:10
+   Duration  247ms (import 36%, transform 31%, tests 31%, worker 2%)

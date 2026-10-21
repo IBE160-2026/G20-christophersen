@@ -1,9 +1,13 @@
 import { KnownDeficiencyInputSchema } from '../contracts/screening.ts'
 import type {
   CriticalDeficiency, KnownDeficiencyAssessment, KnownDeficiencyInput, KnownReportDeficiency,
+  EconomicScreeningTrigger, ScreeningAssessment, ScreeningInput,
 } from '../contracts/screening.ts'
 import { validateTg3Resolution } from './tg3-resolution.ts'
 import { validateFinancialBasis } from './financial-basis.ts'
+import { assessFindingList } from './finding-control.ts'
+import { calculateFinancialMetrics } from './finance.ts'
+import { evaluateCashFlowThreshold, evaluateNetYieldThreshold } from './thresholds.ts'
 
 const reportText = {
   'unresolved-tg3': {
@@ -57,5 +61,55 @@ export function evaluateKnownDeficiencies(input: KnownDeficiencyInput): KnownDef
     recommendation: 'Innhent mer informasjon', priority: 1, triggers,
     explanation: `Kritisk grunnlag er utilstrekkelig. ${triggers.map((entry) => entry.message).join(' ')}`,
     nextAction: `Før ny vurdering: ${[...new Set(triggers.map((entry) => entry.action))].join(' ')}`,
+  }
+}
+
+/** Én ren fullscreening. Alle gyldighets- og økonomiregler eies av eksisterende
+ * felles funksjoner; denne funksjonen velger bare avgjørende prioritet og fast tekst.
+ */
+export function evaluateScreening(input: ScreeningInput): ScreeningAssessment {
+  const basis = structuredClone(input)
+  const report = assessFindingList(basis.reportBasis)
+  const deficiencies = evaluateKnownDeficiencies({ financialBasis: basis.financialBasis,
+    reportDeficiencies: report.reportDeficiencies, tg3Findings: basis.reportBasis.tg3Findings })
+  const support = {
+    scope: 'screening' as const, basis,
+    metrics: calculateFinancialMetrics(basis.financialBasis),
+    thresholds: { netYield: evaluateNetYieldThreshold(basis.financialBasis),
+      cashFlow: evaluateCashFlowThreshold(basis.financialBasis) },
+  }
+  if (deficiencies.status === 'information-required') {
+    return { ...deficiencies, ...support, partialBasis: true }
+  }
+
+  const { netYield, cashFlow } = support.thresholds
+  // Felles mangelautoritet må ha fanget alt som hindrer terskelavgjørelse.
+  if (netYield.decision.status === 'unavailable' || cashFlow.decision.status === 'unavailable') {
+    throw new Error('Tilstrekkelig kritisk grunnlag må ha vurderbare økonomiske terskler.')
+  }
+  const economic: EconomicScreeningTrigger[] = [
+    { kind: 'economic', target: 'netYield', threshold: netYield,
+      code: netYield.decision.status === 'breached' ? 'net-yield-below-minimum' : 'net-yield-requirement-met',
+      message: netYield.decision.status === 'breached'
+        ? 'Nettoyield er lavere enn ditt avkastningskrav.' : 'Nettoyield oppfyller ditt avkastningskrav.' },
+    { kind: 'economic', target: 'cashFlowBeforeTax', threshold: cashFlow,
+      code: cashFlow.decision.status === 'breached' ? 'negative-cash-flow' : 'cash-flow-nonnegative',
+      message: cashFlow.decision.status === 'breached'
+        ? 'Kontantstrøm før skatt er negativ.' : 'Kontantstrøm før skatt er null eller positiv.' },
+  ]
+  const breached = economic.filter(trigger => trigger.threshold.decision.status === 'breached')
+  if (breached.length > 0) return {
+    ...support, status: 'rejected', recommendation: 'Forkast', priority: 2, partialBasis: false,
+    triggers: breached,
+    explanation: `Økonomiske minimumskrav er ikke oppfylt. ${breached.map(trigger => trigger.message).join(' ')}`,
+    nextAction: 'Forkast objektet på det gjeldende screeninggrunnlaget.',
+  }
+  const technical = { kind: 'technical' as const, code: 'technical-basis-sufficient' as const,
+    target: 'report' as const, message: 'Teknisk grunnlag er tilstrekkelig for førstevurdering.' }
+  return {
+    ...support, status: 'proceed', recommendation: 'Gå videre', priority: 3, partialBasis: false,
+    triggers: [...economic, technical],
+    explanation: [...economic, technical].map(trigger => trigger.message).join(' '),
+    nextAction: 'Gå videre til grundigere vurdering/befaring.',
   }
 }

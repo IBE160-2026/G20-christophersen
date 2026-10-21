@@ -54,3 +54,11 @@ Ingen ekstraktor, OCR/vision eller manuell semantisk klassifisering er lagt til.
 Story 2.8: `finding-control.ts` eier separat brukt korrigering med gjenbrukt
 kilde-/gradform fra analysekontrakten, rått redigeringsutkast og revisjonsbundet
 enkeltfunnkontroll. Adapteroriginalen omskrives aldri av brukerkontroll.
+
+Story 3.4: `screening.ts` eier også `ScreeningInput` og det diskriminerte
+`ScreeningAssessment` for full screening. Input gjenbruker hele finansgrunnlaget
+og `FindingListBasis`; output har nøyaktig én anbefaling/prioritet, avgjørende
+utløsere, fast tekst/neste handling, eksakte nøkkeltall/terskler og bevart
+grunnlag. Prioritet 1 gjenbruker de eksisterende kritiske mangeltypene;
+økonomiske utløsere peker på de delte terskelkontraktene. Ingen lokaliserte
+visningstall, KI-tekst eller snapshotgyldighet innføres i regelinput.

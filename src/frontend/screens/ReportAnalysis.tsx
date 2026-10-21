@@ -13,12 +13,14 @@ export function ReportAnalysis({ session, dispatch, client }: {
 }) {
   const report = session.report
   const list = useRef<HTMLHeadingElement>(null)
+  const selectedButton = useRef<HTMLButtonElement>(null)
   const outcome = report.outcome
   const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
   const deficiencies = reportDeficiencies(report)
   const selectedFinding = report.view.findingId ? currentFinding(report, report.view.findingId) : null
-  const selectedCandidate = extraction?.uncertainCandidates.find(candidate => candidate.findingId === report.view.findingId)
-  const summary = selectedFinding ? `${selectedFinding.grade} · ${selectedFinding.description}` : selectedCandidate ? `Usikkert funn · ${selectedCandidate.original.description}` : null
+  const selectedCandidate = [...(extraction?.findings ?? []), ...(extraction?.uncertainCandidates ?? [])].find(candidate => candidate.findingId === report.view.findingId)
+  const selectedRejected = report.findingControls.some(control => control.findingId === report.view.findingId && control.rejection)
+  const summary = selectedFinding ? `${selectedFinding.grade} · ${selectedFinding.description}` : selectedCandidate ? `${selectedRejected ? 'Brukeravvist KI-uttrekk' : 'Usikkert funn'} · ${selectedCandidate.original.description}` : null
   const target = (source: unknown) => sourceTarget(source, { hash: report.selected?.hash ?? '', documentName: report.selected?.file.name.trim() ?? '' })
   const sourceIssue = !selectedFinding && selectedCandidate ? target(selectedCandidate.original.source).issue : null
   const onView = (view: typeof report.view) => dispatch({ type: 'report-view', generation: report.generation, view })
@@ -68,19 +70,23 @@ export function ReportAnalysis({ session, dispatch, client }: {
           const finding = currentFinding(report, candidate.findingId)
           const control = report.findingControls.find(item => item.findingId === candidate.findingId)
           return <li key={candidate.findingId}>
-          {finding ? <>
-          <h3><button className="finding-select" type="button" aria-pressed={report.view.findingId === finding.findingId} onClick={() => onView({ ...report.view, findingId: finding.findingId, pdfPage: finding.source.pdfPage })}>{finding.grade} · {finding.description}</button></h3>
+          {control?.rejection ? <>
+          <h3><button ref={report.view.findingId === candidate.findingId ? selectedButton : undefined} className="finding-select" type="button" aria-pressed={report.view.findingId === candidate.findingId} onClick={() => onView({ ...report.view, findingId: candidate.findingId, pdfPage: target(candidate.original.source).page })}>Brukeravvist KI-uttrekk · {candidate.original.description}</button></h3>
+          <p>Ikke aktivt rapportfunn · Avvist av deg · {candidate.findingId}</p>
+          <p>Opprinnelig grad: {candidate.original.grade ?? 'Ikke oppgitt'} · Oppgitt dokument: {candidate.original.source?.documentName ?? 'Ikke oppgitt'} · Oppgitt PDF-side: {candidate.original.source?.pdfPage ?? 'Ikke oppgitt'}</p>
+          </> : finding ? <>
+          <h3><button ref={report.view.findingId === candidate.findingId ? selectedButton : undefined} className="finding-select" type="button" aria-pressed={report.view.findingId === finding.findingId} onClick={() => onView({ ...report.view, findingId: finding.findingId, pdfPage: finding.source.pdfPage })}>{finding.grade} · {finding.description}</button></h3>
           <p>{finding.source.documentName} · PDF-side {finding.source.pdfPage} · {finding.findingId}</p>
           <p>{control?.correction ? 'Brukerkorrigert' : 'Opprinnelig KI-uttrekk'} · {control?.confirmedRevision === (control?.revision ?? 0) ? 'Kontrollert og bekreftet mot originalrapporten' : 'Ikke kontrollert'}</p>
           </> : <>
-          <h3><button className="finding-select" type="button" aria-pressed={report.view.findingId === candidate.findingId} onClick={() => onView({ ...report.view, findingId: candidate.findingId, pdfPage: target(candidate.original.source).page })}>Usikkert funn · {candidate.original.description}</button></h3>
+          <h3><button ref={report.view.findingId === candidate.findingId ? selectedButton : undefined} className="finding-select" type="button" aria-pressed={report.view.findingId === candidate.findingId} onClick={() => onView({ ...report.view, findingId: candidate.findingId, pdfPage: target(candidate.original.source).page })}>Usikkert funn · {candidate.original.description}</button></h3>
           <p>Opprinnelig grad: {candidate.original.grade ?? 'Ikke oppgitt'} · {candidate.findingId}</p>
           <p>Oppgitt dokument: {candidate.original.source?.documentName ?? 'Ikke oppgitt'} · Oppgitt PDF-side: {candidate.original.source?.pdfPage ?? 'Ikke oppgitt'} (usikker kilde)</p>
           {candidate.kind === 'uncertain' && <ul>{candidate.issues.map(issue => <li key={issue.code}>{issue.code}: {issue.reason}</li>)}</ul>}
           <ul>{candidate.original.uncertainties.map((text, index) => <li key={index}>{text}</li>)}</ul>
           </>}
           {control?.draft && <p>Redigert utkast — ikke brukt</p>}
-          {report.status === 'completed' && report.view.findingId === candidate.findingId && <FindingControl report={report} candidate={candidate} dispatch={dispatch} />}
+          {report.status === 'completed' && report.view.findingId === candidate.findingId && <FindingControl report={report} candidate={candidate} dispatch={dispatch} onRejected={() => selectedButton.current?.focus()} />}
         </li>})}
       </ol>
       </SourceReview>

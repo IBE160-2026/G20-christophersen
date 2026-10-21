@@ -9,6 +9,7 @@ export type FindingErrors = Partial<Record<keyof FindingDraft | 'source', string
 export interface FindingControl {
   findingId: string
   revision: number
+  rejection: { revision: number } | null
   correction: FindingCorrection | null
   draft: FindingDraft | null
   confirmedRevision: number | null

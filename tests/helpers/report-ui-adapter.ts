@@ -8,6 +8,10 @@ export const createAdapter = (): AnalysisAdapter => ({
     const findings = [{ findingId: 'ui-TG3', description: 'Kontrollert lekkasje', grade: 'TG3',
       source: { documentName: document.documentName, reportHash: document.reportHash, pdfPage: 2 }, uncertainties: [] as string[] }]
     const version = { contractVersion: CONTRACT_VERSION, extractionVersion: EXTRACTION_VERSION }
+    if (document.documentName === 'rt12.pdf') return { ...version, status: 'completed', findings: [
+      { findingId: 'rt12-fabricated', description: 'Oppdiktet lekkasje', grade: 'TG3', source: { documentName: document.documentName, reportHash: document.reportHash, pdfPage: 3 }, uncertainties: [] },
+      { findingId: 'rt12-floor', description: 'Slitt gulv', grade: 'TG2', source: { documentName: document.documentName, reportHash: document.reportHash, pdfPage: 2 }, uncertainties: [] },
+    ], limitations: [] }
     if (document.documentName === 'rt11.pdf') return { ...version, status: 'completed', findings: [
       { findingId: 'rt11', description: 'Feil uttrekk av tak', grade: 'TG3', source: { documentName: document.documentName, reportHash: document.reportHash, pdfPage: 4 }, uncertainties: [] },
       { findingId: 'gulv', description: 'Slitt gulv', grade: 'TG2', source: { documentName: document.documentName, reportHash: document.reportHash, pdfPage: 2 }, uncertainties: [] },

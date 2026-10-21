@@ -1,0 +1,188 @@
+Story 2.9 implementation checkpoint — 2026-10-21
+Baseline: 63627cee85b771f6207c431338eca7a734a9ee24
+
+COMMAND: npm test (local loopback allowed)
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  20 passed (20)
+      Tests  534 passed (534)
+   Start at  12:07:03
+   Duration  82.89s (tests 98%, import 2%)
+
+
+
+COMMAND: npm run typecheck
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+
+
+COMMAND: npm run lint
+
+> property-acquisition-agent@0.0.0 lint
+> oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts vitest.config.ts
+
+
+
+COMMAND: npm run build
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 137 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                              0.53 kB │ gzip:   0.34 kB
+dist/assets/pdf.worker.min-CjEcRF4W.mjs  1,264.34 kB
+dist/assets/index-DFYlve2N.css              13.51 kB │ gzip:   3.16 kB
+dist/assets/index-DOIPeMGJ.js              815.98 kB │ gzip: 245.60 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 194ms
+
+
+COMMAND: PLAYWRIGHT_BROWSERS_PATH=/private/tmp/ibe160-story-1-2-browsers npx playwright test
+[WebServer] (node:66980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 79 tests using 4 workers
+
+(node:66982) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66983) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66981) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 tests/e2e/app-shell.spec.ts:70:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (130ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   4 tests/e2e/app-shell.spec.ts:122:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (527ms)
+  ✓   3 tests/e2e/app-shell.spec.ts:47:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (586ms)
+  ✓   1 tests/e2e/app-shell.spec.ts:8:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (1.1s)
+  ✓   5 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (1.1s)
+  ✓   6 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (614ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (861ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (743ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (759ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (716ms)
+  ✓  11 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (651ms)
+  ✓  14 tests/e2e/financial-input.spec.ts:5:1 › 1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplisitt periode/år (355ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (709ms)
+  ✓  13 tests/e2e/app-shell.spec.ts:255:1 › Story 2.5: faktisk demoserver analyserer én multipart-PDF med backendhash og korrelasjon (1.4s)
+  ✓  15 tests/e2e/financial-input.spec.ts:24:1 › 1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjengelig retur (1.1s)
+  ✓  17 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 (1.6s)
+  ✓  19 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 (949ms)
+  ✓  16 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 1440×900 (2.0s)
+  ✓  22 tests/e2e/financial-input.spec.ts:160:1 › 1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholder brukeropphav etter retting (466ms)
+  ✓  18 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 (1.7s)
+  ✓  21 tests/e2e/financial-input.spec.ts:117:1 › 1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflikt uten automatisk valg (1.1s)
+  ✓  23 tests/e2e/financial-input.spec.ts:183:1 › 1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og bevarte D/J-totaler (816ms)
+  ✓  20 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 (1.4s)
+  ✓  27 tests/e2e/financial-input.spec.ts:260:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 1440×900 (435ms)
+  ✓  28 tests/e2e/financial-input.spec.ts:260:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 320×160 (481ms)
+  ✓  24 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 1440×900 (1.9s)
+  ✓  25 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 360×225 (1.8s)
+  ✓  26 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 (1.9s)
+  ✓  29 tests/e2e/financial-input.spec.ts:290:1 › 1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret retur, retting og øktslutt (978ms)
+  ✓  30 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: F3 manglende L viser lokale feil, første berørte felt og krever retting (795ms)
+  ✓  31 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: ugyldig P viser lokale feil, første berørte felt og krever retting (800ms)
+  ✓  32 tests/e2e/financial-input.spec.ts:329:3 › 1.7 AC2/AC6: ulike år viser lokale feil, første berørte felt og krever retting (849ms)
+  ✓  34 tests/e2e/financial-input.spec.ts:380:1 › 1.7 AC2: L-konflikt består gjennom forsøk; opphav og ny kontroll må rettes eksplisitt (867ms)
+  ✓  33 tests/e2e/financial-input.spec.ts:347:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes (1.2s)
+  ✓  35 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1440×900 (748ms)
+  ✓  36 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1280×800 (973ms)
+  ✓  37 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 720×450 (798ms)
+  ✓  38 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 320×200 (745ms)
+Story 1.7 målt kontrast: {"action":6.701109538539959,"error":7.104296467437304,"issueText":11.601821357499892,"control":3.8101786636538826,"focus":6.701109538539959}
+  ✓  39 tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast (956ms)
+  ✓  40 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes (782ms)
+  ✓  41 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes (806ms)
+  ✓  42 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes (888ms)
+  ✓  45 tests/e2e/report-analysis.spec.ts:418:1 › 2.7 AC4 RT-7: kjent men ugyldig kildeside viser faktisk mangel uten gjettet navigasjon (1.7s)
+  ✓  46 tests/e2e/report-analysis.spec.ts:680:1 › 2.8 uavhengig review: delvis retting bevarer feltfeil og retur stjeler ikke fokus (2.0s)
+  ✓  44 tests/e2e/report-analysis.spec.ts:182:1 › 2.6 AC6: liste utenfor liten arbeidsflate er ikke synlig før den rulles inn (2.4s)
+  ✓  43 tests/e2e/report-analysis.spec.ts:59:1 › 2.6 AC1/4/5/6: faktisk HTTP/adapter, ett kall, originalhash, synlighetsgrense og finansgjenbruk (3.4s)
+  ✓  49 tests/e2e/report-analysis.spec.ts:199:1 › 2.6 review AC6: fullført rapporttrinn og én kunngjøring ved tastaturretur (1.5s)
+  ✓  48 tests/e2e/report-analysis.spec.ts:704:1 › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm (1.9s)
+  ✓  47 tests/e2e/report-analysis.spec.ts:428:1 › 2.7 cleanup/lasting: ventende worker gir ærlig status og frigjøres ved trinnretur (2.5s)
+  ✓  52 tests/e2e/report-analysis.spec.ts:736:1 › 2.8 uavhengig review: ugyldig utkast bevares uten nytt feilfokus ved funnretur (1.7s)
+  ✓  51 tests/e2e/report-analysis.spec.ts:226:1 › 2.6 review AC6: kun seksjonskant synlig teller ikke som synlig listestart (2.2s)
+  ✓  50 tests/e2e/report-analysis.spec.ts:91:1 › 2.6 AC4: gyldig tomliste og alle usikkerheter gjennom ordinær kontrolladapter (2.9s)
+  ✓  55 tests/e2e/report-analysis.spec.ts:254:3 › 2.6 review AC2/4/6: transport kunngjøres én gang uten retry eller fokusflytting (844ms)
+  ✓  53 tests/e2e/report-analysis.spec.ts:448:1 › 2.7 visuell QA: 1440, 1280, smalt panel og sterk zoom bevarer kilder/kontroller (2.5s)
+  ✓  57 tests/e2e/report-analysis.spec.ts:254:3 › 2.6 review AC2/4/6: invalid-json kunngjøres én gang uten retry eller fokusflytting (794ms)
+  ✓  54 tests/e2e/report-analysis.spec.ts:748:1 › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema (2.3s)
+  ✓  56 tests/e2e/report-analysis.spec.ts:109:1 › 2.6 AC4: analysefeil/delresultat og dokumentfeil er ufullført (3.0s)
+  ✓  58 tests/e2e/report-analysis.spec.ts:473:1 › 2.7 kontrakt: usikker grad med kjent kilde og utelatt valgfri originalhash viser riktig originalside (2.3s)
+  ✓  61 tests/e2e/report-analysis.spec.ts:125:3 › 2.6 AC2: kontrollert ugyldig 200-retur invalid-json gir feil (589ms)
+  ✓  59 tests/e2e/report-analysis.spec.ts:291:1 › 2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/zoom og beholdt fokus (2.2s)
+  ✓  60 tests/e2e/report-analysis.spec.ts:772:1 › 2.9 AC1–4 RT-12: dokumentfasit, tastatur-Avvis, bevart original, andre funn og retur med ett POST (2.9s)
+  ✓  63 tests/e2e/report-analysis.spec.ts:125:3 › 2.6 AC2: kontrollert ugyldig 200-retur sessionId gir feil (1.9s)
+  ✓  62 tests/e2e/report-analysis.spec.ts:482:1 › 2.7 uavhengig review: terminal renderfeil avslutter busy og ny naboside kan vises (2.6s)
+  ✓  64 tests/e2e/report-analysis.spec.ts:326:1 › 2.7 AC3/5: smalt panel har headingfokus, fokusfelle, Esc/retur og bevart valg/posisjon (2.6s)
+  ✓  66 tests/e2e/report-analysis.spec.ts:125:3 › 2.6 AC2: kontrollert ugyldig 200-retur requestId gir feil (2.0s)
+  ✓  65 tests/e2e/report-analysis.spec.ts:823:1 › 2.9 AC1/4 RT-12: historisk retting og ubrukt utkast bevares, smalt kildepanel og retur stjeler ikke fokus (3.0s)
+  ✓  68 tests/e2e/report-analysis.spec.ts:358:1 › 2.7 AC4 RT-7/8: usikker kilde gjettes ikke og workerfeil er synlig uten ny analyse (2.2s)
+  ✓  67 tests/e2e/report-analysis.spec.ts:502:1 › 2.7 uavhengig review: Hel side passer i leseregion og 1199/1200-grensen bevarer kilde (3.3s)
+  ✓  69 tests/e2e/report-analysis.spec.ts:125:3 › 2.6 AC2: kontrollert ugyldig 200-retur generation gir feil (2.6s)
+  ✓  70 tests/e2e/report-analysis.spec.ts:863:1 › 2.9 AC3: eksplisitt avvisning av usikker kandidat bevarer kildeusikkerhet og rapportbegrensning (2.4s)
+  ✓  71 tests/e2e/report-analysis.spec.ts:374:1 › 2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og originalen kan gjenbrukes (2.7s)
+  ✓  73 tests/e2e/report-analysis.spec.ts:125:3 › 2.6 AC2: kontrollert ugyldig 200-retur reportHash gir feil (1.4s)
+  ✓  75 tests/e2e/report-analysis.spec.ts:143:1 › 2.6 AC3: rapportbytte og forlatt pågående analyse forkaster gamle svar og forsøker abort (704ms)
+  ✓  72 tests/e2e/report-analysis.spec.ts:525:1 › 2.7 uavhengig review: rapportbytte under ventende render frigjør gammel original og nullstiller visning (4.0s)
+  ✓  74 tests/e2e/report-analysis.spec.ts:405:1 › 2.7 AC4: faktisk renderfeil skjuler gammel side, beholder dokument/side og starter ikke analyse (1.8s)
+  ✓  76 tests/e2e/report-analysis.spec.ts:168:1 › 2.6: produksjonsdemo viser faktiske F4-funn uten ekstern trafikk (1.9s)
+  ✓  77 tests/e2e/report-analysis.spec.ts:562:1 › 2.8 AC1–4 RT-11: originalfasit, kontroll, separat utkast, eksplisitt bruk/avbryt og ett analyse-POST (1.8s)
+  ✓  78 tests/e2e/report-analysis.spec.ts:612:1 › 2.8 AC2/4: ugyldig utkast, feltfokus, panel-Esc, funnbytte og trinnretur bevarer ubrukt utkast (1.8s)
+  ✓  79 tests/e2e/report-analysis.spec.ts:659:1 › 2.8 AC4: ukjent grad/kilde gjettes ikke, eksplisitt gyldig retting bevarer original usikkerhet (1.4s)
+
+  79 passed (35.7s)
+
+
+COMMAND: PLAYWRIGHT_BROWSERS_PATH=/private/tmp/ibe160-story-1-2-browsers npx playwright test --config playwright.dev.config.ts
+[WebServer] (node:67409) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 3 workers
+
+(node:67415) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67414) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/private/story-1-2-dev-TTjTg7/private.txt" is outside of Vite serving allow list.
+[WebServer]
+[WebServer] - /Users/madschristophersen/IBE160/G20-christophersen
+[WebServer]
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+[WebServer]
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+  ✓  2 tests/e2e/dev-shell.spec.ts:38:1 › 2.7 uavhengig review: lokal PDF-ressursrute åpner ikke prosjektets private grense (53ms)
+  ✓  1 tests/e2e/dev-shell.spec.ts:21:1 › AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler (55ms)
+  ✓  3 tests/e2e/dev-shell.spec.ts:5:1 › AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil (477ms)
+
+  3 passed (1.8s)

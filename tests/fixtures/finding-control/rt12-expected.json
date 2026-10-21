@@ -1,0 +1,9 @@
+{
+  "documentName": "rt12.pdf",
+  "pageCount": 3,
+  "findings": [
+    { "grade": "TG2", "description": "Slitt gulv", "pdfPage": 2 }
+  ],
+  "noFinding": { "pdfPage": 3, "text": "Ingen registrert lekkasje eller teknisk grad paa denne siden." },
+  "fabricatedControlResponse": { "findingId": "rt12-fabricated", "grade": "TG3", "description": "Oppdiktet lekkasje", "pdfPage": 3 }
+}

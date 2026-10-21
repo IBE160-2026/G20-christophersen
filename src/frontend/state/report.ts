@@ -5,6 +5,7 @@ import { evaluateKnownDeficiencies } from '../../domain/screening.ts'
 import type { KnownReportDeficiency } from '../../contracts/screening.ts'
 import type { FindingControl, FindingDraft } from '../../contracts/finding-control.ts'
 import { validateFindingCorrection } from '../../domain/finding-control.ts'
+import { sourceTarget } from '../pdf/source-page.ts'
 
 export interface SelectedReport {
   file: File
@@ -25,7 +26,7 @@ export interface ReportState {
   listConfirmationRevision: number | null
 }
 export type ReportAction =
-  | { type: 'report-finding-edit' | 'report-finding-apply' | 'report-finding-cancel' | 'report-finding-confirm'; generation: number; findingId: string }
+  | { type: 'report-finding-edit' | 'report-finding-apply' | 'report-finding-cancel' | 'report-finding-confirm' | 'report-finding-reject'; generation: number; findingId: string }
   | { type: 'report-finding-draft'; generation: number; findingId: string; field: keyof FindingDraft; value: string }
   | { type: 'report-view'; generation: number; view: ReportState['view'] }
   | { type: 'report-selecting'; generation: number }
@@ -50,10 +51,13 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
     const candidate = [...outcome.findings, ...outcome.uncertainCandidates].find(item => item.findingId === action.findingId)
     if (!candidate) return state
     const control = state.findingControls.find(item => item.findingId === action.findingId)
-      ?? { findingId: action.findingId, revision: 0, correction: null, draft: null, confirmedRevision: null, errors: {} }
+      ?? { findingId: action.findingId, revision: 0, rejection: null, correction: null, draft: null, confirmedRevision: null, errors: {} }
+    if (control.rejection) return state
     const current = currentFinding(state, action.findingId)
     let next: FindingControl = control
-    if (action.type === 'report-finding-edit') {
+    if (action.type === 'report-finding-reject') {
+      next = { ...control, rejection: { revision: control.revision + 1 }, revision: control.revision + 1, confirmedRevision: null }
+    } else if (action.type === 'report-finding-edit') {
       if (control.draft) return state
       const original = candidate.original
       next = { ...control, errors: {}, draft: { grade: current?.grade ?? (original.grade === 'TG2' || original.grade === 'TG3' ? original.grade : ''),
@@ -81,7 +85,7 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
     }
     return { ...state, findingControls: [...state.findingControls.filter(item => item.findingId !== action.findingId), next],
       ...(next.revision !== control.revision ? { listRevision: state.listRevision + 1, listConfirmationRevision: null,
-        view: state.view.findingId === action.findingId ? { ...state.view, pdfPage: next.correction!.source.pdfPage } : state.view } : {}) }
+        view: state.view.findingId === action.findingId ? { ...state.view, pdfPage: next.rejection ? sourceTarget(candidate.original.source, { hash: state.selected.hash, documentName: outcome.documentName }).page : next.correction!.source.pdfPage } : state.view } : {}) }
   }
   if (action.type === 'report-view') return action.generation === state.generation && state.selected
     ? { ...state, view: action.view } : state
@@ -116,7 +120,9 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
 export function currentFinding(state: ReportState, findingId: string) {
   const outcome = state.outcome
   const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
-  const correction = state.findingControls.find(item => item.findingId === findingId)?.correction
+  const control = state.findingControls.find(item => item.findingId === findingId)
+  if (control?.rejection) return null
+  const correction = control?.correction
   if (correction) return { findingId, ...correction }
   return extraction?.findings.find(item => item.findingId === findingId) ?? null
 }
@@ -129,7 +135,7 @@ export function reportDeficiencies(state: ReportState) {
   else {
     reportDeficiencies.push({ code: 'incomplete-report', reason: 'Funnlisten er ennå ikke kontrollert og bekreftet av deg.' })
     if (state.outcome?.status === 'completed') {
-      for (const candidate of state.outcome.uncertainCandidates.filter(item => !currentFinding(state, item.findingId))) for (const issue of candidate.issues) {
+      for (const candidate of state.outcome.uncertainCandidates.filter(item => !currentFinding(state, item.findingId) && !state.findingControls.some(control => control.findingId === item.findingId && control.rejection))) for (const issue of candidate.issues) {
         reportDeficiencies.push({ code: 'incomplete-report', reason: `${candidate.findingId}: ${issue.reason}` })
       }
       for (const limitation of state.outcome.limitations) reportDeficiencies.push({ code: 'incomplete-report', reason: limitation })

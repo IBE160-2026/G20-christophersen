@@ -189,3 +189,95 @@ describe('Story 2.8 — kontroll, utkast og immutabel original', () => {
   })
 
 })
+
+describe('Story 2.9 — eksplisitt brukeravvisning med bevart opphav', () => {
+  const reject = (state: ReportState) => reportReducer(state, { type: 'report-finding-reject', generation: 1, findingId: 'rt11' })
+  it('AC1/3: avvisning fjerner påstått TG3 fra aktiv seleksjon og bevarer original/PDF uten teknisk avklaring', () => {
+    const before = completed()
+    const originalJson = JSON.stringify(before.outcome)
+    const rejected = reject(before)
+    expect(currentFinding(rejected, 'rt11')).toBeNull()
+    expect(rejected.findingControls[0]).toMatchObject({ rejection: { revision: 1 }, revision: 1, confirmedRevision: null })
+    expect(rejected.status).toBe('completed')
+    expect(rejected.outcome).toBe(before.outcome)
+    expect(JSON.stringify(rejected.outcome)).toBe(originalJson)
+    expect(rejected.selected).toBe(before.selected)
+    expect(reportDeficiencies(rejected).status).toBe('information-required')
+    expect(rejected).not.toHaveProperty('tg3Resolution')
+  })
+  it('AC2: avviser ett, øker listen én gang og bevarer andre originaler, rettinger, utkast og bekreftelser', () => {
+    let before = completed()
+    if (before.outcome?.status !== 'completed') throw new Error('test fixture')
+    const other = { ...before.outcome.findings[0]!, findingId: 'other', original: { ...before.outcome.findings[0]!.original, findingId: 'other' } }
+    before = { ...before, outcome: { ...before.outcome, findings: [...before.outcome.findings, other] } }
+    for (const type of ['report-finding-edit', 'report-finding-apply', 'report-finding-confirm', 'report-finding-edit'] as const) {
+      before = reportReducer(before, { type, generation: 1, findingId: 'other' })
+    }
+    before = act(before, 'report-finding-confirm')
+    before = { ...before, listConfirmationRevision: before.listRevision }
+    const otherControl = before.findingControls.find(item => item.findingId === 'other')
+    const rejected = reject(before)
+    expect(rejected.listRevision).toBe(before.listRevision + 1)
+    expect(rejected.listConfirmationRevision).toBeNull()
+    expect(rejected.findingControls.find(item => item.findingId === 'other')).toBe(otherControl)
+    expect(currentFinding(rejected, 'other')).toEqual(currentFinding(before, 'other'))
+    expect(rejected.outcome).toBe(before.outcome)
+  })
+  it('AC1/4: brukt korrigering og ugyldig ubrukt utkast bevares separat og kan ikke reaktivere', () => {
+    let before = act(act(draft(), 'report-finding-apply'), 'report-finding-confirm')
+    before = act(edit(act(before, 'report-finding-edit'), 'pdfPage', '99'), 'report-finding-apply')
+    before = { ...before, view: { findingId: 'rt11', pdfPage: 5, zoom: 1.5 }, listConfirmationRevision: 1 }
+    const control = before.findingControls[0]!
+    const rejected = reject(before)
+    expect(rejected.findingControls[0]?.correction).toBe(control.correction)
+    expect(rejected.findingControls[0]?.draft).toBe(control.draft)
+    expect(rejected.findingControls[0]?.errors).toBe(control.errors)
+    expect(rejected.findingControls[0]?.confirmedRevision).toBeNull()
+    expect(rejected.listRevision).toBe(2)
+    expect(rejected.view).toEqual({ findingId: 'rt11', pdfPage: 4, zoom: 1.5 })
+    expect(currentFinding(rejected, 'rt11')).toBeNull()
+    for (const type of ['report-finding-reject', 'report-finding-edit', 'report-finding-apply', 'report-finding-cancel', 'report-finding-confirm'] as const) {
+      expect(reportReducer(rejected, { type, generation: 1, findingId: 'rt11' })).toBe(rejected)
+    }
+    expect(edit(rejected, 'grade', 'TG3')).toBe(rejected)
+    const moved = reportReducer(rejected, { type: 'report-view', generation: 1, view: { findingId: 'other', pdfPage: 2, zoom: 1 } })
+    const returned = sessionReducer({ ...createInitialSession(), report: moved }, { type: 'navigate', step: 'tallgrunnlag' })
+    expect(returned.report.findingControls).toBe(rejected.findingControls)
+    expect(returned.report.listRevision).toBe(2)
+  })
+  it('AC3: avvist usikker kandidat er ikke uløst aktiv kandidat, mens rapportbegrensninger består', () => {
+    const before = completed(true)
+    if (before.outcome?.status !== 'completed') throw new Error('test fixture')
+    const limited = { ...before, outcome: { ...before.outcome, limitations: ['Rapportbegrensning består'] }, view: { findingId: 'rt11', pdfPage: null, zoom: 1 } }
+    const rejected = reject(limited)
+    expect(currentFinding(rejected, 'rt11')).toBeNull()
+    const reasons = reportDeficiencies(rejected).triggers.map(item => item.message)
+    expect(reasons).toHaveLength(2)
+    expect(reasons.some(reason => reason.includes('Rapportbegrensning består'))).toBe(true)
+    expect(reasons.some(reason => reason.includes('rt11:'))).toBe(false)
+    expect(rejected.view.pdfPage).toBeNull()
+    expect(rejected.outcome).toBe(limited.outcome)
+  })
+  it.each(['document', 'analysis'] as const)('AC3: %s-feil med delresultat tillater ingen avvisning eller falsk fullføring', kind => {
+    const before = completed()
+    if (before.outcome?.status !== 'completed') throw new Error('test fixture')
+    const failed: ReportState = { ...before, status: 'failed', error: 'timeout', outcome: { ...context, status: 'failed',
+      error: kind === 'document' ? { kind, code: 'unreadable-text', target: null, reason: null } : { kind, code: 'timeout', target: null, reason: null },
+      partialResult: { findings: before.outcome.findings, uncertainCandidates: [], limitations: ['Delresultat'], completeness: 'incomplete' } } }
+    expect(reject(failed)).toBe(failed)
+    expect(reportDeficiencies(reject(failed)).status).toBe('information-required')
+  })
+  it('AC4: ukjent funn, feil rapportidentitet og gammel generasjon ignoreres; rapportbytte overfører ingen avvisning', () => {
+    const before = completed()
+    expect(reportReducer(before, { type: 'report-finding-reject', generation: 0, findingId: 'rt11' })).toBe(before)
+    expect(reportReducer(before, { type: 'report-finding-reject', generation: 1, findingId: 'unknown' })).toBe(before)
+    for (const selected of [{ ...before.selected!, hash: 'b'.repeat(64) }, { ...before.selected!, file: new File(['%PDF'], 'other.pdf') }]) {
+      const mismatched = { ...before, selected }
+      expect(reject(mismatched)).toBe(mismatched)
+    }
+    const replacement = reportReducer(reject(before), { type: 'report-selecting', generation: 2 })
+    expect(replacement.findingControls).toEqual([])
+    expect(replacement.listRevision).toBe(0)
+    expect(reject(replacement)).toBe(replacement)
+  })
+})

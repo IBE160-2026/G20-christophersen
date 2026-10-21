@@ -1,0 +1,8 @@
+ink-structure / status-success-surface: 11.6420:1; krav 4.5:1; BESTÅTT
+text-primary / status-warning-surface: 11.6018:1; krav 4.5:1; BESTÅTT
+ink-structure / status-danger-surface: 11.1981:1; krav 4.5:1; BESTÅTT
+status-danger / surface-page: 6.4640:1; krav 4.5:1; BESTÅTT
+status-warning / status-warning-surface: 6.1501:1; krav 4.5:1; BESTÅTT
+text-secondary / surface-subtle: 5.2061:1; krav 4.5:1; BESTÅTT
+focus-ring / surface-subtle: 5.8590:1; krav 3:1; BESTÅTT
+border-control / surface-subtle: 3.3314:1; krav 3:1; BESTÅTT

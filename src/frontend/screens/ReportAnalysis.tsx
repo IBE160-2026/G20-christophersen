@@ -24,7 +24,7 @@ export function ReportAnalysis({ session, dispatch, client }: {
   const selectedFinding = report.view.findingId ? currentFinding(report, report.view.findingId) : null
   const selectedCandidate = [...(extraction?.findings ?? []), ...(extraction?.uncertainCandidates ?? [])].find(candidate => candidate.findingId === report.view.findingId)
   const selectedRejected = report.findingControls.some(control => control.findingId === report.view.findingId && control.rejection)
-  const summary = selectedFinding ? `${selectedFinding.grade} · ${selectedFinding.description}` : selectedCandidate ? `${selectedRejected ? 'Brukeravvist KI-uttrekk' : 'Usikkert funn'} · ${selectedCandidate.original.description}` : null
+  const summary = selectedFinding ? `${selectedFinding.grade} · ${selectedFinding.description}` : selectedCandidate ? `${selectedRejected ? 'Brukeravvist KI-uttrekk' : 'Usikkert funn'} · ${selectedCandidate.original.description}` : report.view.pdfPage !== null && report.selected ? `Originalrapport · ${report.selected.file.name}` : null
   const target = (source: unknown) => sourceTarget(source, { hash: report.selected?.hash ?? '', documentName: report.selected?.file.name.trim() ?? '' })
   const sourceIssue = !selectedFinding && selectedCandidate ? target(selectedCandidate.original.source).issue : null
   const onView = (view: typeof report.view) => dispatch({ type: 'report-view', generation: report.generation, view })
@@ -111,6 +111,7 @@ export function ReportAnalysis({ session, dispatch, client }: {
     </aside>}
     {deficiencies.status === 'no-known-deficiencies' && <p className="report-sufficiency">Ingen kjent rapportmangel i det kontrollerte grunnlaget. Dette er ingen screeninganbefaling.</p>}
     {report.status === 'completed' && session.currentStep !== 'kontroller-funn' && <button className="secondary-action" type="button" onClick={() => dispatch({ type: 'navigate', step: 'kontroller-funn' })}>Gå til Kontroller funn</button>}
+    {session.currentStep === 'kontroller-funn' && listAssessment.controlCompleted && <button className="primary-action" type="button" onClick={() => dispatch({ type: 'navigate', step: 'resultat' })}>{session.resultSnapshot ? 'Vis resultat' : 'Beregn og vis resultat'}</button>}
     {session.currentStep === 'kontroller-funn' && <button className="secondary-action" type="button" onClick={() => dispatch({ type: 'navigate', step: 'tilstandsrapport' })}>Tilbake til Tilstandsrapport</button>}
     <button className="secondary-action" type="button" onClick={() => dispatch({ type: 'navigate', step: 'tallgrunnlag' })}>Tilbake til Tallgrunnlag</button>
   </section>

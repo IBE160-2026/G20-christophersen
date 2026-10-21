@@ -1147,7 +1147,8 @@ test.describe('Story 2.11 — gjeldende liste og lokal tilstrekkelighet', () => 
       await expect(page.locator('.local-deficiencies')).toHaveCount(0)
       await expect(page.locator('.report-sufficiency')).toContainText('ingen screeninganbefaling')
       await expect(page.getByRole('button', { name: /Kontroller funn Trinn 3/ })).toContainText('Fullført')
-      await expect(page.getByRole('button', { name: /Resultat Trinn 4/ })).toHaveAttribute('aria-disabled', 'true')
+      // Story 3.7 åpner Resultat etter denne fullførte kontrollporten.
+      await expect(page.getByRole('button', { name: /Resultat Trinn 4/ })).not.toHaveAttribute('aria-disabled', 'true')
       await page.getByRole('button', { name: 'Korriger', exact: true }).click()
       await page.getByLabel('Beskrivelse fra rapporten', { exact: true }).fill('Ubrukt gulvutkast')
       await expect(page.locator('#findings-title')).toHaveText('Funnliste — bekreftet')

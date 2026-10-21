@@ -25,3 +25,16 @@ Ingen generering, oppdatering, eksternt kall eller live-fallback skjer under
 kjøring. Nye/endret rapportbytes krever et eksplisitt nytt kontrollert svar;
 filnavn eller «liknende» innhold kan aldri gjenbruke et annet svar. Uavhengig
 rapportfasit skal fortsatt fastsettes før uttrekket og ikke tilpasses det.
+
+
+## Opphav er ikke kritisk rapportmangel
+
+Kontrollert, fiktivt lagret demo-uttrekk; ingen ny eller gjennomført live-analyse.
+Denne opphavsopplysningen lå tidligere feilaktig i `limitations` og blokkerte
+F1/F2 selv etter ferdig kontroll. Story 3.7 retter den konkrete
+fixtureplasseringen i tråd med PRD FR-6.5/NFR-3, AD-6 og F1/F2-fasiten.
+`limitations` er tom for disse komplette, kontrollerte uttrekkene. Reelle
+uttrekksbegrensninger forblir kritiske i felles mangelvurdering. Ingen
+runtime-filtrering, egen demoregel eller kontraktendring er innført.
+UI viser fortsatt «Demo · lagret KI-uttrekk» gjennom hele reisen og bevarer
+opplysningen om lagret opphav i resultatets analyseopphav.

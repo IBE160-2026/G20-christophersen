@@ -47,7 +47,8 @@ describe('Story 2.4 AC1/AC3 – ekte PDF-pipeline og lokale lagrede svar', () =>
     expect(result.status).toBe('completed')
     if (result.status !== 'completed') throw new Error('Forventet fullført demo.')
     expect(result.uncertainCandidates).toEqual([])
-    expect(result.limitations).toEqual(['Kontrollert, fiktivt lagret demo-uttrekk; ingen ny eller gjennomført live-analyse.'])
+    // Demoopphav følger mode/merking; de komplette F1–F4-uttrekkene har ingen rapportmangel.
+    expect(result.limitations).toEqual([])
     expect(result.findings.map(finding => ({
       id: finding.findingId, description: finding.description, grade: finding.grade,
       documentName: finding.source.documentName, pdfPage: finding.source.pdfPage,

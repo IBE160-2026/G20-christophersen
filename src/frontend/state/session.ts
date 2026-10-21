@@ -1,4 +1,4 @@
-import { createReportState, reportReducer } from './report.ts'
+import { createReportState, findingListAssessment, reportReducer } from './report.ts'
 import type { ReportAction, ReportState } from './report.ts'
 import type {
   FinancialField, RegisteredFinancialInput, RecurringField, RegisteredPeriod,
@@ -15,7 +15,7 @@ export interface SessionState {
   sources: FinancialSources
   costItems: CostItem[]
   nextCostId: number
-  currentStep: 'tallgrunnlag' | 'tilstandsrapport' | 'kontroller-funn'
+  currentStep: 'tallgrunnlag' | 'tilstandsrapport' | 'kontroller-funn' | 'resultat'
   report: ReportState
   financialRevision: number
   changedFields: FinancialField[]
@@ -98,6 +98,11 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
   if (action.type === 'report-start' && (!isFinancialConfirmed(state) || state.currentStep === 'tallgrunnlag')) return state
   if (action.type.startsWith('report-')) return { ...state, report: reportReducer(state.report, action as ReportAction) }
   if (action.type === 'navigate') {
+    if (action.step === 'resultat') {
+      if (state.resultSnapshot) return { ...state, currentStep: 'resultat' }
+      if (!isFinancialConfirmed(state) || !findingListAssessment(state.report).controlCompleted) return state
+      return { ...state, currentStep: 'resultat', resultSnapshot: calculateResultSnapshot(state), resultChanges: [] }
+    }
     if (action.step === state.currentStep || (action.step !== 'tallgrunnlag' && !isFinancialConfirmed(state))
       || (action.step === 'kontroller-funn' && state.report.status !== 'completed')) return state
     return { ...state, currentStep: action.step, report: reportReducer(state.report, { type: 'report-abandon' }) }

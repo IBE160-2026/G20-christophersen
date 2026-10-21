@@ -378,3 +378,25 @@ h1 {
 .finding-edit-field { display: grid; gap: var(--space-2); margin-block: var(--space-3); }
 .finding-edit input, .finding-edit select, .finding-edit textarea { width: 100%; min-width: 0; min-height: var(--control-height); padding: var(--space-2); font: inherit; color: var(--text-primary); background: var(--surface-main); border: 1px solid var(--border-control); border-radius: var(--radius-md); }
 .finding-edit [aria-invalid="true"] { border-color: var(--status-danger); }
+
+.screening-result { display: grid; gap: var(--section-gap); min-width: 0; overflow-wrap: anywhere; }
+.recommendation { padding: var(--space-5); border-left: 4px solid; border-radius: var(--radius-md); }
+.recommendation-proceed { background: var(--status-success-surface); border-color: var(--status-success); }
+.recommendation-rejected { background: var(--status-danger-surface); border-color: var(--status-danger); }
+.recommendation-information-required { background: var(--status-warning-surface); border-color: var(--status-warning); }
+.recommendation-historical, .result-stale { background: var(--surface-subtle); border-color: var(--border-control); }
+.recommendation h2 { font-size: 24px; line-height: 1.25; margin-block: var(--space-2) var(--space-3); }
+.recommendation h3, .result-findings h3 { font-size: 16px; margin-block: var(--space-4) var(--space-2); }
+.result-next-action { margin-top: var(--space-4); }
+.result-triggers, .result-findings { padding-left: var(--space-5); }
+.result-triggers li + li { margin-top: var(--space-2); }
+.result-findings > li { padding-block: var(--space-3); border-bottom: 1px solid var(--border-decorative); }
+.result-severe { color: var(--status-danger); }
+.result-tg3, .result-draft { padding: var(--space-2); color: var(--status-warning); background: var(--status-warning-surface); }
+.result-stale { padding: var(--space-4); border: 1px solid var(--border-control); }
+.result-detail { margin-block: var(--space-3); }
+.result-detail > summary { min-height: var(--control-height); padding-block: var(--space-2); font-weight: 600; cursor: pointer; }
+.result-origin { padding: var(--space-4); background: var(--surface-subtle); }
+.result-origin h4 { margin: var(--space-3) 0 var(--space-2); }
+.result-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.screening-result-historical .result-report { background: var(--surface-subtle); padding: var(--space-4); }

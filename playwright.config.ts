@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
-  testMatch: ['app-shell.spec.ts', 'financial-input.spec.ts', 'report-analysis.spec.ts'],
+  testMatch: ['app-shell.spec.ts', 'financial-input.spec.ts', 'report-analysis.spec.ts', 'screening-result.spec.ts'],
   fullyParallel: true,
   retries: 0,
   reporter: 'list',

@@ -1,0 +1,10 @@
+[WebServer] (node:62048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:62057) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/report-analysis.spec.ts:1107:5 › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC1/4/5 RT11/13/14/19: korrigert kontrollert liste, separat tastaturbekreftelse, utkast/retur og ny retting (2.2s)
+
+  1 passed (3.3s)

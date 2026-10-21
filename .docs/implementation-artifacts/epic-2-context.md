@@ -65,3 +65,16 @@ Full sluttregresjon: 564/564 Vitest, 84/84 bygget-app og 3/3 dev-E2E,
 typecheck/lint/build bestått. Ingen ny blocker/beslutning eller endring i porter.
 Epic 2 in-progress; 2.1–2.10 done, 2.11 backlog. Epic 3 backlog.
 Neste tillatte steg er bare 2.11 med ny implementeringsagent og separat review.
+
+Gjeldende oppfølging 2026-10-21 etter 2.11: Story 2.11 er **done** etter
+[full uavhengig BMAD-review](story-2-11-review.md) med fire sekvensielle lag.
+Eksplisitt rapport-/revisjonsbundet listebekreftelse, separat TG3-status og
+korrekt invalidasjon/bevaring er kontrollert mot alle AC. En kontrollmelding
+er presisert, og negative bindings-/finans-/tastaturprøver er lagt til.
+Alle 2.1–2.11 har done-spec og uavhengig reviewbevis; **Epic 2 og SP3 er done**.
+Milepæl 2 kan demonstreres; ingen Epic 3-resultatlogikk er innført.
+Full regresjon etter Epic 2-status er bestått: 582/582 unit, 89/89 bygget-app,
+3/3 dev-E2E og typecheck/lint/build; bevis står i reviewrapporten.
+Epic 3 er backlog. Ingen ny blocker eller beslutning; R1/R4 forblir uendret.
+Neste tillatte story etter grønn sluttregresjon er 3.1 med ny implementeringsagent
+og separat reviewagent. Ikke start 3.3 i denne bestillingen.

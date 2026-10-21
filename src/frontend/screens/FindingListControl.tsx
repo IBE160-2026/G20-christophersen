@@ -10,7 +10,7 @@ export function FindingListControl({ report, dispatch }: { report: ReportState; 
     <p>Listebekreftelsen avklarer ikke TG3. Du kan registrere Uavklart og fullføre kontrollen selv om Innhent mer informasjon fortsatt gjelder.</p>
     <p id="list-confirmation-status" role="status" aria-live="polite" aria-atomic="true">{assessment.controlCompleted
       ? 'Kontroll fullført — gjeldende funnliste er bekreftet og separat TG3-status er håndtert.'
-      : assessment.confirmed ? 'Gjeldende funnliste er bekreftet. Registrer separat TG3-status for å fullføre kontrollen.'
+      : assessment.confirmed ? 'Gjeldende funnliste er bekreftet. Registrer separat TG3-status for gjeldende forhold. Avklart krever også begrunnelse og konkret eksternt grunnlag; Uavklart kan beholdes.'
         : 'Gjeldende funnliste er ikke bekreftet.'}</p>
     <p id="list-confirmation-reason">{assessment.confirmed ? 'Bekreftelsen gjelder denne rapporten og gjeldende listerevisjon.'
       : assessment.canConfirm ? 'Listen er klar for din separate bekreftelse.'

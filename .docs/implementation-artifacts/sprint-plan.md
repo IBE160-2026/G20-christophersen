@@ -167,3 +167,15 @@ unit-prøver, faktisk Tab/status-/kortskjermkontroll og full regresjon består:
 Epic 2 er in-progress; 2.1–2.9 done, 2.10/2.11 backlog. Epic 3 er backlog.
 Neste tillatte steg er bare 2.10 med ny implementeringsagent og separat review.
 Readiness og porter er uendret; ingen ny blocker eller beslutning.
+
+Gjeldende oppfølging 2026-10-21 etter 2.11: 2.1–2.11 har done-spec og separat
+uavhengig review; **Epic 2 og SP3 er done**, milepæl 2 kan demonstreres.
+Story 2.11s [reviewrapport](story-2-11-review.md) dokumenterer AC, konkrete
+rettinger, egne negative/tastaturprøver og full regresjon etter Epic 2-status.
+Epic 3 er backlog. Ingen ny beslutning eller blocker, R1/R4 uendret.
+Etter grønn sluttregresjon kan bare 3.1 og deretter 3.2 følge i brukerens
+sekvensielle bestilling, hver med ny implementeringsagent og separat review.
+Ingen 3.3, full screening eller Resultat-flate er startet.
+
+Sluttregresjon etter Epic 2-done bestått: 582/582 unit, 89/89 bygget-app,
+3/3 dev-E2E og typecheck/lint/build. Ingen ny blocker eller beslutning.

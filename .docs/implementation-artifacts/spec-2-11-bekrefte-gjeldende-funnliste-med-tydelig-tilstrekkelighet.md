@@ -2,7 +2,7 @@
 title: 'Story 2.11 — Bekrefte gjeldende funnliste med tydelig tilstrekkelighet'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-11-bekrefte-gjeldende-funnliste-med-tydelig-tilstrekkelighet'
 baseline_commit: 'b2600f954dc2a4f2aa37f3903a0754e738d3b1e3'
@@ -64,3 +64,30 @@ Ingen intensjonsgap eller irreversible handlinger funnet. Konkret kode-/feltdesi
 `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` og begge Playwright-suiter. Chromium `PLAYWRIGHT_BROWSERS_PATH=/private/tmp/ibe160-story-1-2-browsers`. Ingen betalt API. Testforventninger skal komme fra låste AC/RT/AT, aldri tilpasses feil produktkode. Faktisk S5-evaluering og Epic 3-resultater er senere leveranser.
 
 Implementeringscheckpoint 2026-10-21: full regresjon 579/579 Vitest, 89/89 bygget-app-E2E og 3/3 dev-E2E; typecheck/lint/build bestått. Samtlige spec-matriserader har kjørte prøver. Se [AC-/testbevis](story-2-11-verifikasjon.md). Ingen ny beslutning eller blokkering. Separat uavhengig BMAD-review er neste port; Epic 2 er fortsatt in-progress og Epic 3 backlog.
+
+### Review Findings
+
+Uavhengig review 2026-10-21 med fire sekvensielle lag; full triage og AC-bevis i
+[reviewrapporten](story-2-11-review.md). Brukeren har autorisert konkrete rettinger.
+
+- [x] [Review][Patch] Presiser kontrollstatus ved ufullstendig Avklart; Uavklart kan beholdes.
+- [x] [Review][Patch] Bevis bevaring av faktisk bekreftet finansgrunnlag ved retur/TG3-/listehandling.
+- [x] [Review][Patch] Prøv faktisk Tab/Shift+Tab gjennom funn/PDF/liste med og uten utkast.
+- [x] [Review][Patch] Bevis synlig fokusgeometri ved 320 px.
+- [x] [Review][Patch] Prøv tilbaketrekking av Fullført etter relevante endringer.
+- [x] [Review][Patch] Skill agentens bilde-/tastaturkontroll fra menneskelig oppfattelse/S5.
+- [x] [Review][Patch] Negativ Uavklart-binding ved endret beskrivelse/fysisk side og ny listekontroll.
+- [x] [Review][Patch] Ekte listehandling etter separat TG3-endring bevarer uendrede bekreftelser.
+
+Rejected: Uavklart/mangelliste er ikke motstrid (false: kontrollslutt og tilstrekkelighet
+er separate); pending-ID-hoppflate er en unødvendig low utvidelse (radstatus finnes);
+inkonsistent tg3Findings er ikke nåbar fra aktuell konsument (false: aktive funn avledes).
+
+Story 2.11 settes done etter grønne målrettede prøver og full AC-gjennomgang.
+Alle 2.1–2.10 har done-spec og eget reviewbevis; Epic 2 settes done.
+Brukerbestilt full regresjon etter dette statuscheckpointet er siste port før
+videre arbeid. Ved feil må status revurderes. Epic 3 er ikke startet her.
+
+Sluttporten etter Epic 2-done er bestått: 582/582 unit, 89/89 bygget-app,
+3/3 dev-E2E og typecheck/lint/build. Ingen åpne funn, blocker eller ny beslutning.
+Se reviewrapportens konkrete kjøretall og kuraterte visuelle bevis.

@@ -56,3 +56,11 @@ Typecheck/lint/build på siste produktkode bestått; git diff --check bestått. 
 PDF-relatert bundle er uendret og ikke en byggfeil.
 
 Checkpoint: Story 2.11 `in-review`/sprint `review`; Epic 2 fortsatt `in-progress`, Epic 3 `backlog`. Ingen åpne implementeringsoppgaver, nye beslutninger eller blockers. Ny uavhengig reviewer vurderer alle AC og egne negative/fokusprøver før done.
+
+Uavhengig oppfølging: [reviewrapport](story-2-11-review.md) erstatter dette historiske
+checkpointet. Tre nye unitprøver og utvidet browserforløp dekker gammel Uavklart-
+binding, faktisk bekreftet finans, ekte listehandling etter TG3, Tab/Shift+Tab,
+320 px-fokus og tilbaketrukket trinnstatus. Skjermbildene er visuelt inspisert
+av reviewagenten. Dette er agentens UI-kontroll; menneskelig oppfattelse og
+faktisk S5-tid er ikke målt og påstås ikke bevist. Epic 2-sluttregresjon føres
+separat i reviewrapporten.

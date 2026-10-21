@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { bindAnalysisOutcome } from '../../src/contracts/analysis-validation.ts'
 import { createReportState, findingListAssessment, reportDeficiencies, reportReducer } from '../../src/frontend/state/report.ts'
 import type { ReportState } from '../../src/frontend/state/report.ts'
-import { createInitialSession, sessionReducer } from '../../src/frontend/state/session.ts'
+import { createInitialSession, isFinancialConfirmed, sessionReducer } from '../../src/frontend/state/session.ts'
+import type { SessionState } from '../../src/frontend/state/session.ts'
 
 const hash = 'a'.repeat(64)
 const documentName = 'list.pdf'
@@ -23,6 +24,22 @@ const finding = (state: ReportState, type: 'report-finding-confirm' | 'report-fi
   reportReducer(state, { type, generation: state.generation, findingId: 'roof' })
 const tg3 = (state: ReportState, field: 'status' | 'reason' | 'basis', value: string) =>
   reportReducer(state, { type: 'report-tg3-register', generation: state.generation, findingId: 'roof', field, value })
+
+function financialSession(report: ReportState): SessionState {
+  let session = createInitialSession()
+  for (const [field, rawValue] of [['P', '16000000'], ['L', '1900000'], ['D', '400000'], ['J', '800000'], ['Ymin', '7']] as const) {
+    session = sessionReducer(session, { type: 'register-value', field, rawValue })
+    session = sessionReducer(session, { type: 'register-source', field, source: { kind: 'assumption', description: `Kontrollert ${field}`, conflict: null } })
+  }
+  for (const field of ['L', 'D', 'J'] as const) {
+    session = sessionReducer(session, { type: 'register-period', field, period: 'year' })
+    session = sessionReducer(session, { type: 'register-year', field, year: '2026' })
+  }
+  session = sessionReducer(session, { type: 'register-rent-nature', rentNature: 'expected' })
+  session = sessionReducer(session, { type: 'confirm-financial' })
+  expect(isFinancialConfirmed(session)).toBe(true)
+  return { ...session, report, currentStep: 'kontroller-funn' as const }
+}
 
 describe('Story 2.11 — separat bekreftelse av gjeldende liste', () => {
   it('AC1: analyse og enkeltfunn bekrefter aldri listen; separat handling binder revisjon og bevarer opphav', () => {
@@ -111,6 +128,25 @@ describe('Story 2.11 — separat bekreftelse av gjeldende liste', () => {
     expect(findingListAssessment(state).controlCompleted).toBe(true)
     expect(reportDeficiencies(state).status).toBe('no-known-deficiencies')
   })
+  it.each([['description', 'Et annet alvorlig takforhold'], ['pdfPage', '2']] as const)('AC3/4: gammel Uavklart-binding fullfører ikke kontrollen etter endret %s og ny listebekreftelse', (field, value) => {
+    const before = completed('tg3')
+    if (before.outcome?.status !== 'completed') throw new Error('fixture')
+    let state: ReportState = { ...before, outcome: { ...before.outcome, pageCount: 2 } }
+    const outcome = state.outcome
+    state = tg3(confirm(finding(state, 'report-finding-confirm')), 'status', 'unresolved')
+    expect(findingListAssessment(state).controlCompleted).toBe(true)
+    const registration = state.tg3Resolutions
+    state = finding(state, 'report-finding-edit')
+    state = reportReducer(state, { type: 'report-finding-draft', generation: 1, findingId: 'roof', field, value })
+    state = confirm(finding(finding(state, 'report-finding-apply'), 'report-finding-confirm'))
+    expect(state.tg3Resolutions).toBe(registration)
+    expect(findingListAssessment(state)).toMatchObject({ confirmed: true, tg3Handled: false, controlCompleted: false })
+    expect(reportDeficiencies(state).triggers[0]?.message).toContain('annet eller ukjent rapportgrunnlag')
+    state = tg3(state, 'status', 'unresolved')
+    expect(findingListAssessment(state)).toMatchObject({ confirmed: true, tg3Handled: true, controlCompleted: true })
+    expect(reportDeficiencies(state).recommendation).toBe('Innhent mer informasjon')
+    expect(state.outcome).toBe(outcome)
+  })
   it.each(['report-finding-apply', 'report-finding-reject'] as const)('AC4 RT11/12: %s opphever listebekreftelsen og gammel revisjon ignoreres', type => {
     const confirmed = confirm(finding(completed(), 'report-finding-confirm'))
     const edited = finding(confirmed, 'report-finding-edit')
@@ -129,12 +165,27 @@ describe('Story 2.11 — separat bekreftelse av gjeldende liste', () => {
     expect(findingListAssessment(draft).confirmed).toBe(true)
     const cancelled = finding(draft, 'report-finding-cancel')
     expect(cancelled.listConfirmationRevision).toBe(0)
-    const session = { ...createInitialSession(), report: cancelled, currentStep: 'kontroller-funn' as const }
+    const session = financialSession(cancelled)
     const returned = sessionReducer(session, { type: 'navigate', step: 'tallgrunnlag' })
     expect(returned.report).toBe(cancelled)
     expect(returned.financial).toBe(session.financial)
     expect(returned.financialRevision).toBe(session.financialRevision)
+    expect(isFinancialConfirmed(returned)).toBe(true)
     expect(returned.report.outcome).toBe(confirmed.outcome)
+  })
+  it('AC4 RT19: ekte listehandling etter separat TG3-endring bevarer faktisk bekreftet finans og liste', () => {
+    const original = financialSession(confirm(finding(completed('tg3'), 'report-finding-confirm')))
+    let session = original
+    for (const [field, value] of [['status', 'unresolved'], ['status', 'resolved'], ['reason', 'Kontrollert for førstevurdering'], ['basis', 'Takrapport ref T-42']] as const) {
+      session = sessionReducer(session, { type: 'report-tg3-register', generation: 1, findingId: 'roof', field, value })
+      session = sessionReducer(session, { type: 'report-list-confirm', generation: 1, reportHash: hash, documentName, listRevision: 0 })
+      expect(isFinancialConfirmed(session)).toBe(true)
+      expect(session.financial).toBe(original.financial)
+      expect(session.financialRevision).toBe(original.financialRevision)
+      expect(session.report.listConfirmationRevision).toBe(0)
+      expect(session.report.findingControls).toBe(original.report.findingControls)
+    }
+    expect(findingListAssessment(session.report).controlCompleted).toBe(true)
   })
   it('AC4: feil identitet, gammel generasjon og rapportbytte ignorerer listehandlinger', () => {
     const state = finding(completed(), 'report-finding-confirm')

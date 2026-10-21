@@ -54,8 +54,7 @@ function assertAffected(input: FinancialBasis, field: FinancialField, code: stri
       expect(metric.value, name).toBeNull()
       expect(metric.issues, name).toContainEqual(expect.objectContaining({ field, code }))
     } else {
-      expect(metric.status, name).toBe('available')
-      expect(metric.value, name).toEqual(original[name].value)
+      expect(metric, name).toEqual(original[name])
     }
   }
   expect(FinancialMetricsSchema.parse(result)).toEqual(result)
@@ -177,6 +176,22 @@ describe('Story 3.1 AC2 — BT-7/15/16, år/periode og kontrollmetadata', () => 
     expect(validateFinancialBasis(input).issues.map(({ field }) => field)).toEqual(['L', 'D', 'J'])
     expect(validateFinancialInput(input.values).issues.map(({ field }) => field)).toEqual(['L', 'D', 'J'])
   })
+  it('review: samtidige J-feil endrer verken verdi eller kontrollgrunnlag i de tre uavhengige tallene', () => {
+    const input = basis()
+    const original = calculateFinancialMetrics(input)
+    input.values.J = { rawValue: '', confirmed: false, period: 'week', year: '2025' }
+    input.sources.J.conflict = { rawValue: '123', description: 'Motstridende gjeldskilde' }
+    const result = calculateFinancialMetrics(input)
+    for (const name of ['grossYield', 'noi', 'netYield'] as const) expect(result[name]).toEqual(original[name])
+    expect(result.cashFlowBeforeTax.value).toBeNull()
+    expect(result.cashFlowBeforeTax.issues.map(({ field, code }) => [field, code])).toEqual([
+      ['L', 'different-years'], ['D', 'different-years'],
+      ['J', 'missing-value'], ['J', 'unsupported-period'], ['J', 'different-years'], ['J', 'source-conflict'],
+    ])
+    // Eksisterende UI/mangelvurdering bruker fortsatt defaultkontrollen av L/D/J.
+    expect(validateFinancialBasis(input).fields.L.status).toBe('insufficient')
+    expect(validateFinancialInput(input.values).fields.D.status).toBe('insufficient')
+  })
   it.each(['L', 'D'] as const)('ulikt %s-år hindrer L/D-beregningene, men ikke L/P alene', (field) => {
     const input = basis(); input.values[field].year = '2025'
     const result = calculateFinancialMetrics(input)
@@ -249,6 +264,22 @@ describe('Story 3.1 AC3/4 — hver inputavhengighet og alle kjente årsaker', ()
     expect(result.netYield.value).toEqual({ kind: 'ratio', numerator: '1000000', denominator: '16000000', unit: 'ratio' })
     expect(result.cashFlowBeforeTax.status).toBe('unavailable')
   })
+  it('review: samtidig ugyldig P/J/Ymin lar hele gyldig NOI-grunnlag stå uendret', () => {
+    const input = basis()
+    const originalNoi = calculateFinancialMetrics(input).noi
+    input.values.P.rawValue = '0'
+    input.values.J = { rawValue: '0', confirmed: false, period: 'unknown', year: '' }
+    input.values.Ymin.rawValue = 'ikke et tall'
+    input.sources.P.description = ''
+    const result = calculateFinancialMetrics(input)
+    expect(result.noi).toEqual(originalNoi)
+    for (const name of ['grossYield', 'netYield', 'cashFlowBeforeTax'] as const) {
+      expect(result[name].status).toBe('unavailable')
+      expect(result[name].value).toBeNull()
+    }
+    expect(result.grossYield.issues.map(({ code }) => code)).toEqual(['must-be-positive', 'missing-source'])
+    expect(result.cashFlowBeforeTax.issues.map(({ code }) => code)).toEqual(['unconfirmed-zero', 'unknown-period', 'missing-year'])
+  })
   it('bevarer alle samtidige relevante feltårsaker i stabil rekkefølge', () => {
     const input = basis()
     input.values.L = { rawValue: '0', confirmed: false, period: 'unknown', year: '' }
@@ -315,6 +346,19 @@ describe('Story 3.1 AC1/2/6 — presisjon, gjentakelse og ingen mutasjon', () =>
   it('uendelig yielddesimal bevarer 1/3 fremfor avkortet eller formattert streng', () => {
     const input = basis(); input.values.P.rawValue = '3'; input.values.L.rawValue = '1'; input.values.D.rawValue = '0'; input.values.J.rawValue = '0'
     expect(calculateFinancialMetrics(input).netYield.value).toEqual({ kind: 'ratio', numerator: '1', denominator: '3', unit: 'ratio' })
+  })
+  it('review: månedlig desimal gir eksakt negativ årsverdi også utover 20 desimaler', () => {
+    const input = basis()
+    input.values.P.rawValue = '1000.000000000000000000001'
+    input.values.L = { rawValue: '0.333333333333333333333333333', confirmed: true, period: 'month', year: '2026' }
+    input.values.D.rawValue = '4'
+    input.values.J.rawValue = '0'
+    const result = calculateFinancialMetrics(input)
+    expect(result.grossYield.value).toEqual({ kind: 'ratio', numerator: '3.999999999999999999999999996', denominator: '1000.000000000000000000001', unit: 'ratio' })
+    expect(result.netYield.value).toEqual({ kind: 'ratio', numerator: '-0.000000000000000000000000004', denominator: '1000.000000000000000000001', unit: 'ratio' })
+    expect(result.noi.value).toEqual({ kind: 'amount', amount: '-0.000000000000000000000000004', unit: 'NOK/year' })
+    expect(result.cashFlowBeforeTax.value).toEqual(result.noi.value)
+    expect(FinancialMetricsSchema.parse(result)).toEqual(result)
   })
   it('fryst input gjentas identisk; hver retur har eget registrert kontrollgrunnlag', () => {
     const input = basis(); input.values.L.period = 'month'

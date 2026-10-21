@@ -188,3 +188,13 @@ Story 3.1 er implementert som ren finansmodul og satt til **review**, med
 av 3.1. Bare dersom den blir done uten blocker kan 3.2 starte, og brukerens
 kjede stopper der før 3.3. Ingen ny beslutning, endring av låst scope eller
 endring av R1/R4-portene.
+
+Gjeldende oppfølging 2026-10-21 etter Story 3.1-review: Story 3.1 er **done**
+etter [full uavhengig BMAD-review](story-3-1-review.md), fire sekvensielle lag
+og egen negativ/presisjonskontroll. Produksjonslogikken bestod; én testkontroll
+ble strammet inn og tre reviewerprøver lagt til. Full siste regresjon er
+649/649 unit, 89/89 bygget-app, 3/3 dev-E2E og typecheck/lint/build grønt.
+Epic 2 er fortsatt done, Epic 3 in-progress. Ingen ny blocker/beslutning eller
+endring av låste krav/porter. 3.2–3.9 står i backlog; i brukerens kjede kan kun
+3.2 nå implementeres og reviewes med separate sekvensielle agenter før stopp.
+3.3 skal ikke startes.

@@ -2,7 +2,7 @@
 title: 'Story 3.1 — Beregne fire nøkkeltall fra hvert sitt gyldige årsgrunnlag'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '3-1-beregne-fire-nøkkeltall-fra-hvert-sitt-gyldige-årsgrunnlag'
 baseline_commit: 'b143d4ba5e4efe48d040852065f64eda87cdc1cc'
@@ -34,3 +34,21 @@ Lever bare ren domain/finance og nødvendige delte kontrakter/tester. Ingen Reac
 - Undersøkelsen omfattet epics, SPEC/grensekontrakt, final arkitektur, kompilert epickontekst, PRD FR-12–FR-14 og addendumets BT-fasit, eksisterende felles schemas/validering og tidligere valideringsspec/review, sprintplan/status, sensorveiledningens lagrede direkte PDFKit-kildeuttrekk og faglærerens tilbakemelding. Krav–kode–testspor og vanlig deterministisk finans med kjente fasitsvar følges. Ingen ny kurskravtolkning.
 - Implementert og egenverifisert: 64 nye finansprøver, 147/147 målrettede validerings-/finanstester og full 646/646 Vitest. Typecheck/lint/build, 89/89 bygget-app og 3/3 dev-E2E består. Første ueskalerte fulltest fikk bare miljøets loopback-EPERM; identisk eskalert kjøring var grønn uten kodeendring. Testløp ble kjørt sekvensielt. Se [AC-/sluttbevis](story-3-1-verifikasjon.md), [Vitest-rålogg](story-3-1-kontroller.txt) og [build/E2E-rålogg](story-3-1-e2e-kontroller.txt).
 - Sluttstatus er in-review/review; Epic 2 done og Epic 3 in-progress. Integrerte reviewlag/done hoppes over etter brukerens eksplisitte fasekrav om separat uavhengig reviewer. Ingen blocker, ny beslutning eller senere story er startet; lokal implementeringscommit overleveres hovedagenten, uten push.
+
+## Independent Review — done
+
+Full separat [BMAD-review](story-3-1-review.md) av implementeringscommit
+`99d47837d8597f67317bee1c7c7581caaddf60d7` er bestått 2026-10-21. Alle fire lag
+ble kjørt sekvensielt; AC1–AC6 er kontrollert mot faktisk kode. Ingen
+produksjonsfeil eller ny produkt-/arkitekturbeslutning. Ett direkte testhull
+er rettet: hele upåvirkede metrikkobjekter sammenliknes. Tre egne negative/
+presisjonsprøver kontrollerer samtidige J-feil, P/J/Ymin-isolasjon og eksakt
+negativ årsverdi utover 20 desimaler. Åtte hypotetiske kandidater er avvist med
+separat begrunnelse i rapporten; ingen åpne/defererte funn.
+
+Sluttregresjon etter testretting: 150/150 målrettet, 649/649 full Vitest,
+89/89 bygget-app, 3/3 dev-E2E samt typecheck/lint/build og diff-whitespace grønt.
+Story 3.1 er **done**, Epic 2 fortsatt done, Epic 3 in-progress.
+3.2–3.9 er backlog. Neste tillatte steg i brukerens kjede er en ny
+implementeringsagent for bare 3.2 og deretter en separat reviewer; stopp før
+3.3. Ingen UI/terskler/format/screening er implementert av 3.1-review.

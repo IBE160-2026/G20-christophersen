@@ -59,3 +59,10 @@ Neste tillatte steg er separat uavhengig full BMAD-review av **kun Story 3.1**.
 Storyspec og sprintnøkkel er satt til in-review/review etter grønne kontroller.
 3.1 må bli done etter bestått review før 3.2 vurderes. Epic 2 forblir done og
 Epic 3 in-progress. Ikke start 3.3.
+
+Oppfølging etter separat review 2026-10-21: [uavhengig BMAD-review](story-3-1-review.md)
+er bestått og Story 3.1 er nå **done**. Ingen produksjonsfeil; én testkontroll
+av hele uberørte resultater er strammet inn og tre egne reviewerprøver lagt
+til. Full sluttregresjon: 649/649 unit, 89/89 bygget-app, 3/3 dev-E2E og
+typecheck/lint/build grønt. Rapporten bevarer alle ni kandidater og triage.
+Epic 3 er fortsatt in-progress; bare 3.2 kan følge i brukerens bestilling.

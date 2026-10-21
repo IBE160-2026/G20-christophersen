@@ -1,10 +1,11 @@
 import { z } from 'zod'
 import { FinancialBasisSchema } from './financial-basis.ts'
+import { Tg3FindingSchema } from './tg3-resolution.ts'
 import { FinancialIssueSchema } from './financial-validation.ts'
 
 // Bare allerede kjente mangler. Ingen påstand om dokument-/analysefullføring.
 export const KnownReportDeficiencySchema = z.strictObject({
-  code: z.enum(['missing-report', 'incomplete-report']),
+  code: z.enum(['missing-report', 'incomplete-report', 'unresolved-tg3']),
   reason: z.string().trim().min(1),
 })
 
@@ -12,6 +13,7 @@ export const KnownReportDeficiencySchema = z.strictObject({
 export const KnownDeficiencyInputSchema = z.strictObject({
   financialBasis: FinancialBasisSchema.optional(),
   reportDeficiencies: z.array(KnownReportDeficiencySchema).default([]),
+  tg3Findings: z.array(Tg3FindingSchema).default([]),
 })
 
 export const CriticalDeficiencySchema = z.discriminatedUnion('kind', [

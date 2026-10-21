@@ -21,3 +21,13 @@ faktisk tresiders PDF uten å lese fasit eller adapter. Kjør
 `node tests/fixtures/finding-control/generate-rt12.mjs` for reproduksjon.
 Bygget-app-prøven kontrollerer tekstlaget og fysisk side før tastatur-Avvis,
 bevart original/provenance, fortsatt aktivt gulvfunn, retur/fokus og ett POST.
+
+## Separat TG3-avklaring, FR-5 / Story 2.10
+
+`tg3-expected.json` er uavhengig håndskrevet fasit med to TG3: elektrisk anlegg
+på fysisk PDF-side 2 og alvorlig lekkasje i tak på side 3. Originalen genereres
+med `node tests/fixtures/finding-control/generate-tg3.mjs`, som ikke leser fasit
+eller kontrolladapter. Nettleserprøvene leser de faktiske tekstlagene og kontrollerer
+begge sidene, separate registreringer, ikke-overføring mellom forhold under stabil
+ID, fokus, nye rapporter og at kontrollflyten sender ett analyse-POST. Eksterne
+kontrollreferanser i brukerregistreringene er fiktive; de verifiseres ikke.

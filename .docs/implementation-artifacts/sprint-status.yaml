@@ -58,7 +58,7 @@ development_status:
   2-7-kontrollere-funnets-kilde-i-original-pdf-og-smalt-panel: done
   2-8-kontrollere-og-korrigere-funn-med-bevart-original-og-utkast: done
   2-9-avvise-feilaktig-ki-funn-med-bevart-opphav: done
-  2-10-registrere-og-validere-separat-tg3-avklaring: backlog
+  2-10-registrere-og-validere-separat-tg3-avklaring: review
   2-11-bekrefte-gjeldende-funnliste-med-tydelig-tilstrekkelighet: backlog
   epic-2-retrospective: optional
 

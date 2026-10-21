@@ -1,0 +1,7 @@
+{
+  "documentName": "tg3.pdf",
+  "findings": [
+    { "findingId": "electric", "grade": "TG3", "description": "Elektrisk anlegg ikke dokumentert", "pdfPage": 2 },
+    { "findingId": "roof", "grade": "TG3", "description": "Alvorlig lekkasje i tak", "pdfPage": 3 }
+  ]
+}

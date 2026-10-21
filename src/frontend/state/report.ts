@@ -5,6 +5,8 @@ import { evaluateKnownDeficiencies } from '../../domain/screening.ts'
 import type { KnownReportDeficiency } from '../../contracts/screening.ts'
 import type { FindingControl, FindingDraft } from '../../contracts/finding-control.ts'
 import { validateFindingCorrection } from '../../domain/finding-control.ts'
+import { sameTg3Basis } from '../../domain/tg3-resolution.ts'
+import type { Tg3Field, Tg3Resolution, Tg3Finding } from '../../contracts/tg3-resolution.ts'
 import { sourceTarget } from '../pdf/source-page.ts'
 
 export interface SelectedReport {
@@ -22,10 +24,13 @@ export interface ReportState {
   view: { findingId: string | null; pdfPage: number | null; zoom: number }
   listVisibleGeneration: number | null
   findingControls: FindingControl[]
+  tg3Revision: number
+  tg3Resolutions: { findingId: string; resolution: Tg3Resolution }[]
   listRevision: number
   listConfirmationRevision: number | null
 }
 export type ReportAction =
+  | { type: 'report-tg3-register'; generation: number; findingId: string; field: Tg3Field; value: string }
   | { type: 'report-finding-edit' | 'report-finding-apply' | 'report-finding-cancel' | 'report-finding-confirm' | 'report-finding-reject'; generation: number; findingId: string }
   | { type: 'report-finding-draft'; generation: number; findingId: string; field: keyof FindingDraft; value: string }
   | { type: 'report-view'; generation: number; view: ReportState['view'] }
@@ -38,7 +43,7 @@ export type ReportAction =
   | { type: 'report-list-visible'; generation: number }
 export function createReportState(): ReportState {
   return { view: { findingId: null, pdfPage: null, zoom: 1 }, generation: 0, status: 'missing', selected: null, active: null, outcome: null, error: null, listVisibleGeneration: null,
-    findingControls: [], listRevision: 0, listConfirmationRevision: null }
+    findingControls: [], tg3Revision: 0, tg3Resolutions: [], listRevision: 0, listConfirmationRevision: null }
 }
 function fail(state: ReportState, code: string): ReportState {
   return { ...state, status: 'failed', active: null, outcome: null, error: code, listVisibleGeneration: null }
@@ -54,6 +59,15 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
       ?? { findingId: action.findingId, revision: 0, rejection: null, correction: null, draft: null, confirmedRevision: null, errors: {} }
     if (control.rejection) return state
     const current = currentFinding(state, action.findingId)
+    if (action.type === 'report-tg3-register') {
+      if (!current || current.grade !== 'TG3') return state
+      const before = state.tg3Resolutions.find(item => item.findingId === action.findingId)?.resolution
+      if ((before?.[action.field] ?? '') === action.value && !(action.field === 'status' && before && !sameTg3Basis(before.binding, current))) return state
+      const resolution: Tg3Resolution = { status: '', reason: '', basis: '', ...before,
+        [action.field]: action.value, binding: before && action.field !== 'status' ? before.binding : { grade: current.grade, description: current.description, source: { ...current.source } } }
+      return { ...state, tg3Revision: state.tg3Revision + 1,
+        tg3Resolutions: [...state.tg3Resolutions.filter(item => item.findingId !== action.findingId), { findingId: action.findingId, resolution }] }
+    }
     let next: FindingControl = control
     if (action.type === 'report-finding-reject') {
       next = { ...control, rejection: { revision: control.revision + 1 }, revision: control.revision + 1, confirmedRevision: null }
@@ -127,6 +141,16 @@ export function currentFinding(state: ReportState, findingId: string) {
   return extraction?.findings.find(item => item.findingId === findingId) ?? null
 }
 
+/** Aktive TG3 med separat registrering; anvendbarhet tolkes bare i domain. */
+export function currentTg3Findings(state: ReportState): Tg3Finding[] {
+  if (state.status !== 'completed' || state.outcome?.status !== 'completed') return []
+  return [...state.outcome.findings, ...state.outcome.uncertainCandidates].flatMap(candidate => {
+    const current = currentFinding(state, candidate.findingId)
+    return current?.grade === 'TG3' ? [{ findingId: candidate.findingId, current: { grade: current.grade, description: current.description, source: current.source },
+      resolution: state.tg3Resolutions.find(item => item.findingId === candidate.findingId)?.resolution ?? null }] : []
+  })
+}
+
 /** Bare kjente mangler; completed er aldri brukerens listebekreftelse. */
 export function reportDeficiencies(state: ReportState) {
   const reportDeficiencies: KnownReportDeficiency[] = []
@@ -141,7 +165,7 @@ export function reportDeficiencies(state: ReportState) {
       for (const limitation of state.outcome.limitations) reportDeficiencies.push({ code: 'incomplete-report', reason: limitation })
     }
   }
-  return evaluateKnownDeficiencies({ reportDeficiencies })
+  return evaluateKnownDeficiencies({ reportDeficiencies, tg3Findings: currentTg3Findings(state) })
 }
 
 export function analysisStatus(report: ReportState) {

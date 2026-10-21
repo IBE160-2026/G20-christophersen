@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { sourceTarget } from '../pdf/source-page.ts'
 import { SourceReview } from '../pdf/SourceReview.tsx'
+import { Tg3Resolution } from './Tg3Resolution.tsx'
 import { FindingControl } from './FindingControl.tsx'
 import type { Dispatch } from 'react'
 import type { ReportClient } from '../analysis/report-client.ts'
@@ -87,6 +88,8 @@ export function ReportAnalysis({ session, dispatch, client }: {
           </>}
           {control?.draft && <p>Redigert utkast — ikke brukt</p>}
           {report.status === 'completed' && report.view.findingId === candidate.findingId && <FindingControl report={report} candidate={candidate} dispatch={dispatch} onRejected={() => selectedButton.current?.focus()} />}
+          {report.status === 'completed' && report.view.findingId === candidate.findingId && finding?.grade === 'TG3' && <Tg3Resolution current={finding}
+            findingId={candidate.findingId} generation={report.generation} resolution={report.tg3Resolutions.find(item => item.findingId === candidate.findingId)?.resolution ?? null} dispatch={dispatch} />}
         </li>})}
       </ol>
       </SourceReview>

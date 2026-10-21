@@ -2,9 +2,14 @@ import { KnownDeficiencyInputSchema } from '../contracts/screening.ts'
 import type {
   CriticalDeficiency, KnownDeficiencyAssessment, KnownDeficiencyInput, KnownReportDeficiency,
 } from '../contracts/screening.ts'
+import { validateTg3Resolution } from './tg3-resolution.ts'
 import { validateFinancialBasis } from './financial-basis.ts'
 
 const reportText = {
+  'unresolved-tg3': {
+    message: 'Alvorlig TG3 er uavklart',
+    action: 'Innhent konkret avklaringsgrunnlag for det navngitte TG3-forholdet og registrer status og begrunnelse for førstevurdering.',
+  },
   'missing-report': {
     message: 'Rapportgrunnlaget mangler',
     action: 'Innhent en støttet tilstandsrapport og fullfør analyse og kontroll av rapportgrunnlaget.',
@@ -17,7 +22,7 @@ const reportText = {
 
 function compareReportDeficiencies(a: KnownReportDeficiency, b: KnownReportDeficiency) {
   // Fast kodeorden, deretter tegnorden; ingen miljøavhengig locale eller inputsortering.
-  if (a.code !== b.code) return a.code === 'missing-report' ? -1 : 1
+  if (a.code !== b.code) return ['missing-report', 'incomplete-report', 'unresolved-tg3'].indexOf(a.code) - ['missing-report', 'incomplete-report', 'unresolved-tg3'].indexOf(b.code)
   return a.reason < b.reason ? -1 : a.reason > b.reason ? 1 : 0
 }
 
@@ -30,7 +35,14 @@ export function evaluateKnownDeficiencies(input: KnownDeficiencyInput): KnownDef
   const triggers: CriticalDeficiency[] = basis.financialBasis === undefined ? []
     : validateFinancialBasis(basis.financialBasis).issues.map((entry) => ({ kind: 'financial', ...entry }))
 
-  for (const entry of basis.reportDeficiencies.sort(compareReportDeficiencies)) {
+  const reportDeficiencies = [...basis.reportDeficiencies]
+  for (const finding of basis.tg3Findings) {
+    if (finding.current.grade !== 'TG3') continue
+    const validation = validateTg3Resolution(finding.current, finding.resolution)
+    if (!validation.applicable) reportDeficiencies.push({ code: 'unresolved-tg3',
+      reason: `${finding.findingId}: ${finding.current.description} (${finding.current.source.documentName}, PDF-side ${finding.current.source.pdfPage}). ${Object.values(validation.errors).join(' ')}` })
+  }
+  for (const entry of reportDeficiencies.sort(compareReportDeficiencies)) {
     const text = reportText[entry.code]
     triggers.push({ ...entry, kind: 'report', target: 'report',
       message: `${text.message}: ${entry.reason}`, action: text.action })

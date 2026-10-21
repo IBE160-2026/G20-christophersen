@@ -1,0 +1,346 @@
+Unit rød før retting
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/finding-control.test.ts (22 tests | 1 failed) 17ms
+   ❯ Story 2.8 — kontroll, utkast og immutabel original (22)
+     × uavhengig review: identifiserte feil består til de respektive feltene er rettet 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/finding-control.test.ts > Story 2.8 — kontroll, utkast og immutabel original > uavhengig review: identifiserte feil består til de respektive feltene er rettet
+AssertionError: expected {} to have property "description"
+ ❯ tests/unit/finding-control.test.ts:132:46
+    130|     let state = act(edit(edit(edit(draft(), 'grade', ''), 'description…
+    131|     state = edit(state, 'grade', 'TG2')
+    132|     expect(state.findingControls[0]?.errors).toHaveProperty('descripti…
+       |                                              ^
+    133|     expect(state.findingControls[0]?.errors).toHaveProperty('pdfPage')
+    134|     expect(state.findingControls[0]?.errors).not.toHaveProperty('grade…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 passed (22)
+   Start at  11:55:09
+   Duration  203ms (import 48%, transform 34%, tests 16%, worker 3%)
+
+
+
+E2E rød, inkl første kort-viewport-oppsettsfeil
+[WebServer] (node:62792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 4 workers
+
+(node:62794) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62795) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62793) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/e2e/report-analysis.spec.ts:703:1 › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm (7.8s)
+  ✘  3 tests/e2e/report-analysis.spec.ts:747:1 › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema (7.8s)
+  ✘  2 tests/e2e/report-analysis.spec.ts:679:1 › 2.8 uavhengig review: delvis retting bevarer feltfeil og retur stjeler ikke fokus (8.0s)
+  ✘  4 tests/e2e/report-analysis.spec.ts:735:1 › 2.8 uavhengig review: ugyldig utkast bevares uten nytt feilfokus ved funnretur (8.0s)
+
+
+  1) tests/e2e/report-analysis.spec.ts:679:1 › 2.8 uavhengig review: delvis retting bevarer feltfeil og retur stjeler ikke fokus
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByLabel('Beskrivelse fra rapporten')
+    Expected: "true"
+    Received: "false"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" getByLabel('Beskrivelse fra rapporten') with timeout 5000ms
+      - waiting for getByLabel('Beskrivelse fra rapporten')
+        14 × locator resolved to <textarea rows="3" aria-invalid="false" id="_r_0_-description"> </textarea>
+           - unexpected value "false"
+
+
+      686 |   await expect(page.getByLabel('Grad fra rapporten')).toBeFocused()
+      687 |   await page.getByLabel('Grad fra rapporten').selectOption('TG2')
+    > 688 |   await expect(page.getByLabel('Beskrivelse fra rapporten')).toHaveAttribute('aria-invalid', 'true')
+          |                                                              ^
+      689 |   await expect(page.getByLabel('Fysisk PDF-side', { exact: true })).toHaveAttribute('aria-invalid', 'true')
+      690 |   await page.getByLabel('Fysisk PDF-side', { exact: true }).fill('88')
+      691 |   await expect(page.getByLabel('Fysisk PDF-side', { exact: true })).toBeFocused()
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:688:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-2449e-og-retur-stjeler-ikke-fokus/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-8-uavhen-2449e-og-retur-stjeler-ikke-fokus/error-context.md
+
+    Error Context: test-results/report-analysis-2-8-uavhen-2449e-og-retur-stjeler-ikke-fokus/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-2449e-og-retur-stjeler-ikke-fokus/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-8-uavhen-2449e-og-retur-stjeler-ikke-fokus/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/report-analysis.spec.ts:703:1 › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('.report-findings')
+    Expected pattern: /\d+/
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.report-findings') with timeout 5000ms
+      - waiting for locator('.report-findings')
+        14 × locator resolved to <section class="report-findings" aria-labelledby="findings-title">…</section>
+           - unexpected value "null"
+
+
+      52 |   await page.getByRole('button', { name: 'Gå til Kontroller funn' }).click()
+      53 |   await expect(page.getByRole('heading', { name: 'Kontroller funn', exact: true })).toBeFocused()
+    > 54 |   await expect(page.locator('.report-findings')).toHaveAttribute('data-list-visible-generation', /\d+/)
+         |                                                  ^
+      55 |   await expect(page.locator('#report-announcement')).toHaveText('Analyse fullført — funnlisten er klar.')
+      56 | }
+      57 |
+        at showList (/Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:54:50)
+        at rt11 (/Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:557:70)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:705:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/error-context.md
+
+    Error Context: test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/e2e/report-analysis.spec.ts:735:1 › 2.8 uavhengig review: ugyldig utkast bevares uten nytt feilfokus ved funnretur
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('button', { name: 'TG3 · Feil uttrekk av tak', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" getByRole('button', { name: 'TG3 · Feil uttrekk av tak', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'TG3 · Feil uttrekk av tak', exact: true })
+        14 × locator resolved to <button type="button" aria-pressed="true" class="finding-select">TG3 · Feil uttrekk av tak</button>
+           - unexpected value "inactive"
+
+
+      742 |   const selected = page.getByRole('button', { name: 'TG3 · Feil uttrekk av tak', exact: true })
+      743 |   await selected.click()
+    > 744 |   await expect(selected).toBeFocused()
+          |                          ^
+      745 | })
+      746 |
+      747 | test('2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema', async ({ page }) => {
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:744:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-d4a80-ytt-feilfokus-ved-funnretur/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-8-uavhen-d4a80-ytt-feilfokus-ved-funnretur/error-context.md
+
+    Error Context: test-results/report-analysis-2-8-uavhen-d4a80-ytt-feilfokus-ved-funnretur/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-d4a80-ytt-feilfokus-ved-funnretur/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-8-uavhen-d4a80-ytt-feilfokus-ved-funnretur/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/e2e/report-analysis.spec.ts:747:1 › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('.report-findings')
+    Expected pattern: /\d+/
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.report-findings') with timeout 5000ms
+      - waiting for locator('.report-findings')
+        14 × locator resolved to <section class="report-findings" aria-labelledby="findings-title">…</section>
+           - unexpected value "null"
+
+
+      52 |   await page.getByRole('button', { name: 'Gå til Kontroller funn' }).click()
+      53 |   await expect(page.getByRole('heading', { name: 'Kontroller funn', exact: true })).toBeFocused()
+    > 54 |   await expect(page.locator('.report-findings')).toHaveAttribute('data-list-visible-generation', /\d+/)
+         |                                                  ^
+      55 |   await expect(page.locator('#report-announcement')).toHaveText('Analyse fullført — funnlisten er klar.')
+      56 | }
+      57 |
+        at showList (/Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:54:50)
+        at rt11 (/Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:557:70)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:749:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/error-context.md
+
+    Error Context: test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    tests/e2e/report-analysis.spec.ts:679:1 › 2.8 uavhengig review: delvis retting bevarer feltfeil og retur stjeler ikke fokus
+    tests/e2e/report-analysis.spec.ts:703:1 › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm
+    tests/e2e/report-analysis.spec.ts:735:1 › 2.8 uavhengig review: ugyldig utkast bevares uten nytt feilfokus ved funnretur
+    tests/e2e/report-analysis.spec.ts:747:1 › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema
+
+
+Korrigert testoppsett; status/synlig fokus rødt
+[WebServer] (node:62933) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:62940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62941) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/e2e/report-analysis.spec.ts:747:1 › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema (1.7s)
+  ✘  2 tests/e2e/report-analysis.spec.ts:703:1 › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm (6.7s)
+
+
+  1) tests/e2e/report-analysis.spec.ts:703:1 › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Kontroll av valgt funn' }).getByRole('status')
+    Expected: "Funnet er kontrollert og bekreftet mot originalrapporten."
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" getByRole('region', { name: 'Kontroll av valgt funn' }).getByRole('status') with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Kontroll av valgt funn' }).getByRole('status')
+
+
+      715 |   }
+      716 |   await page.getByRole('button', { name: 'Bekreft', exact: true }).click()
+    > 717 |   await expect(control.getByRole('status')).toHaveText('Funnet er kontrollert og bekreftet mot originalrapporten.')
+          |                                             ^
+      718 |   await edit.click()
+      719 |   await page.getByLabel('Grad fra rapporten').selectOption('TG2')
+      720 |   await page.getByLabel('Beskrivelse fra rapporten').fill('Slitt takoverflate')
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:717:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/error-context.md
+
+    Error Context: test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-8-uavhen-1b0f6-synlig-fokus-på-kort-skjerm/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/report-analysis.spec.ts:747:1 › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      758 |     const area = element.closest('.workspace')!.getBoundingClientRect()
+      759 |     return rect.top >= Math.max(0, area.top) && rect.bottom <= Math.min(innerHeight, area.bottom)
+    > 760 |   })).toBe(true)
+          |       ^
+      761 | })
+      762 |
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/report-analysis.spec.ts:760:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/error-context.md
+
+    Error Context: test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/report-analysis-2-8-uavhen-87042-tastaturbruk-av-kort-skjema/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests/e2e/report-analysis.spec.ts:703:1 › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm
+    tests/e2e/report-analysis.spec.ts:747:1 › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema
+
+
+Unit grønn
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  11:56:37
+   Duration  194ms (import 51%, transform 31%, tests 15%, worker 3%)
+
+
+
+E2E grønn etter retting
+[WebServer] (node:63408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 4 workers
+
+(node:63409) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63411) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63410) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:63412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 tests/e2e/report-analysis.spec.ts:747:1 › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema (2.8s)
+  ✓  1 tests/e2e/report-analysis.spec.ts:735:1 › 2.8 uavhengig review: ugyldig utkast bevares uten nytt feilfokus ved funnretur (2.9s)
+  ✓  4 tests/e2e/report-analysis.spec.ts:703:1 › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm (2.9s)
+  ✓  3 tests/e2e/report-analysis.spec.ts:679:1 › 2.8 uavhengig review: delvis retting bevarer feltfeil og retur stjeler ikke fokus (3.1s)
+
+  4 passed (4.4s)

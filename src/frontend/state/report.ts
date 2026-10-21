@@ -61,7 +61,11 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
         pdfPage: current ? String(current.source.pdfPage) : typeof original.source?.pdfPage === 'number' && Number.isInteger(original.source.pdfPage) ? String(original.source.pdfPage) : '' } }
     } else if (action.type === 'report-finding-draft') {
       if (!control.draft) return state
-      next = { ...control, draft: { ...control.draft, [action.field]: action.value }, errors: {} }
+      const draft = { ...control.draft, [action.field]: action.value }
+      const validation = validateFindingCorrection(draft, outcome)
+      // Vis bare allerede identifiserte feil under inntasting, til deres grunnlag er rettet.
+      const errors = Object.fromEntries(Object.entries(validation.errors).filter(([field]) => field in control.errors))
+      next = { ...control, draft, errors }
     } else if (action.type === 'report-finding-cancel') {
       if (!control.draft) return state
       next = { ...control, draft: null, errors: {} }

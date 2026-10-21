@@ -126,4 +126,66 @@ describe('Story 2.8 — kontroll, utkast og immutabel original', () => {
     }
     expect(reportReducer(applied, { type: 'report-finding-confirm', generation: 0, findingId: 'rt11' })).toBe(applied)
   })
+  it('uavhengig review: identifiserte feil består til de respektive feltene er rettet', () => {
+    let state = act(edit(edit(edit(draft(), 'grade', ''), 'description', ' '), 'pdfPage', '99'), 'report-finding-apply')
+    state = edit(state, 'grade', 'TG2')
+    expect(state.findingControls[0]?.errors).toHaveProperty('description')
+    expect(state.findingControls[0]?.errors).toHaveProperty('pdfPage')
+    expect(state.findingControls[0]?.errors).not.toHaveProperty('grade')
+    state = edit(state, 'pdfPage', '88')
+    expect(state.findingControls[0]?.errors).toHaveProperty('pdfPage')
+    state = edit(state, 'pdfPage', '5')
+    expect(state.findingControls[0]?.errors).not.toHaveProperty('pdfPage')
+    expect(state.findingControls[0]?.errors).toHaveProperty('description')
+    expect(state.listRevision).toBe(0)
+  })
+  it('uavhengig review: B-handlinger bevarer As brukte korrigering, bekreftelse og nye utkast', () => {
+    let state = completed()
+    const outcome = state.outcome
+    if (outcome?.status !== 'completed') throw new Error('test fixture')
+    const other = { ...outcome.findings[0]!, findingId: 'other', original: { ...outcome.findings[0]!.original, findingId: 'other' } }
+    state = { ...state, outcome: { ...outcome, findings: [...outcome.findings, other] } }
+    state = act(act(draft(state), 'report-finding-apply'), 'report-finding-confirm')
+    state = edit(act(state, 'report-finding-edit'), 'description', 'Ubrukt andreutkast')
+    const a = state.findingControls.find(item => item.findingId === 'rt11')
+    for (const type of ['report-finding-edit', 'report-finding-apply', 'report-finding-confirm', 'report-finding-edit', 'report-finding-cancel'] as const) {
+      state = reportReducer(state, { type, generation: 1, findingId: 'other' })
+      expect(state.findingControls.find(item => item.findingId === 'rt11')).toBe(a)
+      expect(currentFinding(state, 'rt11')).toMatchObject({ grade: 'TG2', source: { pdfPage: 5 } })
+    }
+  })
+  it('uavhengig review: ny brukt retting opphever nyere bekreftelser og bevarer første original', () => {
+    const before = completed()
+    let state = act(act(draft(before), 'report-finding-apply'), 'report-finding-confirm')
+    state = { ...state, listConfirmationRevision: 1 }
+    state = edit(act(state, 'report-finding-edit'), 'pdfPage', '2')
+    state = edit(state, 'description', 'Ny kontrollert representasjon')
+    state = act(state, 'report-finding-apply')
+    expect(currentFinding(state, 'rt11')).toMatchObject({ source: { pdfPage: 2 }, description: 'Ny kontrollert representasjon' })
+    expect(state.findingControls[0]).toMatchObject({ revision: 2, confirmedRevision: null, draft: null })
+    expect(state.listRevision).toBe(2)
+    expect(state.listConfirmationRevision).toBeNull()
+    expect(state.outcome).toBe(before.outcome)
+  })
+  it.each(['documentName', 'reportHash'] as const)('uavhengig review: mismatchet original %s beholdes som opphav gjennom eksplisitt retting', field => {
+    const before = completed()
+    const outcome = bindAnalysisOutcome({ ...context, pages: Array.from({ length: 5 }, (_, i) => ({ pdfPage: i + 1, text: 'Rapport', status: 'readable', reason: null })) },
+      { contractVersion: '2', extractionVersion: '1', status: 'completed', findings: [{ ...original, source: { ...original.source, [field]: 'feil' } }], limitations: [] })
+    let state: ReportState = { ...before, outcome }
+    expect(currentFinding(state, 'rt11')).toBeNull()
+    expect(act(state, 'report-finding-confirm')).toBe(state)
+    state = act(state, 'report-finding-edit')
+    expect(state.findingControls[0]?.draft?.pdfPage).toBe('4')
+    state = act(state, 'report-finding-apply')
+    expect(currentFinding(state, 'rt11')?.source).toEqual(original.source)
+    expect(state.findingControls[0]?.confirmedRevision).toBeNull()
+    expect(state.outcome).toBe(outcome)
+    if (outcome.status !== 'completed') throw new Error('test fixture')
+    expect(outcome.uncertainCandidates[0]?.original.source?.[field]).toBe('feil')
+  })
+  it('uavhengig review: sen draft-hendelse kan ikke endre nytt grunnlag med samme funn-ID', () => {
+    const state = { ...draft(), generation: 2 }
+    expect(reportReducer(state, { type: 'report-finding-draft', generation: 1, findingId: 'rt11', field: 'grade', value: 'TG3' })).toBe(state)
+  })
+
 })

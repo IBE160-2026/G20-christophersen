@@ -66,7 +66,7 @@ Tilstandsrapport og velg **Start analyse**. Bruk for eksempel
 F1–F4-originalene har tilhørende lagret demouttrekk. Ingen analyse starter ved
 filvalg. Åpne **Kontroller funn** etter mottatt uttrekk for å se alle funn,
 usikkerheter og lokale mangler. Listen er fortsatt ubekreftet. Velg et funn for å vise original-PDF;
-kontrollhandlingene følger senere stories. Uendret uttrekk beholdes ved
+enkeltfunnkontroll og korrigering følger 2.8 som beskrevet nedenfor. Uendret uttrekk beholdes ved
 retur/finansendring. Rapportbytte eller forlatt pågående analyse ugyldiggjør
 gamle svar og forsøker abort. Dette dokumenterer ingen faktisk live-analyse.
 Se [verifikasjon](.docs/implementation-artifacts/story-2-6-verifikasjon.md).
@@ -79,7 +79,14 @@ bevares ved retur. **Forrige/Neste PDF-side** og **PDF-zoom** leser originalen
 lokalt uten ny analyse. Ukjent/ugyldig kilde og visningsfeil forklares ved
 PDF-visningen. Worker, tegnkart, fonter og nødvendige visningsressurser
 leveres fra samme lokale installasjon. Se [AC-/testbevis](.docs/implementation-artifacts/story-2-7-verifikasjon.md).
-Listen er fortsatt ubekreftet, og 2.8 er ikke startet.
+Story 2.8 er done etter [uavhengig full review](.docs/implementation-artifacts/story-2-8-review.md).
+Velg **Bekreft** for kontroll av gjeldende enkeltfunn mot originalen, eller
+**Korriger** for separat utkast til grad, beskrivelse og fysisk PDF-side.
+Bare **Bruk korrigering** endrer gjeldende funn og krever ny kontroll;
+**Avbryt** forkaster utkastet og beholder tidligere gjeldende versjon/status.
+Opprinnelig KI-uttrekk og kilde bevares. Funn-/trinnretur og PDF-panellukking
+bevarer ubrukt utkast uten ny analyse. Listen er fortsatt ubekreftet;
+avvisning, separat TG3-avklaring og listebekreftelse gjenstår i 2.9–2.11.
 
 ## Installasjon og kontroll
 

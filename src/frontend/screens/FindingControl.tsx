@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import type { Dispatch } from 'react'
 import type { CheckableFinding, UncertainCandidate } from '../../contracts/document-analysis.ts'
 import { currentFinding } from '../state/report.ts'
@@ -14,19 +14,40 @@ export function FindingControl({ report, candidate, dispatch }: {
   const draft = control?.draft
   const errors = control?.errors
   const hadDraft = useRef(Boolean(draft))
+  const focusNewErrors = useRef(false)
+  const previousControl = useRef(control)
+  const [announcement, setAnnouncement] = useState('')
   const current = currentFinding(report, candidate.findingId)
   const original = candidate.original
   useEffect(() => {
-    if (hadDraft.current && !draft) opener.current?.focus({ preventScroll: true })
+    if (hadDraft.current && !draft) opener.current?.focus()
     if (!hadDraft.current && draft) form.current?.querySelector('select')?.focus()
     hadDraft.current = Boolean(draft)
   }, [draft])
   useEffect(() => {
-    if (errors && Object.keys(errors).length > 0) form.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+    if (focusNewErrors.current && errors && Object.keys(errors).length > 0) {
+      form.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+    }
+    focusNewErrors.current = false
   }, [errors])
-  const action = (type: 'report-finding-confirm' | 'report-finding-edit' | 'report-finding-apply' | 'report-finding-cancel') =>
+  useEffect(() => {
+    const before = previousControl.current
+    previousControl.current = control
+    if (!control || control === before) return
+    if (control.revision !== (before?.revision ?? 0)) {
+      setAnnouncement('Korrigeringen er brukt. Funnet må kontrolleres og bekreftes på nytt.')
+    } else if (control.confirmedRevision !== null && control.confirmedRevision !== before?.confirmedRevision) {
+      setAnnouncement('Funnet er kontrollert og bekreftet mot originalrapporten.')
+    } else if (before?.draft && !control.draft) {
+      setAnnouncement('Utkastet er forkastet. Gjeldende funn og kontrollstatus er beholdt.')
+    } else if (!before?.draft && control.draft) setAnnouncement('')
+  }, [control])
+  const action = (type: 'report-finding-confirm' | 'report-finding-edit' | 'report-finding-apply' | 'report-finding-cancel') => {
+    focusNewErrors.current = type === 'report-finding-apply'
     dispatch({ type, generation: report.generation, findingId: candidate.findingId })
+  }
   return <section className="finding-control" aria-label="Kontroll av valgt funn">
+    <p role="status" aria-live="polite" aria-atomic="true">{announcement}</p>
     <p>Kontroll av uttrekket gjelder gjeldende versjon mot originalrapporten. Dette bekrefter ikke listen og avklarer ikke TG3.</p>
     <div className="finding-actions">
       <button type="button" className="secondary-action" disabled={!current || control?.confirmedRevision === (control?.revision ?? 0)} onClick={() => action('report-finding-confirm')}>Bekreft</button>

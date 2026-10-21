@@ -1,9 +1,10 @@
 # Story 2.8 — egenverifikasjon og sporbarhet
 
 Dato: 2026-10-21. Baseline: `fee2f76e5e94745cc1df43a45ae103cf633981c0`.
-Story/sprint er **review**, implementeringsspec er **in-review**.
-Full uavhengig BMAD-review skal utføres av en ny agent før done og før 2.9.
-Dette dokumenterer implementeringens egne kontroller.
+Dette er implementeringens historiske egenkontroll ved commit `c0594fb`, da
+story/sprint var review og spec in-review. Nå er 2.8 **done** etter
+[full uavhengig BMAD-review og rettinger](story-2-8-review.md); der står
+gjeldende sluttregresjon. Tallene nedenfor tilhører implementeringscheckpointet.
 
 ## AC og faktisk bevis
 

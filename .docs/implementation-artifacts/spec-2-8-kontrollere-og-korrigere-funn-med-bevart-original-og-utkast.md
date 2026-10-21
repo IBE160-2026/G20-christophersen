@@ -2,7 +2,7 @@
 title: 'Story 2.8 — Kontrollere og korrigere funn med bevart original og utkast'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-8-kontrollere-og-korrigere-funn-med-bevart-original-og-utkast'
 baseline_commit: 'fee2f76e5e94745cc1df43a45ae103cf633981c0'
@@ -63,4 +63,17 @@ Ingen intensjonsgap eller irreversible handlinger. Fotavtrykket omfatter felles 
 
 `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` og relevante bygget-app-/dev-E2E. Verifikasjonsrapport dokumenterer faktisk kjørt omfang og AC-spor.
 
-Implementeringen og matrisen er verifisert; full uavhengig BMAD-review er neste steg. Se [verifikasjon](story-2-8-verifikasjon.md).
+Implementeringen og matrisen er verifisert; full uavhengig BMAD-review er bestått. Se [egenverifikasjon](story-2-8-verifikasjon.md) og [uavhengig review](story-2-8-review.md).
+
+### Review Findings
+
+Uavhengig full BMAD-review av c0594fb, fire sekvensielle lag. Ingen ny beslutning kreves.
+
+- [x] [Review][Patch] Bevar identifiserte feltfeil til respektive grunnlag er rettet; ingen fokusflytting ved vanlig redigering. [src/frontend/state/report.ts:64]
+- [x] [Review][Patch] Begrens feilfokus til nytt ugyldig Bruk-forsøk; behold funn-/trinnfokus ved retur. [src/frontend/screens/FindingControl.tsx:24]
+- [x] [Review][Patch] Kunngjør Bekreft, Bruk og Avbryt kort uten fokusstjeling. [src/frontend/screens/FindingControl.tsx:29]
+- [x] [Review][Patch] Etterprøv flere samtidige funn/utkast, andre brukte korrigering, mismatchet originalkilde og gammel draft-hendelse. [tests/unit/finding-control.test.ts]
+- [x] [Review][Patch] Etterprøv fokusets faktiske synlighet ved Bruk/Avbryt på kort skjerm. [tests/e2e/report-analysis.spec.ts]
+- [x] [Review][Patch] Synkroniser gjeldende README og kontinuitetsstatus etter bestått review.
+
+Rejected: Blindlagets kombinerte feil på ugyldig rapportidentitet er false som nåbar produktfeil: fullført utfall valideres mot hash/dokument i HTTP-/reducergrensen før kontrollhandlinger tillates. Ingen konkurrerende kildepolicy innføres. Alle øvrige kandidater behandles i patchgruppene og full triage i story-2-8-review.md.

@@ -197,4 +197,12 @@ ble strammet inn og tre reviewerprøver lagt til. Full siste regresjon er
 Epic 2 er fortsatt done, Epic 3 in-progress. Ingen ny blocker/beslutning eller
 endring av låste krav/porter. 3.2–3.9 står i backlog; i brukerens kjede kan kun
 3.2 nå implementeres og reviewes med separate sekvensielle agenter før stopp.
+
+Gjeldende oppfølging 2026-10-21 ved Story 3.2-review: 3.2 er implementert
+som separate rene eksakte terskelfunksjoner og satt til **review**, med
+[AC-/testbevis](story-3-2-verifikasjon.md). 716/716 Vitest, 89/89 bygget-app,
+3/3 dev-E2E samt typecheck/lint/build er bestått. Epic 2 forblir **done**,
+Epic 3 **in-progress**, 3.1 **done** og 3.3–3.9 backlog. Neste tillatte steg
+er kun separat uavhengig BMAD-review av 3.2 og endelig stopp før 3.3.
+Ingen ny beslutning eller endring av porter.
 3.3 skal ikke startes.

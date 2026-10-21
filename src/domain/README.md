@@ -34,3 +34,12 @@ divisjon, format, terskelavgjørelse, rapportinput eller anbefaling inngår.
 Story 2.8: `finding-control.ts` validerer brukerens korrigering mot kjent
 rapportidentitet og fysisk sideområde med det delte korrigeringsskjemaet.
 Det validerer struktur/kilde, ikke semantisk støtte eller teknisk tilstandsgrad.
+
+Story 3.2 leverer `thresholds.ts`: separate `evaluateNetYieldThreshold` og
+`evaluateCashFlowThreshold` gjenbruker 3.1 og felles grunnlagsvalidering.
+Yieldkravet bruker eksakt `100 * NOI >= P * Ymin`, cash bruker `>= 0`.
+Likhet består uten divisjon eller avrundingsmargin. Beslutningen har
+bestått/brutt/ikke-vurderbart, eksakte sammenlikningsverdier og relevante
+feltårsaker; metrikkgrunnlag og Ymin med kilde følger for etterprøving.
+Funksjonene velger ingen anbefaling og erstatter ikke senere screeningens
+kritisk-mangelvurdering. Ingen presentasjonsformat eller rapportinput inngår.

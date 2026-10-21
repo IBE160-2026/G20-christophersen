@@ -42,3 +42,7 @@ Sandkassen avviste først Chromium-start med lokal Mach-port-sperre. Den autoris
 Separat uavhengig BMAD-review bestemmer eventuelle funn/rettinger og done. Samlet plassering/zoom/fokusflyt i bygget app er Story 3.7s ansvar; denne storyen oppretter med vilje ingen samlet rute. Komponenttesten er ikke hydrerings- eller samlet appflytbevis. Orkestrator kjører full siste regresjon sekvensielt: `npm test`, `npm run test:components`, `npm run test:e2e`, `npm run typecheck` og `npm run lint` på endelig kode. `test:e2e` inkluderer bygg. Ingen full ny Vitest/E2E-regresjon eller live-/S5-/S6-bevis påstås i denne fasen.
 
 Ingen blocker, ny produkt-/arkitekturbeslutning, push eller implementasjon av Story 3.7+.
+
+## Etter uavhengig review
+
+2026-10-21: Story 3.6 er **done** etter separat [BMAD-review med individuell triage og fasebevis](story-3-6-review.md). Ni patchpunkter er lukket, åtte nye komponentprøver er lagt til, og 24/24 komponentprøver samt 333/333 målrettede Vitest, typecheck/lint og diffkontroll består. Tallene over er opprinnelig egenverifikasjon; reviewrapporten skiller nye resultater fra tidligere bevis. Full sluttregresjon og samlet appflate tas av orkestratoren/senere 3.7-fase.

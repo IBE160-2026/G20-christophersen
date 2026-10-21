@@ -75,6 +75,7 @@ button[aria-disabled="true"] { cursor: not-allowed; }
 .metric-cost-basis li + li { margin-top: var(--space-2); }
 .metric-stale { padding: var(--space-4); margin-bottom: var(--space-4); background: var(--surface-subtle); border-radius: var(--radius-md); }
 .financial-metrics-historical .financial-metric { background: var(--surface-subtle); }
+@media (min-width: 1200px) { .metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 700px) { .metric-grid { grid-template-columns: minmax(0, 1fr); } }
 
 .app-shell {

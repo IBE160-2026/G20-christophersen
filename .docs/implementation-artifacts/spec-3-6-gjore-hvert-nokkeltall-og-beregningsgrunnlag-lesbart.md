@@ -2,7 +2,7 @@
 title: 'Story 3.6 — Gjøre hvert nøkkeltall og beregningsgrunnlag lesbart'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '3-6-gjøre-hvert-nøkkeltall-og-beregningsgrunnlag-lesbart'
 baseline_commit: 'db45d35cf8eae885b9fb4426b15ab281e227c689'
@@ -35,3 +35,21 @@ Verifiser direkte komponentgrense med faktiske finans-/presentasjons-/snapshotda
 - Egenverifikasjon: **16/16 direkte Chromium-komponentprøver**, **333/333 målrettede Vitest-prøver i fem filer**, typecheck, lint og produksjonsbygg består på pinnet Node 24.21.0/npm 11.19.0. Bygg har bare kjent størrelsesvarsel for eksisterende PDF/app-bunt. Native åpen/lukket, merkede kontrollnavn, Tab/Enter/Space, fokus og historiske tokens er kontrollert. Komponenttesten serverrendrer faktisk React-kode og betjener native kontroller i nettleser; den er ikke et hydrerings-/appflytbevis.
 - Førstekontroll: sandkassen blokkerte Chromiums lokale Mach-port, deretter gikk autorisert lokal kjøring utenfor sandkassen. Test-fixtures ble rettet til eksisterende finans-/analysesperre og listekontroll; ingen produksjonsregel ble endret for å gjøre testene grønne. Playwrights tekstsnapshot utelater native DisclosureTriangle; testen leser faktisk AX-expanded via CDP. Se [AC-/testbevis](story-3-6-verifikasjon.md) og [arbeidsøkt](../process/arbeidsokter/2026-10-21-story-3-6.md).
 - Checkpoint: **in-review / review**, ikke done. Separat uavhengig BMAD-review er neste fase. Full Vitest og bygget-app/dev-E2E kjøres av orkestrator ved mini-sprintens slutt, sammen med `npm run test:components`; de er ikke påstått nykjørt her. Ingen ny beslutning, blocker, push, ny rute eller implementasjon av 3.7+.
+
+## Review Findings
+
+Uavhengig BMAD-review 2026-10-21: fire sekvensielle lag er fullført uten filendring under lagene. Blind Hunter ga åtte kandidater; Verification Gap ett forhåndsverifisert gap; Acceptance fant ingen sikre AC-avvik ved den direkte komponentgrensen. Edge returnerte `[]`, registrert som tomt lag etter workflowets feilregel. Individuell triage og kildebevis skrives i story-3-6-review.md. Brukerens mini-sprintbestilling autoriserer retting uten ny bekreftelse. Ingen ny produkt-/arkitekturbeslutning.
+
+- [x] [Review][Patch] B1: Fire nøkkeltall i én rad på bred flate, i tråd med eksisterende DESIGN.
+- [x] [Review][Patch] B2: Kvalifiser numerisk Ymin når terskelavgjørelsen er utilgjengelig; vis terskelårsaker.
+- [x] [Review][Patch] B3: Bevar Ymin-registrering, kilde/forutsetning og bekreftelse i detaljene.
+- [x] [Review][Patch] B4: Kostnadsinnhold skal ikke ubetinget påstås gyldig inkludert ved ugyldighet/overskredet total.
+- [x] [Review][Patch] B5: Bevar registrert kostnadsbeløp/renter-avdrag også når oppdelingen er ugyldig.
+- [x] [Review][Patch] B6: Vis valgt inkludering også når relasjonen er ugyldig.
+- [x] [Review][Patch] B7: Håndskrevne konkrete formelforventninger for alle fire kort.
+- [x] [Review][Patch] B8: Komponentprøver for kildekonflikt, ubekreftet numerisk input og ugyldig kostnadsinkludering.
+- [x] [Review][Patch] V1: Kontroller synlige feltspesifikke rettingshandlinger for utilgjengelige tall.
+
+Rejected: ingen. Ingen decision-needed eller defer.
+
+- Reviewcheckpoint: **done / done**, 2026-10-21. Separat BMAD-review og individuell triage lukket ni patchpunkter; 24/24 komponentprøver, 333/333 målrettede Vitest, typecheck/lint og diffkontroll består. Se [reviewrapport](story-3-6-review.md) med rød/grønn-bevis og avgrensning. Ingen nye beslutninger, åpne/defer-funn, push eller senere story. Full siste regresjon gjenstår hos orkestrator.

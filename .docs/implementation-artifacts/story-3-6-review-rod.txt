@@ -1,0 +1,273 @@
+
+> property-acquisition-agent@0.0.0 test:components
+> playwright test --config playwright.components.config.ts
+
+
+Running 24 tests using 4 workers
+
+(node:56236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:56235) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:56233) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:56234) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-5: konkrete inputmangler, gyldige delberegninger og ingen skjult null (722ms)
+  ✓   3 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-6: konkrete inputmangler, gyldige delberegninger og ingen skjult null (747ms)
+  ✓   2 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-3: konkrete inputmangler, gyldige delberegninger og ingen skjult null (831ms)
+  ✓   4 tests/components/financial-metrics.spec.ts:106:1 › AC1/3 BT-1: fire navn, norsk fasit/enhet/år fra start og faktisk formel/input/kilder (956ms)
+  ✓   6 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-18: konkrete inputmangler, gyldige delberegninger og ingen skjult null (251ms)
+  ✓   7 tests/components/financial-metrics.spec.ts:164:3 › AC2 BT-4 og tilstandsgrense: error beholder F1-tall som Delgrunnlag (201ms)
+  ✓   5 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-17: konkrete inputmangler, gyldige delberegninger og ingen skjult null (330ms)
+  ✓   8 tests/components/financial-metrics.spec.ts:164:3 › AC2 BT-4 og tilstandsgrense: unconfirmed beholder F1-tall som Delgrunnlag (234ms)
+  ✓   9 tests/components/financial-metrics.spec.ts:164:3 › AC2 BT-4 og tilstandsgrense: tg3 beholder F1-tall som Delgrunnlag (234ms)
+  ✓  10 tests/components/financial-metrics.spec.ts:174:1 › AC1 BT-11: negative resultater beholdes i alle berørte kort (217ms)
+  ✓  11 tests/components/financial-metrics.spec.ts:179:1 › AC3 BT-15: registrert måned, faktor 12 og faktisk anvendt årsverdi er lesbare (312ms)
+  ✓  12 tests/components/financial-metrics.spec.ts:189:1 › AC4 BT-8: likhet og én krone under har lik standardvisning, men bruddet forklares presist (257ms)
+  ✓  13 tests/components/financial-metrics.spec.ts:202:1 › AC4: negativ kontantstrøm som rundes til null forklares med uavrundet beløp (237ms)
+  ✓  16 tests/components/financial-metrics.spec.ts:260:1 › ny økt viser bare Ikke beregnet uten gamle verdier eller detaljer (191ms)
+  ✓  15 tests/components/financial-metrics.spec.ts:246:1 › AC5 og snapshotgrense: historiske tall/kilder blandes ikke med ny finansverdi (304ms)
+  ✓  14 tests/components/financial-metrics.spec.ts:211:1 › AC5: native semantikk, Enter/Space, synlig fokus og lukket detalj uten ekstra fokusmål (515ms)
+  ✘  17 tests/components/financial-metrics.spec.ts:269:1 › review B1: bred rad og smal ombrytning følger DESIGN uten innholdstap (238ms)
+(node:56277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  21 tests/components/financial-metrics.spec.ts:310:3 › review B8 BT-14: unconfirmed numerisk L viser årsak og ikke-anvendt grunnlag (363ms)
+  ✓  22 tests/components/financial-metrics.spec.ts:310:3 › review B8 BT-14: conflict numerisk L viser årsak og ikke-anvendt grunnlag (391ms)
+  ✘  19 tests/components/financial-metrics.spec.ts:281:3 › review B2/3: conflict Ymin beholder registrering/kilde og er ikke et gyldig anvendt krav (5.3s)
+  ✘  18 tests/components/financial-metrics.spec.ts:281:3 › review B2/3: unconfirmed Ymin beholder registrering/kilde og er ikke et gyldig anvendt krav (5.3s)
+  ✘  20 tests/components/financial-metrics.spec.ts:300:1 › review B3: gyldig krav har registrert verdi, kilde og bekreftelse ved eksakt verdi (5.2s)
+(node:56314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  23 tests/components/financial-metrics.spec.ts:328:1 › review B4/5/6/8: ugyldig kostnadsoppdeling bevarer råbeløp og valgt relasjon uten inkludert-påstand (5.2s)
+  ✘  24 tests/components/financial-metrics.spec.ts:340:1 › review B4: kostnad som overstiger total beholder årsak uten gyldig inkluderingspåstand (5.3s)
+
+
+  1) tests/components/financial-metrics.spec.ts:269:1 › review B1: bred rad og smal ombrytning følger DESIGN uten innholdstap
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 2
+
+      271 |   const cards = page.locator('.financial-metric')
+      272 |   const wide = await cards.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().top))
+    > 273 |   expect(new Set(wide).size).toBe(1)
+          |                              ^
+      274 |   await page.setViewportSize({ width: 600, height: 900 })
+      275 |   const narrow = await cards.evaluateAll(elements => elements.map(element => element.getBoundingClientRect().top))
+      276 |   expect(new Set(narrow).size).toBe(4)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/financial-metrics.spec.ts:273:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-23bff-ger-DESIGN-uten-innholdstap/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-metrics-review-B-23bff-ger-DESIGN-uten-innholdstap/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-23bff-ger-DESIGN-uten-innholdstap/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-metrics-review-B-23bff-ger-DESIGN-uten-innholdstap/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/components/financial-metrics.spec.ts:281:3 › review B2/3: unconfirmed Ymin beholder registrering/kilde og er ikke et gyldig anvendt krav
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Eksakt minimumskrav til nettoyield:')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Eksakt minimumskrav til nettoyield:') with timeout 5000ms
+      - waiting for getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Eksakt minimumskrav til nettoyield:')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      289 |     const net = page.getByRole('article', { name: 'Nettoyield', exact: true })
+      290 |     await net.locator('summary').click()
+    > 291 |     await expect(net.getByText('Eksakt minimumskrav til nettoyield:', { exact: false })).toHaveCount(0)
+          |                                                                                          ^
+      292 |     await expect(net.getByText(`Registrert Ymin: ${kind === 'unconfirmed' ? '8' : '7'} %.`, { exact: true })).toBeVisible()
+      293 |     await expect(net.getByText('Oppgitt kilde: Kontrollert grunnlag Ymin.', { exact: true })).toBeVisible()
+      294 |     await expect(net.getByText('Terskelkontroll ikke tilgjengelig.', { exact: true })).toBeVisible()
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/financial-metrics.spec.ts:291:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-a1601-ikke-et-gyldig-anvendt-krav/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-metrics-review-B-a1601-ikke-et-gyldig-anvendt-krav/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-a1601-ikke-et-gyldig-anvendt-krav/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-metrics-review-B-a1601-ikke-et-gyldig-anvendt-krav/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/components/financial-metrics.spec.ts:281:3 › review B2/3: conflict Ymin beholder registrering/kilde og er ikke et gyldig anvendt krav
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Eksakt minimumskrav til nettoyield:')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Eksakt minimumskrav til nettoyield:') with timeout 5000ms
+      - waiting for getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Eksakt minimumskrav til nettoyield:')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      289 |     const net = page.getByRole('article', { name: 'Nettoyield', exact: true })
+      290 |     await net.locator('summary').click()
+    > 291 |     await expect(net.getByText('Eksakt minimumskrav til nettoyield:', { exact: false })).toHaveCount(0)
+          |                                                                                          ^
+      292 |     await expect(net.getByText(`Registrert Ymin: ${kind === 'unconfirmed' ? '8' : '7'} %.`, { exact: true })).toBeVisible()
+      293 |     await expect(net.getByText('Oppgitt kilde: Kontrollert grunnlag Ymin.', { exact: true })).toBeVisible()
+      294 |     await expect(net.getByText('Terskelkontroll ikke tilgjengelig.', { exact: true })).toBeVisible()
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/financial-metrics.spec.ts:291:90
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-8e787-ikke-et-gyldig-anvendt-krav/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-metrics-review-B-8e787-ikke-et-gyldig-anvendt-krav/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-8e787-ikke-et-gyldig-anvendt-krav/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-metrics-review-B-8e787-ikke-et-gyldig-anvendt-krav/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/components/financial-metrics.spec.ts:300:1 › review B3: gyldig krav har registrert verdi, kilde og bekreftelse ved eksakt verdi
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Registrert Ymin: 7 %.', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Registrert Ymin: 7 %.', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article', { name: 'Nettoyield', exact: true }).getByText('Registrert Ymin: 7 %.', { exact: true })
+
+
+      302 |   const net = page.getByRole('article', { name: 'Nettoyield', exact: true })
+      303 |   await net.locator('summary').click()
+    > 304 |   await expect(net.getByText('Registrert Ymin: 7 %.', { exact: true })).toBeVisible()
+          |                                                                         ^
+      305 |   await expect(net.getByText('Oppgitt kilde: Kontrollert grunnlag Ymin.', { exact: true })).toBeVisible()
+      306 |   await expect(net.getByText('Ymin er bekreftet i dette resultatet.', { exact: true })).toBeVisible()
+      307 | })
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/financial-metrics.spec.ts:304:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-a4532-ekreftelse-ved-eksakt-verdi/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-metrics-review-B-a4532-ekreftelse-ved-eksakt-verdi/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-a4532-ekreftelse-ved-eksakt-verdi/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-metrics-review-B-a4532-ekreftelse-ved-eksakt-verdi/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) tests/components/financial-metrics.spec.ts:328:1 › review B4/5/6/8: ugyldig kostnadsoppdeling bevarer råbeløp og valgt relasjon uten inkludert-påstand
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article', { name: 'Kontantstrøm før skatt', exact: true }).getByText('Registrert beløp: ukjent kr. Registrerte renter og avdrag: 200 kr.', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article', { name: 'Kontantstrøm før skatt', exact: true }).getByText('Registrert beløp: ukjent kr. Registrerte renter og avdrag: 200 kr.', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article', { name: 'Kontantstrøm før skatt', exact: true }).getByText('Registrert beløp: ukjent kr. Registrerte renter og avdrag: 200 kr.', { exact: true })
+
+
+      332 |   const cash = page.getByRole('article', { name: 'Kontantstrøm før skatt', exact: true })
+      333 |   await cash.locator('summary').click()
+    > 334 |   await expect(cash.getByText('Registrert beløp: ukjent kr. Registrerte renter og avdrag: 200 kr.', { exact: true })).toBeVisible()
+          |                                                                                                                       ^
+      335 |   await expect(cash.getByText('Registrert inkludering: Felleskostnader. Inkluderingen må kontrolleres.', { exact: true })).toBeVisible()
+      336 |   await expect(cash.getByText('De inngår allerede i D/J-totalene', { exact: false })).toHaveCount(0)
+      337 |   await expect(cash.getByText('Oppgitt kostnadsinnhold uten dobbelttelling:', { exact: false })).toHaveCount(0)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/financial-metrics.spec.ts:334:119
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-c7653-sjon-uten-inkludert-påstand/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-metrics-review-B-c7653-sjon-uten-inkludert-påstand/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-c7653-sjon-uten-inkludert-påstand/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-metrics-review-B-c7653-sjon-uten-inkludert-påstand/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) tests/components/financial-metrics.spec.ts:340:1 › review B4: kostnad som overstiger total beholder årsak uten gyldig inkluderingspåstand
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article', { name: 'Kontantstrøm før skatt', exact: true }).getByText('De inngår allerede i D/J-totalene')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article', { name: 'Kontantstrøm før skatt', exact: true }).getByText('De inngår allerede i D/J-totalene') with timeout 5000ms
+      - waiting for getByRole('article', { name: 'Kontantstrøm før skatt', exact: true }).getByText('De inngår allerede i D/J-totalene')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      344 |   await expect(cash.locator('.metric-issues')).toContainText('D: Oppgitt kostnadsinnhold overstiger den registrerte totalen.')
+      345 |   await cash.locator('summary').click()
+    > 346 |   await expect(cash.getByText('De inngår allerede i D/J-totalene', { exact: false })).toHaveCount(0)
+          |                                                                                       ^
+      347 | })
+      348 |
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/financial-metrics.spec.ts:346:87
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-b6b17--gyldig-inkluderingspåstand/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-metrics-review-B-b6b17--gyldig-inkluderingspåstand/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-metrics-review-B-b6b17--gyldig-inkluderingspåstand/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-metrics-review-B-b6b17--gyldig-inkluderingspåstand/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    tests/components/financial-metrics.spec.ts:269:1 › review B1: bred rad og smal ombrytning følger DESIGN uten innholdstap
+    tests/components/financial-metrics.spec.ts:281:3 › review B2/3: unconfirmed Ymin beholder registrering/kilde og er ikke et gyldig anvendt krav
+    tests/components/financial-metrics.spec.ts:281:3 › review B2/3: conflict Ymin beholder registrering/kilde og er ikke et gyldig anvendt krav
+    tests/components/financial-metrics.spec.ts:300:1 › review B3: gyldig krav har registrert verdi, kilde og bekreftelse ved eksakt verdi
+    tests/components/financial-metrics.spec.ts:328:1 › review B4/5/6/8: ugyldig kostnadsoppdeling bevarer råbeløp og valgt relasjon uten inkludert-påstand
+    tests/components/financial-metrics.spec.ts:340:1 › review B4: kostnad som overstiger total beholder årsak uten gyldig inkluderingspåstand
+  18 passed (13.8s)

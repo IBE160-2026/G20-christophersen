@@ -37,15 +37,34 @@ function CostBasis({ basis }: { basis: FinancialMetricBasis }) {
   const money = (value: string | null) => value === null ? 'Ikke avklart' : `${formatFinancialDecimal(value)} kr`
   return <section className="metric-cost-basis" aria-label="Kostnadsinnhold og D/J-fordeling">
     <h4>Kostnadsinnhold og D/J-fordeling</h4>
-    <p>Postene følger D: {period}. De inngår allerede i D/J-totalene og trekkes ikke fra på nytt. Renter og avdrag hører bare til J.</p>
+    <p>Postene følger D: {period}. Kostnadsinnhold skal inngå i D/J-totalene og skal ikke trekkes fra på nytt. Renter og avdrag hører bare til J.</p>
     {cost.items.length === 0 ? <p>Ingen kostnadsposter oppgitt.</p> : <ul>
       {cost.items.map(item => <li key={item.id}>
+        <p>Registrert beløp: {item.rawAmount || 'Ikke oppgitt'} kr. Registrerte renter og avdrag: {item.rawDebt || 'Ikke oppgitt'} kr.</p>
         <p><strong>{item.label || 'Post uten navn'}</strong>: {money(item.amount)} = D {money(item.D)} + J {money(item.J)}.</p>
         {item.status === 'included' && <p>Inngår i {cost.items.find(other => other.id === item.includedIn)?.label || 'oppgitt post'}; telles ikke på nytt.</p>}
+        {item.includedIn !== null && item.status !== 'included' && <p>Registrert inkludering: {cost.items.find(other => other.id === item.includedIn)?.label || item.includedIn}. Inkluderingen må kontrolleres.</p>}
         {item.status === 'invalid' && <p>Oppdelingen må kontrolleres.</p>}
       </li>)}
     </ul>}
-    {cost.items.length > 0 && <p>Oppgitt kostnadsinnhold uten dobbelttelling: D {money(cost.annualD)}/år · J {money(cost.annualJ)}/år. Dette kan være en del av totalene.</p>}
+    {cost.items.length > 0 && (cost.annualD !== null && cost.annualJ !== null
+      ? <p>Oppgitt kostnadsinnhold uten dobbelttelling: D {money(cost.annualD)}/år · J {money(cost.annualJ)}/år. Dette kan være en del av totalene.</p>
+      : <p>Kostnadsinnholdet må kontrolleres før årsfordelingen kan brukes.</p>)}
+  </section>
+}
+
+function NetYieldBasis({ threshold }: { threshold: PresentedFinancialMetric['threshold'] }) {
+  if (!threshold || !('minimumYield' in threshold.basis)) return null
+  const { registered, source } = threshold.basis.minimumYield
+  return <section aria-label="Avkastningskravets grunnlag">
+    <p>Registrert Ymin: {registered.rawValue || 'Ikke oppgitt'} %.</p>
+    <p>{source.kind === 'source' ? 'Oppgitt kilde' : source.kind === 'assumption' ? 'Egen forutsetning' : 'Opphav ikke oppgitt'}: {source.description || 'Ikke oppgitt'}.</p>
+    {source.conflict && <p>Uløst kildekonflikt: {source.conflict.rawValue} % · {source.conflict.description}.</p>}
+    <p className="meta">{registered.confirmed ? 'Ymin er bekreftet i dette resultatet.' : 'Ymin er ubekreftet og brukes ikke som gyldig krav.'}</p>
+    {threshold.decision.status === 'unavailable' ? <>
+      <p>Terskelkontroll ikke tilgjengelig.</p>
+      <ul className="metric-threshold-issues">{threshold.decision.issues.map((issue, index) => <li key={`${issue.field}-${issue.code}-${index}`}>{issue.message} {issue.action}</li>)}</ul>
+    </> : <p>Eksakt minimumskrav til nettoyield: {threshold.minimumDetailValue} %. Regelen bruker uavrundet grunnlag uten toleransemargin.</p>}
   </section>
 }
 
@@ -65,8 +84,7 @@ function MetricCard({ metric }: { metric: PresentedFinancialMetric }) {
       <div className="metric-detail-content">
         <p>Formel: {basis.formula}{metric.unit === '%' && ' × 100 %'}. {metric.unit === '%' ? 'Yield vises i prosent.' : 'Resultatet er i kr/år.'}</p>
         {metric.detail && <p>Detaljverdi{metric.detail.approximate ? ' (tilnærmet)' : ' (uavrundet)'}: {metric.detail.displayValue} {metric.unit}.</p>}
-        {metric.threshold?.minimumDetailValue !== null && metric.threshold?.minimumDetailValue !== undefined
-          && <p>Eksakt minimumskrav til nettoyield: {metric.threshold.minimumDetailValue} %. Regelen bruker uavrundet grunnlag uten toleransemargin.</p>}
+        <NetYieldBasis threshold={metric.threshold} />
         <dl>{basis.inputs.map(input => <InputBasis input={input} applied={metric.metric.status === 'available'} key={input.field} />)}</dl>
         <CostBasis basis={basis} />
         <p className="meta">Kodeberegning fra dette resultatets grunnlag. Ingen ekstra fratrekk for skatt, reparasjon, ledighet eller verdiendring.</p>

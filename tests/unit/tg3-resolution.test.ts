@@ -134,19 +134,19 @@ describe('Story 2.10 — forholdsbinding, negative overganger og revisjonsisolas
     expect(register(state, 'status', 'resolved', 'unknown')).toBe(state)
     expect(reportReducer(state, { type: 'report-tg3-register', generation: 0, findingId: 'electric', field: 'status', value: 'unresolved' })).toBe(state)
   })
-  it('usikker kilde eller grad kan ikke få anvendbar TG3-avklaring før eksplisitt korrigering', () => {
+  it.each(['source', 'grade'] as const)('usikker %s kan ikke få anvendbar TG3-avklaring før eksplisitt korrigering', field => {
     const state = completed()
     if (state.outcome?.status !== 'completed') throw new Error('fixture')
     const first = state.outcome.findings[0]!
     const outcome = bindAnalysisOutcome({ contractVersion: '2', extractionVersion: '1', requestId: 'request', mode: 'demo', reportHash: hash, documentName: 'tg3.pdf', pageCount: 4,
       pages: Array.from({ length: 4 }, (_, i) => ({ pdfPage: i + 1, text: 'Rapport', status: 'readable' as const, reason: null })) },
-      { contractVersion: '2', extractionVersion: '1', status: 'completed', findings: [{ ...first.original, source: null }], limitations: [] })
+      { contractVersion: '2', extractionVersion: '1', status: 'completed', findings: [{ ...first.original, ...(field === 'source' ? { source: null } : { grade: '?' }) }], limitations: [] })
     const uncertain = { ...state, outcome }
     expect(currentFinding(uncertain, 'electric')).toBeNull()
     expect(register(uncertain, 'status', 'resolved')).toBe(uncertain)
     expect(currentTg3Findings(uncertain)).toEqual([])
     expect(reportDeficiencies(uncertain).triggers.some(item => item.message.includes('electric:'))).toBe(true)
-    const corrected = correct(uncertain, 'pdfPage', '2')
+    const corrected = correct(uncertain, field === 'source' ? 'pdfPage' : 'grade', field === 'source' ? '2' : 'TG3')
     expect(currentTg3Findings(corrected)).toHaveLength(1)
     expect(validateTg3Resolution(currentFinding(corrected, 'electric')!, null).applicable).toBe(false)
     expect(validateTg3Resolution(currentFinding(corrected, 'electric')!, resolve(corrected).tg3Resolutions[0]!.resolution).applicable).toBe(true)

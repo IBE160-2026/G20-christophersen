@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
+import { validateTg3Resolution } from '../../domain/tg3-resolution.ts'
 import { sourceTarget } from '../pdf/source-page.ts'
 import { SourceReview } from '../pdf/SourceReview.tsx'
-import { Tg3Resolution } from './Tg3Resolution.tsx'
+import { Tg3Resolution, PreviousTg3Resolution } from './Tg3Resolution.tsx'
 import { FindingControl } from './FindingControl.tsx'
 import type { Dispatch } from 'react'
 import type { ReportClient } from '../analysis/report-client.ts'
@@ -70,6 +71,8 @@ export function ReportAnalysis({ session, dispatch, client }: {
         {[...extraction.findings, ...extraction.uncertainCandidates].map(candidate => {
           const finding = currentFinding(report, candidate.findingId)
           const control = report.findingControls.find(item => item.findingId === candidate.findingId)
+          const resolution = report.tg3Resolutions.find(item => item.findingId === candidate.findingId)?.resolution ?? null
+          const tg3Validation = finding?.grade === 'TG3' ? validateTg3Resolution(finding, resolution) : null
           return <li key={candidate.findingId}>
           {control?.rejection ? <>
           <h3><button ref={report.view.findingId === candidate.findingId ? selectedButton : undefined} className="finding-select" type="button" aria-pressed={report.view.findingId === candidate.findingId} onClick={() => onView({ ...report.view, findingId: candidate.findingId, pdfPage: target(candidate.original.source).page })}>Brukeravvist KI-uttrekk · {candidate.original.description}</button></h3>
@@ -86,10 +89,12 @@ export function ReportAnalysis({ session, dispatch, client }: {
           {candidate.kind === 'uncertain' && <ul>{candidate.issues.map(issue => <li key={issue.code}>{issue.code}: {issue.reason}</li>)}</ul>}
           <ul>{candidate.original.uncertainties.map((text, index) => <li key={index}>{text}</li>)}</ul>
           </>}
+          {finding?.grade === 'TG3' && <p>Separat TG3-status: {tg3Validation?.applicable ? 'Brukerbekreftet avklaring for førstevurdering' : resolution?.status === 'unresolved' && !tg3Validation?.errors.binding ? 'Registrert som Uavklart' : 'Uavklart — utilstrekkelig avklaringsgrunnlag'}</p>}
+          {report.view.findingId === candidate.findingId && finding?.grade !== 'TG3' && resolution && <PreviousTg3Resolution resolution={resolution} />}
           {control?.draft && <p>Redigert utkast — ikke brukt</p>}
           {report.status === 'completed' && report.view.findingId === candidate.findingId && <FindingControl report={report} candidate={candidate} dispatch={dispatch} onRejected={() => selectedButton.current?.focus()} />}
           {report.status === 'completed' && report.view.findingId === candidate.findingId && finding?.grade === 'TG3' && <Tg3Resolution current={finding}
-            findingId={candidate.findingId} generation={report.generation} resolution={report.tg3Resolutions.find(item => item.findingId === candidate.findingId)?.resolution ?? null} dispatch={dispatch} />}
+            findingId={candidate.findingId} generation={report.generation} resolution={resolution} dispatch={dispatch} />}
         </li>})}
       </ol>
       </SourceReview>

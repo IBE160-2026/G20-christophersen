@@ -46,7 +46,7 @@ Oppfølging 2026-10-20: [R2 er lukket](../planning-artifacts/r2-pdf-lesbarhet-se
 
 Historisk oppfølging 2026-10-21 etter 2.8: Story 2.8 er **done** etter [full uavhengig BMAD-review](story-2-8-review.md). Fire reproduserte UX-feil er rettet: vedvarende feltfeil, retur uten fokusstjeling, korte kontrollkunngjøringer og synlig fokus etter Bruk/Avbryt på kort skjerm. Nye negative/isolasjonsprøver og full sluttregresjon består: 527/527 Vitest, 76/76 bygget-app og 3/3 dev-E2E samt type/lint/build. Se også [egenverifikasjon](story-2-8-verifikasjon.md). Epic 2 pågår; 2.1–2.8 er done, 2.9–2.11 er backlog, og Epic 3 er ikke startet. Neste tillatte steg er bare Story 2.9 med ny implementeringsagent og deretter ny uavhengig reviewagent.
 
-Gjeldende oppfølging 2026-10-21 etter 2.9: Story 2.9 er **done** etter
+Historisk oppfølging 2026-10-21 etter 2.9: Story 2.9 er **done** etter
 [full uavhengig BMAD-review](story-2-9-review.md). Avvist utkasthistorikk er
 rettet til fullt lesbar tekst uten aktive feiloppgaver. Fire nye negative
 unit-prøver, faktisk Tab/status-/kortskjermkontroll og full regresjon består:
@@ -54,3 +54,14 @@ unit-prøver, faktisk Tab/status-/kortskjermkontroll og full regresjon består:
 Epic 2 er in-progress; 2.1–2.9 done, 2.10/2.11 backlog. Epic 3 er backlog.
 Neste tillatte steg er bare 2.10 med ny implementeringsagent og separat review.
 Readiness og porter er uendret; ingen ny blocker eller beslutning.
+
+
+Gjeldende oppfølging 2026-10-21 etter 2.10: Story 2.10 er **done** etter
+[full uavhengig BMAD-review](story-2-10-review.md) med fire sekvensielle lag.
+Separat TG3-avklaring, domain-eid forholdsbinding og egen revisjon består.
+Beholdt registrering er lesbar etter TG2/avvisning, avklaringsstatus er synlig
+på alle aktive TG3-rader, og bevisst Uavklart får ingen falsk ugyldigfeltmerking.
+Full sluttregresjon: 564/564 Vitest, 84/84 bygget-app og 3/3 dev-E2E,
+typecheck/lint/build bestått. Ingen ny blocker/beslutning eller endring i porter.
+Epic 2 in-progress; 2.1–2.10 done, 2.11 backlog. Epic 3 backlog.
+Neste tillatte steg er bare 2.11 med ny implementeringsagent og separat review.

@@ -17,6 +17,7 @@ export function Tg3Resolution({ current, resolution, findingId, generation, disp
     }
   })
   const validation = validateTg3Resolution(current, resolution)
+  const intentionallyUnresolved = resolution?.status === 'unresolved' && !validation.errors.binding
   const previous = useRef(validation.applicable)
   const [announcement, setAnnouncement] = useState('')
   useEffect(() => {
@@ -37,17 +38,29 @@ export function Tg3Resolution({ current, resolution, findingId, generation, disp
     </div>}
     <div className="finding-edit-field"><label htmlFor={`${id}-status`}>TG3-status for gjeldende forhold</label>
       <select id={`${id}-status`} value={validation.errors.binding ? '' : resolution?.status === 'resolved' || resolution?.status === 'unresolved' ? resolution.status : ''}
-        aria-invalid={Boolean(validation.errors.status || validation.errors.binding)} aria-describedby={`${id}-status-error${validation.errors.binding ? ` ${id}-binding` : ''}`}
+        aria-invalid={!intentionallyUnresolved && Boolean(validation.errors.status || validation.errors.binding)} aria-describedby={`${id}-status-error${validation.errors.binding ? ` ${id}-binding` : ''}`}
         onChange={event => register('status', event.currentTarget.value)}>
         <option value="">Velg status</option><option value="unresolved">Uavklart</option><option value="resolved">Avklart</option>
       </select>
-      <p id={`${id}-status-error`} className={validation.errors.status ? 'field-issue' : undefined}>{validation.errors.status ?? 'Statusen gjelder dette rapportforholdet og de registrerte tekstene.'}</p>
+      <p id={`${id}-status-error`} className={!intentionallyUnresolved && validation.errors.status ? 'field-issue' : undefined}>{intentionallyUnresolved ? 'Registrert som Uavklart. Forholdet gir fortsatt utilstrekkelig avklaringsgrunnlag.' : validation.errors.status ?? 'Statusen gjelder dette rapportforholdet og de registrerte tekstene.'}</p>
     </div>
     {(['reason', 'basis'] as const).map(field => <div className="finding-edit-field" key={field}>
       <label htmlFor={`${id}-${field}`}>{field === 'reason' ? 'Kort begrunnelse for TG3-avklaring' : 'Konkret eksternt avklaringsgrunnlag'}</label>
-      <textarea id={`${id}-${field}`} rows={3} value={resolution?.[field] ?? ''} aria-invalid={Boolean(validation.errors[field])}
-        aria-describedby={validation.errors[field] ? `${id}-${field}-error` : undefined} onChange={event => register(field, event.currentTarget.value)} />
-      {validation.errors[field] && <p className="field-issue" id={`${id}-${field}-error`}>{validation.errors[field]}</p>}
+      <textarea id={`${id}-${field}`} rows={3} value={resolution?.[field] ?? ''} aria-invalid={!intentionallyUnresolved && Boolean(validation.errors[field])}
+        aria-describedby={!intentionallyUnresolved && validation.errors[field] ? `${id}-${field}-error` : undefined} onChange={event => register(field, event.currentTarget.value)} />
+      {!intentionallyUnresolved && validation.errors[field] && <p className="field-issue" id={`${id}-${field}-error`}>{validation.errors[field]}</p>}
     </div>)}
   </fieldset>
+}
+
+/** Beholdt brukergrunnlag er lesbart også når funnet ikke lenger er aktivt TG3. */
+export function PreviousTg3Resolution({ resolution }: { resolution: Resolution }) {
+  return <section aria-label="Tidligere TG3-registrering" className="finding-edit">
+    <h4>Tidligere TG3-registrering — ikke gjeldende avklaring</h4>
+    <p>Brukeroppgitt status: {resolution.status === 'resolved' ? 'Avklart' : resolution.status === 'unresolved' ? 'Uavklart' : 'Ukjent'}.</p>
+    <p>Registrert for {resolution.binding.grade} · {resolution.binding.description} · {resolution.binding.source.documentName} · PDF-side {resolution.binding.source.pdfPage}.</p>
+    <p>Kort begrunnelse: {resolution.reason || 'Ikke oppgitt'}</p>
+    <p>Konkret eksternt avklaringsgrunnlag: {resolution.basis || 'Ikke oppgitt'}</p>
+    <p>Brukeroppgitt for førstevurdering; ikke KI-fakta, nødvendigvis utbedret eller teknisk godkjent. Grunnlaget er ikke eksternt verifisert.</p>
+  </section>
 }

@@ -2,7 +2,7 @@
 title: 'Story 2.10 — Registrere og validere separat TG3-avklaring'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '2-10-registrere-og-validere-separat-tg3-avklaring'
 baseline_commit: '70c799af3593ad10795cb1eebaa95771530e9478'
@@ -65,3 +65,20 @@ Ingen intensjonsgap eller irreversible handlinger. Contracts/domain utformer den
 `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, bygget-app og dev-E2E. Chromium: `PLAYWRIGHT_BROWSERS_PATH=/private/tmp/ibe160-story-1-2-browsers`. Ingen betalt API eller ny avhengighet. Økonomidelen i FR-5 fullføres i Epic 3 og faktisk listebekreftelse i 2.11.
 
 Implementeringscheckpoint 2026-10-21: Full regresjon 562/562 Vitest og 83/83 bygget-app-E2E, 3/3 dev-E2E, typecheck/lint/build bestått. Deretter ble én ekstra usikker-kilde-prøve lagt til: målrettet suite 25/25 (inkludert denne) bestått. Siste E2E-endring gjaldt kun bedre skjermbildeutsnitt og samme prøve bestod på nytt. Ingen produktkode endret etter full regresjon. Se [verifikasjon](story-2-10-verifikasjon.md). Ny uavhengig BMAD-review er neste port; denne agenten har ikke reviewet seg selv.
+
+### Review Findings
+
+Fire BMAD-lag kjørt sekvensielt. Blind Hunter ga åtte kandidater; Edge Case Hunter ga `[]` (tomt lag registrert), Verification Gap ga ingen gap, Acceptance Auditor ingen AC-/specbrudd. Ingen beslutningsbehov.
+
+- [x] [Review][Patch][medium] Beholdt TG3-grunnlag skjult etter avvisning/TG2 — lesbar separat historisk registrering for valgt funn.
+- [x] [Review][Patch][low] Avklaringsstatus mangler på uvalgt aktiv TG3-rad — vis separat tekststatus etter UX status-label.
+- [x] [Review][Patch][medium] Tilsiktet Uavklart får ugyldig feltmerking — skill gyldig Uavklart-registrering fra utilstrekkelig avklaringsgrunnlag.
+- [x] [Review][Patch][low] Tastaturtest bruker selectOption — etterprøvd faktisk native select med bokstavvalg, Tab/Shift+Tab og beholdt fokus.
+- [x] [Review][Patch][low] Rapportbytte-E2E gjenbruker ikke findingId — legg til samme-ID-rapport med nye bytes.
+- [x] [Review][Patch][low] Usikker grad-prøve dekker bare usikker kilde — prøv ukjent grad med gyldig kilde og eksplisitt retting.
+- [x] [Review][Patch][low] Begge TG3 avklart mangler browserbevis — etterprøv begge registreringer, mangler, retur og kallantall.
+
+Rejected: Blind Hunter #1 `false` som kravbrudd. Registrerte brukerstatus/tekster kan eksplisitt endres etter FR-5/AC5; ingen immutabel historikk for hver tekstredigering er låst. Bare tekstredigering bevarer gammel binding og kan aldri gjøre avklaringen anvendbar for endret forhold. Originalt KI-uttrekk/provenance overskrives ikke.
+
+
+Uavhengig review sluttført 2026-10-21: tre smale visningsrettinger og fire verifikasjonsforbedringer, én forkastet kandidat, ingen åpne funn/beslutninger. Full regresjon på siste produktkode: 564/564 Vitest, 84/84 bygget-app-E2E, 3/3 dev-E2E og typecheck/lint/build bestått. Se [review og AC-bevis](story-2-10-review.md). Story 2.10 done; 2.11 backlog, Epic 2 in-progress og Epic 3 backlog.

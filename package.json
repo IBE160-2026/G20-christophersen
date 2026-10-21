@@ -13,8 +13,9 @@
     "demo": "node src/backend/server.ts",
     "dev": "node src/backend/server.ts --dev",
     "typecheck": "tsc -b",
-    "lint": "oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts vitest.config.ts",
+    "lint": "oxlint --deny-warnings src tests vite.config.ts playwright.config.ts playwright.dev.config.ts playwright.components.config.ts vitest.config.ts",
     "test:e2e": "npm run build && playwright test && playwright test --config playwright.dev.config.ts",
+    "test:components": "playwright test --config playwright.components.config.ts",
     "test": "vitest run"
   },
   "dependencies": {

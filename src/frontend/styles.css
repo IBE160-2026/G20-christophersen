@@ -55,6 +55,28 @@ button[aria-disabled="true"] { cursor: not-allowed; }
   outline-offset: var(--focus-offset);
 }
 
+.financial-metrics { min-width: 0; }
+.financial-metrics > h2 { margin-bottom: var(--space-4); }
+.metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); align-items: start; }
+.financial-metric { min-width: 0; padding: var(--space-4); border: 1px solid var(--border-decorative); border-radius: var(--radius-lg); background: var(--surface-main); overflow-wrap: anywhere; }
+.financial-metric h3, .metric-cost-basis h4 { margin: 0 0 var(--space-2); font-size: 16px; font-weight: 600; line-height: 1.4; }
+.metric-value { font-size: 22px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.metric-partial, .metric-rounding { margin-top: var(--space-2); color: var(--status-warning); background: var(--status-warning-surface); }
+.metric-rounding { padding: var(--space-2); border-radius: var(--radius-sm); }
+.metric-issues { margin-block: var(--space-3); padding-left: var(--space-5); }
+.metric-detail { margin-top: var(--space-4); border-top: 1px solid var(--border-decorative); }
+.metric-detail summary { cursor: pointer; min-height: var(--control-height); padding-block: var(--space-2); font-weight: 600; }
+.metric-detail-content { padding-block: var(--space-3); }
+.metric-detail-content > p + p, .metric-input-basis p + p { margin-top: var(--space-2); }
+.metric-input-basis { margin-block: var(--space-4); }
+.metric-input-basis dt { font-weight: 600; }
+.metric-input-basis dd { margin: var(--space-2) 0 0; }
+.metric-cost-basis { padding-top: var(--space-3); border-top: 1px solid var(--border-decorative); }
+.metric-cost-basis li + li { margin-top: var(--space-2); }
+.metric-stale { padding: var(--space-4); margin-bottom: var(--space-4); background: var(--surface-subtle); border-radius: var(--radius-md); }
+.financial-metrics-historical .financial-metric { background: var(--surface-subtle); }
+@media (max-width: 700px) { .metric-grid { grid-template-columns: minmax(0, 1fr); } }
+
 .app-shell {
   height: 100dvh;
   display: grid;

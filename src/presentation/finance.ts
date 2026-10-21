@@ -15,6 +15,11 @@ function norwegian(fixed: string): string {
   return `${negative ? '−' : ''}${integer!.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')}${fraction === undefined ? '' : `,${fraction}`}`
 }
 
+/** Eksakt kanonisk desimaltekst i beregningsgrunnlag; ingen avrunding. */
+export function formatFinancialDecimal(value: string): string {
+  return norwegian(value)
+}
+
 function amountAt(amount: string, decimals: number): string {
   return new Decimal(amount).toFixed(decimals, Decimal.roundHalfUp)
 }

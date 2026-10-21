@@ -1,0 +1,33 @@
+
+> property-acquisition-agent@0.0.0 test:components
+> playwright test --config playwright.components.config.ts
+
+
+Running 16 tests using 4 workers
+
+(node:52926) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:52925) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 tests/components/financial-metrics.spec.ts:138:3 › AC1/2 BT-5: konkrete inputmangler, gyldige delberegninger og ingen skjult null (758ms)
+  ✓   1 tests/components/financial-metrics.spec.ts:138:3 › AC1/2 BT-6: konkrete inputmangler, gyldige delberegninger og ingen skjult null (828ms)
+  ✓   4 tests/components/financial-metrics.spec.ts:138:3 › AC1/2 BT-3: konkrete inputmangler, gyldige delberegninger og ingen skjult null (914ms)
+  ✓   6 tests/components/financial-metrics.spec.ts:138:3 › AC1/2 BT-18: konkrete inputmangler, gyldige delberegninger og ingen skjult null (249ms)
+  ✓   5 tests/components/financial-metrics.spec.ts:138:3 › AC1/2 BT-17: konkrete inputmangler, gyldige delberegninger og ingen skjult null (339ms)
+  ✓   2 tests/components/financial-metrics.spec.ts:102:1 › AC1/3 BT-1: fire navn, norsk fasit/enhet/år fra start og faktisk formel/input/kilder (1.1s)
+  ✓   7 tests/components/financial-metrics.spec.ts:159:3 › AC2 BT-4 og tilstandsgrense: error beholder F1-tall som Delgrunnlag (259ms)
+  ✓   9 tests/components/financial-metrics.spec.ts:159:3 › AC2 BT-4 og tilstandsgrense: tg3 beholder F1-tall som Delgrunnlag (248ms)
+  ✓   8 tests/components/financial-metrics.spec.ts:159:3 › AC2 BT-4 og tilstandsgrense: unconfirmed beholder F1-tall som Delgrunnlag (262ms)
+  ✓  10 tests/components/financial-metrics.spec.ts:169:1 › AC1 BT-11: negative resultater beholdes i alle berørte kort (271ms)
+  ✓  11 tests/components/financial-metrics.spec.ts:174:1 › AC3 BT-15: registrert måned, faktor 12 og faktisk anvendt årsverdi er lesbare (351ms)
+  ✓  13 tests/components/financial-metrics.spec.ts:197:1 › AC4: negativ kontantstrøm som rundes til null forklares med uavrundet beløp (260ms)
+  ✓  12 tests/components/financial-metrics.spec.ts:184:1 › AC4 BT-8: likhet og én krone under har lik standardvisning, men bruddet forklares presist (336ms)
+  ✓  16 tests/components/financial-metrics.spec.ts:255:1 › ny økt viser bare Ikke beregnet uten gamle verdier eller detaljer (225ms)
+  ✓  15 tests/components/financial-metrics.spec.ts:241:1 › AC5 og snapshotgrense: historiske tall/kilder blandes ikke med ny finansverdi (394ms)
+  ✓  14 tests/components/financial-metrics.spec.ts:206:1 › AC5: native semantikk, Enter/Space, synlig fokus og lukket detalj uten ekstra fokusmål (572ms)
+
+  16 passed (3.1s)

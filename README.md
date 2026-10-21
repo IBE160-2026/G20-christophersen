@@ -150,17 +150,23 @@ npx playwright install chromium
 npm run typecheck
 npm run lint
 npm test
+npm run test:components
 npm run test:e2e
 ```
 
 E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. Vitest-modul-/PDF-integrasjonstester, 57 tester av bygget app
-og 2 dev-tester kjøres gjennom kommandoene over.
+port 3000, som må være ledig. Vitest-modul-/PDF-integrasjonstester, komponenttester, tester av bygget app
+og dev-tester kjøres gjennom kommandoene over.
 Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
 forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
 tastatur/fokus/ombryting ved desktop og viewport tilsvarende sterk zoom,
 inkludert 320×200 og korte 320×160/360×160-flater. Dev-kontrollene krever
 synlig skall, tilkoblet HMR på samme origin og avvisning av faktiske private filer.
+`test:components` rendrer de faktiske React-nøkkeltallskomponentene fra
+revisjonsbundne snapshot og leser/betjener resultatet direkte i Chromium.
+Denne testen av komponentgrensen bruker native detaljåpning og krever ingen
+appserver, testrute, hydrering eller betalt API. Samlet plassering og flyt i
+bygget app kontrolleres separat av E2E.
 Registreringstestene bruker kontrollerte F1-/F3-verdier og kontrollerer
 råstrenger, blank/0/sletting, ubekreftet status, periode/år, retur uten
 datatap og tom registrering etter sideoppdatering. De kontrollerer ingen

@@ -49,7 +49,10 @@ export function selectResult(state: SessionState): ResultSelection {
   if (state.resultChanges.length === 0 && sameResultBinding(state.resultSnapshot.binding, resultBinding(state))) {
     return { status: 'current', label: 'Gjeldende', snapshot: state.resultSnapshot, unusedDraftFindingIds }
   }
-  return { status: 'historical', label: 'Utdatert', snapshot: state.resultSnapshot, changes: state.resultChanges, unusedDraftFindingIds }
+  const financialConfirmed = FinancialFieldSchema.options.every(field => state.financial[field].confirmed)
+  const changes = state.resultChanges.map(change => change.kind === 'financial' && financialConfirmed
+    ? { ...change, nextAction: 'Tallgrunnlaget er bekreftet. Beregn resultatet på nytt fra gjeldende grunnlag.' } : change)
+  return { status: 'historical', label: 'Utdatert', snapshot: state.resultSnapshot, changes, unusedDraftFindingIds }
 }
 
 /** Kalles bare etter en faktisk endring av bindingen. Bekreftelsesregler eies fortsatt av Epic 1/2. */

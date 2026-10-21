@@ -1,0 +1,33 @@
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/result-snapshot.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/result-snapshot.test.ts (62 tests | 1 failed) 81ms
+   ❯ Story 3.5 — snapshot og revisjonsbundet gyldighet (62)
+     × AC2/5 AT16 BT12: L-endring og ny bekreftelse gir nytt Forkast uten rapportendring 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/result-snapshot.test.ts > Story 3.5 — snapshot og revisjonsbundet gyldighet > AC2/5 AT16 BT12: L-endring og ny bekreftelse gir nytt Forkast uten rapportendring
+AssertionError: expected 'Kontroller og bekreft berørt tallgrun…' to be 'Tallgrunnlaget er bekreftet. Beregn r…' // Object.is equality
+
+Expected: "Tallgrunnlaget er bekreftet. Beregn resultatet på nytt fra gjeldende grunnlag."
+Received: "Kontroller og bekreft berørt tallgrunnlag for L, og beregn resultatet på nytt."
+
+ ❯ tests/unit/result-snapshot.test.ts:362:8
+    360|     if (confirmed.status !== 'historical') throw new Error('Forventet …
+    361|     expect(confirmed.changes.find(change => change.kind === 'financial…
+    362|       .toBe('Tallgrunnlaget er bekreftet. Beregn resultatet på nytt fr…
+       |        ^
+    363|     expect(confirmed.changes.find(change => change.kind === 'financial…
+    364|     state = calculate(state)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 61 passed (62)
+   Start at  20:03:03
+   Duration  293ms (tests 40%, import 30%, transform 28%, worker 1%)

@@ -2,7 +2,7 @@
 title: 'Story 3.5 — Binde resultat til revisjoner og gjøre tidligere resultat historisk'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '3-5-binde-resultat-til-revisjoner-og-gjøre-tidligere-resultat-hi'
 baseline_commit: 'c2faf8f597299210b98b5f8b7d445684dbf232c3'
@@ -37,3 +37,30 @@ Test hele endringsmatrisen med faktisk produsert F1-snapshot, AT-16, RT-3/11–1
 - Egenverifikasjon: 57 nye snapshotprøver, typecheck/lint og 89 bygget-app + 3 dev-E2E bestått på Node 24.21.0/npm 11.19.0. Første mutasjonsprøve ble rettet mot eksisterende immutabel original. Sandkassens lokale serversperre og manglende Playwright-versjon ble håndtert med lokal testtillatelse og midlertidig nettleser. Første brede Vitest ga 909/910; eksisterende cleanup-prøve traff tidsfristen ved samtidig E2E. Isolert etterkontroll består, sluttregresjon kjøres uten samtidig E2E. Se verifikasjonsnotatet for endelig resultat. Ingen produksjonsendring utenfor Story 3.5.
 
 - Sluttkontroll: **910/910 Vitest i 27 filer**, **57/57 nye snapshotprøver**, **89/89 bygget-app + 3/3 dev-E2E**, build/typecheck/lint og diffkontroll bestått. Sluttregresjonen uten samtidig E2E bekrefter at cleanup-prøven består uten endring av gammel test/produksjonskode. [AC-/testbevis](story-3-5-verifikasjon.md), [sluttregresjon](story-3-5-regresjon-slutt.txt), [arbeidsøkt](../process/arbeidsokter/2026-10-21-story-3-5.md). Status er in-review/review; ingen review, push eller videre story. Ingen blockers.
+
+
+## Review Findings
+
+Uavhengig BMAD-review med fire sekvensielle reviewlag er fullført.
+Alle elleve kandidater er triagert individuelt i [reviewrapporten](story-3-5-review.md).
+Ingen produkt-/arkitekturbeslutning eller endring av autoritativt kravgrunnlag.
+
+- [x] [Review][Patch] G1: Historisk finansendring skal etter vellykket ny bekreftelse be om ny beregning, mens navngitt endringsårsak beholdes.
+- [x] [Review][Patch] G2: Lukk verifikasjonshull for D-periode/-år med kostnad og navngitt D/J-behov, omberegning med aktivt utkast, faktisk omordning av kontroller og full ny rapportkontroll.
+
+### Rejected
+
+- B1 — false: Avvist funns utkast bevares eksplisitt som historikk etter Story 2.9-review; det er fortsatt ubrukt og skal ikke slettes eller kunne reaktivere funnet.
+- B2 — low: Mutasjon av selektorens endringsmetadata har ingen nåværende appkaller; beskyttelse av all mutable session-state ville legge til defensive grener for håndmutert state.
+- B3 — low: Snapshot fryses dypt i runtime og negative mutasjonsprøver består. Ingen konsument skriver til snapshot; rekursive readonly-typer vil kreve bredere kontrakt-/konsumertilpasning uten demonstrert brukerfeil.
+- B4 — low: Direkte mutasjon av aktiv state omgår den autoritative reduceren. Den beviste produksjonsflyten oppdaterer binding ved hver relevant handling; mutasjonsprøvens mål er isolasjon av historisk kopi.
+- B7 — low: Samme-generasjon completed→error→vellykket ny analyse krever håndlagde handlinger; ReportClient sender ikke feil etter fullført svar og backend sperrer nytt adapterkall for samme økt/rapport. Ingen nåbar gjenoppliving er vist.
+
+
+Checkpoint etter review: **done**. G1 og G2 er lukket. Fem nye reviewerprøver
+og forsterket AT16 gir **62 snapshotprøver**, **300/300 målrettede tester i åtte filer**,
+typecheck/lint og diffkontroll bestått på pinnet Node24/npm. Én konkret rød
+produksjonsreproduksjon ble grønn etter retting. Full Vitest/build/bygget-app/dev-E2E
+kjøres av orkestratoren sekvensielt ved mini-sprintens slutt; tidligere implementerings-
+regresjon er ikke påstått nykjørt her. [Bevis og individuell triage](story-3-5-review.md).
+Ingen åpne funn, ny beslutning, push eller implementasjon av Story 3.6+ i denne fasen.

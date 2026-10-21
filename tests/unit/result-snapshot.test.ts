@@ -145,12 +145,18 @@ describe('Story 3.5 — snapshot og revisjonsbundet gyldighet', () => {
     expect(after.financial.J.confirmed).toBe(false)
     expect(after.resultSnapshot!.assessment.basis.financialBasis.costItems[0]!.rawAmount).toBe('120000')
   })
-  it('AC2: D-perioden opphever også J-kontroll ved delt kostnadskontekst', () => {
+  it.each([
+    ['periode', { type: 'register-period', field: 'D', period: 'month' }],
+    ['år', { type: 'register-year', field: 'D', year: '2025' }],
+  ] as const)('AC2: D-%s opphever også J-kontroll og navngir begge ved delt kostnadskontekst', (_detail, action) => {
     const before = f1(true)
-    const after = sessionReducer(before, { type: 'register-period', field: 'D', period: 'month' })
+    const after = sessionReducer(before, action)
     historical(before, after, 'D')
     expect(after.financial.J.confirmed).toBe(false)
-    expect(after.financial.P.confirmed).toBe(true)
+    expect(after.financial.D.confirmed).toBe(false)
+    for (const field of ['P', 'L', 'Ymin'] as const) expect(after.financial[field].confirmed).toBe(true)
+    expect(after.report).toBe(before.report)
+    expect(after.resultChanges[0]!.nextAction).toBe('Kontroller og bekreft berørt tallgrunnlag for D og J, og beregn resultatet på nytt.')
   })
   it('AC1/2: tilbaketrukket nullkontroll fanges ved lik finansrevisjon; ny bekreftelse gjenoppliver aldri gammelt resultat', () => {
     let state = controlled()
@@ -188,7 +194,35 @@ describe('Story 3.5 — snapshot og revisjonsbundet gyldighet', () => {
     expect(state.report.listConfirmationRevision).toBe(0)
     expect(isFinancialConfirmed(state)).toBe(true)
   })
-  it('AC4: utkast til et tidligere ukontrollert funn og omordnet kontrolltabell påvirker ikke binding', () => {
+  it('AC1/4: omberegning med aktivt ubrukt utkast bruker fortsatt gjeldende funn', () => {
+    const before = f1()
+    let state = draft(finding(before, 'report-finding-edit'), 'description', 'Ubrukt annet forhold')
+    state = draft(state, 'grade', 'TG3')
+    state = draft(state, 'pdfPage', '999')
+    state = finding(state, 'report-finding-apply')
+    expect(state.report.findingControls[0]!.errors.pdfPage).toBeTruthy()
+    state = calculate(state)
+    expect(selectResult(state)).toMatchObject({ status: 'current', unusedDraftFindingIds: ['F1-TG2-1'] })
+    expect(state.resultSnapshot!.assessment).toEqual(before.resultSnapshot!.assessment)
+    expect(state.resultSnapshot!.assessment.basis.reportBasis.controls[0]!).toMatchObject({ draft: null, errors: {} })
+    expect(state.report.findingControls[0]!.draft!.description).toBe('Ubrukt annet forhold')
+    expect(state.report.findingControls[0]!.errors.pdfPage).toBeTruthy()
+  })
+  it('AC1/4: omordning av to ekte F4-kontroller endrer ikke binding eller snapshotgyldighet', () => {
+    const before = calculate(controlled('F4'))
+    expect(before.report.findingControls).toHaveLength(2)
+    const state = { ...before, report: { ...before.report, findingControls: [...before.report.findingControls].reverse() } }
+    expect(state.report.findingControls.map(control => control.findingId)).not.toEqual(before.report.findingControls.map(control => control.findingId))
+    expect(resultBinding(state)).toEqual(resultBinding(before))
+    expect(selectResult(state).status).toBe('current')
+    expect(selectResult(state).snapshot).toBe(before.resultSnapshot)
+    const next = calculate(state)
+    expect(next.resultSnapshot!.assessment.recommendation).toBe('Innhent mer informasjon')
+    expect(next.resultSnapshot!.binding).toEqual(before.resultSnapshot!.binding)
+    expect(next.resultSnapshot!.assessment.basis.reportBasis.controls.map(control => control.findingId).sort())
+      .toEqual(before.resultSnapshot!.assessment.basis.reportBasis.controls.map(control => control.findingId).sort())
+  })
+  it('AC4: utkast til et tidligere ukontrollert funn påvirker ikke binding', () => {
     let state = calculate(receive(sessionReducer(financialSession(), { type: 'navigate', step: 'tilstandsrapport' })))
     const before = state
     state = finding(state, 'report-finding-edit')
@@ -322,6 +356,11 @@ describe('Story 3.5 — snapshot og revisjonsbundet gyldighet', () => {
     expect(unconfirmed.metrics.noi.status).toBe('unavailable')
     state = sessionReducer(state, { type: 'confirm-financial' })
     historical(before, state)
+    const confirmed = selectResult(state)
+    if (confirmed.status !== 'historical') throw new Error('Forventet historisk resultat før ny beregning')
+    expect(confirmed.changes.find(change => change.kind === 'financial' && change.target === 'L')!.nextAction)
+      .toBe('Tallgrunnlaget er bekreftet. Beregn resultatet på nytt fra gjeldende grunnlag.')
+    expect(confirmed.changes.find(change => change.kind === 'financial' && change.target === 'L')!.message).toBe('L: verdi er endret.')
     state = calculate(state)
     expect(state.report).toBe(before.report)
     expect(state.resultSnapshot!.assessment).toMatchObject({ recommendation: 'Forkast', priority: 2,
@@ -368,6 +407,28 @@ describe('Story 3.5 — snapshot og revisjonsbundet gyldighet', () => {
     expect(state.resultSnapshot!.binding.report.reportHash).toBe(next.selected.hash)
     expect(before.resultSnapshot!.binding.report.generation).toBe(1)
     expect(before.resultSnapshot!.assessment.recommendation).toBe('Gå videre')
+  })
+  it.each(['F1', 'F4'])('AC1/5: ny rapport %s blir komplett først etter egne kontroller og får ny provenance', caseId => {
+    const before = f1()
+    const nextReport = reportFixture(caseId, 2)
+    let state = receive(before, nextReport)
+    expect(state.report.findingControls).toEqual([])
+    expect(state.report.listConfirmationRevision).toBeNull()
+    expect(calculate(state).resultSnapshot!.assessment.priority).toBe(1)
+    for (const item of nextReport.expected.findings) state = finding(state, 'report-finding-confirm', item.id)
+    if (caseId === 'F4') state = tg3(tg3(tg3(state, 'status', 'resolved'), 'reason', 'Kontrollert nytt takforhold'), 'basis', 'Ny rapport T-43')
+    state = confirmList(state)
+    expect(state.report.listConfirmationRevision).toBe(0)
+    historical(before, state)
+    state = calculate(state)
+    expect(selectResult(state).status).toBe('current')
+    expect(state.resultSnapshot!.assessment.recommendation).toBe('Gå videre')
+    expect(state.resultSnapshot!.binding.report).toMatchObject({ generation: 2, requestId: 'request-2',
+      reportHash: nextReport.selected.hash, documentName: nextReport.expected.documentName })
+    expect(state.resultSnapshot!.assessment.basis.reportBasis.outcome).toEqual(nextReport.outcome)
+    expect(state.resultSnapshot!.binding.findingConfirmations.map(control => control.findingId).sort())
+      .toEqual(nextReport.expected.findings.map(item => item.id).sort())
+    expect(before.resultSnapshot!.binding.report.generation).toBe(1)
   })
   it('AC5: avbrutt analyse, feil og sent svar gjenoppliver ikke komplett resultat', () => {
     const before = f1()

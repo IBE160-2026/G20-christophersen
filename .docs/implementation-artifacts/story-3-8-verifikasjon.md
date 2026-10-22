@@ -6,7 +6,7 @@ Autoritet: [Story 3.8 AC1–5](../planning-artifacts/epics.md), [gyldig Epic3-ko
 
 ## Leveranse og avgrensning
 
-Resultatnavigasjonen i `sessionReducer` fornyer eksisterende snapshot når bare finansbindingen er endret, finansgrunnlaget er gyldig/bekreftet og eksisterende rapportkontroll er fullført. Beregning, screening, snapshot og historisk vern bruker de eksisterende autoritetene. Uendret retur bevarer samme snapshotobjekt. Ubekreftet/ugyldig endring beholder forrige historiske resultat.
+Resultatnavigasjonen i `sessionReducer` fornyer eksisterende snapshot når bare finansbindingen er endret, eller en finansendring fortsatt venter etter gjenbekreftelse med identisk sluttbinding. Finansgrunnlaget må være gyldig/bekreftet og eksisterende rapportkontroll fullført. Beregning, screening, snapshot og historisk vern bruker de eksisterende autoritetene. Uendret retur bevarer samme snapshotobjekt. Ubekreftet/ugyldig endring beholder forrige historiske resultat.
 
 Hele resten av bindingen sammenlignes (rapportidentitet/status, funnkontroll, liste og TG3). Endret rapport-/funn-/TG3-binding fornyes derfor ikke gjennom Story 3.8. Story 3.9 er fortsatt backlog. Ingen backend, kontrakt, domainregel, skjerm, ny bekreftelseshandling, testrute eller analysehandling er lagt til.
 
@@ -40,10 +40,48 @@ Grønne kjøringer bruker pinnet Node `v24.21.0`/npm `11.19.0` fra `/private/tmp
 
 Bygget-app-prøvene kjører ordinær lokal PDF-/demopipeline med reelle fiktive fixtures, ikke en offentlig testrute. Fasitverdiene er håndskrevne fra de godkjente finanscasene; produksjonens formatterer brukes ikke til å generere forventningene. Logikknære mangler/rapportfeil testes ved de eksisterende stategrensene, uten ny navigasjon som omgår kontroll.
 
+### Eksakte kommandoer og miljø
+
+Kjør fra repositoryroten. Disse miljøverdiene ble brukt for de grønne kjøringene; Playwright starter lokal demoserver fra eksisterende konfigurasjon. Runtime- og browserstiene må finnes i miljøet som reproduserer kjøringen.
+
+```sh
+export PATH="/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin:$PATH"
+export PLAYWRIGHT_BROWSERS_PATH="/private/tmp/ibe160-story-3-5-browsers"
+npm run build
+
+# Faktisk første kjøring, før AT-10/AT-11-testene ble lagt til: 5 tester.
+npx playwright test tests/e2e/screening-result.spec.ts --grep '3.8' --workers=2
+
+# Faktisk berørt sluttkjøring etter tillegg av AT-10/AT-11: 46 tester.
+npx playwright test tests/e2e/screening-result.spec.ts tests/e2e/financial-input.spec.ts --workers=2
+
+# Faktisk målrettet Vitest-kjøring før review: 241 tester.
+npm test -- tests/unit/financial-result-renewal.test.ts tests/unit/result-snapshot.test.ts tests/unit/screening-result-navigation.test.ts tests/unit/financial-confirmation.test.ts tests/unit/financial-basis.test.ts tests/unit/complete-screening.test.ts
+npm run typecheck
+npm run lint
+git diff --check
+```
+
+På dagens testfil velger `--grep '3.8'` syv tester. For å reprodusere utvalget på fem i den første loggen fra dagens fil, bruk `npx playwright test tests/e2e/screening-result.spec.ts --grep '^3\.8 (BT-|AC4)' --workers=2`. Denne avgrensede reproduksjonskommandoen oppgis for etterprøvbarhet; den er ikke kjørt på nytt i patchfasen.
+
+## Rettingsspor etter uavhengig review
+
+R1 rettet en faktisk AC5-feil: gyldig J=0 → tilbaketrukket nullkontroll → gjenopprettet nullkontroll → ny bekreftelse kunne ha identisk binding og likevel et ventende finansendringsspor. Resultatnavigasjonen tar nå dette sporet med i vurderingen. Gyldig finans, fullført listekontroll og sammenligning av hele den ikke-finansielle bindingen består som porter. Reviewerens [røde råbevis](story-3-8-review-rod.txt) er bevart urørt. Den utvidede regresjonsprøven krever nytt snapshot etter gjenbekreftelse, og krever fortsatt historisk snapshot når et rapportfunn også er avvist og den nye listen bekreftet; 3.9-fornyelse er ikke aktivert.
+
+R2–R5 styrker eksisterende prøver: P/D/J har direkte anbefaling/prioritet/triggerfasit; månedlig L har års-L 22 800 000, NOI 22 400 000, nettoyieldbrøk 22 400 000/16 000 000 og kontantstrøm 21 600 000; numerisk kostnad 150 000 med gjeldsdel 30 000 gir oppdatert snapshotinnhold D120 000/J30 000 uten tillegg til registrerte D/J-totaler; et faktisk manglende-Ymin-snapshot beholdes gjennom Ymin10/bekreftelse og erstattes først ved resultatnavigasjon. R6 er rettet med de eksakte kommandoene over.
+
+Kun målrettede prøver for endret session-kode ble kjørt i patchfasen, med pinnet Node og følgende kommando:
+
+```sh
+PATH=/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin:$PATH npm test -- tests/unit/financial-result-renewal.test.ts tests/unit/result-snapshot.test.ts tests/unit/screening-result-navigation.test.ts tests/unit/session.test.ts tests/unit/financial-confirmation.test.ts
+```
+
+**148/148 bestått** i fem filer, inkludert 20 finansfornyelsesprøver. [Grønt patchbevis](story-3-8-review-patch-test.txt). Full sluttregresjon og uavhengig etterkontroll utføres av forelder/reviewer etter denne patchfasen. Reviewrapport, spec og sprintstatus avgjøres ikke av implementeringsagenten.
+
 ## Agentgjennomført fokus- og visuell kontroll
 
 Faktiske nettleserbilder fra BT-12 er åpnet og inspisert. [Ugyldig L](story-3-8-ui/ugyldig-finans-fokus.png) viser synlig feltfokus, lokal negativfeil, bekreftet P og historisk Resultat-status i sticky trinn. [Fornyet F2](story-3-8-ui/fornyet-f2.png) viser Gjeldende, Forkast/prioritet 2 med eksakt økonomisk forklaring, fire korrekte F2-tall og bevart F1-rapport/funnliste. Ingen blanding med gamle tall observeres. De automatiserte kontrollene etterprøver også første feilfokus og trinnoverskrift ved fremover-/resultatnavigasjon. Dette er agentgjennomført QA, ingen påstand om menneskelig S5/S6-/live-evaluering.
 
 ## Checkpoint
 
-Implementeringen er klar for separat uavhengig BMAD-review. Spec er **in-review**, sprintstory er **review**. Implementeringsagenten har ikke utført review eller satt done. Forelderen kjører full siste regresjon etter review og eventuelle rettinger. Ingen ny produkt-/arkitekturbeslutning, ingen Story 3.9+, ingen push.
+R1–R6 er rettet og klar for separat uavhengig etterkontroll. Spec er **in-review**, sprintstory er **review**. Implementeringsagenten har ikke utført review eller satt done. Forelderen kjører full siste regresjon etter review og eventuelle rettinger. Ingen ny produkt-/arkitekturbeslutning, ingen Story 3.9+, ingen push.

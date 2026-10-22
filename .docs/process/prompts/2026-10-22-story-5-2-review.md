@@ -1,0 +1,7 @@
+# Reviewoppdrag — Story5.2
+
+2026-10-22. Brukerens kontrollerte mini-sprint krever sekvensielle subagenter, implementering fulgt av uavhengig BMAD-review før done, relevante tester per fase og full sluttregresjon, lokale commits uten push. Ingen Epic4/R1/senere forhåndsarbeid.
+
+Orkestratorens konkrete target var `69c3695822b222f6c19cc94a52230b42e0c4759d..5c4af6754dad4d12da6209c21e8a92fe5e23dd4c`, full code-review etter `.agents/skills/bmad-code-review/SKILL.md`/customization. AC1–6/UX/SPEC/arkitektur/sprint/kurs/faglærer er autoritet. Kontroller faktisk M01–19-dekning og vurder ikke-kjørt auditiv AT uten å innføre sertifisering. Rett reelle funn, test sekvensielt, bevar ærlige begrensninger og commit rapport/arbeidsøkt; opprinnelige rå-sessionlogger/orkestratorlogg skal være urørt og utenfor commit.
+
+Fire ferske reviewerprompts ble sendt i skillens rekkefølge med diff som filreferanse: Blind Hunter fikk bare diff og skillens funngulv; Edge Case Hunter fikk sin komplette instruksfil, diff og separat claims-fil; Verification Gap fikk sin komplette instruksfil og diff; Acceptance Auditor fikk diff/spec og autoritative kilder, med særlig vurdering av auditiv AT-begrensning. Ingen reviewer fikk andres funn. Alle ble kjørt ferdig før neste startet; triage etter siste. Midlertidig diff/claims i `/tmp/story-5-2-review.diff` og `/tmp/story-5-2-review-claims.txt` kan regenereres fra targetrange. Individuelle funn, dommer og refutasjoner er bevart i [reviewrapporten](../../implementation-artifacts/story-5-2-review.md).

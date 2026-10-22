@@ -2,11 +2,11 @@
 title: 'Story 5.2 — Manuell UX- og tilgjengelighetskontroll'
 type: 'chore'
 created: '2026-10-22'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '5-2-etterprøve-hele-den-felles-brukerflyten-og-grunnleggende-til'
 baseline_commit: '69c3695822b222f6c19cc94a52230b42e0c4759d'
-review_loop_iteration: 0
+review_loop_iteration: 1
 context:
   - '{project-root}/.docs/implementation-artifacts/epic-5-context.md'
 ---
@@ -58,7 +58,18 @@ Planlegging: Ingen uløst produktavgjørelse eller irreversibel handling. Sekven
 
 ## Review Triage Log
 
+2026-10-22: Full uavhengig BMAD-review med fire ferske sekvensielle reviewerlag. To low-patcher: miljø-/viewportproveniens presisert uten oppdiktede CSS-mål; tomliste-E2E venter nå på faktisk ferdigrendret original og tekstlag både bredt og smalt. Åtte blindkandidater er individuelt avvist med kilde-/bevisgrunnlag; ingen uløst high/medium, beslutning eller defer. Auditiv VoiceOver/NVDA er fortsatt eksplisitt ikke kjørt. Se [reviewrapport](story-5-2-review.md).
+
+### Review Findings
+
+- [x] [Review][Patch] Presiser faktisk viewport/zoom per prøvegruppe og skill skjermfangstpiksler fra ukjente CSS-mål — dokumentert fra implementeringsagentens faktabekreftelse.
+- [x] [Review][Patch] Verifiser faktisk ferdig PDF-render/fixturetekst for U1 [tests/e2e/report-analysis.spec.ts:101] — relevant1/1 og full bygget-app114/114 + dev3/3 bestått.
+
+Rejected: B1 false, kildene krever ikke bestemt auditiv AT-prøve og faktisk AX/status/fokus er dokumentert; B3 false, uendret funn-/trinnretur trenger ikke ny repetisjon og har tidligere bevis; B4 false, kontrollert detaljsemantikk/formel/kilde og original ved relevant flate oppfyller utvalget, øvrige disclosures er uendret; B5 false, Key Flow4 krever forstått feil og fungerende separat demo, ikke ny fullreise etter hver feil; B6–B8 false, obligatorisk ny manuell null-/måned-/konfliktmatrise er ikke et5.2-krav, ingen slik utførtpåstand beholdes; B10 false, den nye viewportuavhengige view-handlingen og eksisterende smale panel er faktisk/kjørbart prøvd. Full individuell refutasjon i reviewrapporten.
+
 ## Verification
+
+Sluttstatus etter uavhengig review: done. Ingen produktkode endret i reviewet. Skjerpet originalrenderprøve1/1, full bygget-app114/114/dev3/3, typecheck/build/lint/diffkontroll bestått. Full Vitest962/962 og komponenter37/37 gjelder uendret produktkode fra implementeringsregresjonen; orkestrator utfører egen avsluttende sprintregresjon.
 
 Manuell UI-kontroll med cua_repl; relevante tester ved kodeendring og full eksisterende regresjon før reviewoverlevering. `npm run build`, `npm run lint`, `npm test`, `npm run test:e2e`, `npm run test:components`, `git diff --check` sekvensielt med avtalt Node/Chromium/loopbackmiljø.
 

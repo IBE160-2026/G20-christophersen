@@ -84,7 +84,7 @@ development_status:
 
   epic-5: in-progress
   5-1-etterprøve-den-samlede-demoen-med-meningsfulle-automatiserte: done
-  5-2-etterprøve-hele-den-felles-brukerflyten-og-grunnleggende-til: review
+  5-2-etterprøve-hele-den-felles-brukerflyten-og-grunnleggende-til: done
   5-3-dokumentere-en-komplett-oppskrift-for-lokal-demo-og-tester: backlog
   5-4-la-en-annen-person-gjennomføre-readme-basert-ren-kjøring: backlog
   5-5-samle-etterprøvbare-leveransebevis-og-kontrollere-repoet: backlog

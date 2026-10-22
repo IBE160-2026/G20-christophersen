@@ -12,6 +12,8 @@ F1/F2/F4 ble valgt som faktiske PDF-filer i `tests/fixtures/property-cases/`, me
 
 Eksakte CSS-flater 1440×900, 1280×800 og1000×800 ble satt gjennom Chromes DevTools Responsive-toolbar. «Fit to window» skalerer fremvisningen av emulert flate og er ikke nettleserzoom. I tillegg ble ekte nettleserzoom110/125% valgt fra View→Zoom In;125% ga behovspanel på den vanlige desktopflaten. Zoom ble satt tilbake til100% etterpå. Åtte faktiske skjermbilder og fem AX-uttrekk er lenket under; disse er observasjonsbevis, ikke mocks.
 
+Presisert per prøve etter implementeringsagentens faktabekreftelse under uavhengig review: M01–M04 brukte vanlig Chrome100%; skjermfangstvinduet var2960×1706 Retina-piksler, men eksakt CSS-viewport ble ikke målt. M05 brukte de tre eksplisitte CSS-flatene ovenfor. M06–M08 fortsatte på1000×800 med Fit to window. M09 startet på1000×800 under finans/filvalg; DevTools ble lukket før F2-analysen. Resten av M09 og M10–M18 brukte vanlig Chrome100% i samme fulle skjermfangstvindu, uten målt CSS-viewport. M19 brukte vanlig100% og deretter ekte125% zoom. Skjermfangstpiksler er ikke oppgitt som CSS-mål.
+
 ## Registrerte manuelle prøver
 
 «Som forventet» nedenfor betyr faktisk sett/utført, med unntakene uttrykkelig oppgitt i siste seksjon. Gjennomgangens produktfunn U1 har egen før/etter-kontroll. Øvrige rader krevde ingen fiks eller repetisjon.
@@ -54,6 +56,8 @@ Standard lagret demo inneholder bare F1–F4. Tom/usikker/timeout kan derfor ikk
 
 Statusoverganger ble manuelt observert i AX og sammenholdt med faktisk fokus: analyserer→mottatt→klar liste, PDF dokument/side→tilgjengelig, resultat gjeldende→utdatert→ny anbefaling. De korte statusregionene skiftet uten fokusstjeling; samme tekst ble ikke observert som nye, gjentatte AX-endringer under uendret tilstand. Auditiv VoiceOver/NVDA-opplesning og antall reelle talekunngjøringer er **ikke kjørt**, så ingen garanti for alle hjelpemidler. Eksisterende automatiske status-/fokustester er støttebevis, ikke erstatning for M01–19. Hver mulig RT-/AT-kantvariant er ikke manuelt gjentatt;31-sider/OCR/nett-/live-leverandørfeil er ikke prøvd manuelt her. Ingen ny mobilreise, faktisk annen person/S6, live-S2/S5 eller Epic4/R1-konklusjon.
 
+Ytterligere presisering av utvalget: ubrukt utkast ble prøvd ved resize/panel/Esc/Avbryt, ikke ved annet funn/trinn og retur. Resultatets Bruttoyield-formel og inputkilde ble åpnet/lukket med tastatur; separate original-/TG3-disclosures ble ikke prøvd manuelt i denne runden. Nullbekreftelse, måned/årsfeil og finanskildekonflikt ble heller ikke manuelt prøvd her. Dokumentfeil→empty.pdf viste fullført analyse ved bytte til kontrolladapter, men ingen ny standarddemo-fullreise eller listebekreftelse/resultat i dette feilreturforløpet. Disse avgrensningene endrer ingen faktisk registrert M-rad. Eksisterende uendrede kontrollers automatiske og tidligere manuelle bevis er identifisert i [uavhengig review](story-5-2-review.md), uten å tilskrives denne rundens manuelle prøver.
+
 ## Automatisk regresjon
 
 Se rålogger for bygge-/typekontroll, lint, relevant E2E og full suite. Disse kjøres sekvensielt med Node24, eksisterende Chromium-cache og godkjent lokal loopback. Manuelle rader ovenfor står på egne faktiske observasjoner.
@@ -66,7 +70,7 @@ Se rålogger for bygge-/typekontroll, lint, relevant E2E og full suite. Disse kj
 - [Komponenter](story-5-2-komponenter.txt):37/37,4,2s.
 - `git diff --check`: bestått. Ingen feil i de avsluttende sekvensielle kontrollene.
 
-Story er in-review/review; uavhengig review er neste checkpoint. Ingen done fra implementeringsagenten.
+Historisk implementeringscheckpoint: in-review/review, ingen done fra implementeringsagenten. Etter separat [full uavhengig BMAD-review](story-5-2-review.md) er Story5.2 done; miljøproveniens og ikke-kjørte varianter er presisert, og U1-testen venter på faktisk ferdigrendret tekstlag. Ingen produktkode ble endret i reviewet.
 
 
 Implementeringscommit (faktisk kode og de kjørte testene): `51a4754b4485caa43eab2fd937473f7c3c490f7a`. Dette etterfølgende bevischeckpointet endrer bare dokumentasjon av commit-ID; ingen kildekode/testforventning er endret etter regresjonen.

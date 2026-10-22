@@ -216,3 +216,14 @@ Epic 2 er **done**, Epic 3 **in-progress**, 3.1/3.2 **done** og 3.3–3.9
 og senere porter er uendret. Brukerens større implementeringsrunde er
 stoppet her som bestilt. Neste handling i denne runden er bare samlet
 sluttrapport og dokumenterende sluttrevisjon; ingen 3.3-implementering.
+
+Gjeldende sluttstatus 2026-10-22 etter Story 3.9: **Epic 3 er done**, og
+alle ni stories 3.1–3.9 har done i både spec og sprintstatus. Story 3.9 er
+bestått etter [uavhengig full BMAD-review](story-3-9-review.md) med fire
+sekvensielle lag; ti kandidater er individuelt refutert, ingen åpne eller
+utsatte funn. Full sluttregresjon består: 958/958 Vitest, 37/37 komponenter,
+114/114 bygget-app, 3/3 dev-E2E, typecheck/lint/build og 7/7 promptloggtester.
+Se [arbeidsøkt og råbevis](../process/arbeidsokter/2026-10-22-story-3-9.md).
+Ingen ny produkt-/arkitekturbeslutning eller blocker. Epic 3-retrospektivet
+forblir optional, Epic 4 er urørt i backlog og R1/R4 er uendret. Denne
+bestillingen stopper her uten å starte flere stories eller utføre push.

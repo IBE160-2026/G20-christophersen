@@ -62,7 +62,7 @@ development_status:
   2-11-bekrefte-gjeldende-funnliste-med-tydelig-tilstrekkelighet: done
   epic-2-retrospective: optional
 
-  epic-3: in-progress
+  epic-3: done
   3-1-beregne-fire-nøkkeltall-fra-hvert-sitt-gyldige-årsgrunnlag: done
   3-2-avgjøre-økonomiske-terskler-med-eksakte-verdier: done
   3-3-formatere-nøkkeltall-uten-å-skjule-økonomiske-brudd: done
@@ -71,7 +71,7 @@ development_status:
   3-6-gjøre-hvert-nøkkeltall-og-beregningsgrunnlag-lesbart: done
   3-7-vise-ett-samlet-screeningresultat-med-kontrollgrunnlag: done
   3-8-oppdatere-resultat-etter-endret-og-bekreftet-finansgrunnlag: done
-  3-9-oppdatere-resultat-etter-rapportkontroll-og-separat-tg3-endr: review
+  3-9-oppdatere-resultat-etter-rapportkontroll-og-separat-tg3-endr: done
   epic-3-retrospective: optional
 
   epic-4: backlog

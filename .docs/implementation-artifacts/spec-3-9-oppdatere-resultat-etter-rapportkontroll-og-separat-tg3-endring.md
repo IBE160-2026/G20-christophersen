@@ -2,7 +2,7 @@
 title: 'Story 3.9 — Oppdatere resultat etter rapportkontroll og separat TG3-endring'
 type: 'feature'
 created: '2026-10-22'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '3-9-oppdatere-resultat-etter-rapportkontroll-og-separat-tg3-endr'
 baseline_commit: 'e2c2c131c7adeef0c80c2f1d9cab93c4aa069264'
@@ -33,3 +33,9 @@ Verifiser utkast/Avbryt/Bruk, avvisning, hver TG3-endring, gyldig og ukjent forh
 - Implementert kontrollert rapport-/funn-/TG3-fornyelse i eksisterende resultatnavigasjon; alle andre produksjonsmoduler er uendret. 18 nye overgangstester ga 16 røde før endringen, og 254 berørte tester er grønne etterpå. 3.8s midlertidige scopeprøver er oppdatert til 3.9-integrasjon.
 - 72/72 berørte bygget-app-tester består, inkludert 8 nye. Første kjørings innerText/textContent-feil i testforventning ble rettet uten produktendring. Typecheck/lint/build/diffkontroll består. Tre faktiske UI-bilder er åpnet/inspisert; AC-spor, miljø og kommandoer står i `story-3-9-verifikasjon.md`.
 - Checkpoint in-review/review. Ingen ny beslutning eller blocker. Implementeringsagenten har ikke utført review eller satt done; ny separat BMAD-reviewagent og full siste regresjon utføres av forelder. Epic 3 forblir in-progress og Epic 4 er ikke startet. Ingen push.
+
+## Review og sluttverifikasjon
+
+Uavhengig full BMAD-review av `e2c2c131c7adeef0c80c2f1d9cab93c4aa069264..7a4e1bb1efe0a93e8b1cfadd91eb9cccf6fcc826` er bestått. Fire nye lag kjørte sekvensielt: Blind Hunter, Edge Case Hunter, Verification Gap Reviewer og Acceptance Auditor. Alle ti kandidater er individuelt refutert i [reviewrapporten](story-3-9-review.md); ingen patch, defer eller beslutningsbehov. Reviewrapportcommit: `d49ca16d6b00b0d88b3804b99736fe99128e0f65`.
+
+Forelderen kjørte full sluttregresjon på dette kodecheckpointet: 958/958 Vitest, 37/37 komponenter, 114/114 bygget-app og 3/3 dev-E2E, typecheck, lint, build og 7/7 promptloggtester består. [Arbeidsøkten](../process/arbeidsokter/2026-10-22-story-3-9.md) lenker kommandoer og råbevis. Ingen produktkode eller tester ble endret etter review eller regresjon. Story 3.9 er done; alle ni Epic 3-stories er kontrollert done i både spec og sprintstatus, og Epic 3 er derfor done. Retrospektivet er fortsatt optional. Epic 4 er urørt, ingen push og ingen nye blockers.

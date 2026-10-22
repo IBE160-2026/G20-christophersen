@@ -1,0 +1,12 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/financial-result-renewal.test.ts tests/unit/result-snapshot.test.ts tests/unit/screening-result-navigation.test.ts tests/unit/financial-confirmation.test.ts tests/unit/financial-basis.test.ts tests/unit/complete-screening.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  6 passed (6)
+      Tests  241 passed (241)
+   Start at  10:46:40
+   Duration  381ms (import 42%, tests 36%, transform 19%, worker 2%)

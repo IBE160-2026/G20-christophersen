@@ -233,3 +233,153 @@ test('review B11: hele originalrapporten får presise etiketter og tastaturretur
   await page.keyboard.press('Escape')
   await expect(opener).toBeFocused()
 })
+
+async function returnThroughControls(page: Page) {
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#confirmation-status')).toContainText('Tallgrunnlaget er bekreftet')
+  await page.locator('#next-step').click()
+  await expect(page.getByRole('heading', { name: 'Tilstandsrapport', exact: true })).toBeFocused()
+  await expect(page.locator('#analysis-start-reason')).toContainText('Uendret rapportuttrekk gjenbrukes')
+  await page.getByRole('button', { name: 'Gå til Kontroller funn', exact: true }).click()
+  await expect(page.locator('#findings-title')).toHaveText('Funnliste — bekreftet')
+  await page.getByRole('button', { name: 'Vis resultat', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Resultat', exact: true })).toBeFocused()
+  await expect(page.locator('.screen-heading > .status-label')).toHaveText('Gjeldende')
+  await expect(page.locator('.result-stale')).toHaveCount(0)
+}
+
+test('3.8 BT-12 AC1/2/4/5: offline ugyldig→rettet→bekreftet L gir F2 uten ny analyse og med fokus/status', async ({ page, baseURL }, testInfo) => {
+  let calls = 0
+  const external: string[] = []
+  await page.route('**/*', async route => {
+    if (new URL(route.request().url()).origin !== new URL(baseURL!).origin) {
+      external.push(route.request().url()); await route.abort(); return
+    }
+    if (route.request().url().endsWith('/api/analysis')) calls++
+    await route.continue()
+  })
+  await controlled(page, 'F1')
+  await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+  await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+  // Uendret retur skal bevare gjeldende F1, uten ny bekreftelse.
+  await page.getByRole('button', { name: /Resultat Trinn 4/ }).click()
+  await expect(page.locator('.screen-heading > .status-label')).toHaveText('Gjeldende')
+  await expect(page.locator('#recommendation-title')).toHaveText('Gå videre')
+  await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+  await page.locator('#value-L').fill('-1')
+  await page.locator('#confirm-financial').click()
+  await expect(page.locator('#value-L')).toBeFocused()
+  await expect(page.locator('#value-L')).toHaveAttribute('aria-invalid', 'true')
+  await expect(page.locator('#field-issues-L')).toContainText('negativ')
+  await expect(page.locator('#confirmation-status')).toContainText('Endret grunnlag: L')
+  await expect(page.locator('#status-P')).toContainText('Bekreftet')
+  await expect(page.locator('#status-D')).toContainText('Bekreftet')
+  await expect(page.locator('#next-step')).toHaveCount(0)
+  await page.screenshot({ path: testInfo.outputPath('ugyldig-finans-fokus.png') })
+  await page.getByRole('button', { name: /Resultat Trinn 4/ }).click()
+  await expect(page.locator('.result-stale')).toContainText('L: verdi er endret.')
+  await expect(page.locator('.result-stale')).toContainText('Kontroller og bekreft berørt tallgrunnlag for L')
+  await expect(page.locator('#recommendation-title')).toHaveText('Gå videre')
+  await expect(page.locator('.metric-value')).toHaveText(['11,875 %', '1 500 000 kr/år', '9,375 %', '700 000 kr/år'])
+  await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+  await page.locator('#value-L').fill('1400000')
+  await returnThroughControls(page)
+  await expect(page.locator('#recommendation-title')).toHaveText('Forkast')
+  await expect(page.locator('.metric-value')).toHaveText(['8,750 %', '1 000 000 kr/år', '6,250 %', '200 000 kr/år'])
+  await expect(page.locator('#result-announcement')).toHaveText('Resultat beregnet: Forkast.')
+  await expect(page.locator('.result-findings')).toContainText('F1-tilstandsrapport.pdf')
+  await page.screenshot({ path: testInfo.outputPath('fornyet-f2.png') })
+  await page.getByRole('button', { name: 'Gå tilbake til rapportfunn', exact: true }).click()
+  await expect(page.locator('#list-confirmation-status')).toContainText('Kontroll fullført')
+  expect(calls).toBe(1); expect(external).toEqual([])
+})
+
+for (const missing of [false, true]) {
+  test(`3.8 BT-13 AC3: ${missing ? 'manglende Ymin rettes til' : 'bare Ymin endres til'} 10 %, samme fire nøkkeltall`, async ({ page }) => {
+    let calls = 0
+    page.on('request', request => { if (request.url().endsWith('/api/analysis')) calls++ })
+    await controlled(page, 'F1')
+    await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+    const metrics = await page.locator('.metric-value').allTextContents()
+    await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+    if (missing) {
+      await page.locator('#value-Ymin').fill('')
+      await page.locator('#confirm-financial').click()
+      await expect(page.locator('#value-Ymin')).toBeFocused()
+      await expect(page.locator('.local-deficiencies')).toContainText('Innhent mer informasjon')
+      await expect(page.locator('#next-step')).toHaveCount(0)
+    }
+    await page.locator('#value-Ymin').fill('10')
+    await expect(page.locator('#status-Ymin')).toContainText('Endret — må kontrolleres på nytt')
+    await page.getByRole('button', { name: /Resultat Trinn 4/ }).click()
+    await expect(page.locator('.result-stale')).toContainText('Ymin')
+    await expect(page.locator('#recommendation-title')).toHaveText('Gå videre')
+    await expect(page.locator('.metric-value')).toHaveText(metrics)
+    await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+    await returnThroughControls(page)
+    await expect(page.locator('#recommendation-title')).toHaveText('Forkast')
+    await expect(page.locator('.result-triggers')).toContainText('Ditt avkastningskrav (Ymin): 10 %')
+    await expect(page.locator('.metric-value')).toHaveText(metrics)
+    expect(calls).toBe(1)
+  })
+}
+
+for (const [rent, metrics] of [
+  ['1400000', ['8,750 %', '1 000 000 kr/år', '6,250 %', '200 000 kr/år']],
+  ['3000000', ['18,750 %', '2 600 000 kr/år', '16,250 %', '1 800 000 kr/år']],
+] as const) {
+  test(`3.8 AC4 F4: L=${rent} fornyer økonomien og gjenbruker uavklart alvorlig TG3 med prioritet 1`, async ({ page }) => {
+    let calls = 0
+    page.on('request', request => { if (request.url().endsWith('/api/analysis')) calls++ })
+    await controlled(page, 'F4')
+    await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+    await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+    await page.locator('#value-L').fill(rent)
+    await returnThroughControls(page)
+    await expect(page.locator('#recommendation-title')).toHaveText('Innhent mer informasjon')
+    await expect(page.locator('.recommendation > .meta')).toContainText('Prioritet 1')
+    await expect(page.locator('.metric-value')).toHaveText([...metrics])
+    await expect(page.locator('.result-tg3')).toContainText('Uavklart')
+    await expect(page.locator('.result-triggers')).toContainText('F4-TG3-1')
+    await expect(page.getByText('Delgrunnlag', { exact: true })).toHaveCount(4)
+    expect(calls).toBe(1)
+  })
+}
+
+test('3.8 AT-10: fornyelse ved nøyaktig 7 % består; én krone under gir Forkast med avrundingsforklaring', async ({ page }) => {
+  let calls = 0
+  page.on('request', request => { if (request.url().endsWith('/api/analysis')) calls++ })
+  await controlled(page, 'F1')
+  await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+  for (const [rent, recommendation, noi, cashFlow] of [
+    ['1520000', 'Gå videre', '1 120 000 kr/år', '320 000 kr/år'],
+    ['1519999', 'Forkast', '1 119 999 kr/år', '319 999 kr/år'],
+  ]) {
+    await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+    await page.locator('#value-L').fill(rent!)
+    await returnThroughControls(page)
+    await expect(page.locator('#recommendation-title')).toHaveText(recommendation!)
+    await expect(page.locator('.metric-value').nth(1)).toHaveText(noi!)
+    await expect(page.locator('.metric-value').nth(2)).toHaveText('7,000 %')
+    await expect(page.locator('.metric-value').nth(3)).toHaveText(cashFlow!)
+    if (recommendation === 'Forkast') await expect(page.locator('.financial-metric').nth(2)).toContainText('under')
+  }
+  expect(calls).toBe(1)
+})
+
+test('3.8 AT-11: fornyelse med kontantstrøm 0 består; −1 kr gir Forkast', async ({ page }) => {
+  let calls = 0
+  page.on('request', request => { if (request.url().endsWith('/api/analysis')) calls++ })
+  await controlled(page, 'F1')
+  await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+  for (const [debt, recommendation, cashFlow] of [
+    ['1500000', 'Gå videre', '0 kr/år'], ['1500001', 'Forkast', '−1 kr/år'],
+  ]) {
+    await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+    await page.locator('#value-J').fill(debt!)
+    await returnThroughControls(page)
+    await expect(page.locator('#recommendation-title')).toHaveText(recommendation!)
+    await expect(page.locator('.metric-value')).toHaveText(['11,875 %', '1 500 000 kr/år', '9,375 %', cashFlow!])
+  }
+  expect(calls).toBe(1)
+})

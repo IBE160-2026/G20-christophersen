@@ -1,0 +1,131 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/financial-result-renewal.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/financial-result-renewal.test.ts (17 tests | 12 failed) 42ms
+   ❯ Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll (17)
+     × BT-12 AC1/2: L-endring er historisk frem til bekreftelse og ny navigasjon, deretter full F2-fasit 17ms
+     × AC2: P fornyer alle avhengige tall fra gjeldende årsgrunnlag 2ms
+     × AC2: D fornyer alle avhengige tall fra gjeldende årsgrunnlag 1ms
+     × AC2: J fornyer alle avhengige tall fra gjeldende årsgrunnlag 1ms
+     × BT-13 AC3: manglende og ubekreftet Ymin blokkerer; bekreftet 10 % endrer screening uten tallendring 4ms
+     × AC1/2: endret periode krever relevant bekreftelse før fornyelse 3ms
+     × AC1/2: endret år krever relevant bekreftelse før fornyelse 2ms
+     × AC1/2: endret kilde krever relevant bekreftelse før fornyelse 1ms
+     × AC1/2: endret kostnadsinnhold krever relevant bekreftelse før fornyelse 1ms
+     × AC4 F4: endret L=1400000 beholder uavklart TG3 som prioritet 1 3ms
+     × AC4 F4: endret L=3000000 beholder uavklart TG3 som prioritet 1 1ms
+     × AC5: ugyldig forsøk bevarer historisk snapshot; retting/bekreftelse gir nytt gjeldende resultat 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > BT-12 AC1/2: L-endring er historisk frem til bekreftelse og ny navigasjon, deretter full F2-fasit
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ tests/unit/financial-result-renewal.test.ts:25:40
+     23|     expect(selectResult(state).status).toBe('historical')
+     24|     state = finish(state)
+     25|     expect(selectResult(state).status).toBe('current')
+       |                                        ^
+     26|     expect(state.resultSnapshot).not.toBe(old)
+     27|     expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC2: P fornyer alle avhengige tall fra gjeldende årsgrunnlag
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC2: D fornyer alle avhengige tall fra gjeldende årsgrunnlag
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC2: J fornyer alle avhengige tall fra gjeldende årsgrunnlag
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ tests/unit/financial-result-renewal.test.ts:44:40
+     42|     const before = screeningState()
+     43|     const after = finish(confirm(sessionReducer(before, { type: 'regis…
+     44|     expect(selectResult(after).status).toBe('current')
+       |                                        ^
+     45|     expect(after.resultSnapshot!.assessment.metrics).toMatchObject(met…
+     46|     expect(after.report).toBe(before.report)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > BT-13 AC3: manglende og ubekreftet Ymin blokkerer; bekreftet 10 % endrer screening uten tallendring
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ tests/unit/financial-result-renewal.test.ts:61:40
+     59|     expect(finish(state).resultSnapshot).toBe(before.resultSnapshot)
+     60|     state = finish(confirm(state))
+     61|     expect(selectResult(state).status).toBe('current')
+       |                                        ^
+     62|     expect(state.resultSnapshot!.assessment.recommendation).toBe('Fork…
+     63|     expect(state.resultSnapshot!.assessment.metrics).toEqual(before.re…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC1/2: endret periode krever relevant bekreftelse før fornyelse
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC1/2: endret år krever relevant bekreftelse før fornyelse
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC1/2: endret kilde krever relevant bekreftelse før fornyelse
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC1/2: endret kostnadsinnhold krever relevant bekreftelse før fornyelse
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ tests/unit/financial-result-renewal.test.ts:81:40
+     79|     if (_name === 'år') for (const field of ['D', 'J'] as const) state…
+     80|     state = finish(confirm(state))
+     81|     expect(selectResult(state).status).toBe('current')
+       |                                        ^
+     82|     expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+     83|     expect(state.report).toBe(before.report)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC4 F4: endret L=1400000 beholder uavklart TG3 som prioritet 1
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC4 F4: endret L=3000000 beholder uavklart TG3 som prioritet 1
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ tests/unit/financial-result-renewal.test.ts:91:40
+     89|     before = sessionReducer(before, { type: 'calculate-result' })
+     90|     const after = finish(confirm(sessionReducer(before, { type: 'regis…
+     91|     expect(selectResult(after).status).toBe('current')
+       |                                        ^
+     92|     expect(after.resultSnapshot!.assessment).toMatchObject({ priority:…
+     93|     expect(after.resultSnapshot!.assessment.triggers.some(trigger => t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > AC5: ugyldig forsøk bevarer historisk snapshot; retting/bekreftelse gir nytt gjeldende resultat
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ tests/unit/financial-result-renewal.test.ts:115:40
+    113|     expect(finish(state).resultSnapshot).toBe(before.resultSnapshot)
+    114|     state = finish(confirm(sessionReducer(state, { type: 'register-val…
+    115|     expect(selectResult(state).status).toBe('current')
+       |                                        ^
+    116|     expect(state.resultSnapshot!.assessment.recommendation).toBe('Fork…
+    117|     expect(state.report).toBe(before.report)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 5 passed (17)
+   Start at  10:43:19
+   Duration  274ms (import 38%, transform 34%, tests 27%, worker 2%)

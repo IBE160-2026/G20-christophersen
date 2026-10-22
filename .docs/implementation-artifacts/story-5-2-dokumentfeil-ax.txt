@@ -1,0 +1,89 @@
+Window: "Property Acquisition Agent", App: Google Chrome.
+0 standard window Property Acquisition Agent - Google Chrome, URL: 127.0.0.1:3000/, Secondary Actions: Raise
+	1 container Property Acquisition Agent - Google Chrome, URL: 127.0.0.1:3000/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop-up button View site information
+					9 text field (settable) Address and search bar, Value: 127.0.0.1:3000, Placeholder: Search Google or type a URL
+					10 button Bookmark this tab
+				11 button Mads
+				12 pop-up button New Chrome available
+			13 container
+				14 scroll area
+					15 HTML content Property Acquisition Agent, URL: 127.0.0.1:3000/
+						16 container
+							17 link Hopp til arbeidsinnhold, Value: 127.0.0.1:3000/#kontroller-funn
+							18 text Property Acquisition Agent
+							19 text Demo · lagret KI-uttrekk
+							20 container Vurderingens fire trinn
+								21 content list
+									22 link Tallgrunnlag Trinn 1 · Fullført, Value: 127.0.0.1:3000/#tallgrunnlag
+									23 button Tilstandsrapport Trinn 2 · Gjeldende
+									24 container
+										25 button (disabled) Kontroller funn Trinn 3 · Gjenstår · Utilgjengelig
+										26 text Krever fullført rapportanalyse og synlig funnliste.
+									27 button Resultat Trinn 4 · Utdatert — må oppdateres
+							28 text Analysefeil — rapportgrunnlaget er ufullført (invalid-format). Resultatet er utdatert. Kontroller endret grunnlag før ny vurdering.
+							29 container Tilstandsrapport
+								30 heading Tilstandsrapport, Value: 1
+									31 text Tilstandsrapport
+								32 text Velg rapport og kontroller gjeldende analysegrunnlag.
+								33 text Bekreftet tallgrunnlag
+								34 container Rapportgrunnlag
+									35 heading Rapportgrunnlag, Value: 2
+										36 text Rapportgrunnlag
+									37 text Demo · lagret KI-uttrekk. Velg én tekstbasert PDF på høyst 30 sider og 50 MiB.
+									38 text Velg tilstandsrapport (PDF)
+									39 button Velg tilstandsrapport (PDF): invalid-format.pdf
+									40 container
+										41 text Gjeldende dokument:  invalid-format.pdf SHA-256:  b690986ab58634206a1a755cd8e25cdfff08dd455807c959f13444ff63e11cd2
+									42 text Analysefeil — rapportgrunnlaget er ufullført (invalid-format).
+									43 text Start analyse sender den valgte rapporten én gang.
+									44 button Start analyse
+									45 container
+										46 text Dokumentfeil :  invalid-format .
+									47 text Filen kunne ikke åpnes som PDF. Velg en PDF-tilstandsrapport.
+									48 container Innhent mer informasjon
+										49 heading Innhent mer informasjon, Value: 2
+											50 text Innhent mer informasjon
+										51 content list
+											52 container
+												53 AXListMarker •
+												54 text Rapportgrunnlaget er ufullført: Dokument-/analysefeil (invalid-format).
+											55 container
+												56 AXListMarker •
+												57 text Rapportgrunnlaget er ufullført: Filen kunne ikke åpnes som PDF. Velg en PDF-tilstandsrapport.
+										58 text Før ny vurdering: Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.
+									59 button Tilbake til Tallgrunnlag
+			60 pop-up button Tab search
+			61 container
+				62 tab group
+					63 tab (settable, boolean) Property Acquisition Agent — fire fargevalg, Value: off
+						64 button Close
+					65 tab (settable, boolean) UX-validering: Property Acquisition Agent, Value: off
+						66 button Close
+					67 tab (settable, boolean) Property Acquisition Agent, Value: off
+						68 button Close
+					69 tab (selected, settable, boolean) Property Acquisition Agent, Value: on
+						70 button Close
+			71 button New tab
+	72 close button
+	73 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	74 minimise button
+75 menu bar
+	76 Chrome
+	77 File
+	78 Edit
+	79 View
+	80 History
+	81 Bookmarks
+	82 Profiles
+	83 Tab
+	84 Window
+	85 Help
+
+The focused UI element is 44 button Start analyse

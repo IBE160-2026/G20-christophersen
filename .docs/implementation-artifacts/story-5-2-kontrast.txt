@@ -1,0 +1,15 @@
+text-primary #243537 / surface-main #FFFFFF = 12.809:1
+text-primary #243537 / surface-page #F1F5F4 = 11.655:1
+text-secondary #526865 / surface-main #FFFFFF = 5.954:1
+text-secondary #526865 / surface-subtle #EBF1EF = 5.206:1
+text-secondary #526865 / status-success-surface #EDF5EE = 5.358:1
+text-secondary #526865 / status-warning-surface #FBF3E2 = 5.393:1
+on-accent #FFFFFF / accent-primary #22665F = 6.701:1
+status-success #2D6144 / status-success-surface #EDF5EE = 6.505:1
+status-warning #7B5318 / status-warning-surface #FBF3E2 = 6.150:1
+status-danger #903E43 / status-danger-surface #F7ECED = 6.149:1
+border-control #738781 / surface-main #FFFFFF = 3.810:1
+border-control #738781 / surface-subtle #EBF1EF = 3.331:1
+focus-ring #22665F / surface-main #FFFFFF = 6.701:1
+focus-ring #22665F / surface-page #F1F5F4 = 6.097:1
+focus-ring #22665F / surface-subtle #EBF1EF = 5.859:1

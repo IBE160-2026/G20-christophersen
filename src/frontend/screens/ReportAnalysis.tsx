@@ -69,6 +69,8 @@ export function ReportAnalysis({ session, dispatch, client }: {
       {outcome?.status === 'completed' && extraction.findings.length === 0 && extraction.uncertainCandidates.length === 0
         && <p>Analyse fullført — ingen TG2/TG3 funnet. {listAssessment.confirmed ? 'Den tomme listen er kontrollert og bekreftet av deg.' : 'Listen må fortsatt kontrolleres og bekreftes.'}</p>}
       <SourceReview report={report} summary={summary} sourceIssue={sourceIssue} onView={onView}>
+      {outcome?.status === 'completed' && extraction.findings.length === 0 && extraction.uncertainCandidates.length === 0
+        && <button className="secondary-action" type="button" onClick={() => onView({ ...report.view, findingId: null, pdfPage: 1 })}>Velg originalrapport for kontroll</button>}
       <ol className="finding-list">
         {[...extraction.findings, ...extraction.uncertainCandidates].map(candidate => {
           const finding = currentFinding(report, candidate.findingId)

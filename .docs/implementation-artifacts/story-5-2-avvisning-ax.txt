@@ -1,0 +1,143 @@
+Window: "Property Acquisition Agent", App: Google Chrome.
+0 standard window Property Acquisition Agent - Google Chrome, URL: 127.0.0.1:3000/, Secondary Actions: Raise
+	1 container Property Acquisition Agent - Google Chrome, URL: 127.0.0.1:3000/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop-up button View site information
+					9 text field (settable) Address and search bar, Value: 127.0.0.1:3000, Placeholder: Search Google or type a URL
+					10 button Bookmark this tab
+				11 button Mads
+				12 pop-up button New Chrome available
+			13 container
+				14 scroll area
+					15 HTML content Property Acquisition Agent, URL: 127.0.0.1:3000/
+						16 container
+							17 link Hopp til arbeidsinnhold, Value: 127.0.0.1:3000/#kontroller-funn
+							18 text Property Acquisition Agent
+							19 text Demo · lagret KI-uttrekk
+							20 container Vurderingens fire trinn
+								21 content list
+									22 link Tallgrunnlag Trinn 1 · Fullført, Value: 127.0.0.1:3000/#tallgrunnlag
+									23 button Tilstandsrapport Trinn 2 · Fullført
+									24 button Kontroller funn Trinn 3 · Gjeldende
+									25 button Resultat Trinn 4 · Utdatert — må oppdateres
+							26 text Analyse fullført — funnlisten er klar. Resultatet er utdatert. Kontroller endret grunnlag før ny vurdering.
+							27 container Kontroller funn
+								28 heading Kontroller funn, Value: 1
+									29 text Kontroller funn
+								30 text Velg rapport og kontroller gjeldende analysegrunnlag.
+								31 text Bekreftet tallgrunnlag
+								32 container Rapportgrunnlag
+									33 heading Rapportgrunnlag, Value: 2
+										34 text Rapportgrunnlag
+									35 text Demo · lagret KI-uttrekk. Velg én tekstbasert PDF på høyst 30 sider og 50 MiB.
+									36 container
+										37 text Gjeldende dokument:  F4-tilstandsrapport.pdf SHA-256:  545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b
+									38 text Analyse fullført — funnlisten er klar.
+									39 text Uendret rapportuttrekk gjenbrukes. Velg en ny rapport for ny analyse.
+									40 container Funnliste — ikke bekreftet
+										41 heading Funnliste — ikke bekreftet, Value: 2
+											42 text Funnliste — ikke bekreftet
+										43 content list
+											44 container
+												45 AXListMarker 1.
+												46 heading Brukeravvist KI-uttrekk · Slitt overflate på baderomsgulv, Value: 3
+													47 toggle button Brukeravvist KI-uttrekk · Slitt overflate på baderomsgulv, Value: 1
+												48 text Ikke aktivt rapportfunn · Avvist av deg ·  F4-TG2-1 Opprinnelig grad:  TG2  · Oppgitt dokument:  F4-tilstandsrapport.pdf  · Oppgitt PDF-side:  2
+												49 container Kontroll av valgt funn
+													50 text Funnet er avvist og holdes utenfor aktive rapportfunn. Originalen er bevart.
+													51 text Brukeravvist KI-uttrekk — ikke aktivt rapportfunn. Avvisningen betyr ingen TG3-avklaring, utbedring eller teknisk godkjenning.
+													52 text Kontroll av uttrekket gjelder gjeldende versjon mot originalrapporten. Dette bekrefter ikke listen og avklarer ikke TG3.
+													53 button (disabled) Bekreft
+													54 button (disabled) Korriger
+													55 button (disabled) Avvis
+													56 container Opprinnelig KI-uttrekk
+														57 heading Opprinnelig KI-uttrekk, Value: 4
+															58 text Opprinnelig KI-uttrekk
+														59 container
+															60 text TG2  ·  Slitt overflate på baderomsgulv
+														61 container
+															62 text Oppgitt dokument:  F4-tilstandsrapport.pdf  · Oppgitt PDF-side:  2
+														63 container
+															64 text Oppgitt rapporthash:  545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b  · Funn-ID:  F4-TG2-1
+													65 container Brukerens korrigering
+														66 heading Brukerens korrigering — historisk, ikke aktiv, Value: 4
+															67 text Brukerens korrigering —  historisk, ikke aktiv
+														68 container
+															69 text TG2  ·  Slitt overflate på baderomsgulv.
+														70 container
+															71 text F4-tilstandsrapport.pdf  · PDF-side  2  · SHA-256:  545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b
+											72 container
+												73 AXListMarker 2.
+												74 heading TG3 · Alvorlig lekkasje i tak, Value: 3
+													75 toggle button TG3 · Alvorlig lekkasje i tak, Value: 0
+														76 text TG3
+														77 text  ·
+														78 text Alvorlig lekkasje i tak
+												79 text F4-tilstandsrapport.pdf  · PDF-side  4  ·  F4-TG3-1 Opprinnelig KI-uttrekk  ·  Kontrollert og bekreftet mot originalrapporten Separat TG3-status:  Brukerbekreftet avklaring for førstevurdering
+										80 container Valgt funns originalkilde
+											81 text Brukeravvist KI-uttrekk · Slitt overflate på baderomsgulv
+											82 container Original-PDF
+												83 container
+													84 text F4-tilstandsrapport.pdf  ·  PDF-side 2  av 4
+												85 button Forrige PDF-side
+												86 button Neste PDF-side
+												87 container
+													88 text PDF-zoom
+													89 pop-up button PDF-zoom, Value: Hel side
+														90 (selected) Hel side
+												91 container
+													92 text F4-tilstandsrapport.pdf  ·  PDF-side 2 :  Originalside tilgjengelig .
+												93 container Les originalside, rull ved behov
+													94 container
+														95 text F4 | FIKTIV TILSTANDSRAPPORT Bad - registrert avvik Tilstandsgrad: TG2 Slitt overflate på baderomsgulv Dette er den forhåndsdefinerte funnteksten for testcaset. Ingen reparasjonskostnad er anslått. Kun testdata - ingen teknisk godkjenning eller markedsverdi PDF-posisjon 2
+										96 text Fullført analyse er ikke brukerens kontroll eller bekreftelse av funnlisten.
+										97 container Bekreft gjeldende funnliste
+											98 text Bekreft gjeldende funnliste
+											99 text Kontroller hele listen mot originalrapporten, inkludert brukte rettinger og avvisninger. Bekreft på hvert aktivt funn gjelder enkeltfunnet; knappen nedenfor bekrefter hele gjeldende liste.
+											100 text Listebekreftelsen avklarer ikke TG3. Du kan registrere Uavklart og fullføre kontrollen selv om Innhent mer informasjon fortsatt gjelder.
+											101 text Gjeldende funnliste er ikke bekreftet.
+											102 text Listen er klar for din separate bekreftelse.
+											103 button Bekreft gjeldende liste
+									104 container Innhent mer informasjon
+										105 heading Innhent mer informasjon, Value: 2
+											106 text Innhent mer informasjon
+										107 content list
+											108 container
+												109 AXListMarker •
+												110 text Rapportgrunnlaget er ufullført: Funnlisten er ennå ikke kontrollert og bekreftet av deg.
+										111 text Før ny vurdering: Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.
+									112 button Tilbake til Tilstandsrapport
+									113 button Tilbake til Tallgrunnlag
+			114 pop-up button Tab search
+			115 container
+				116 tab group
+					117 tab (settable, boolean) Property Acquisition Agent — fire fargevalg, Value: off
+						118 button Close
+					119 tab (settable, boolean) UX-validering: Property Acquisition Agent, Value: off
+						120 button Close
+					121 tab (settable, boolean) Property Acquisition Agent, Value: off
+						122 button Close
+					123 tab (selected, settable, boolean) Property Acquisition Agent, Value: on
+						124 button Close
+			125 button New tab
+	126 close button
+	127 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	128 minimise button
+129 menu bar
+	130 Chrome
+	131 File
+	132 Edit
+	133 View
+	134 History
+	135 Bookmarks
+	136 Profiles
+	137 Tab
+	138 Window
+	139 Help
+
+The focused UI element is 47 toggle button Brukeravvist KI-uttrekk · Slitt overflate på baderomsgulv, Value: 1

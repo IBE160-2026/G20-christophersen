@@ -1,0 +1,194 @@
+Window: "Property Acquisition Agent", App: Google Chrome.
+0 standard window Property Acquisition Agent - Google Chrome, URL: 127.0.0.1:3000/, Secondary Actions: Raise
+	1 container Property Acquisition Agent - Google Chrome, URL: 127.0.0.1:3000/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop-up button View site information
+					9 text field (settable) Address and search bar, Value: 127.0.0.1:3000, Placeholder: Search Google or type a URL
+					10 button Bookmark this tab
+				11 button Mads
+				12 pop-up button New Chrome available
+			13 container
+				14 scroll area
+					15 HTML content Property Acquisition Agent, URL: 127.0.0.1:3000/
+						16 container
+							17 link Hopp til arbeidsinnhold, Value: 127.0.0.1:3000/#kontroller-funn
+							18 text Property Acquisition Agent
+							19 text Demo · lagret KI-uttrekk
+							20 container Vurderingens fire trinn
+								21 content list
+									22 link Tallgrunnlag Trinn 1 · Fullført, Value: 127.0.0.1:3000/#tallgrunnlag
+									23 button Tilstandsrapport Trinn 2 · Fullført
+									24 button Kontroller funn Trinn 3 · Gjeldende
+									25 button Resultat Trinn 4 · Utdatert — må oppdateres
+							26 text Analyse fullført — funnlisten er klar. Resultatet er utdatert. Kontroller endret grunnlag før ny vurdering.
+							27 container Kontroller funn
+								28 heading Kontroller funn, Value: 1
+									29 text Kontroller funn
+								30 text Velg rapport og kontroller gjeldende analysegrunnlag.
+								31 text Bekreftet tallgrunnlag
+								32 container Rapportgrunnlag
+									33 heading Rapportgrunnlag, Value: 2
+										34 text Rapportgrunnlag
+									35 text Demo · lagret KI-uttrekk. Velg én tekstbasert PDF på høyst 30 sider og 50 MiB.
+									36 container
+										37 text Gjeldende dokument:  uncertain.pdf SHA-256:  458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86
+									38 text Analyse fullført — funnlisten er klar.
+									39 text Uendret rapportuttrekk gjenbrukes. Velg en ny rapport for ny analyse.
+									40 container Funnliste — ikke bekreftet
+										41 heading Funnliste — ikke bekreftet, Value: 2
+											42 text Funnliste — ikke bekreftet
+										43 content list
+											44 container
+												45 AXListMarker 1.
+												46 heading TG3 · Kontrollert lekkasje, Value: 3
+													47 toggle button TG3 · Kontrollert lekkasje, Value: 0
+														48 text TG3
+														49 text  ·
+														50 text Kontrollert lekkasje
+												51 text uncertain.pdf  · PDF-side  2  ·  ui-TG3 Opprinnelig KI-uttrekk  ·  Ikke kontrollert Separat TG3-status:  Uavklart — utilstrekkelig avklaringsgrunnlag
+											52 container
+												53 AXListMarker 2.
+												54 heading Usikkert funn · Usikker vegg, Value: 3
+													55 toggle button Usikkert funn · Usikker vegg, Value: 1
+												56 text Opprinnelig grad:  ?  ·  ui-uncertain Oppgitt dokument:  Ikke oppgitt  · Oppgitt PDF-side:  Ikke oppgitt  (usikker kilde)
+												57 content list
+													58 container
+														59 AXListMarker ◦
+														60 text unclear-grade :  Eksplisitt TG2 eller TG3 mangler eller er uklar.
+													61 container
+														62 AXListMarker ◦
+														63 text missing-source :  Dokumentkilde mangler.
+													64 container
+														65 AXListMarker ◦
+														66 text invalid-page :  Kontrollerbar PDF-posisjon innen rapportens sideantall mangler.
+													67 container
+														68 AXListMarker ◦
+														69 text reported-uncertainty :  Adapteren oppga usikkerhet; se det originale uttrekket.
+												70 content list
+													71 container
+														72 AXListMarker ◦
+														73 text Teksten er uklar
+												74 container Kontroll av valgt funn
+													75 text Kontroll av uttrekket gjelder gjeldende versjon mot originalrapporten. Dette bekrefter ikke listen og avklarer ikke TG3.
+													76 button (disabled) Bekreft
+													77 button Korriger
+													78 button Avvis
+													79 text Usikkert uttrekk kan ikke bekreftes. Korriger mot en kontrollerbar kilde først.
+													80 container Opprinnelig KI-uttrekk
+														81 heading Opprinnelig KI-uttrekk, Value: 4
+															82 text Opprinnelig KI-uttrekk
+														83 container
+															84 text ?  ·  Usikker vegg
+														85 container
+															86 text Oppgitt dokument:  Ikke oppgitt  · Oppgitt PDF-side:  Ikke oppgitt
+														87 container
+															88 text Oppgitt rapporthash:  Ikke oppgitt  · Funn-ID:  ui-uncertain
+														89 content list
+															90 container
+																91 AXListMarker ◦
+																92 text Eksplisitt TG2 eller TG3 mangler eller er uklar.
+															93 container
+																94 AXListMarker ◦
+																95 text Dokumentkilde mangler.
+															96 container
+																97 AXListMarker ◦
+																98 text Kontrollerbar PDF-posisjon innen rapportens sideantall mangler.
+															99 container
+																100 AXListMarker ◦
+																101 text Adapteren oppga usikkerhet; se det originale uttrekket.
+														102 content list
+															103 container
+																104 AXListMarker ◦
+																105 text Teksten er uklar
+										106 container Valgt funns originalkilde
+											107 text Usikkert funn · Usikker vegg
+											108 container Original-PDF
+												109 container
+													110 text uncertain.pdf  ·  PDF-side ukjent  av 4
+												111 button (disabled) Forrige PDF-side
+												112 button (disabled) Neste PDF-side
+												113 container
+													114 text PDF-zoom
+													115 pop-up button PDF-zoom, Value: Hel side
+														116 (selected) Hel side
+												117 container
+													118 text uncertain.pdf  ·  PDF-side ukjent :  Kildens PDF-side er ikke kjent. Ingen side er valgt.
+												119 container Les originalside, rull ved behov
+										120 heading Begrensninger, Value: 3
+											121 text Begrensninger
+										122 content list
+											123 container
+												124 AXListMarker •
+												125 text Usikkert uttrekk
+										126 text Fullført analyse er ikke brukerens kontroll eller bekreftelse av funnlisten.
+										127 container Bekreft gjeldende funnliste
+											128 text Bekreft gjeldende funnliste
+											129 text Kontroller hele listen mot originalrapporten, inkludert brukte rettinger og avvisninger. Bekreft på hvert aktivt funn gjelder enkeltfunnet; knappen nedenfor bekrefter hele gjeldende liste.
+											130 text Listebekreftelsen avklarer ikke TG3. Du kan registrere Uavklart og fullføre kontrollen selv om Innhent mer informasjon fortsatt gjelder.
+											131 text Gjeldende funnliste er ikke bekreftet.
+											132 text Kontroller og bekreft hvert aktivt funn, eller avvis feilaktige uttrekk. Gjenstår: 2 funn.
+											133 button (disabled) Bekreft gjeldende liste
+									134 container Innhent mer informasjon
+										135 heading Innhent mer informasjon, Value: 2
+											136 text Innhent mer informasjon
+										137 content list
+											138 container
+												139 AXListMarker •
+												140 text Rapportgrunnlaget er ufullført: Funnlisten er ennå ikke kontrollert og bekreftet av deg.
+											141 container
+												142 AXListMarker •
+												143 text Rapportgrunnlaget er ufullført: Usikkert uttrekk
+											144 container
+												145 AXListMarker •
+												146 text Rapportgrunnlaget er ufullført: ui-uncertain: Adapteren oppga usikkerhet; se det originale uttrekket.
+											147 container
+												148 AXListMarker •
+												149 text Rapportgrunnlaget er ufullført: ui-uncertain: Dokumentkilde mangler.
+											150 container
+												151 AXListMarker •
+												152 text Rapportgrunnlaget er ufullført: ui-uncertain: Eksplisitt TG2 eller TG3 mangler eller er uklar.
+											153 container
+												154 AXListMarker •
+												155 text Rapportgrunnlaget er ufullført: ui-uncertain: Kontrollerbar PDF-posisjon innen rapportens sideantall mangler.
+											156 container
+												157 AXListMarker •
+												158 text Rapportgrunnlaget er ufullført: ui-uncertain: Teksten er uklar
+											159 container
+												160 AXListMarker •
+												161 text Alvorlig TG3 er uavklart: ui-TG3: Kontrollert lekkasje (uncertain.pdf, PDF-side 2). Velg eksplisitt Avklart med nødvendig grunnlag, eller behold Uavklart. Oppgi en kort begrunnelse for at forholdet er tilstrekkelig avklart for førstevurdering. Oppgi konkret eksternt avklaringsgrunnlag, for eksempel kontroll fra autorisert elektriker med dato eller referanse.
+										162 text Før ny vurdering: Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag. Innhent konkret avklaringsgrunnlag for det navngitte TG3-forholdet og registrer status og begrunnelse for førstevurdering.
+									163 button Tilbake til Tilstandsrapport
+									164 button Tilbake til Tallgrunnlag
+			165 pop-up button Tab search
+			166 container
+				167 tab group
+					168 tab (settable, boolean) Property Acquisition Agent — fire fargevalg, Value: off
+						169 button Close
+					170 tab (settable, boolean) UX-validering: Property Acquisition Agent, Value: off
+						171 button Close
+					172 tab (settable, boolean) Property Acquisition Agent, Value: off
+						173 button Close
+					174 tab (selected, settable, boolean) Property Acquisition Agent, Value: on
+						175 button Close
+			176 button New tab
+	177 close button
+	178 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	179 minimise button
+180 menu bar
+	181 Chrome
+	182 File
+	183 Edit
+	184 View
+	185 History
+	186 Bookmarks
+	187 Profiles
+	188 Tab
+	189 Window
+	190 Help
+
+The focused UI element is 55 toggle button Usikkert funn · Usikker vegg, Value: 1

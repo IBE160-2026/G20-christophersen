@@ -1,0 +1,94 @@
+Window: "Property Acquisition Agent", App: Google Chrome.
+0 standard window Property Acquisition Agent - Google Chrome, URL: 127.0.0.1:3000/, Secondary Actions: Raise
+	1 container Property Acquisition Agent - Google Chrome, URL: 127.0.0.1:3000/
+		2 container
+			3 toolbar
+				4 button Back
+				5 button (disabled) Forward
+				6 button Reload
+				7 container
+					8 pop-up button View site information
+					9 text field (settable) Address and search bar, Value: 127.0.0.1:3000, Placeholder: Search Google or type a URL
+					10 button Bookmark this tab
+				11 button Mads
+				12 pop-up button New Chrome available
+			13 container
+				14 scroll area
+					15 HTML content Property Acquisition Agent, URL: 127.0.0.1:3000/
+						16 container
+							17 link Hopp til arbeidsinnhold, Value: 127.0.0.1:3000/#kontroller-funn
+							18 text Property Acquisition Agent
+							19 text Demo · lagret KI-uttrekk
+							20 container Vurderingens fire trinn
+								21 content list
+									22 link Tallgrunnlag Trinn 1 · Fullført, Value: 127.0.0.1:3000/#tallgrunnlag
+									23 button Tilstandsrapport Trinn 2 · Fullført
+									24 button Kontroller funn Trinn 3 · Gjeldende
+									25 button Resultat Trinn 4 · Utdatert — må oppdateres
+							26 text Analyse fullført — funnlisten er klar. Resultatet er utdatert. Kontroller endret grunnlag før ny vurdering.
+							27 container Kontroller funn
+								28 heading Kontroller funn, Value: 1
+									29 text Kontroller funn
+								30 text Velg rapport og kontroller gjeldende analysegrunnlag.
+								31 text Bekreftet tallgrunnlag
+								32 container Rapportgrunnlag
+									33 heading Rapportgrunnlag, Value: 2
+										34 text Rapportgrunnlag
+									35 text Demo · lagret KI-uttrekk. Velg én tekstbasert PDF på høyst 30 sider og 50 MiB.
+									36 container
+										37 text Gjeldende dokument:  empty.pdf SHA-256:  c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb
+									38 text Analyse fullført — funnlisten er klar.
+									39 text Uendret rapportuttrekk gjenbrukes. Velg en ny rapport for ny analyse.
+									40 container Funnliste — ikke bekreftet
+										41 heading Funnliste — ikke bekreftet, Value: 2
+											42 text Funnliste — ikke bekreftet
+										43 container
+											44 text Analyse fullført — ingen TG2/TG3 funnet.  Listen må fortsatt kontrolleres og bekreftes.
+										45 container Valgt funns originalkilde
+											46 text Velg et funn for å vise originalkilden.
+										47 text Fullført analyse er ikke brukerens kontroll eller bekreftelse av funnlisten.
+										48 container Bekreft gjeldende funnliste
+											49 text Bekreft gjeldende funnliste
+											50 text Kontroller hele listen mot originalrapporten, inkludert brukte rettinger og avvisninger. Bekreft på hvert aktivt funn gjelder enkeltfunnet; knappen nedenfor bekrefter hele gjeldende liste.
+											51 text Listebekreftelsen avklarer ikke TG3. Du kan registrere Uavklart og fullføre kontrollen selv om Innhent mer informasjon fortsatt gjelder.
+											52 text Gjeldende funnliste er ikke bekreftet.
+											53 text Listen er klar for din separate bekreftelse.
+											54 button Bekreft gjeldende liste
+									55 container Innhent mer informasjon
+										56 heading Innhent mer informasjon, Value: 2
+											57 text Innhent mer informasjon
+										58 content list
+											59 container
+												60 AXListMarker •
+												61 text Rapportgrunnlaget er ufullført: Funnlisten er ennå ikke kontrollert og bekreftet av deg.
+										62 text Før ny vurdering: Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.
+									63 button Tilbake til Tilstandsrapport
+									64 button Tilbake til Tallgrunnlag
+			65 pop-up button Tab search
+			66 container
+				67 tab group
+					68 tab (settable, boolean) Property Acquisition Agent — fire fargevalg, Value: off
+						69 button Close
+					70 tab (settable, boolean) UX-validering: Property Acquisition Agent, Value: off
+						71 button Close
+					72 tab (settable, boolean) Property Acquisition Agent, Value: off
+						73 button Close
+					74 tab (selected, settable, boolean) Property Acquisition Agent, Value: on
+						75 button Close
+			76 button New tab
+	77 close button
+	78 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	79 minimise button
+80 menu bar
+	81 Chrome
+	82 File
+	83 Edit
+	84 View
+	85 History
+	86 Bookmarks
+	87 Profiles
+	88 Tab
+	89 Window
+	90 Help
+
+The focused UI element is 28 heading Kontroller funn, Value: 1

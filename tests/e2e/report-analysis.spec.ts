@@ -95,6 +95,16 @@ test('2.6 AC4: gyldig tomliste og alle usikkerheter gjennom ordinær kontrollada
   await choose(page, 'empty.pdf'); await page.getByRole('button', { name: 'Start analyse' }).click()
   await showList(page)
   await expect(page.getByText(/Analyse fullført — ingen TG2\/TG3 funnet/)).toBeVisible()
+  // Tomlisten må kunne kontrolleres mot originalen før listebekreftelse.
+  await page.getByRole('button', { name: 'Velg originalrapport for kontroll' }).click()
+  await expect(page.getByRole('region', { name: 'Original-PDF' })).toContainText('PDF-side 1 av 4')
+  await expect(page.getByRole('button', { name: 'Bekreft gjeldende liste', exact: true })).toHaveAttribute('aria-disabled', 'false')
+  await page.setViewportSize({ width: 1000, height: 800 })
+  const original = page.getByRole('button', { name: 'Åpne originalrapport', exact: true })
+  await original.click()
+  await expect(page.getByRole('dialog')).toContainText('PDF-side 1 av 4')
+  await page.keyboard.press('Escape')
+  await expect(original).toBeFocused()
   await page.getByRole('button', { name: 'Tilbake til Tilstandsrapport' }).click()
   // Ny originalhash kreves av den prosesslokale sperren; bruk en annen faktisk rapport.
   const buffer = await readFile(new URL('../fixtures/property-cases/F2-tilstandsrapport.pdf', import.meta.url))

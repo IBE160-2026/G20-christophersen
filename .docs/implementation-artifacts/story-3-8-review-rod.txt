@@ -1,0 +1,35 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/financial-result-renewal.test.ts -t review R1
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/financial-result-renewal.test.ts (19 tests | 1 failed | 18 skipped) 18ms
+   ❯ Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll (19)
+     × review R1 AC5: tilbaketrukket og gjenbekreftet nullkontroll fornyer selv ved identisk binding 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/financial-result-renewal.test.ts > Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll > review R1 AC5: tilbaketrukket og gjenbekreftet nullkontroll fornyer selv ved identisk binding
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ tests/unit/financial-result-renewal.test.ts:160:40
+    158|     expect(selectResult(state).status).toBe('historical')
+    159|     state = finish(state)
+    160|     expect(selectResult(state).status).toBe('current')
+       |                                        ^
+    161|     expect(state.resultSnapshot).not.toBe(snapshot)
+    162|     expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 skipped (19)
+   Start at  10:58:25
+   Duration  214ms (import 49%, transform 34%, tests 15%, worker 2%)
+

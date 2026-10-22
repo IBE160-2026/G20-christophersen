@@ -62,7 +62,7 @@ npm run lint
 git diff --check
 ```
 
-På dagens testfil velger `--grep '3.8'` syv tester. For å reprodusere utvalget på fem i den første loggen fra dagens fil, bruk `npx playwright test tests/e2e/screening-result.spec.ts --grep '^3\.8 (BT-|AC4)' --workers=2`. Denne avgrensede reproduksjonskommandoen oppgis for etterprøvbarhet; den er ikke kjørt på nytt i patchfasen.
+På dagens testfil velger `--grep '3.8'` syv tester. For å reprodusere utvalget på fem i den første loggen fra dagens fil, bruk `npx playwright test tests/e2e/screening-result.spec.ts --grep '3\.8 (BT-|AC4)' --workers=2`. Denne avgrensede reproduksjonskommandoen oppgis for etterprøvbarhet; den er ikke kjørt på nytt i patchfasen. Uavhengig reviewer kontrollerte etterpå med `--list` at filteret velger nøyaktig fem tester og at den berørte sluttkommandoen velger 46. Et innledende `^` ble fjernet fordi Playwright søker i fulle titler med filnavn foran testnavnet.
 
 ## Rettingsspor etter uavhengig review
 

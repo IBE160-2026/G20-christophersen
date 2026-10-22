@@ -100,15 +100,10 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
   if (action.type === 'navigate') {
     if (action.step === 'resultat') {
       if (state.resultSnapshot) {
-        const binding = resultBinding(state)
-        const previous = state.resultSnapshot.binding
-        // Story 3.8 fornyer bare finans. Rapport-, liste- og TG3-endringer
-        // må fortsatt beholde historisk resultat frem til sin egen kontrollflyt (3.9).
-        const pendingFinancialChange = state.resultChanges.some(change => change.kind === 'financial')
-        const financialChangeOnly = (pendingFinancialChange || !sameResultBinding(previous, binding)) && sameResultBinding(previous, {
-          ...binding, financialRevision: previous.financialRevision, financialConfirmations: previous.financialConfirmations,
-        })
-        if (financialChangeOnly && isFinancialConfirmed(state) && findingListAssessment(state.report).controlCompleted) {
+        // Alle brukte endringer fornyes først etter relevant kontroll. Utkast
+        // er utenfor bindingen; uendret retur beholder det samme snapshotet.
+        const changed = state.resultChanges.length > 0 || !sameResultBinding(state.resultSnapshot.binding, resultBinding(state))
+        if (changed && isFinancialConfirmed(state) && findingListAssessment(state.report).controlCompleted) {
           return { ...state, currentStep: 'resultat', resultSnapshot: calculateResultSnapshot(state), resultChanges: [] }
         }
         return { ...state, currentStep: 'resultat', report: reportReducer(state.report, { type: 'report-abandon' }) }

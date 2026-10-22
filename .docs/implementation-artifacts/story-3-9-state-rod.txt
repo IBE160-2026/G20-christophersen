@@ -1,0 +1,161 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/report-result-renewal.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/report-result-renewal.test.ts (18 tests | 16 failed) 49ms
+   ❯ Story 3.9 — rapportkontroll og separat TG3-fornyelse (18)
+     × AC2/6: ugyldig Bruk bevarer grunnlaget; gyldig Bruk krever både funnkontroll og listebekreftelse før nytt snapshot 6ms
+     × AC2: avvist TG3 er inaktiv original, ikke teknisk avklaring; ny listebekreftelse fornyer resultat 3ms
+     × AC3/6 FR5-1/2/7: endret status bevarer kontroll og fornyer bare ved resultatnavigasjon 2ms
+     × AC3/6 FR5-1/2/7: endret reason bevarer kontroll og fornyer bare ved resultatnavigasjon 3ms
+     × AC3/6 FR5-1/2/7: endret basis bevarer kontroll og fornyer bare ved resultatnavigasjon 3ms
+     × AC3 FR5-3/4/7: ugyldig reason=" " er prioritet 1 og bevarer historisk snapshot frem til relevant håndtering 3ms
+     × AC3 FR5-3/4/7: ugyldig basis="\t" er prioritet 1 og bevarer historisk snapshot frem til relevant håndtering 1ms
+     × AC3 FR5-3/4/7: ugyldig status="unknown" er prioritet 1 og bevarer historisk snapshot frem til relevant håndtering 1ms
+     × AC3 FR5-3/4/7: ugyldig status="" er prioritet 1 og bevarer historisk snapshot frem til relevant håndtering 1ms
+     × AC3 FR5-6: gyldig Avklart gir økonomiavhengig utfall ved L=1900000 1ms
+     × AC3 FR5-6: gyldig Avklart gir økonomiavhengig utfall ved L=1400000 1ms
+     × AC4: korrigert description=" Alvorlig  lekkasje i tak " bruker felles forholdsvalidering, anvendbar=true 1ms
+     × AC4: korrigert description="Elektrisk anlegg ikke dokumentert" bruker felles forholdsvalidering, anvendbar=false 2ms
+     × AC4: korrigert description="Bedre formulering uten kjent forholdsbevis" bruker felles forholdsvalidering, anvendbar=false 1ms
+     × AC4: korrigert pdfPage="2" bruker felles forholdsvalidering, anvendbar=false 1ms
+     × AC5/6: ny rapport med feil=false ignorerer gammelt/sent svar og bruker bare nytt kontrollert grunnlag 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC2/6: ugyldig Bruk bevarer grunnlaget; gyldig Bruk krever både funnkontroll og listebekreftelse før nytt snapshot
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ expectRenewed tests/unit/report-result-renewal.test.ts:32:38
+     30| }
+     31| function expectRenewed(state: SessionState, before: SessionState) {
+     32|   expect(selectResult(state).status).toBe('current')
+       |                                      ^
+     33|   expect(state.resultSnapshot).not.toBe(before.resultSnapshot)
+     34|   expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+ ❯ tests/unit/report-result-renewal.test.ts:71:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC2: avvist TG3 er inaktiv original, ikke teknisk avklaring; ny listebekreftelse fornyer resultat
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ expectRenewed tests/unit/report-result-renewal.test.ts:32:38
+     30| }
+     31| function expectRenewed(state: SessionState, before: SessionState) {
+     32|   expect(selectResult(state).status).toBe('current')
+       |                                      ^
+     33|   expect(state.resultSnapshot).not.toBe(before.resultSnapshot)
+     34|   expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+ ❯ tests/unit/report-result-renewal.test.ts:86:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3/6 FR5-1/2/7: endret status bevarer kontroll og fornyer bare ved resultatnavigasjon
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3/6 FR5-1/2/7: endret reason bevarer kontroll og fornyer bare ved resultatnavigasjon
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3/6 FR5-1/2/7: endret basis bevarer kontroll og fornyer bare ved resultatnavigasjon
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ expectRenewed tests/unit/report-result-renewal.test.ts:32:38
+     30| }
+     31| function expectRenewed(state: SessionState, before: SessionState) {
+     32|   expect(selectResult(state).status).toBe('current')
+       |                                      ^
+     33|   expect(state.resultSnapshot).not.toBe(before.resultSnapshot)
+     34|   expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+ ❯ tests/unit/report-result-renewal.test.ts:109:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3 FR5-3/4/7: ugyldig reason=" " er prioritet 1 og bevarer historisk snapshot frem til relevant håndtering
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3 FR5-3/4/7: ugyldig basis="\t" er prioritet 1 og bevarer historisk snapshot frem til relevant håndtering
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3 FR5-3/4/7: ugyldig status="unknown" er prioritet 1 og bevarer historisk snapshot frem til relevant håndtering
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3 FR5-3/4/7: ugyldig status="" er prioritet 1 og bevarer historisk snapshot frem til relevant håndtering
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ expectRenewed tests/unit/report-result-renewal.test.ts:32:38
+     30| }
+     31| function expectRenewed(state: SessionState, before: SessionState) {
+     32|   expect(selectResult(state).status).toBe('current')
+       |                                      ^
+     33|   expect(state.resultSnapshot).not.toBe(before.resultSnapshot)
+     34|   expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+ ❯ tests/unit/report-result-renewal.test.ts:124:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3 FR5-6: gyldig Avklart gir økonomiavhengig utfall ved L=1900000
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC3 FR5-6: gyldig Avklart gir økonomiavhengig utfall ved L=1400000
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ expectRenewed tests/unit/report-result-renewal.test.ts:32:38
+     30| }
+     31| function expectRenewed(state: SessionState, before: SessionState) {
+     32|   expect(selectResult(state).status).toBe('current')
+       |                                      ^
+     33|   expect(state.resultSnapshot).not.toBe(before.resultSnapshot)
+     34|   expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+ ❯ tests/unit/report-result-renewal.test.ts:134:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC4: korrigert description=" Alvorlig  lekkasje i tak " bruker felles forholdsvalidering, anvendbar=true
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC4: korrigert description="Elektrisk anlegg ikke dokumentert" bruker felles forholdsvalidering, anvendbar=false
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC4: korrigert description="Bedre formulering uten kjent forholdsbevis" bruker felles forholdsvalidering, anvendbar=false
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC4: korrigert pdfPage="2" bruker felles forholdsvalidering, anvendbar=false
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ expectRenewed tests/unit/report-result-renewal.test.ts:32:38
+     30| }
+     31| function expectRenewed(state: SessionState, before: SessionState) {
+     32|   expect(selectResult(state).status).toBe('current')
+       |                                      ^
+     33|   expect(state.resultSnapshot).not.toBe(before.resultSnapshot)
+     34|   expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+ ❯ tests/unit/report-result-renewal.test.ts:158:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  tests/unit/report-result-renewal.test.ts > Story 3.9 — rapportkontroll og separat TG3-fornyelse > AC5/6: ny rapport med feil=false ignorerer gammelt/sent svar og bruker bare nytt kontrollert grunnlag
+AssertionError: expected 'historical' to be 'current' // Object.is equality
+
+Expected: "current"
+Received: "historical"
+
+ ❯ expectRenewed tests/unit/report-result-renewal.test.ts:32:38
+     30| }
+     31| function expectRenewed(state: SessionState, before: SessionState) {
+     32|   expect(selectResult(state).status).toBe('current')
+       |                                      ^
+     33|   expect(state.resultSnapshot).not.toBe(before.resultSnapshot)
+     34|   expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+ ❯ tests/unit/report-result-renewal.test.ts:190:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  16 failed | 2 passed (18)
+   Start at  13:17:14
+   Duration  284ms (import 38%, tests 31%, transform 29%, worker 2%)

@@ -950,6 +950,49 @@ async function resolveTg3Ui(page: Page) {
   await page.getByLabel('Konkret eksternt avklaringsgrunnlag').fill('Kontroll fra autorisert elektriker 2026-10-15, ref E-42')
 }
 
+test('3.9 AC3/6 FR5-5/6: ett av to TG3 avklart fornyer fortsatt prioritet 1; alle avklart lar økonomien avgjøre', async ({ page }) => {
+  let calls = 0
+  page.on('request', request => { if (request.url().endsWith('/api/analysis')) calls++ })
+  await tg3(page)
+  for (const item of tg3Oracle.findings) {
+    await page.getByRole('button', { name: `TG3 · ${item.description}`, exact: true }).click()
+    await page.getByRole('button', { name: 'Bekreft', exact: true }).click()
+    await page.getByLabel('TG3-status for gjeldende forhold').selectOption('unresolved')
+  }
+  await page.getByRole('button', { name: 'Bekreft gjeldende liste', exact: true }).click()
+  await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+  await expect(page.locator('.result-triggers')).toContainText('electric:')
+  await expect(page.locator('.result-triggers')).toContainText('roof:')
+  await page.getByRole('button', { name: 'Gå tilbake til rapportfunn', exact: true }).click()
+  await page.getByRole('button', { name: `TG3 · ${tg3Oracle.findings[0]!.description}`, exact: true }).click()
+  await resolveTg3Ui(page)
+  await expect(page.locator('#findings-title')).toHaveText('Funnliste — bekreftet')
+  await page.getByRole('button', { name: 'Vis resultat', exact: true }).click()
+  await expect(page.locator('.result-stale')).toHaveCount(0)
+  await expect(page.locator('#recommendation-title')).toHaveText('Innhent mer informasjon')
+  await expect(page.locator('.result-triggers > li')).toHaveCount(1)
+  await expect(page.locator('.result-triggers')).toContainText('roof:')
+  await expect(page.locator('.result-triggers')).not.toContainText('electric:')
+  await page.getByRole('button', { name: 'Gå tilbake til rapportfunn', exact: true }).click()
+  await page.getByRole('button', { name: `TG3 · ${tg3Oracle.findings[1]!.description}`, exact: true }).click()
+  await page.getByLabel('TG3-status for gjeldende forhold').selectOption('resolved')
+  await page.getByLabel('Kort begrunnelse for TG3-avklaring').fill('Taket er undersøkt med tilstrekkelig grunnlag for screening')
+  await page.getByLabel('Konkret eksternt avklaringsgrunnlag').fill('Takrapport T-42 datert 2026-10-22')
+  await page.getByRole('button', { name: 'Vis resultat', exact: true }).click()
+  await expect(page.locator('.result-stale')).toHaveCount(0)
+  await expect(page.locator('#recommendation-title')).toHaveText('Gå videre')
+  await expect(page.locator('.result-severe')).toHaveCount(2)
+  await page.getByRole('button', { name: 'Endre tallgrunnlag', exact: true }).click()
+  await page.locator('#value-L').fill('1400000')
+  await page.locator('#confirm-financial').click()
+  await page.getByRole('button', { name: /Resultat Trinn 4/ }).click()
+  await expect(page.locator('.result-stale')).toHaveCount(0)
+  await expect(page.locator('#recommendation-title')).toHaveText('Forkast')
+  await expect(page.locator('.metric-value')).toHaveText(['8,750 %', '1 000 000 kr/år', '6,250 %', '200 000 kr/år'])
+  await expect(page.locator('.result-severe')).toHaveCount(2)
+  expect(calls).toBe(1)
+})
+
 test('2.10 AC1–3/5: separat eksplisitt avklaring, negative tekstfelt, to TG3, originalfasit og fokus', async ({ page }, testInfo) => {
   let calls = 0
   page.on('request', request => { if (request.url().endsWith('/api/analysis')) calls++ })

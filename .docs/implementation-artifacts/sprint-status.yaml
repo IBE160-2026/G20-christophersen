@@ -71,7 +71,7 @@ development_status:
   3-6-gjøre-hvert-nøkkeltall-og-beregningsgrunnlag-lesbart: done
   3-7-vise-ett-samlet-screeningresultat-med-kontrollgrunnlag: done
   3-8-oppdatere-resultat-etter-endret-og-bekreftet-finansgrunnlag: done
-  3-9-oppdatere-resultat-etter-rapportkontroll-og-separat-tg3-endr: backlog
+  3-9-oppdatere-resultat-etter-rapportkontroll-og-separat-tg3-endr: review
   epic-3-retrospective: optional
 
   epic-4: backlog

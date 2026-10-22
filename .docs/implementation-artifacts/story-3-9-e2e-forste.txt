@@ -1,0 +1,71 @@
+[WebServer] (node:29652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 2 workers
+
+(node:29653) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29654) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 tests/e2e/screening-result.spec.ts:471:1 › 3.9 AC2 RT-3/12: avvist TG3 bevarer original, krever listekontroll og regnes ikke som avklaring (2.4s)
+  ✓  3 tests/e2e/screening-result.spec.ts:495:1 › 3.9 AC3/6 AT-7–9/20 RT-14/15: hver TG3-tekst/statusendring reevalueres uten ny finans-/listebekreftelse (2.5s)
+  ✓  4 tests/e2e/screening-result.spec.ts:543:3 › 3.9 AC4: brukt TG3-korrigering med samme-ID, kjent forholdsbinding=true (1.9s)
+  ✘  1 tests/e2e/screening-result.spec.ts:407:1 › 3.9 AC1/2/6 AT-13/16 RT-11/13: utkast, Avbryt, ugyldig Bruk og ny kontroll i bygget offline demo (7.7s)
+(node:29719) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 tests/e2e/screening-result.spec.ts:543:3 › 3.9 AC4: brukt TG3-korrigering med samme-ID, kjent forholdsbinding=false (2.1s)
+  ✓  7 tests/e2e/screening-result.spec.ts:608:1 › 3.9 AC5: kontrollert sent svar fra forlatt rapport kan ikke overstyre ny rapport og nytt resultat (2.8s)
+  ✓  6 tests/e2e/screening-result.spec.ts:575:1 › 3.9 AC5/6: rapportbytte, synlig ny analysefeil og deretter eksplisitt kontrollert ny rapport (4.0s)
+
+
+  1) tests/e2e/screening-result.spec.ts:407:1 › 3.9 AC1/2/6 AT-13/16 RT-11/13: utkast, Avbryt, ugyldig Bruk og ny kontroll i bygget offline demo
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Opprinnelig KI-uttrekk', exact: true })
+    Timeout: 5000ms
+    - Expected  - 7
+    + Received  + 1
+
+    - Opprinnelig KI-uttrekk
+    -
+    - TG2 · Slitt overflate på baderomsgulv
+    -
+    - Oppgitt dokument: F1-tilstandsrapport.pdf · Oppgitt PDF-side: 2
+    -
+    - Oppgitt rapporthash: c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb · Funn-ID: F1-TG2-1
+    + Opprinnelig KI-uttrekkTG2 · Slitt overflate på baderomsgulvOppgitt dokument: F1-tilstandsrapport.pdf · Oppgitt PDF-side: 2Oppgitt rapporthash: c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb · Funn-ID: F1-TG2-1
+
+    Call log:
+      - Expect "toHaveText" getByRole('region', { name: 'Opprinnelig KI-uttrekk', exact: true }) with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Opprinnelig KI-uttrekk', exact: true })
+        14 × locator resolved to <section class="origin-detail" aria-label="Opprinnelig KI-uttrekk">…</section>
+           - unexpected value "Opprinnelig KI-uttrekkTG2 · Slitt overflate på baderomsgulvOppgitt dokument: F1-tilstandsrapport.pdf · Oppgitt PDF-side: 2Oppgitt rapporthash: c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb · Funn-ID: F1-TG2-1"
+
+
+      450 |   await expect(page.locator('.result-findings')).not.toContainText('Kontrollert slitasje')
+      451 |   await backToFindings(page)
+    > 452 |   await expect(page.getByRole('region', { name: 'Opprinnelig KI-uttrekk', exact: true })).toHaveText(original)
+          |                                                                                           ^
+      453 |   await expect(page.getByRole('button', { name: 'Bekreft gjeldende liste', exact: true })).toHaveAttribute('aria-disabled', 'true')
+      454 |   await page.getByRole('button', { name: 'Bekreft', exact: true }).click()
+      455 |   await resultStep(page)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/screening-result.spec.ts:452:91
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-3-9-AC1-2-9abcd-troll-i-bygget-offline-demo/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-3-9-AC1-2-9abcd-troll-i-bygget-offline-demo/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-3-9-AC1-2-9abcd-troll-i-bygget-offline-demo/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-3-9-AC1-2-9abcd-troll-i-bygget-offline-demo/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/screening-result.spec.ts:407:1 › 3.9 AC1/2/6 AT-13/16 RT-11/13: utkast, Avbryt, ugyldig Bruk og ny kontroll i bygget offline demo
+  6 passed (13.6s)

@@ -194,20 +194,16 @@ describe('Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll', ()
       expect(findingListAssessment(state.report).controlCompleted).toBe(true)
     }
     state = finish(state)
-    if (reportChange) {
-      expect(selectResult(state).status).toBe('historical')
-      expect(state.resultSnapshot).toBe(snapshot)
-      return
-    }
     expect(selectResult(state).status).toBe('current')
     expect(state.resultSnapshot).not.toBe(snapshot)
     expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
     expect(state.resultChanges).toEqual([])
-    expect(state.report).toBe(before.report)
+    if (!reportChange) expect(state.report).toBe(before.report)
+    else expect(state.resultSnapshot!.assessment.basis.reportBasis.controls[0]!.rejection).toEqual({ revision: 1 })
     expect(snapshot.assessment.metrics.cashFlowBeforeTax.value).toMatchObject({ amount: '1500000' })
   })
 
-  it.each(['tg3', 'funn', 'rapport'] as const)('scope: finansbekreftelse fornyer ikke resultat etter endret %s-binding (3.9)', kind => {
+  it.each(['tg3', 'funn', 'rapport'] as const)('3.9-integrasjon: finans og %s fornyes samlet bare etter relevant kontroll', kind => {
     const before = screeningState({ report: kind === 'tg3' ? 'tg3' : undefined })
     let state = before
     if (kind === 'tg3') state = sessionReducer(state, { type: 'report-tg3-register', generation: 1, findingId: 'F4-TG3-1', field: 'status', value: 'unresolved' })
@@ -217,7 +213,12 @@ describe('Story 3.8 — ny resultatnavigasjon etter relevant finanskontroll', ()
     }
     if (kind === 'rapport') state = sessionReducer(state, { type: 'report-error', generation: 1, code: 'analysis-failed' })
     state = finish(confirm(sessionReducer(state, { type: 'register-value', field: 'L', rawValue: '1400000' })))
-    expect(selectResult(state).status).toBe('historical')
-    expect(state.resultSnapshot).toBe(before.resultSnapshot)
+    expect(selectResult(state).status).toBe(kind === 'rapport' ? 'historical' : 'current')
+    if (kind === 'rapport') expect(state.resultSnapshot).toBe(before.resultSnapshot)
+    else {
+      expect(state.resultSnapshot).not.toBe(before.resultSnapshot)
+      expect(state.resultSnapshot!.binding).toEqual(resultBinding(state))
+      expect(state.resultSnapshot!.assessment.recommendation).toBe(kind === 'tg3' ? 'Innhent mer informasjon' : 'Forkast')
+    }
   })
 })

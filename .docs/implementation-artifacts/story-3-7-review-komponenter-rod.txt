@@ -1,0 +1,358 @@
+
+> property-acquisition-agent@0.0.0 test:components
+> playwright test --config playwright.components.config.ts tests/components/screening-result.spec.ts
+
+
+Running 13 tests using 4 workers
+
+(node:74108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74105) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74106) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74107) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 tests/components/screening-result.spec.ts:21:1 › AC4: Ikke beregnet viser kontrollbehov uten anbefaling eller tidligere tall (426ms)
+  ✓   1 tests/components/screening-result.spec.ts:28:1 › AC3: manglende J og ubekreftet liste samles med konkrete handlinger og gyldig delgrunnlag (503ms)
+  ✓   5 tests/components/screening-result.spec.ts:73:1 › AC2/6: TG3-status synlig fra start og begrunnelse/opphav bak native tastaturdisclosure (236ms)
+  ✓   6 tests/components/screening-result.spec.ts:87:1 › AC2: Avklart beholder TG3, begrunnelse og konkret brukergrunnlag uten teknisk godkjenning (217ms)
+  ✓   7 tests/components/screening-result.spec.ts:104:1 › AC4: brukt retting etter snapshot endrer ikke historiske funn; ny rapport får ingen historisk kildehandling (205ms)
+  ✘   2 tests/components/screening-result.spec.ts:58:1 › AC4: historiske tall, anbefaling og funn blandes ikke med ny aktiv leie eller korrigering; utkast opplyses (5.4s)
+  ✘   4 tests/components/screening-result.spec.ts:38:1 › AC3: analysefeil er kompakt og ikke tom suksess eller kopi av lokal langfeil (5.4s)
+(node:74185) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74186) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   8 tests/components/screening-result.spec.ts:124:1 › review B2/E4: identisk bevart PDF er ikke erstattet bare fordi analysestatus feiler (5.2s)
+  ✘   9 tests/components/screening-result.spec.ts:132:1 › review B3: ugyldig TG3-binding forklares sammen med bevart brukeropplysning (5.2s)
+(node:74195) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  11 tests/components/screening-result.spec.ts:152:1 › review E3: TG3-ID-prefikser beholder hvert sitt faktiske avgjørende forhold (5.3s)
+  ✘  10 tests/components/screening-result.spec.ts:167:1 › review B5/B6/B10: reelt deluttrekk ignorerer gamle rettinger/avvisninger og beholder TG3, usikkerhet og mangler (5.3s)
+  ✘  12 tests/components/screening-result.spec.ts:194:1 › review A2: kompakt dokumentfeil bevarer alle berørte sider uten lokal langforklaring (5.3s)
+  ✘  13 tests/components/screening-result.spec.ts:207:1 › review V1/R1: begge økonomiske brudd, prioritet og tallfestet regelgrunnlag er åpne fra start (5.3s)
+
+
+  1) tests/components/screening-result.spec.ts:38:1 › AC3: analysefeil er kompakt og ikke tom suksess eller kopi av lokal langfeil
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.result-triggers > li')
+    Expected: 1
+    Received: 3
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.result-triggers > li') with timeout 5000ms
+      - waiting for locator('.result-triggers > li')
+        14 × locator resolved to 3 elements
+           - unexpected value "3"
+
+
+      51 |   await expect(page.locator('.result-triggers')).toContainText('timeout')
+      52 |   await expect(page.locator('.result-triggers')).toContainText('Berørt PDF-side: 3')
+    > 53 |   await expect(page.locator('.result-triggers > li')).toHaveCount(1)
+         |                                                       ^
+      54 |   await expect(page.getByText(local, { exact: false })).toHaveCount(0)
+      55 |   await expect(page.getByText('Ingen fullført funnliste. Rapportmanglene ovenfor må avklares.')).toBeVisible()
+      56 |   await expect(page.getByText('Delgrunnlag', { exact: true })).toHaveCount(4)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/screening-result.spec.ts:53:55
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-AC3-analy-e97b1-ller-kopi-av-lokal-langfeil/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-AC3-analy-e97b1-ller-kopi-av-lokal-langfeil/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-AC3-analy-e97b1-ller-kopi-av-lokal-langfeil/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-AC3-analy-e97b1-ller-kopi-av-lokal-langfeil/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/components/screening-result.spec.ts:58:1 › AC4: historiske tall, anbefaling og funn blandes ikke med ny aktiv leie eller korrigering; utkast opplyses
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText('L: verdi er endret.')
+    Expected: 1
+    Received: 2
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText('L: verdi er endret.') with timeout 5000ms
+      - waiting for getByText('L: verdi er endret.')
+        14 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+      64 |   await expect(page.getByRole('heading', { name: 'Utdatert / Må bekreftes på nytt' })).toBeVisible()
+      65 |   await expect(page.locator('.result-stale')).toContainText('L: verdi er endret.')
+    > 66 |   await expect(page.getByText('L: verdi er endret.', { exact: false })).toHaveCount(1)
+         |                                                                         ^
+      67 |   await expect(page.locator('#recommendation-title')).toHaveText('Gå videre')
+      68 |   await expect(page.locator('.metric-value').nth(1)).toHaveText('1 500 000 kr/år')
+      69 |   await expect(page.locator('.result-findings')).toContainText('Slitt overflate på baderomsgulv')
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/screening-result.spec.ts:66:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-AC4-histo-8e0ad-korrigering-utkast-opplyses/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-AC4-histo-8e0ad-korrigering-utkast-opplyses/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-AC4-histo-8e0ad-korrigering-utkast-opplyses/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-AC4-histo-8e0ad-korrigering-utkast-opplyses/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/components/screening-result.spec.ts:124:1 › review B2/E4: identisk bevart PDF er ikke erstattet bare fordi analysestatus feiler
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText(/originalrapporten er erstattet/)
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText(/originalrapporten er erstattet/) with timeout 5000ms
+      - waiting for getByText(/originalrapporten er erstattet/)
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      126 |   await render(page, state)
+      127 |   await expect(page.getByRole('heading', { name: 'Utdatert / Må bekreftes på nytt' })).toBeVisible()
+    > 128 |   await expect(page.getByText(/originalrapporten er erstattet/)).toHaveCount(0)
+          |                                                                  ^
+      129 |   await expect(page.getByRole('button', { name: /Se originalside/ })).toHaveCount(0)
+      130 | })
+      131 |
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/screening-result.spec.ts:128:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-review-B2-4516a--fordi-analysestatus-feiler/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-review-B2-4516a--fordi-analysestatus-feiler/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-review-B2-4516a--fordi-analysestatus-feiler/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-review-B2-4516a--fordi-analysestatus-feiler/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/components/screening-result.spec.ts:132:1 › review B3: ugyldig TG3-binding forklares sammen med bevart brukeropplysning
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.result-triggers')
+    Expected substring: "annet eller ukjent rapportgrunnlag"
+    Received string:    "Rapportgrunnlaget er ufullført: Funnlisten er ennå ikke kontrollert og bekreftet av deg.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.Alvorlig TG3 er uavklart: F4-TG3-1 · Et annet alvorlig takforhold (F4-tilstandsrapport.pdf, PDF-side 4).Innhent konkret avklaringsgrunnlag for det navngitte TG3-forholdet og registrer status og begrunnelse for førstevurdering."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('.result-triggers') with timeout 5000ms
+      - waiting for locator('.result-triggers')
+        14 × locator resolved to <ul class="result-triggers">…</ul>
+           - unexpected value "Rapportgrunnlaget er ufullført: Funnlisten er ennå ikke kontrollert og bekreftet av deg.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.Alvorlig TG3 er uavklart: F4-TG3-1 · Et annet alvorlig takforhold (F4-tilstandsrapport.pdf, PDF-side 4).Innhent konkret avklaringsgrunnlag for det navngitte TG3-forholdet og registrer status og begrunnelse for førstevurdering."
+
+
+      140 |   } })
+      141 |   await render(page, state)
+    > 142 |   await expect(page.locator('.result-triggers')).toContainText('annet eller ukjent rapportgrunnlag')
+          |                                                  ^
+      143 |   const detail = page.locator('.result-findings details').last()
+      144 |   await detail.locator('summary').click()
+      145 |   await expect(detail).toContainText('Registrert brukerstatus: Avklart')
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/screening-result.spec.ts:142:50
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-review-B3-5cb29-med-bevart-brukeropplysning/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-review-B3-5cb29-med-bevart-brukeropplysning/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-review-B3-5cb29-med-bevart-brukeropplysning/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-review-B3-5cb29-med-bevart-brukeropplysning/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) tests/components/screening-result.spec.ts:152:1 › review E3: TG3-ID-prefikser beholder hvert sitt faktiske avgjørende forhold
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.result-triggers')
+    Expected substring: "TG3-A: Første takforhold"
+    Received string:    "Rapportgrunnlaget er ufullført: Funnlisten er ennå ikke kontrollert og bekreftet av deg.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.Alvorlig TG3 er uavklart: TG3-A · Første takforhold (F4-tilstandsrapport.pdf, PDF-side 4).Innhent konkret avklaringsgrunnlag for det navngitte TG3-forholdet og registrer status og begrunnelse for førstevurdering.Alvorlig TG3 er uavklart: TG3-A · Første takforhold (F4-tilstandsrapport.pdf, PDF-side 4).Innhent konkret avklaringsgrunnlag for det navngitte TG3-forholdet og registrer status og begrunnelse for førstevurdering."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('.result-triggers') with timeout 5000ms
+      - waiting for locator('.result-triggers')
+        14 × locator resolved to <ul class="result-triggers">…</ul>
+           - unexpected value "Rapportgrunnlaget er ufullført: Funnlisten er ennå ikke kontrollert og bekreftet av deg.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.Alvorlig TG3 er uavklart: TG3-A · Første takforhold (F4-tilstandsrapport.pdf, PDF-side 4).Innhent konkret avklaringsgrunnlag for det navngitte TG3-forholdet og registrer status og begrunnelse for førstevurdering.Alvorlig TG3 er uavklart: TG3-A · Første takforhold (F4-tilstandsrapport.pdf, PDF-side 4).Innhent konkret avklaringsgrunnlag for det navngitte TG3-forholdet og registrer status og begrunnelse for førstevurdering."
+
+
+      161 |   state = sessionReducer({ ...state, report: { ...state.report, outcome, findingControls: [], tg3Resolutions: [] } }, { type: 'calculate-result' })
+      162 |   await render(page, state)
+    > 163 |   await expect(page.locator('.result-triggers')).toContainText('TG3-A: Første takforhold')
+          |                                                  ^
+      164 |   await expect(page.locator('.result-triggers')).toContainText('TG3-A:B: Andre takforhold')
+      165 | })
+      166 |
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/screening-result.spec.ts:163:50
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-review-E3-e856a-faktiske-avgjørende-forhold/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-review-E3-e856a-faktiske-avgjørende-forhold/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-review-E3-e856a-faktiske-avgjørende-forhold/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-review-E3-e856a-faktiske-avgjørende-forhold/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) tests/components/screening-result.spec.ts:167:1 › review B5/B6/B10: reelt deluttrekk ignorerer gamle rettinger/avvisninger og beholder TG3, usikkerhet og mangler
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.result-severe')
+    Expected: "TG3 · Alvorlig lekkasje i tak"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" locator('.result-severe') with timeout 5000ms
+      - waiting for locator('.result-severe')
+
+
+      182 |   state = sessionReducer({ ...state, report: { ...state.report, status: 'failed', error: 'timeout', outcome } }, { type: 'calculate-result' })
+      183 |   await render(page, state)
+    > 184 |   await expect(page.locator('.result-severe')).toHaveText('TG3 · Alvorlig lekkasje i tak')
+          |                                                ^
+      185 |   await expect(page.locator('.result-findings')).toContainText(tg2.description)
+      186 |   await expect(page.getByText(/Gammel brukerretting som ikke gjelder/)).toHaveCount(0)
+      187 |   await expect(page.getByText(/Brukeravvist KI-uttrekk/)).toHaveCount(0)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/screening-result.spec.ts:184:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-review-B5-ec029-r-TG3-usikkerhet-og-mangler/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-review-B5-ec029-r-TG3-usikkerhet-og-mangler/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-review-B5-ec029-r-TG3-usikkerhet-og-mangler/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-review-B5-ec029-r-TG3-usikkerhet-og-mangler/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) tests/components/screening-result.spec.ts:194:1 › review A2: kompakt dokumentfeil bevarer alle berørte sider uten lokal langforklaring
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.result-triggers')
+    Expected substring: "Berørte PDF-sider: 2, 3."
+    Received string:    "Rapportgrunnlaget er ufullført: Berørt PDF-side: 2.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.Rapportgrunnlaget er ufullført · Dokumentfeil: unreadable-text. Berørt PDF-side: 2.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.Rapportgrunnlaget er ufullført · Dokumentfeil: unreadable-text. Berørt PDF-side: 2.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('.result-triggers') with timeout 5000ms
+      - waiting for locator('.result-triggers')
+        14 × locator resolved to <ul class="result-triggers">…</ul>
+           - unexpected value "Rapportgrunnlaget er ufullført: Berørt PDF-side: 2.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.Rapportgrunnlaget er ufullført · Dokumentfeil: unreadable-text. Berørt PDF-side: 2.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag.Rapportgrunnlaget er ufullført · Dokumentfeil: unreadable-text. Berørt PDF-side: 2.Avklar den oppgitte rapportmangelen og fullfør analyse og kontroll av gjeldende rapportgrunnlag."
+
+
+      200 |   await render(page, state)
+      201 |   await expect(page.locator('.result-triggers')).toContainText('Dokumentfeil: unreadable-text')
+    > 202 |   await expect(page.locator('.result-triggers')).toContainText('Berørte PDF-sider: 2, 3.')
+          |                                                  ^
+      203 |   await expect(page.getByText(/Lang lokal sideforklaring/)).toHaveCount(0)
+      204 |   await expect(page.locator('.result-triggers > li')).toHaveCount(1)
+      205 | })
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/screening-result.spec.ts:202:50
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-review-A2-32644-r-uten-lokal-langforklaring/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-review-A2-32644-r-uten-lokal-langforklaring/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-review-A2-32644-r-uten-lokal-langforklaring/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-review-A2-32644-r-uten-lokal-langforklaring/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) tests/components/screening-result.spec.ts:207:1 › review V1/R1: begge økonomiske brudd, prioritet og tallfestet regelgrunnlag er åpne fra start
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.result-triggers')
+    Expected substring: "Ditt avkastningskrav (Ymin): 7 %"
+    Received string:    "Nettoyield er lavere enn ditt avkastningskrav.Kontantstrøm før skatt er negativ."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('.result-triggers') with timeout 5000ms
+      - waiting for locator('.result-triggers')
+        14 × locator resolved to <ul class="result-triggers">…</ul>
+           - unexpected value "Nettoyield er lavere enn ditt avkastningskrav.Kontantstrøm før skatt er negativ."
+
+
+      210 |   await expect(page.locator('.recommendation > p').nth(1)).toHaveText('Økonomiske minimumskrav er ikke oppfylt. Nettoyield er lavere enn ditt avkastningskrav. Kontantstrøm før skatt er negativ.')
+      211 |   await expect(page.locator('.result-triggers > li > p:first-child')).toHaveText(['Nettoyield er lavere enn ditt avkastningskrav.', 'Kontantstrøm før skatt er negativ.'])
+    > 212 |   await expect(page.locator('.result-triggers')).toContainText('Ditt avkastningskrav (Ymin): 7 %')
+          |                                                  ^
+      213 |   await expect(page.locator('.result-triggers')).toContainText('Nullgrense: 0 kr/år')
+      214 | })
+      215 |
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/components/screening-result.spec.ts:212:50
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/screening-result-review-V1-c880d-lgrunnlag-er-åpne-fra-start/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/screening-result-review-V1-c880d-lgrunnlag-er-åpne-fra-start/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/screening-result-review-V1-c880d-lgrunnlag-er-åpne-fra-start/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/screening-result-review-V1-c880d-lgrunnlag-er-åpne-fra-start/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    tests/components/screening-result.spec.ts:38:1 › AC3: analysefeil er kompakt og ikke tom suksess eller kopi av lokal langfeil
+    tests/components/screening-result.spec.ts:58:1 › AC4: historiske tall, anbefaling og funn blandes ikke med ny aktiv leie eller korrigering; utkast opplyses
+    tests/components/screening-result.spec.ts:124:1 › review B2/E4: identisk bevart PDF er ikke erstattet bare fordi analysestatus feiler
+    tests/components/screening-result.spec.ts:132:1 › review B3: ugyldig TG3-binding forklares sammen med bevart brukeropplysning
+    tests/components/screening-result.spec.ts:152:1 › review E3: TG3-ID-prefikser beholder hvert sitt faktiske avgjørende forhold
+    tests/components/screening-result.spec.ts:167:1 › review B5/B6/B10: reelt deluttrekk ignorerer gamle rettinger/avvisninger og beholder TG3, usikkerhet og mangler
+    tests/components/screening-result.spec.ts:194:1 › review A2: kompakt dokumentfeil bevarer alle berørte sider uten lokal langforklaring
+    tests/components/screening-result.spec.ts:207:1 › review V1/R1: begge økonomiske brudd, prioritet og tallfestet regelgrunnlag er åpne fra start
+  5 passed (14.3s)

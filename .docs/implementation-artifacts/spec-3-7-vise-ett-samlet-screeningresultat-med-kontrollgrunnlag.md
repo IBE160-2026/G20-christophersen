@@ -2,7 +2,7 @@
 title: 'Story 3.7 — Vise ett samlet screeningresultat med kontrollgrunnlag'
 type: 'feature'
 created: '2026-10-21'
-status: 'in-review'
+status: 'done'
 route: 'oneshot'
 story_key: '3-7-vise-ett-samlet-screeningresultat-med-kontrollgrunnlag'
 baseline_commit: 'fcc87c6e4b13fdaf03271dd0b7825804ec2e6412'
@@ -38,3 +38,21 @@ Verifiser bygget app med ekte kontrollerte PDF-/adapterdata for F1 Gå videre, F
 - Endelig egenverifikasjon: **182/182 målrettede Vitest**, **31/31 direkte Chromium-komponentprøver**, **67/67 berørte bygget-app-E2E**, typecheck/lint/build og diffkontroll. Syv nye E2E og syv nye komponentprøver dekker F1/F2/F4, historisk vern, brukt retting/avvist original, korrekt fysisk PDF-side, hele originalrapporten, kontrollport/retur/fokus, native detaljer og observerte statusmutasjoner én gang. En foreldet tidligere test om permanent sperret Resultat etter ferdig kontroll ble oppdatert til den nye storyen; reelle sperrer beholdes.
 - Agentgjennomført visuell QA og kontrastkontroll er dokumentert med faktiske nettleserbilder. Alle fire tall ligger i bred rad, sticky trinn/status og historisk banner ombrytes ved 720×450 CSS px (200% tilsvarende flate), og detaljer/fokus er lesbare. Forelder har også inspisert representative bilder. Ingen menneskelig S6-/live-/WCAG-sertifiseringspåstand. Se [AC-/testbevis](story-3-7-verifikasjon.md) og [arbeidsøkt](../process/arbeidsokter/2026-10-21-story-3-7.md).
 - Checkpoint: **in-review / review**, ikke done. Ingen reviewlag er kjørt av implementeringsagenten, i samsvar med brukerens separate sekvensielle reviewfase. Full siste regresjon tas av forelder etter uavhengig BMAD-review. Ingen ny beslutning/blocker, 3.8+, push eller endring av porter. Aktiv automatisk promptlogg holdes utenfor fasecommit.
+
+### Review Findings
+
+Uavhengig BMAD-review startet21.oktober og gjenopptatt22.oktober etter faktisk usagegrense. Fire separate lag er fullført sekvensielt uten prosjektendringer; individuell triage, bevis og tiltak står i [reviewrapporten](story-3-7-review.md).
+
+- [x] [Review][Patch] Avbruddsvern ved historisk navigasjon under ny analyse/filvalg (B1/E2).
+- [x] [Review][Patch] Skill originalidentitet fra kontrollflatens tilgjengelighet (B2/E4).
+- [x] [Review][Patch] Bevar TG3-utløsere/anvendbarhetsårsaker uten ID-prefikstolkning (B3/E3).
+- [x] [Review][Patch] Kompakt feil uten duplikater og uten tap av berørte sider (B4/A2).
+- [x] [Review][Patch] Deluttrekk og listebekreftelse følger felles kontrollautoritet (B5/B6/B10).
+- [x] [Review][Patch] Historisk kildekontekst og bevart originalkilde valideres korrekt (B7/E1/A1).
+- [x] [Review][Patch] Én historisk oppsummering og presise originalrapportetiketter (B8/B11).
+- [x] [Review][Patch] Synlig prioritet/kort grunn/full utløsersamling og tallfestet økonomisk regelgrunnlag (B9/V1/R1).
+- [x] [Review][Patch] Verifiser historisk kildevern etter fullført erstatningsanalyse (V2).
+
+Rejected:ingen. Defer:ingen. Decision-needed:ingen.
+
+Uavhengig review bestått2026-10-22:20 individuelle punkter/15 grupper lukket.278 målrettede Vitest,37 komponenter,70 berørte bygget-app-prøver og type/lint/build/diffkontroll består. Se reviewrapporten for presist rød/grønn-bevis og testgrenser. Story/sprint er done; full siste regresjon tas av forelderen. Ingen3.8+,ny beslutning eller push.

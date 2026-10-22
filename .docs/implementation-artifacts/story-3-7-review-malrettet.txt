@@ -1,0 +1,12 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/screening-result-navigation.test.ts tests/unit/result-snapshot.test.ts tests/unit/finding-list-control.test.ts tests/unit/complete-screening.test.ts tests/unit/document-analysis.test.ts tests/integration/demo-analysis.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  6 passed (6)
+      Tests  278 passed (278)
+   Start at  10:21:31
+   Duration  5.19s (tests 87%, import 9%, transform 3%)

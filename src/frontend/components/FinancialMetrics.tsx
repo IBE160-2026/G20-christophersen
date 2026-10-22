@@ -94,7 +94,7 @@ function MetricCard({ metric }: { metric: PresentedFinancialMetric }) {
 }
 
 /** Én seleksjon binder alle fire tall, terskler, kilder og historisk status sammen. */
-export function FinancialMetrics({ result }: { result: ResultSelection }) {
+export function FinancialMetrics({ result, showHistorySummary = true }: { result: ResultSelection; showHistorySummary?: boolean }) {
   if (result.status === 'not-calculated') return <section aria-label="Økonomiske nøkkeltall"><h2>Økonomiske nøkkeltall</h2><p>Ikke beregnet</p></section>
   const { assessment } = result.snapshot
   const metrics = formatFinancialMetrics({
@@ -103,7 +103,7 @@ export function FinancialMetrics({ result }: { result: ResultSelection }) {
   }, { partialBasis: assessment.partialBasis })
   return <section className={`financial-metrics${result.status === 'historical' ? ' financial-metrics-historical' : ''}`} aria-label="Økonomiske nøkkeltall">
     <h2>Økonomiske nøkkeltall</h2>
-    {result.status === 'historical' && <div className="metric-stale">
+    {result.status === 'historical' && showHistorySummary && <div className="metric-stale">
       <p className="status-label">Utdatert / Må bekreftes på nytt</p>
       <p>Historiske tall og beregningsgrunnlag fra forrige vurdering.</p>
       <ul>{result.changes.map((change, index) => <li key={index}>{change.message} {change.nextAction}</li>)}</ul>

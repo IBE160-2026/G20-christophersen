@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import { fileURLToPath } from 'node:url'
+import { readFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { AnalysisHttpCorrelationSchema } from '../../src/contracts/analysis-http.ts'
+import { bindAnalysisOutcome } from '../../src/contracts/analysis-validation.ts'
+import oracle from '../fixtures/property-cases/expected.json' with { type: 'json' }
 
-async function controlled(page: Page, caseId: 'F1' | 'F2' | 'F4') {
+async function controlled(page: Page, caseId: 'F1' | 'F2' | 'F4', rejectUncertain = false) {
   await page.goto('/')
   for (const [field, value] of Object.entries({ P: '16000000', L: caseId === 'F2' ? '1400000' : '1900000', D: '400000', J: '800000', Ymin: '7' })) {
     await page.locator(`#value-${field}`).fill(value)
@@ -23,7 +28,7 @@ async function controlled(page: Page, caseId: 'F1' | 'F2' | 'F4') {
   await expect(page.locator('.report-findings')).toHaveAttribute('data-list-visible-generation', /\d+/)
   for (const row of await page.locator('.finding-list > li').all()) {
     await row.locator('.finding-select').click()
-    await row.getByRole('button', { name: 'Bekreft', exact: true }).click()
+    await row.getByRole('button', { name: rejectUncertain ? 'Avvis' : 'Bekreft', exact: true }).click()
     if ((await row.locator('.finding-select').innerText()).startsWith('TG3')) await page.getByLabel('TG3-status for gjeldende forhold').selectOption('unresolved')
   }
   await page.getByRole('button', { name: 'Bekreft gjeldende liste', exact: true }).click()
@@ -43,6 +48,15 @@ for (const [id, recommendation, expected] of [
     await go.focus(); await go.press('Enter')
     await expect(page.getByRole('heading', { name: 'Resultat', exact: true })).toBeFocused()
     await expect(page.locator('#recommendation-title')).toHaveText(recommendation)
+    await expect(page.locator('.recommendation > .meta')).toHaveText(`Kodebestemt screeninganbefaling · Prioritet ${id === 'F1' ? 3 : id === 'F2' ? 2 : 1}`)
+    await expect(page.locator('.recommendation > p').nth(1)).toHaveText(id === 'F1'
+      ? 'Nettoyield oppfyller ditt avkastningskrav. Kontantstrøm før skatt er null eller positiv. Teknisk grunnlag er tilstrekkelig for førstevurdering.'
+      : id === 'F2' ? 'Økonomiske minimumskrav er ikke oppfylt. Nettoyield er lavere enn ditt avkastningskrav.' : 'Kritisk grunnlag er utilstrekkelig.')
+    await expect(page.locator('.result-triggers > li > p:first-child')).toHaveText(id === 'F1'
+      ? ['Nettoyield oppfyller ditt avkastningskrav.', 'Kontantstrøm før skatt er null eller positiv.', 'Teknisk grunnlag er tilstrekkelig for førstevurdering.']
+      : id === 'F2' ? ['Nettoyield er lavere enn ditt avkastningskrav.']
+        : ['Alvorlig TG3 er uavklart: F4-TG3-1: Alvorlig lekkasje i tak (F4-tilstandsrapport.pdf, PDF-side 4). Velg eksplisitt Avklart med nødvendig grunnlag, eller behold Uavklart. Oppgi en kort begrunnelse for at forholdet er tilstrekkelig avklart for førstevurdering. Oppgi konkret eksternt avklaringsgrunnlag, for eksempel kontroll fra autorisert elektriker med dato eller referanse.'])
+    if (id !== 'F4') await expect(page.locator('.result-triggers')).toContainText(`Nettoyield: ${id === 'F1' ? '9,375' : '6,250'} % · Ditt avkastningskrav (Ymin): 7 %`)
     await expect(page.locator('#result-announcement')).toHaveText(`Resultat beregnet: ${recommendation}.`)
     await expect(page.locator('.metric-value')).toHaveText([...expected])
     await expect(page.locator('.recommendation details')).toHaveCount(0)
@@ -158,4 +172,64 @@ test('3.7 AC6: gyldighetsstatus kunngjøres én gang og detaljbetjening/trinnret
   expect(await count()).toBe(2)
   await page.getByRole('button', { name: /Resultat Trinn 4/ }).click()
   expect(await count()).toBe(2)
+})
+
+test('review E1/A1: avvist fremmed originalkilde velger aldri en side i aktiv PDF', async ({ page }) => {
+  await page.route('**/api/analysis', async route => {
+    const headers = await route.request().allHeaders()
+    const correlation = AnalysisHttpCorrelationSchema.parse({ sessionId: headers['x-session-id'], requestId: headers['x-request-id'], generation: Number(headers['x-analysis-generation']) })
+    const fixture = oracle.cases.find(item => item.caseId === 'F1')!
+    const bytes = readFileSync(new URL(`../fixtures/property-cases/${fixture.documentName}`, import.meta.url))
+    // Kontrollert kontrakt ved HTTP-grensen; de tre hovedcasene prøver ordinær PDF-/demopipeline.
+    const outcome = bindAnalysisOutcome({ contractVersion: '2', extractionVersion: '1', mode: 'demo',
+      requestId: correlation.requestId, reportHash: createHash('sha256').update(bytes).digest('hex'), documentName: fixture.documentName,
+      pageCount: fixture.pageCount, pages: Array.from({ length: fixture.pageCount }, (_, index) => ({ pdfPage: index + 1, text: 'Fiktiv rapport', status: 'readable', reason: null })) }, {
+      contractVersion: '2', extractionVersion: '1', status: 'completed', limitations: [], findings: [{ findingId: 'wrong-source', grade: 'TG2', description: 'Feil KI-kilde',
+        source: { documentName: 'Annen-rapport.pdf', reportHash: 'a'.repeat(64), pdfPage: 2 }, uncertainties: [] }],
+    })
+    await route.fulfill({ json: { kind: 'analysis', correlation, outcome } })
+  })
+  await controlled(page, 'F1', true)
+  await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+  await expect(page.locator('#recommendation-title')).toHaveText('Gå videre')
+  const detail = page.locator('.result-findings details')
+  await detail.locator('summary').click()
+  await detail.getByRole('button', { name: 'Se avvist original i rapportkontroll', exact: true }).click()
+  await expect(page.locator('#pdf-status')).toContainText('samsvarer ikke med valgt originalrapport')
+  await expect(page.locator('.pdf-identity')).toContainText('PDF-side ukjent')
+  await expect(page.locator('.pdf-canvas-holder')).not.toHaveAttribute('data-pdf-page')
+  await expect(page.locator('.pdf-controls button').first()).toBeDisabled()
+  await expect(page.locator('.pdf-controls button').nth(1)).toBeDisabled()
+})
+
+test('review B7: historisk kilde åpner bevart side uten ny aktiv funnversjon som kildekontekst', async ({ page }) => {
+  await controlled(page, 'F1')
+  await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+  await page.getByRole('button', { name: 'Gå tilbake til rapportfunn', exact: true }).click()
+  await page.getByRole('button', { name: 'TG2 · Slitt overflate på baderomsgulv', exact: true }).click()
+  await page.getByRole('button', { name: 'Korriger', exact: true }).click()
+  await page.getByLabel('Beskrivelse fra rapporten').fill('Ny aktiv beskrivelse for kontroll')
+  await page.getByLabel('Fysisk PDF-side').fill('3')
+  await page.getByRole('button', { name: 'Bruk korrigering', exact: true }).click()
+  await page.getByRole('button', { name: /Resultat Trinn 4/ }).click()
+  await page.getByRole('button', { name: 'Se originalside — F1-TG2-1', exact: true }).click()
+  await expect(page.locator('.source-original > p').first()).toHaveText('Originalrapport · F1-tilstandsrapport.pdf')
+  await expect(page.locator('.source-original')).not.toContainText('Ny aktiv beskrivelse for kontroll')
+  await expect(page.locator('.pdf-identity')).toContainText('PDF-side 2')
+  await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
+})
+
+test('review B11: hele originalrapporten får presise etiketter og tastaturretur i smalt panel', async ({ page }) => {
+  await controlled(page, 'F1')
+  await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+  await page.setViewportSize({ width: 900, height: 700 })
+  await page.getByRole('button', { name: 'Åpne originalrapport i rapportkontroll', exact: true }).click()
+  const opener = page.getByRole('button', { name: 'Åpne originalrapport', exact: true })
+  await opener.focus(); await opener.press('Enter')
+  await expect(page.getByRole('heading', { name: 'Originalrapport', exact: true })).toBeFocused()
+  await expect(page.locator('dialog')).toContainText('Originalrapport · F1-tilstandsrapport.pdf')
+  await expect(page.locator('dialog .pdf-identity')).toContainText('PDF-side 1')
+  await expect(page.locator('dialog .textLayer')).toContainText('FIKTIV TILSTANDSRAPPORT')
+  await page.keyboard.press('Escape')
+  await expect(opener).toBeFocused()
 })

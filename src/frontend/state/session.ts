@@ -99,7 +99,7 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
   if (action.type.startsWith('report-')) return { ...state, report: reportReducer(state.report, action as ReportAction) }
   if (action.type === 'navigate') {
     if (action.step === 'resultat') {
-      if (state.resultSnapshot) return { ...state, currentStep: 'resultat' }
+      if (state.resultSnapshot) return { ...state, currentStep: 'resultat', report: reportReducer(state.report, { type: 'report-abandon' }) }
       if (!isFinancialConfirmed(state) || !findingListAssessment(state.report).controlCompleted) return state
       return { ...state, currentStep: 'resultat', resultSnapshot: calculateResultSnapshot(state), resultChanges: [] }
     }

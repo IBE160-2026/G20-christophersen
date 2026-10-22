@@ -12,6 +12,7 @@ export function SourceReview({ report, summary, sourceIssue, children, onView }:
   const dialog = useRef<HTMLDialogElement>(null)
   const heading = useRef<HTMLHeadingElement>(null)
   const opener = useRef<HTMLButtonElement>(null)
+  const wholeReport = report.view.findingId === null && report.view.pdfPage !== null
   useEffect(() => {
     const media = matchMedia('(min-width: 1200px)')
     const changed = () => { setWide(media.matches); setOpen(false) }
@@ -27,7 +28,7 @@ export function SourceReview({ report, summary, sourceIssue, children, onView }:
     onPage={pdfPage => onView({ ...report.view, pdfPage })} onZoom={zoom => onView({ ...report.view, zoom })} />
   return <div className={`source-review${wide ? ' source-review-wide' : ''}`}>
     <div className="source-findings">{children}
-      {!wide && <button ref={opener} className="secondary-action" type="button" disabled={!summary} aria-haspopup="dialog" onClick={() => setOpen(true)}>Åpne PDF for valgt funn</button>}
+      {!wide && <button ref={opener} className="secondary-action" type="button" disabled={!summary} aria-haspopup="dialog" onClick={() => setOpen(true)}>{wholeReport ? 'Åpne originalrapport' : 'Åpne PDF for valgt funn'}</button>}
     </div>
     {wide && <aside className="source-original" aria-label="Valgt funns originalkilde">{summary ? <><p>{summary}</p>{viewer}</> : <p>Velg et funn for å vise originalkilden.</p>}</aside>}
     {!wide && <dialog ref={dialog} className="pdf-dialog" aria-labelledby="pdf-panel-title" onKeyDown={event => {
@@ -40,7 +41,7 @@ export function SourceReview({ report, summary, sourceIssue, children, onView }:
         event.preventDefault(); first?.focus()
       }
     }} onCancel={event => { event.preventDefault(); close() }}>
-      <h2 ref={heading} id="pdf-panel-title" tabIndex={-1}>Originalkilde for valgt funn</h2>
+      <h2 ref={heading} id="pdf-panel-title" tabIndex={-1}>{wholeReport ? 'Originalrapport' : 'Originalkilde for valgt funn'}</h2>
       <p>{summary}</p>
       <button type="button" className="secondary-action" onClick={close}>Tilbake til funnkontroll</button>
       {open && viewer}

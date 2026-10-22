@@ -1,0 +1,51 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/screening-result-navigation.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/unit/screening-result-navigation.test.ts (5 tests | 2 failed) 26ms
+   ❯ Story 3.7 — første resultat gjennom eksisterende kontrollport (5)
+     × historisk navigasjon forlater selecting og avviser sent svar/filvalg 5ms
+     × historisk navigasjon forlater analysing og avviser sent svar/filvalg 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/screening-result-navigation.test.ts > Story 3.7 — første resultat gjennom eksisterende kontrollport > historisk navigasjon forlater selecting og avviser sent svar/filvalg
+AssertionError: expected 'selecting' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "selecting"
+
+ ❯ tests/unit/screening-result-navigation.test.ts:45:33
+     43|     }
+     44|     state = sessionReducer(state, { type: 'navigate', step: 'resultat'…
+     45|     expect(state.report.status).toBe('failed')
+       |                                 ^
+     46|     expect(state.report.generation).toBe(3)
+     47|     expect(state.report.error).toBe('interrupted')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/screening-result-navigation.test.ts > Story 3.7 — første resultat gjennom eksisterende kontrollport > historisk navigasjon forlater analysing og avviser sent svar/filvalg
+AssertionError: expected 'analysing' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "analysing"
+
+ ❯ tests/unit/screening-result-navigation.test.ts:45:33
+     43|     }
+     44|     state = sessionReducer(state, { type: 'navigate', step: 'resultat'…
+     45|     expect(state.report.status).toBe('failed')
+       |                                 ^
+     46|     expect(state.report.generation).toBe(3)
+     47|     expect(state.report.error).toBe('interrupted')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  10:17:47
+   Duration  215ms (import 47%, transform 30%, tests 21%, worker 2%)

@@ -1,0 +1,54 @@
+
+> property-acquisition-agent@0.0.0 test:components
+> playwright test --config playwright.components.config.ts
+
+
+Running 37 tests using 4 workers
+
+(node:75001) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:75000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74999) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:75002) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-5: konkrete inputmangler, gyldige delberegninger og ingen skjult null (640ms)
+  ✓   3 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-6: konkrete inputmangler, gyldige delberegninger og ingen skjult null (676ms)
+  ✓   2 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-3: konkrete inputmangler, gyldige delberegninger og ingen skjult null (781ms)
+  ✓   4 tests/components/financial-metrics.spec.ts:106:1 › AC1/3 BT-1: fire navn, norsk fasit/enhet/år fra start og faktisk formel/input/kilder (828ms)
+  ✓   6 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-18: konkrete inputmangler, gyldige delberegninger og ingen skjult null (200ms)
+  ✓   5 tests/components/financial-metrics.spec.ts:142:3 › AC1/2 BT-17: konkrete inputmangler, gyldige delberegninger og ingen skjult null (298ms)
+  ✓   7 tests/components/financial-metrics.spec.ts:164:3 › AC2 BT-4 og tilstandsgrense: error beholder F1-tall som Delgrunnlag (211ms)
+  ✓   9 tests/components/financial-metrics.spec.ts:164:3 › AC2 BT-4 og tilstandsgrense: tg3 beholder F1-tall som Delgrunnlag (187ms)
+  ✓   8 tests/components/financial-metrics.spec.ts:164:3 › AC2 BT-4 og tilstandsgrense: unconfirmed beholder F1-tall som Delgrunnlag (212ms)
+  ✓  10 tests/components/financial-metrics.spec.ts:174:1 › AC1 BT-11: negative resultater beholdes i alle berørte kort (196ms)
+  ✓  13 tests/components/financial-metrics.spec.ts:202:1 › AC4: negativ kontantstrøm som rundes til null forklares med uavrundet beløp (272ms)
+  ✓  12 tests/components/financial-metrics.spec.ts:189:1 › AC4 BT-8: likhet og én krone under har lik standardvisning, men bruddet forklares presist (291ms)
+  ✓  11 tests/components/financial-metrics.spec.ts:179:1 › AC3 BT-15: registrert måned, faktor 12 og faktisk anvendt årsverdi er lesbare (320ms)
+  ✓  16 tests/components/financial-metrics.spec.ts:260:1 › ny økt viser bare Ikke beregnet uten gamle verdier eller detaljer (171ms)
+  ✓  17 tests/components/financial-metrics.spec.ts:269:1 › review B1: bred rad og smal ombrytning følger DESIGN uten innholdstap (191ms)
+  ✓  14 tests/components/financial-metrics.spec.ts:211:1 › AC5: native semantikk, Enter/Space, synlig fokus og lukket detalj uten ekstra fokusmål (492ms)
+  ✓  15 tests/components/financial-metrics.spec.ts:246:1 › AC5 og snapshotgrense: historiske tall/kilder blandes ikke med ny finansverdi (347ms)
+  ✓  18 tests/components/financial-metrics.spec.ts:281:3 › review B2/3: unconfirmed Ymin beholder registrering/kilde og er ikke et gyldig anvendt krav (299ms)
+  ✓  20 tests/components/financial-metrics.spec.ts:300:1 › review B3: gyldig krav har registrert verdi, kilde og bekreftelse ved eksakt verdi (285ms)
+  ✓  19 tests/components/financial-metrics.spec.ts:281:3 › review B2/3: conflict Ymin beholder registrering/kilde og er ikke et gyldig anvendt krav (328ms)
+  ✓  21 tests/components/financial-metrics.spec.ts:310:3 › review B8 BT-14: unconfirmed numerisk L viser årsak og ikke-anvendt grunnlag (397ms)
+  ✓  24 tests/components/financial-metrics.spec.ts:328:1 › review B4/5/6/8: ugyldig kostnadsoppdeling bevarer råbeløp og valgt relasjon uten inkludert-påstand (242ms)
+  ✓  23 tests/components/financial-metrics.spec.ts:340:1 › review B4: kostnad som overstiger total beholder årsak uten gyldig inkluderingspåstand (251ms)
+  ✓  25 tests/components/screening-result.spec.ts:21:1 › AC4: Ikke beregnet viser kontrollbehov uten anbefaling eller tidligere tall (159ms)
+  ✓  22 tests/components/financial-metrics.spec.ts:310:3 › review B8 BT-14: conflict numerisk L viser årsak og ikke-anvendt grunnlag (474ms)
+  ✓  27 tests/components/screening-result.spec.ts:38:1 › AC3: analysefeil er kompakt og ikke tom suksess eller kopi av lokal langfeil (220ms)
+  ✓  26 tests/components/screening-result.spec.ts:28:1 › AC3: manglende J og ubekreftet liste samles med konkrete handlinger og gyldig delgrunnlag (291ms)
+  ✓  28 tests/components/screening-result.spec.ts:58:1 › AC4: historiske tall, anbefaling og funn blandes ikke med ny aktiv leie eller korrigering; utkast opplyses (201ms)
+  ✓  29 tests/components/screening-result.spec.ts:73:1 › AC2/6: TG3-status synlig fra start og begrunnelse/opphav bak native tastaturdisclosure (244ms)
+  ✓  32 tests/components/screening-result.spec.ts:124:1 › review B2/E4: identisk bevart PDF er ikke erstattet bare fordi analysestatus feiler (226ms)
+  ✓  30 tests/components/screening-result.spec.ts:87:1 › AC2: Avklart beholder TG3, begrunnelse og konkret brukergrunnlag uten teknisk godkjenning (329ms)
+  ✓  31 tests/components/screening-result.spec.ts:104:1 › AC4: brukt retting etter snapshot endrer ikke historiske funn; ny rapport får ingen historisk kildehandling (303ms)
+  ✓  34 tests/components/screening-result.spec.ts:152:1 › review E3: TG3-ID-prefikser beholder hvert sitt faktiske avgjørende forhold (163ms)
+  ✓  33 tests/components/screening-result.spec.ts:132:1 › review B3: ugyldig TG3-binding forklares sammen med bevart brukeropplysning (338ms)
+  ✓  36 tests/components/screening-result.spec.ts:194:1 › review A2: kompakt dokumentfeil bevarer alle berørte sider uten lokal langforklaring (185ms)
+  ✓  35 tests/components/screening-result.spec.ts:167:1 › review B5/B6/B10: reelt deluttrekk ignorerer gamle rettinger/avvisninger og beholder TG3, usikkerhet og mangler (216ms)
+  ✓  37 tests/components/screening-result.spec.ts:207:1 › review V1/R1: begge økonomiske brudd, prioritet og tallfestet regelgrunnlag er åpne fra start (166ms)
+
+  37 passed (4.1s)

@@ -1,0 +1,9 @@
+npm error code ENOTFOUND
+npm error syscall getaddrinfo
+npm error errno ENOTFOUND
+npm error network request to https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-6.4.299.tgz failed, reason: getaddrinfo ENOTFOUND registry.npmjs.org
+npm error network This is a problem related to network connectivity.
+npm error network In most cases you are behind a proxy or have bad network settings.
+npm error network
+npm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly.  See: 'npm help config'
+npm error A complete log of this run can be found in: /private/tmp/ibe160-resume-npm-cache-20261019/_logs/2026-10-22T20_35_03_818Z-debug-0.log

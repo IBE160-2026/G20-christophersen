@@ -1,0 +1,54 @@
+F1: seks kostnadsposter, ekte PDF, original/funn/liste/TG3 → Gå videre, fire fasittall bestått
+Retur: bekreftelser bevart; faktisk L-endring → historisk resultat; ny kontroll/beregning → Forkast
+F2: seks kostnadsposter, ekte PDF, original/funn/liste/TG3 → Forkast, fire fasittall bestått
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+ExpectError: expect(locator).toContainText(expected) failed
+
+Locator: locator('.textLayer')
+Expected substring: "Alvorlig lekkasje i tak"
+Received string:    "F4 | FIKTIV TILSTANDSRAPPORTBad - registrert avvikTilstandsgrad: TG2Slitt overflate på baderomsgulvDette er den forhåndsdefinerte funnteksten for testcaset.Ingen reparasjonskostnad er anslått.Kun testdata - ingen teknisk godkjenning eller markedsverdiPDF-posisjon 2"
+Timeout: 5000ms
+
+Call log:
+  - Expect "toContainText" locator('.textLayer') with timeout 5000ms
+  - waiting for locator('.textLayer')
+    12 × locator resolved to <div class="textLayer" data-main-rotation="0">…</div>
+       - unexpected value "F4 | FIKTIV TILSTANDSRAPPORTBad - registrert avvikTilstandsgrad: TG2Slitt overflate på baderomsgulvDette er den forhåndsdefinerte funnteksten for testcaset.Ingen reparasjonskostnad er anslått.Kun testdata - ingen teknisk godkjenning eller markedsverdiPDF-posisjon 2"
+
+    at captureRawStack (/Users/madschristophersen/IBE160/G20-christophersen/node_modules/playwright-core/lib/coreBundle.js:9282:17)
+    at callMatcherAsStep (/Users/madschristophersen/IBE160/G20-christophersen/node_modules/playwright/lib/matchers/expect.js:13316:57)
+    at Object.toContainText (/Users/madschristophersen/IBE160/G20-christophersen/node_modules/playwright/lib/matchers/expect.js:13308:23)
+    at control (/Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-5-3-oppskrift-kontroll.mjs:52:46)
+    at async file:///Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-5-3-oppskrift-kontroll.mjs:64:5 {
+  matcherResult: {
+    name: 'toContainText',
+    expected: 'Alvorlig lekkasje i tak',
+    message: 'expect(locator).toContainText(expected) failed\n' +
+      '\n' +
+      "Locator: locator('.textLayer')\n" +
+      'Expected substring: "Alvorlig lekkasje i tak"\n' +
+      'Received string:    "F4 | FIKTIV TILSTANDSRAPPORTBad - registrert avvikTilstandsgrad: TG2Slitt overflate på baderomsgulvDette er den forhåndsdefinerte funnteksten for testcaset.Ingen reparasjonskostnad er anslått.Kun testdata - ingen teknisk godkjenning eller markedsverdiPDF-posisjon 2"\n' +
+      'Timeout: 5000ms\n' +
+      '\n' +
+      'Call log:\n' +
+      `  - Expect "toContainText" locator('.textLayer') with timeout 5000ms\n` +
+      "  - waiting for locator('.textLayer')\n" +
+      '    12 × locator resolved to <div class="textLayer" data-main-rotation="0">…</div>\n' +
+      '       - unexpected value "F4 | FIKTIV TILSTANDSRAPPORTBad - registrert avvikTilstandsgrad: TG2Slitt overflate på baderomsgulvDette er den forhåndsdefinerte funnteksten for testcaset.Ingen reparasjonskostnad er anslått.Kun testdata - ingen teknisk godkjenning eller markedsverdiPDF-posisjon 2"\n',
+    pass: false,
+    actual: 'F4 | FIKTIV TILSTANDSRAPPORTBad - registrert avvikTilstandsgrad: TG2Slitt overflate på baderomsgulvDette er den forhåndsdefinerte funnteksten for testcaset.Ingen reparasjonskostnad er anslått.Kun testdata - ingen teknisk godkjenning eller markedsverdiPDF-posisjon 2',
+    log: [
+      `  - Expect "toContainText" locator('.textLayer') with timeout 5000ms`,
+      "  - waiting for locator('.textLayer')",
+      '    12 × locator resolved to <div class="textLayer" data-main-rotation="0">…</div>',
+      '       - unexpected value "F4 | FIKTIV TILSTANDSRAPPORTBad - registrert avvikTilstandsgrad: TG2Slitt overflate på baderomsgulvDette er den forhåndsdefinerte funnteksten for testcaset.Ingen reparasjonskostnad er anslått.Kun testdata - ingen teknisk godkjenning eller markedsverdiPDF-posisjon 2"'
+    ],
+    timeout: 5000,
+    ariaSnapshot: '- text: "F4 | FIKTIV TILSTANDSRAPPORT Bad - registrert avvik Tilstandsgrad: TG2 Slitt overflate på baderomsgulv Dette er den forhåndsdefinerte funnteksten for testcaset. Ingen reparasjonskostnad er anslått. Kun testdata - ingen teknisk godkjenning eller markedsverdi PDF-posisjon 2"'
+  }
+}
+
+Node.js v24.21.0

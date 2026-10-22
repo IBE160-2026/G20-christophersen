@@ -1,0 +1,8 @@
+F1: seks kostnadsposter, ekte PDF, original/funn/liste/TG3 → Gå videre, fire fasittall bestått
+Retur: bekreftelser bevart; faktisk L-endring → historisk resultat; ny kontroll/beregning → Forkast
+F2: seks kostnadsposter, ekte PDF, original/funn/liste/TG3 → Forkast, fire fasittall bestått
+F4: seks kostnadsposter, ekte PDF, original/funn/liste/TG3 → Innhent mer informasjon, fire fasittall bestått
+F3: blank L → lokal Innhent mer informasjon, ingen hovedstart
+Null: J0 med fem driftsposter krever særskilt nullkontroll før samlet bekreftelse
+Feil/retur: invalid-format → Dokumentfeil; ekte F3-PDF i uttrykkelig rettet variant → kontroll/resultat (ikke opprinnelig F3-fasit)
+Ekstern browsertrafikk: 0; eksplisitt route-sperre aktiv. Ingen live/KI-nøkkel.

@@ -1,0 +1,169 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/Users/madschristophersen/IBE160/G20-christophersen[39m
+
+[90mstderr[2m | tests/integration/pdf-format.test.ts
+[22m[39mWarning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+
+ [32m✓[39m tests/unit/document-analysis.test.ts [2m([22m[2m107 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m tests/unit/finance.test.ts [2m([22m[2m67 tests[22m[2m)[22m[32m 204[2mms[22m[39m
+ [32m✓[39m tests/unit/finding-control.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m tests/unit/complete-screening.test.ts [2m([22m[2m72 tests[22m[2m)[22m[32m 192[2mms[22m[39m
+ [32m✓[39m tests/unit/result-snapshot.test.ts [2m([22m[2m62 tests[22m[2m)[22m[33m 303[2mms[22m[39m
+ [32m✓[39m tests/unit/thresholds.test.ts [2m([22m[2m83 tests[22m[2m)[22m[32m 216[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-basis.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-result-renewal.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 125[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-presentation.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32m✓[39m tests/unit/screening.test.ts [2m([22m[2m36 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m tests/unit/finding-list-control.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m tests/unit/report-session.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 209[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-validation.test.ts [2m([22m[2m51 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+[90mstderr[2m | tests/integration/pdf-extraction.test.ts
+[22m[39mWarning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+
+ [32m✓[39m tests/unit/tg3-resolution.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m tests/unit/report-result-renewal.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m tests/unit/demo-analysis.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-confirmation.test.ts [2m([22m[2m52 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+[90mstderr[2m | tests/integration/demo-analysis.test.ts
+[22m[39mWarning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+
+[90mstderr[2m | tests/integration/demo-screening.test.ts
+[22m[39mWarning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+
+ [32m✓[39m tests/unit/pdf-extraction.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/unit/session.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/unit/http-pipeline-races.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+Warning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+ [32m✓[39m tests/integration/http-analysis-review.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1372[2mms[22m[39m
+   [32m✓[39m Story 2.5 – uavhengige HTTP-/ressursprøver i review [2m(2)[22m
+     [33m[2m✓[22m[39m to reelle prosesser som når samme markør får bare én adaptertillatelse og begge termineres[33m 1234[2mms[22m[39m
+ [32m✓[39m tests/unit/screening-result-navigation.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m tests/unit/http-pipeline-initialization.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/http-receive-pdf.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 2141[2mms[22m[39m
+   [32m✓[39m HTTP strømparser – eksakte metadata- og chunkgrenser [2m(5)[22m
+     [33m[2m✓[22m[39m fragmentert stor metadata skannes én gang og små filchunks samles i faste blokker[33m 1809[2mms[22m[39m
+ [32m✓[39m tests/unit/pdf-source.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/analysis-http.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/integration/demo-screening.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 2840[2mms[22m[39m
+   [32m✓[39m Story 5.1 AC1/2/4 — faktisk PDF → demoadapter → kontroll → finans/screening [2m(4)[22m
+     [33m[2m✓[22m[39m F1: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 888[2mms[22m[39m
+     [33m[2m✓[22m[39m F2: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 908[2mms[22m[39m
+     [33m[2m✓[22m[39m F3: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 529[2mms[22m[39m
+     [33m[2m✓[22m[39m F4: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 513[2mms[22m[39m
+ [32m✓[39m tests/integration/demo-analysis.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 7138[2mms[22m[39m
+   [32m✓[39m Story 2.4 AC1/AC3 – ekte PDF-pipeline og lokale lagrede svar [2m(8)[22m
+     [33m[2m✓[22m[39m standard demo virker i ny prosess uten miljønøkler og med nettfunksjoner sperret[33m 1280[2mms[22m[39m
+     [33m[2m✓[22m[39m F1-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit[33m 794[2mms[22m[39m
+     [33m[2m✓[22m[39m F2-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit[33m 535[2mms[22m[39m
+     [33m[2m✓[22m[39m F3-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit[33m 422[2mms[22m[39m
+     [33m[2m✓[22m[39m F4-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit[33m 368[2mms[22m[39m
+     [33m[2m✓[22m[39m samme PDF gir identisk resultat ved gjentakelse og etter mutert retur[33m 376[2mms[22m[39m
+     [33m[2m✓[22m[39m samme adapter holder samtidige F1/F4-kall og returmutasjoner adskilt[33m 727[2mms[22m[39m
+     [33m[2m✓[22m[39m identiske bytes med nytt navn finner samme hash uten å skrive om originalkilden[33m 379[2mms[22m[39m
+   [32m✓[39m Story 2.4 AC2 – riktig rapport, ingen cache fra annen PDF [2m(6)[22m
+     [33m[2m✓[22m[39m F2 under F1-navn får F2-hash og aldri F1-uttrekket[33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m F1-tilstandsrapport-endret.pdf gir manglende demosvar selv under F1-navn[33m 361[2mms[22m[39m
+     [33m[2m✓[22m[39m text-30-pages.pdf gir manglende demosvar selv under F1-navn[33m 421[2mms[22m[39m
+     [33m[2m✓[22m[39m mixed-status.pdf stanser før demooppslag og bevarer dokumentfeil[33m 380[2mms[22m[39m
+     [33m[2m✓[22m[39m uncertain-content.pdf stanser før demooppslag og bevarer dokumentfeil[33m 354[2mms[22m[39m
+     [33m[2m✓[22m[39m blank-variants.pdf stanser før demooppslag og bevarer dokumentfeil[33m 383[2mms[22m[39m
+ [32m✓[39m tests/integration/pdf-format.test.ts [2m([22m[2m42 tests[22m[2m)[22m[33m 9003[2mms[22m[39m
+   [32m✓[39m Story 2.2 AC1 – faktiske bytes og sidegrense (RT-1 formatdel / RT-2) [2m(22)[22m
+     [33m[2m✓[22m[39m godtar 30 sider, bevarer faktisk sidetall og alle originalbytes[33m 629[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer støtte for text-30-pages-object-stream.pdf[33m 332[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer støtte for text-30-pages-linearized.pdf[33m 406[2mms[22m[39m
+     [33m[2m✓[22m[39m avviser 31 sider med trygg dokumentfeil og faktisk sidetall[33m 304[2mms[22m[39m
+     [33m[2m✓[22m[39m kan ikke skjule side 31 med deklarert /Count 30[33m 387[2mms[22m[39m
+     [33m[2m✓[22m[39m kan ikke skjule side 31 med deklarert /Count 01[33m 456[2mms[22m[39m
+     [33m[2m✓[22m[39m kan ikke skjule side 31 med deklarert /Count 00[33m 413[2mms[22m[39m
+     [33m[2m✓[22m[39m traverserer også nestede Kids selv når både root og gren underrapporterer Count[33m 764[2mms[22m[39m
+     [33m[2m✓[22m[39m returnerer faktisk 30 sider og originalbytes når Count er 29[33m 311[2mms[22m[39m
+     [33m[2m✓[22m[39m sidetretraverseringen avviser skadet referanse også når den ligger etter deklarert siste side[33m 328[2mms[22m[39m
+   [32m✓[39m Story 2.2 AC2 – SHA-256 gjelder originalbytes, navn er metadata [2m(3)[22m
+     [33m[2m✓[22m[39m gir identiske bytes samme hash under ulike og stilignende navn[33m 332[2mms[22m[39m
+     [33m[2m✓[22m[39m gir endrede, fortsatt gyldige PDF-bytes ny hash ved samme navn[33m 321[2mms[22m[39m
+   [32m✓[39m Story 2.2 AC3 – format er delutfall, ingen lesbarhet eller analysefullføring [2m(11)[22m
+     [33m[2m✓[22m[39m rydder ekte PDF.js-workers ved suksess, sideavvisning og parserfeil[33m 352[2mms[22m[39m
+     [33m[2m✓[22m[39m avslutter den faktiske sidetre-workeren ved suksess, sidegrense og skadet tre[33m 523[2mms[22m[39m
+ [32m✓[39m tests/integration/pdf-extraction.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 15301[2mms[22m[39m
+   [32m✓[39m Story 2.3 AC1/AC2 – ekte parser og fysisk kilde [2m(11)[22m
+     [33m[2m✓[22m[39m F1-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter[33m 787[2mms[22m[39m
+     [33m[2m✓[22m[39m F2-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter[33m 688[2mms[22m[39m
+     [33m[2m✓[22m[39m F3-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter[33m 906[2mms[22m[39m
+     [33m[2m✓[22m[39m F4-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter[33m 595[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer tabellrader, kolonneblokker, norske tegn og blandet tekst/bilde fra separat fasit[33m 463[2mms[22m[39m
+     [33m[2m✓[22m[39m beholder alle 30 sider i text-30-pages.pdf[33m 402[2mms[22m[39m
+     [33m[2m✓[22m[39m beholder alle 30 sider i text-30-pages-object-stream.pdf[33m 403[2mms[22m[39m
+     [33m[2m✓[22m[39m beholder alle 30 sider i text-30-pages-linearized.pdf[33m 427[2mms[22m[39m
+     [33m[2m✓[22m[39m bruker faktisk bladrekkefølge når både rot og nestet gren har feil Count[33m 348[2mms[22m[39m
+     [33m[2m✓[22m[39m ukjent fysisk mapping blir aldri godkjent som readable og alle 2.2-posisjoner beholdes[33m 345[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer snapshot, originalhash og navn når parseren får kopi av en Buffer-slice[33m 362[2mms[22m[39m
+   [32m✓[39m Story 2.3 AC3/AC4 – konservativ blankregel og fullføringssperre [2m(15)[22m
+     [33m[2m✓[22m[39m blank-variants.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 357[2mms[22m[39m
+     [33m[2m✓[22m[39m textless-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 344[2mms[22m[39m
+     [33m[2m✓[22m[39m mixed-status.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 378[2mms[22m[39m
+     [33m[2m✓[22m[39m uncertain-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 382[2mms[22m[39m
+     [33m[2m✓[22m[39m structural-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 408[2mms[22m[39m
+     [33m[2m✓[22m[39m catalog-form.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 370[2mms[22m[39m
+     [33m[2m✓[22m[39m catalog-xfa.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 311[2mms[22m[39m
+     [33m[2m✓[22m[39m catalog-empty-form.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 347[2mms[22m[39m
+     [33m[2m✓[22m[39m catalog-empty-dict.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 305[2mms[22m[39m
+     [33m[2m✓[22m[39m encrypted-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 345[2mms[22m[39m
+     [33m[2m✓[22m[39m blank alene blokkerer ikke sammen med lesbar rapporttekst[33m 316[2mms[22m[39m
+     [33m[2m✓[22m[39m beholder alle uleste fysiske sider og kjente årsaker etter en blank side[33m 324[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer kjent delvis tekst når en senere innholdsstrøm er skadet[33m 306[2mms[22m[39m
+     [33m[2m✓[22m[39m den eksisterende vektorfixturen blir aldri blank[33m 312[2mms[22m[39m
+   [32m✓[39m Story 2.3 – workeropprydding og trygge driftsfeil [2m(9)[22m
+     [33m[2m✓[22m[39m avslutter den faktiske uttrekksworkeren etter layout.pdf[33m 320[2mms[22m[39m
+     [33m[2m✓[22m[39m avslutter den faktiske uttrekksworkeren etter mixed-status.pdf[33m 358[2mms[22m[39m
+     [33m[2m✓[22m[39m avslutter den faktiske uttrekksworkeren etter blank-variants.pdf[33m 306[2mms[22m[39m
+     [33m[2m✓[22m[39m ryddet tråd og trygg melding når siste terminate avvises[33m 313[2mms[22m[39m
+   [32m✓[39m Story 2.3 review – faktisk PDF-regresjon [2m(9)[22m
+     [33m[2m✓[22m[39m annotated-xfa.pdf beholder tekst, status og fullføringssperre[33m 308[2mms[22m[39m
+     [33m[2m✓[22m[39m annotated-uncertain.pdf beholder tekst, status og fullføringssperre[33m 314[2mms[22m[39m
+     [33m[2m✓[22m[39m annotation-text-loss.pdf beholder tekst, status og fullføringssperre[33m 307[2mms[22m[39m
+     [33m[2m✓[22m[39m parser-diagnostics.pdf beholder tekst, status og fullføringssperre[33m 313[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer tilstøtende TG3-fragmenter gjennom fontbytte[33m 303[2mms[22m[39m
+     [33m[2m✓[22m[39m laster sammensatt fonts innebygde CMaps fra lokal PDF.js-pakke[33m 326[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer radvis kolonnerekkefølge og avgrenser readable til digital tekst over skann[33m 323[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer trygt kjent årsakskategori for uavklart dekoding og referanse[33m 314[2mms[22m[39m
+ [32m✓[39m tests/integration/http-analysis.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 79558[2mms[22m[39m
+   [32m✓[39m Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp [2m(22)[22m
+     [33m[2m✓[22m[39m F1 følger faktisk PDF og uavhengig fasit med ett adapterkall[33m 2227[2mms[22m[39m
+     [33m[2m✓[22m[39m F2 følger faktisk PDF og uavhengig fasit med ett adapterkall[33m 2040[2mms[22m[39m
+     [33m[2m✓[22m[39m F3 følger faktisk PDF og uavhengig fasit med ett adapterkall[33m 1176[2mms[22m[39m
+     [33m[2m✓[22m[39m F4 følger faktisk PDF og uavhengig fasit med ett adapterkall[33m 1138[2mms[22m[39m
+     [33m[2m✓[22m[39m navn og MIME er bare metadata, feil signatur/container er dokumentfeil[33m 1003[2mms[22m[39m
+     [33m[2m✓[22m[39m PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked[33m 1586[2mms[22m[39m
+     [33m[2m✓[22m[39m vilkårlige chunks og falsk boundary bevarer originalbytehash[33m 584[2mms[22m[39m
+     [33m[2m✓[22m[39m aktiv lås gjelder under upload med andre requestId/generasjon og slipper etter abort[33m 618[2mms[22m[39m
+     [33m[2m✓[22m[39m http-adapter-failure.ts gir trygg feil uten retry og beholder markør[33m 1018[2mms[22m[39m
+     [33m[2m✓[22m[39m http-adapter-invalid.ts gir trygg feil uten retry og beholder markør[33m 1023[2mms[22m[39m
+     [33m[2m✓[22m[39m aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon[33m 657[2mms[22m[39m
+     [33m[2m✓[22m[39m without-text-layer.pdf blir dokumentfeil uten adaptertillatelse eller varig markør[33m 984[2mms[22m[39m
+     [33m[2m✓[22m[39m text-31-pages.pdf blir dokumentfeil uten adaptertillatelse eller varig markør[33m 676[2mms[22m[39m
+     [33m[2m✓[22m[39m cleanup-feil i parser eier fortsatt workertråder som termineres med prosessen[33m 308[2mms[22m[39m
+     [33m[2m✓[22m[39m klientabort under parser stopper synkront heng og lar samme session starte igjen[33m 516[2mms[22m[39m
+     [33m[2m✓[22m[39m én reell 60 s-frist stopper parserheng, adapterheng og sen retur etter flere steg[33m 60531[2mms[22m[39m
+     [33m[2m✓[22m[39m eide inputbytes tømmes ved suksess, adapterfeil, duplikatavvisning og abort[33m 1902[2mms[22m[39m
+     [33m[2m✓[22m[39m serverstopp venter på faktisk cleanup av en request med hengende adapter[33m 475[2mms[22m[39m
+     [33m[2m✓[22m[39m klientabort under adapter terminerer prosessen og beholder duplikatsperre[33m 974[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m31 passed[39m[22m[90m (31)[39m
+[2m      Tests [22m [1m[32m962 passed[39m[22m[90m (962)[39m
+[2m   Start at [22m 22:45:52
+[2m   Duration [22m 80.04s[2m (tests 96%, import 3%, transform 2%)[22m

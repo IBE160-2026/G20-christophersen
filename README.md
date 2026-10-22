@@ -1,106 +1,12 @@
-# G20 — Mads Semb
+# Property Acquisition Agent — IBE160, G20
 
-Gruppeprosjekt i **IBE160 Programmering med KI** ved Høgskolen i Molde, høsten 2026 (15 studiepoeng).
+Lokal førstevurdering av **ett boligutleieobjekt**, laget for investorens tidlige sortering. Brukeren registrerer og kontrollerer økonomiske forutsetninger, leser tilstandsrapportens original, kontrollerer TG2/TG3-funn og får en kodebestemt anbefaling: **Gå videre**, **Forkast** eller **Innhent mer informasjon**. Beregningene er bruttoyield, NOI, nettoyield og kontantstrøm før skatt. Investoren tar beslutningen; dette er ingen teknisk godkjenning eller komplett investeringsanalyse.
 
-Repoet inneholder gruppens applikasjon og dokumentasjon av utvikling, testing og kvalitetssikring med KI.
+Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rapporter, menneskelig kontroll/korrigering, separat TG3-avklaring og revisjonsbundet resultat. Demo er standard og krever **ingen API-nøkkel, miljøfil, konto eller betalt tjeneste**. Faktisk live-uttrekk og separat kvalitets-/tidsevaluering er påkrevd v1-arbeid i Epic 4, som ennå ikke er implementert. Demo beviser ingen live-kvalitet eller live-tid. Automatisk søk, markedsdata, rangering og lagring mellom økter er utenfor denne smale v1.
 
-## Property Acquisition Agent — Epic 1 reviewet og ferdig
+## Installer og start demo
 
-Planlagt produkt er en lokal førstevurdering av ett boligutleieobjekt med
-kontrollert tallgrunnlag, tilstandsrapport og kodebasert screening.
-Appen har lokal server, godkjent appskall og registrering av P/L/D/J/Ymin.
-L/D/J har eksplisitt periode og år. Feltene starter blanke og ubekreftede;
-egne råverdier beholdes i den aktive økten, også 0 og sletting. Oppdatering
-eller lukking av siden avslutter økten. Tallgrunnlag viser lokal validering og eksakt årsnormalisering med big.js.
-Eksplisitt bekreftelse av gyldige tall, perioder/år, kilder og kostnadsinnhold
-åpner Tilstandsrapport uten analyse. Nullverdier må også kontrolleres
-eksplisitt. Faktiske endringer opphever berørt bekreftelse; uendret retur
-bevarer kontrollstatus. Senere trinn viser status og hvorfor de er utilgjengelige.
-Kilder, kostnadsinnhold og uløste kildekonflikter kan kontrolleres i appen.
-Story 1.6 gir en separat ren vurdering av kjente kritiske mangler med faste
-begrunnelser og handlinger; uavhengig review er bestått. Tom mangelliste er ingen
-økonomisk godkjenning. Story 1.7 kobler dette til Tallgrunnlag og er
-uavhengig reviewet med alle seks AC bestått. Rapportanalyse er tilgjengelig som lokal demo fra Story 2.6. Story 2.7
-er done etter uavhengig review av originalkilden; kontrollhandlinger og full screening følger senere stories. Ingen API-nøkkel, miljøvariabler eller betalt
-konto kreves for registreringen.
-
-Story 2.1 er implementert og uavhengig reviewet med alle fire AC bestått: felles dokument-/
-analyseschemas og rene validatorer skiller fullføring, feil og usikre
-kilder med kodekontrollert metadata. Kontrakttestene krever ingen PDF-parser
-eller betalt API. Rapportflyten bruker denne kontrakten fra Story 2.6.
-
-Story 2.2 er ferdig etter [uavhengig review](.docs/implementation-artifacts/story-2-2-review.md): backend kontrollerer
-faktiske PDF-bytes, faktisk sidemengde mot grensen 30 og SHA-256 med låst PDF.js legacy-build.
-Originalbytes bevares, og dokumentfeil bruker kontrakten fra 2.1.
-Sidetrær traverseres uavhengig av deklarert `/Count`; også skjulte ødelagte
-sidereferanser og sideegenskaper avvises. Formatgodkjenning
-er et eget delutfall uten påstand om tekstlesbarhet eller fullført analyse.
-[Fiktive F1–F4-PDF-er og uavhengig fasit](tests/fixtures/property-cases/README.md)
-er kontrollert visuelt, inklusive TG3 på PDF-side 4 / trykt side 2.
-Modulen brukes nå av appens rapportflyt gjennom HTTP-pipelinen.
-[R2 er lukket med godkjent sidestatusregel](.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md):
-bevist blank side tillates, mens ulest innhold blokkerer fullført analyse.
-Story 2.3 er done etter [code review](.docs/implementation-artifacts/story-2-3-review.md): `extractPdf` leverer hele kontraktversjon 2 /
-uttrekksversjon 1-grunnlaget med én tekst-/statuspost per fysisk side. Den
-[godkjente blankregelen](.docs/planning-artifacts/r2-pdf-lesbarhet-semester-v1.md)
-krever full strukturell inspeksjon; unreadable/unknown/incomplete og bare
-blanke sider gir dokumentfeil før adapterbruk. Readable gjelder tekstlaget,
-ikke semantisk lesing av bilder. Se [modulbruk](src/backend/README.md) og
-[AC-/testbevis](.docs/implementation-artifacts/story-2-3-verifikasjon.md).
-
-Story 2.4 er implementert til review: en smal analyseadapter tar hele
-`DocumentBasis`, og standard demo leser lokale, fiktive F1–F4-svar bundet til
-originalenes SHA-256 og kontrakt-/uttrekksversjon. Manglende eller feilbundet
-svar gir eksplisitt feil uten live-fallback. Dokumentsperren fra 2.3 gjelder
-før oppslag. Demo-modulen trenger verken API-nøkkel eller ekstern tjeneste.
-Se [modulbruk og opphav](src/backend/README.md) og
-[testbevis](.docs/implementation-artifacts/story-2-4-verifikasjon.md).
-Story 2.5 kobler nå format, alle fysiske sider og demo til ett
-`POST /api/analysis` med binær multipart-fil, aktiv sessionlås, varig
-prosesslokal duplikatsperre og én hard lokal 60 s-frist. PDF-grensen er
-50 MiB inklusive likhet; JSON/metadata har egen 1 MiB-grense. Ingen innhold
-skrives til disk. Se [HTTP-form, feil og ressurslivsløp](src/backend/README.md#http-analyse--story-25).
-Story 2.6 er done etter [uavhengig review](.docs/implementation-artifacts/story-2-6-review.md): bekreft tallgrunnlaget, velg én PDF i
-Tilstandsrapport og velg **Start analyse**. Bruk for eksempel
-`tests/fixtures/property-cases/F4-tilstandsrapport.pdf`; bare de uendrede
-F1–F4-originalene har tilhørende lagret demouttrekk. Ingen analyse starter ved
-filvalg. Åpne **Kontroller funn** etter mottatt uttrekk for å se alle funn,
-usikkerheter og lokale mangler. Listen er fortsatt ubekreftet. Velg et funn for å vise original-PDF;
-enkeltfunnkontroll og korrigering følger 2.8 som beskrevet nedenfor. Uendret uttrekk beholdes ved
-retur/finansendring. Rapportbytte eller forlatt pågående analyse ugyldiggjør
-gamle svar og forsøker abort. Dette dokumenterer ingen faktisk live-analyse.
-Se [verifikasjon](.docs/implementation-artifacts/story-2-6-verifikasjon.md).
-
-Story 2.7 er done etter [uavhengig full review](.docs/implementation-artifacts/story-2-7-review.md): velg funnets overskrift for å se riktig
-fysisk PDF-side med dokumentnavn. Fra 1200 CSS px ligger funn og original
-side om side. Under grensen brukes **Åpne PDF for valgt funn**; panelet har
-**Tilbake til funnkontroll**, tastaturfokus og Esc. Valgt funn, side og zoom
-bevares ved retur. **Forrige/Neste PDF-side** og **PDF-zoom** leser originalen
-lokalt uten ny analyse. Ukjent/ugyldig kilde og visningsfeil forklares ved
-PDF-visningen. Worker, tegnkart, fonter og nødvendige visningsressurser
-leveres fra samme lokale installasjon. Se [AC-/testbevis](.docs/implementation-artifacts/story-2-7-verifikasjon.md).
-Story 2.8 er done etter [uavhengig full review](.docs/implementation-artifacts/story-2-8-review.md).
-Velg **Bekreft** for kontroll av gjeldende enkeltfunn mot originalen, eller
-**Korriger** for separat utkast til grad, beskrivelse og fysisk PDF-side.
-Bare **Bruk korrigering** endrer gjeldende funn og krever ny kontroll;
-**Avbryt** forkaster utkastet og beholder tidligere gjeldende versjon/status.
-Opprinnelig KI-uttrekk og kilde bevares. Funn-/trinnretur og PDF-panellukking
-bevarer ubrukt utkast uten ny analyse. Listen er fortsatt ubekreftet;
-separat TG3-avklaring og listebekreftelse gjenstår i 2.10–2.11.
-Story 2.9 er done etter [uavhengig full review](.docs/implementation-artifacts/story-2-9-review.md).
-Velg **Avvis** for et feilaktig KI-uttrekk. Original grad/tekst/kilde beholdes
-som brukeravvist og inngår ikke i aktive rapportfunn; brukt korrigering og
-ubrukt utkast bevares som historikk. Avvisning krever senere ny listebekreftelse
-og betyr ingen TG3-avklaring, utbedring eller teknisk godkjenning. Ingen ny analyse.
-
-## Installasjon og kontroll
-
-Bruk **Node.js 24.21.0 LTS og medfølgende npm 11.19.0**. `.nvmrc` angir
-Node-versjonen; `.npmrc` avviser feil Node-/npm-versjon. Med nvm installert kan
-versjonen velges med `nvm install` og `nvm use` fra reporoten. Ellers installer
-[Node.js 24.21.0](https://nodejs.org/en/blog/release/v24.21.0) før kommandoene.
-
-Kjør fra reporoten:
+Bruk et lokalt utsjekket repo og en terminal i **reporoten** (mappen som inneholder `package.json`). Forutsetninger er **Node.js 24.21.0 og npm 11.19.0**, låst i `package.json`, `package-lock.json` og `.nvmrc`. Installer denne Node-versjonen med tilhørende npm; bruker du allerede nvm, kan du kjøre `nvm install` og `nvm use`. nvm er ikke påkrevd. Ingen global Vite, Python, database, Docker eller egen frontendserver trengs for demo/test.
 
 ```sh
 node --version
@@ -110,40 +16,67 @@ npm run build
 npm run demo
 ```
 
-Åpne **http://127.0.0.1:3000**. Forventet: `v24.21.0`, `11.19.0`, vellykket
-installasjon/build og synlig registrering av finansverdier. Demo serveres fra `dist/` av én
-Express-prosess på loopback. `POST /api/analysis` tilbyr lokal demoanalyse;
-andre API-ruter svarer 404. Reporot og private dokumenter serveres ikke.
-Stopp med **Ctrl+C**. Port 3000 må være ledig; serveren velger ikke en annen
-port i stillhet. Manglende build gir beskjed om å kjøre `npm run build`.
+De to første kommandoene skal vise `v24.21.0` og `11.19.0`. `npm ci` installerer nøyaktig fra låsfilen og erstatter eksisterende `node_modules`. Installasjon kan kreve nett til npm-registeret. Åpne **http://127.0.0.1:3000** i en moderne nettleser. Du skal se Tallgrunnlag og **Demo · lagret KI-uttrekk**. Én Express-prosess serverer bygget `dist/`, API og PDF-/worker-/fontressurser lokalt. Etter installasjon kan build og hele demoen kjøres med eksternt nett sperret; behold tilgang til lokal loopback.
 
-Installasjon krever nett til npm-registeret. Etter installasjon kan både
-build og demo kjøres med eksternt nett sperret. Modusmerket
-«Demo · lagret KI-uttrekk» følger godkjent UX gjennom rapportflyten.
-Lagret uttrekk bruker den samme lokale dokumentpipelinen; ingen nøkkel kreves.
+Stopp med **Ctrl+C** i serverterminalen. Port 3000 må være ledig; serveren velger ikke en annen port. Ved «Bygget app mangler» kjører du `npm run build`. Ved opptatt port stopper du din tidligere demo/dev/testserver før ny oppstart. Ikke kjør dem samtidig. Oppdatering/lukking av siden avslutter den midlertidige økten, inklusive tall, rapport, kontroll og resultat; ingen brukerdata lagres.
 
-npm 11.19.0 kan på macOS varsle om
-installasjonsscriptet til den valgfrie avhengigheten `fsevents@2.3.3`;
-installasjonen og kontrollene er prøvd med dette varselet og avsluttes med 0.
-Oppskriften er prøvd på macOS 26.6.2 (arm64). Andre plattformer er ikke
-etterprøvd.
+Oppskriften er egenprøvd på macOS 26.6.2 arm64; andre plattformer er ikke egenprøvd. npm kan varsle om det valgfrie installasjonsscriptet til `fsevents@2.3.3` på macOS. Vite kan varsle om stor chunk; faktisk exitstatus og testresultat må fortsatt kontrolleres.
 
-## Utvikling
+## Prøv F1–F4 fra start til resultat
 
-Etter `npm ci`, med demo stoppet:
+Bruk de innsjekkede PDF-ene i [tests/fixtures/property-cases](tests/fixtures/property-cases/README.md) og den forhåndsdefinerte [expected.json](tests/fixtures/property-cases/expected.json). Finansdata ligger separat fra rapportene. Bruk bare disse fiktive dataene i oppskriften. Bare **uendrede F1–F4-originalbytes** har lagrede demosvar; ny filidentitet gir ingen live-fallback.
+
+| Case / rapportfil | P (NOK) | L (NOK/år) | D (NOK/år) | J (NOK/år) | Ymin | Forventet utfall etter nødvendig kontroll |
+|---|---:|---:|---:|---:|---:|---|
+| `F1-tilstandsrapport.pdf` | 16000000 | 1900000 | 400000 | 800000 | 7 % | Gå videre |
+| `F2-tilstandsrapport.pdf` | 16000000 | 1400000 | 400000 | 800000 | 7 % | Forkast: nettoyield under 7 % |
+| `F3-tilstandsrapport.pdf` | 16000000 | **blank** | 400000 | 800000 | 7 % | Innhent mer informasjon lokalt i Tallgrunnlag; ingen gyldig hovedstart |
+| `F4-tilstandsrapport.pdf` | 16000000 | 1900000 | 400000 | 800000 | 7 % | Innhent mer informasjon: alvorlig TG3 Uavklart |
+
+1. I **Tallgrunnlag** skriver du fem tall fra valgt case. For **L, D og J** velger du **År** og **2026**. Velg **Egen forutsetning** for hvert felts opphav og skriv eksempelvis «F1 — kontrollert fiktiv P fra expected.json» i kilde/forutsetning (tilpass felt og case). For L velger du **Forventet leie**. Tall fra rapporten fylles ikke inn automatisk.
+2. Under **Kostnadsinnhold i D og J**, bruk **Legg til kostnadsinnhold** for postene nedenfor. Samlet beløp og rentedel/avdrag må oppgis, også 0. La **Inngår allerede i** være **Selvstendig post**. Perioden følger D (År 2026). Postene forklarer allerede registrerte D/J og legges ikke til totalene en gang til.
+
+   | Navn på post | Samlet beløp | Herav renter/avdrag |
+   |---|---:|---:|
+   | Felleskostnader uten gjeldsbetjening | 120000 | 0 |
+   | Kommunale avgifter/eiendomsskatt | 80000 | 0 |
+   | Forsikring | 40000 | 0 |
+   | Forvaltning | 60000 | 0 |
+   | Løpende vedlikehold | 100000 | 0 |
+   | Gjeldsbetjening: renter 600000 + avdrag 200000 | 800000 | 800000 |
+
+3. Velg **Bekreft tallgrunnlaget**. Rett eventuelle konkrete lokale feil, kontroller kildene/kostnadsinnholdet og bekreft igjen. F1/F2/F4 åpner **Fortsett til Tilstandsrapport**. F3 skal beholde blank L og vise manglende leie og **Innhent mer informasjon** her; den kan ikke gå videre før faktisk leiegrunnlag er innhentet, registrert og bekreftet. F3-fasiten har fire utilgjengelige beregninger (`null`), ikke fire nullbeløp. For å prøve F3-rapporten videre kan du i en egen, uttrykkelig endret variant sette L=1900000 med samme år/kildekontroll som F1; den er da ikke lenger det opprinnelige F3-mangelcaset.
+4. I **Tilstandsrapport** velger du den matchende PDF-filen og deretter **Start analyse**. Filvalg alene starter ingen analyse. Når fullført, velg **Gå til Kontroller funn**. Uttrekket er fortsatt ubekreftet.
+5. Velg hvert aktivt funns overskrift, sammenlign beskrivelse/TG med originalen og velg **Bekreft** på enkeltfunnet. TG2 «Slitt overflate på baderomsgulv» ligger på **PDF-side 2**. For F4 ligger TG3 «Alvorlig lekkasje i tak» på **PDF-side 4**, selv om trykt sidetall er 2. Bruk Forrige/Neste PDF-side og PDF-zoom ved behov. Ved smal flate: **Åpne PDF for valgt funn**, deretter **Tilbake til funnkontroll** eller Esc.
+6. F4 krever også et separat valg i **TG3-status for gjeldende forhold**: velg **Uavklart** for originalcaset. Enkeltfunnbekreftelse eller listebekreftelse avklarer ikke TG3. **Avklart** krever både kort begrunnelse og konkret eksternt avklaringsgrunnlag; velg det bare som en tydelig merket fiktiv kontrollvariant her. Avklart betyr ikke nødvendigvis utbedret.
+7. Kontroller hele gjeldende listen og velg **Bekreft gjeldende liste**, deretter **Beregn og vis resultat**. Kontroller anbefaling, årsberegninger, utløsende regler, alvorlige forhold/mangler og neste handling. Åpne detaljer for formel, kilde og opprinnelig uttrekk ved behov.
+
+| Case | Bruttoyield | NOI (kr/år) | Nettoyield | Kontantstrøm før skatt (kr/år) |
+|---|---:|---:|---:|---:|
+| F1 | 11,875 % | 1500000 | 9,375 % | 700000 |
+| F2 | 8,750 % | 1000000 | 6,250 % | 200000 |
+| F4 Uavklart | 11,875 % | 1500000 | 9,375 % | 700000 |
+
+F4-tallene er **Delgrunnlag** og overstyrer ikke TG3-mangelen. Start et uavhengig case med sideoppdatering; da registreres og kontrolleres grunnlaget på nytt.
+
+## Prøv blank/null, feil, korrigering og retur
+
+- **Blank og 0:** Fra bekreftet F1, gå tilbake til Tallgrunnlag og slett L; forsøk bekreftelse. Manglende leie forklares lokalt og er aldri 0. Sett L tilbake til 1900000 med kontrollert kilde før du prøver separat J=0. Fjern gjeldsposten fra kostnadsinnholdet, og behold fem driftsposter. Velg den synlige særskilte nullkontrollen for J før du bekrefter tallgrunnlaget igjen. Registrert 0 alene er ubekreftet. P må være større enn 0. Sett J=800000 og legg tilbake gjeldsposten før du sammenligner med original F1-fasit.
+- **Feil rapport:** Etter gyldige tall, velg `invalid-format.pdf` i samme fixturemappe og Start analyse. Forvent dokumentfeil, konkret lokal forklaring/handling og ingen vellykket tomliste. Velg deretter en uendret støttet rapport (for eksempel F1), start analyse og gjennomfør kontrollen igjen med ditt eksplisitt registrerte tallgrunnlag. En endret F1-PDF eller annen egen rapport kan være gyldig PDF uten å ha et lagret demosvar. Demo oppfinner ikke et svar.
+- **Korrigering:** På et disponibelt F1-case: velg funnet → **Korriger**, skriv et utkast, og prøv **Avbryt**. Ubrukt utkast endrer ikke gjeldende grunnlag. Prøv deretter en liten fiktiv tekstretting og **Bruk korrigering**. Original og brukerkorrigert opphav beholdes; bekreft funnet og listen på nytt. PDF-side må være en faktisk posisjon 1–4. **Avvis** beholder originalen som historikk, tar funnet ut av aktiv liste og er ingen teknisk godkjenning.
+- **Retur og nytt resultat:** Fra F1-resultat velger du **Endre tallgrunnlag**. Uendret retur bevarer bekreftelser. Endre L til 1400000 med oppdatert kildebeskrivelse; gammelt resultat blir **Utdatert** og kan bare leses som historisk. Bekreft endret tallgrunnlag, gå tilbake til kontroll og beregn på nytt. Uendret rapportuttrekk gjenbrukes; nettoyield blir 6,250 % og anbefalingen Forkast. Dette er en endret F1-finansvariant. Faktisk rapportbytte krever ny analyse og ny funn-/listekontroll. Brukt funnendring krever berørt ny kontroll/listebekreftelse; separat TG3-endring krever gyldig ny TG3-håndtering og nytt resultat.
+
+## Utvikling og tester
+
+Etter installasjon, med demo stoppet:
 
 ```sh
 npm run dev
 ```
 
-Åpne **http://127.0.0.1:3000**. Kommandoen starter Express med Vite-middleware
-og lokal HMR i samme app-prosess. Ved endring av backend-koden stopper du og
-starter `npm run dev` på nytt. Ingen ekstra serverkommando kreves.
-Stopp med **Ctrl+C** før demo eller E2E kjøres.
+Åpne **http://127.0.0.1:3000**. Dev bruker Vite-middleware/HMR i samme Express-prosess. Backendendringer krever stopp/start. Avslutt med Ctrl+C før demo/test.
 
-## Kvalitetskontroll og tester
-
-Kjør fra reporoten. Installer testnettleseren mens nett er tilgjengelig:
+Installer prosjektets Chromium mens nett er tilgjengelig. Playwright kjører browseren lokalt; ingen global Playwright trengs. På Linux kan browserens systembiblioteker måtte forberedes med `npx playwright install --with-deps chromium` (kan kreve administratorrettigheter); Linux-oppskriften er ikke egenprøvd her. Vanlig installasjon:
 
 ```sh
 npx playwright install chromium
@@ -154,141 +87,29 @@ npm run test:components
 npm run test:e2e
 ```
 
-E2E bygger gjeldende kilde og starter/stopper først demo og deretter dev på
-port 3000, som må være ledig. Vitest-modul-/PDF-integrasjonstester, komponenttester, tester av bygget app
-og dev-tester kjøres gjennom kommandoene over.
-Testene kontrollerer startstatus/sperrer, lokal ressurslasting med eksterne
-forespørsler blokkert, HTTP-grensen, faktiske designtokens/kontrast og
-tastatur/fokus/ombryting ved desktop og viewport tilsvarende sterk zoom,
-inkludert 320×200 og korte 320×160/360×160-flater. Dev-kontrollene krever
-synlig skall, tilkoblet HMR på samme origin og avvisning av faktiske private filer.
-`test:components` rendrer de faktiske React-nøkkeltallskomponentene fra
-revisjonsbundne snapshot og leser/betjener resultatet direkte i Chromium.
-Denne testen av komponentgrensen bruker native detaljåpning og krever ingen
-appserver, testrute, hydrering eller betalt API. Samlet plassering og flyt i
-bygget app kontrolleres separat av E2E.
-Registreringstestene bruker kontrollerte F1-/F3-verdier og kontrollerer
-råstrenger, blank/0/sletting, ubekreftet status, periode/år, retur uten
-datatap og tom registrering etter sideoppdatering. De kontrollerer ingen
-finansberegning eller full screening.
-Domenetestene kontrollerer alle fem felt, blank/0/negative/ikke-numeriske
-verdier, bekreftelsesgrunnlag, perioder/år, årsnormaliseringsdelen av
-BT-7/BT-15/BT-16, presise desimaler og gjentakelse uten mutasjon. De dekker også
-kilder, D/J-kostnadsdeling og alle kjente samtidige mangler med identisk
-kodebegrunnelse/neste handling, inkludert kjent rapportmangel ved F2-verdier.
-95 kontrakttester for Story 2.1 dekker versjoner, obligatoriske felt,
-fullført tomliste kontra feil, ufullstendige delresultater, RT-7s umulige/
-usikre kilder og forsøk på å erstatte kodekontrollert metadata.
-PDF-integrasjonene bruker faktiske 30-/31-sidersfiler, feilformat/skadet
-container, hash-/navnevarianter og tekstløs PDF. De kontrollerer også
-ressursopprydding, bytebevaring og F1–F4 mot en fasit fastlagt før adapterbruk.
-Kjør formatkontrollen med `npm test -- tests/integration/pdf-format.test.ts`.
-Story 2.3 bruker egne faktiske blank-/layout-/raster-/form-/feilfixtures med
-håndskrevet fasit og tester sidestatus, fullføringssperre, delvis tekst og
-opprydding: `npm test -- tests/integration/pdf-extraction.test.ts tests/unit/pdf-extraction.test.ts`.
-[Fixturebeskrivelsen](tests/fixtures/pdf-readability/README.md) forklarer
-hvordan originaler og forventede utfall kan etterprøves uavhengig.
-Story 2.5s HTTP-tester kjøres med
-`npm test -- tests/integration/http-analysis.test.ts tests/unit/http-receive-pdf.test.ts`.
-De krever lokal loopback og omfatter ekte 50 MiB-/1 MiB-grenser samt en
-reell 60-sekunders timeoutprøve med parser-/adapterheng og sen retur.
-Chromium-binæren må være installert før offline kjøring. Feilspor/skjermbilder
-legges under Git-ignorerte `test-results/`.
+Kjør sekvensielt fra reporoten med port 3000 ledig. `npm run test:e2e` bygger automatisk, starter/stopper først bygget demo og deretter dev. Vitest bruker lokale moduler, ekte fiktive PDF-er og HTTP-integrasjon. Komponenttester viser faktiske React-resultatkomponenter i Chromium. E2E dekker hovedflyt, kontrollporter, feil/retur, originalvisning, nøkkeltall, anbefalinger og fokus/responsivitet. Enkelte spesialutfall bruker en **kontrolladapter ved produktets adaptergrense** eller kontrollerte HTTP-svar; dette er testinnganger, ikke live-KI. Hele testoppskriften krever ingen betalt KI-tjeneste eller nøkkel. Browserforberedelsen krever vanligvis nedlasting; på Linux må nødvendige systembiblioteker også være installert før nettfri testkjøring.
 
-Manuell kontroll: Tab viser fokus på hoppelenke og trinn; Enter på hoppelenken
-flytter fokus til Tallgrunnlag. Utilgjengelige trinn forklarer sperren og åpnes
-ikke med klikk/Enter/mellomrom. Prøv 200 % og 400 % nettleserzoom og rull
-arbeidsinnhold med tastatur; navn/nummer/status beholdes, og navigasjonen
-dekker ikke innholdet. Tab videre gjennom verdier, perioder og år; fokus og
-feltetiketter skal forbli synlige. Prøv for eksempel P=16000000, L=1900000,
-D=400000, J=800000 og Ymin=7, velg År og skriv 2026 for L/D/J. Retur til
-Tallgrunnlag bevarer registreringen. Oppgi også opphav og kildebeskrivelse
-for hvert felt, og velg forventet/faktisk leie. Bruk Bekreft tallgrunnlaget:
-slettet L gir konkret feil/fokus, mens J=0 krever egen nullkontroll. Rett
-grunnen, bekreft og gå frem/tilbake; bekreftelser skal være bevart. Endre L
-og bekreft på nytt etter kontroll. Faktisk gjennomføring og avgrensning står i
-[verifikasjonen for Story 1.2](.docs/implementation-artifacts/story-1-2-verifikasjon.md).
-[Verifikasjonen for Story 1.3](.docs/implementation-artifacts/story-1-3-verifikasjon.md)
-dekker registrering og aktiv økt.
-[Verifikasjonen for Story 1.4](.docs/implementation-artifacts/story-1-4-verifikasjon.md)
-dekker den rene validerings-/normaliseringsmodulen.
-[Verifikasjonen for Story 1.5](.docs/implementation-artifacts/story-1-5-verifikasjon.md)
-og [reviewet](.docs/implementation-artifacts/story-1-5-review.md) dekker kilde-/kostnadskontroll.
-[Egenverifikasjonen for Story 1.6](.docs/implementation-artifacts/story-1-6-verifikasjon.md)
-dekker den rene mangelvurderingen. [Review av Story 1.6](.docs/implementation-artifacts/story-1-6-review.md)
-kontrollerer alle fem AC og dokumenterer retting og egne sluttkontroller.
-[Verifikasjonen for Story 1.7](.docs/implementation-artifacts/story-1-7-verifikasjon.md)
-dekker bekreftelse, feil, endring/retur, null, semantikk og faktisk zoomkontroll.
-[Review av Story 1.7](.docs/implementation-artifacts/story-1-7-review.md)
-kontrollerer alle seks AC, reviewrettinger og egne sluttkontroller.
-[Verifikasjonen for Story 2.1](.docs/implementation-artifacts/story-2-1-verifikasjon.md)
-dekker kontraktleveransens fire AC; [uavhengig review er bestått](.docs/implementation-artifacts/story-2-1-review.md).
-[Verifikasjonen for Story 2.2](.docs/implementation-artifacts/story-2-2-verifikasjon.md)
-viser egenverifikasjon av fire AC, reelle PDF-tester og visuell kryssjekk.
-[Reviewet av 2.2](.docs/implementation-artifacts/story-2-2-review.md) er bestått
-etter retting av manipulert sidetelling og ny full regresjon.
-Den [avgrensede koblingen til PDF.js](.docs/implementation-artifacts/story-2-2-page-tree-design.md)
-er bundet til eksakt installert parserbunt. Format-/fixturetestene beviser
-ikke tekstlesbarhet alene. [Story 2.3-verifikasjonen](.docs/implementation-artifacts/story-2-3-verifikasjon.md)
-dekker lokal deterministisk ekstraksjon og R2; dette beviser ingen S2 eller live-S5.
-Full demo, senere funksjonstester og annen-person-bevis for S6 følger sine stories.
+Testene kontrollerer også sentral finans-/terskellogikk og blank/null/feiltilstander mot uavhengig fasit. De beviser ikke manuell lesbarhet, alle hjelpemidler eller live-uttrekkskvalitet. Se [samlet automatisk verifikasjon 5.1](.docs/implementation-artifacts/story-5-1-verifikasjon.md), [manuell UX-kontroll 5.2](.docs/implementation-artifacts/story-5-2-manuell-kontroll.md) og [egen README-gjennomkjøring 5.3](.docs/implementation-artifacts/story-5-3-verifikasjon.md). Egen gjennomkjøring er forberedelse; **annen person i rent miljø/S6 (5.4) er ennå ikke gjennomført**.
 
-Grunnlaget er tilpasset den [offisielle Vite react-ts-starteren](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).
-Demonstrasjonsinnhold er fjernet, React-inngangen er flyttet til `src/frontend/`,
-og nødvendige avhengigheter er eksakt låst etter arkitekturen.
+## Struktur og sporbarhet
 
-## Struktur og importgrenser
-
-| Mappe | Ansvar og importretning etter AD-1 |
+| Plassering | Ansvar |
 |---|---|
-| `src/frontend/` | React-appskall, finansregistrering, én reducer for aktiv økt og lokale DESIGN-tokens. Bruker contracts og domain; senere egen presentasjon/PDF-visning. |
-| `src/domain/` | Rene regler og beregninger. Bruker contracts. Ingen UI, server eller I/O. |
-| `src/contracts/` | Felles runtime-skjema og avledede typer. Ingen UI, server eller I/O. |
-| `src/backend/` | Lokal HTTP-server og bytesbasert PDF-format-/side-/hashvalidering og sidemerket tekstuttrekk samt lokal demo-adapter. Bruker contracts; finans/anbefaling forblir i domain. |
-| `tests/e2e/` | Playwright-kontroll mot bygget demo og lokalt dev-skall. |
-| `tests/unit/` | Rene Vitest-kontroller av registrering, navigasjon, tall-/årsvalidering, kilde-/kostnadsgrunnlag, kjente kritiske mangler og dokument-/analysekontrakten. |
-| `tests/integration/` | PDF.js-format-/side-/hash-/lesbarhetskontroll og faktisk HTTP med ekte fixturebytes, grenser, duplikater og prosessavslutning. |
-| `tests/fixtures/property-cases/` | Fiktive rapporter, uavhengig JSON-fasit, bytehashinventar og reproducerbar generator. |
-| `tests/fixtures/pdf-readability/` | Fiktive blank-/layout-/innholds-/feiloriginaler, håndskrevet sidestatus-/tekstfasit og reproducerbar generator. |
-| `.docs/` | Autoritative planer, implementeringsbevis og prosesspor. |
+| `src/frontend/` | React, midlertidig økt, kontroll, lokale PDF-ressurser og resultatvisning; bruker domain/contracts. |
+| `src/domain/` | Rene finans-, validerings- og screeningregler; bruker contracts, ingen UI/server/I/O. |
+| `src/contracts/` | Delte runtime-skjema og typer; ingen UI/server/I/O. |
+| `src/backend/` | Lokal server, PDF-bytes/identitet/sider/tekst, analysepipeline og lagret demo; [modulbruk](src/backend/README.md). |
+| `tests/unit/`, `tests/integration/` | Rene grenser, reell PDF-/HTTP-integrasjon og samlet demo. |
+| `tests/e2e/`, `tests/components/` | Bygget app/dev og resultatkomponenter i Chromium. |
+| `tests/fixtures/` | Versjonerte fiktive PDF-er og uavhengig fasit; ingen private originaler. |
+| `src/backend/analysis/data/` | Rapportbundne lagrede [demosvar og opphav](src/backend/analysis/data/README.md). |
+| `.docs/` | Planer, implementerings-/test-/reviewbevis og KI-prosess. |
 
-Importgrensene gjennomgås ved endringer, inklusive reeksporter, dynamiske
-importer og direkte I/O-bruk. Type- og lintkontroll erstatter ikke denne
-gjennomgangen mot AD-1. Contracts eier rå/registrert finansschema og
-valideringsresultat med avledede typer; `domain/validation.ts` eier numerisk
-gyldighet, bekreftelsesbehov og eksakt årsnormalisering. Ingen framtidig
-rapportretting, finansberegning eller økonomisk screeningregel er lagt inn.
-Dokument-/analyseschemas og ren kilde-/metadatavalidering eies nå også av
-contracts; backend bruker PDF.js ved format- og tekstgrensen. Demo-adapter og HTTP-kobling er levert; frontendkobling er levert i Story 2.6 og originalvisning i Story 2.7.
-`domain/financial-basis.ts` vurderer kilde-/kostnadsgrunnlaget, og
-`domain/screening.ts` samler kjente mangler til fast prioritet-1-utfall.
-Private originaldokumenter og lokalt rapportmateriale lagres under `private/`,
-som er Git-ignorert. `.env` og `.env.*` holdes utenfor Git, med unntak for
-`.env.example` og `.env.*.example` uten hemmeligheter. `node_modules/`, bygge-
-og kontrollartefakter holdes også utenfor Git. Fiktive fixtures er versjonert
-under `tests/fixtures/property-cases/`; de har ingen private originaler.
+Private originaler hører til Git-ignorert `private/`. `.env`/`.env.*`, avhengigheter og byggeutdata er ignorert; bare eventuelle hemmelighetsfrie `.example`-filer er tillatt. Demo leser ingen nødvendig miljøfil. Lokal statisk server tilbyr bygget app, ikke reporoten eller private filer.
 
-## Plan og prosess
+- Låst grunnlag: [SPEC](.docs/specs/spec-IBE160/SPEC.md), [epics/Story 5.3 AC](.docs/planning-artifacts/epics.md#story-53-dokumentere-en-komplett-oppskrift-for-lokal-demo-og-tester), [arkitektur AD-1–AD-10](.docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md), [DESIGN](.docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md) og [EXPERIENCE](.docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md).
+- Fremdrift: [sprintplan](.docs/implementation-artifacts/sprint-plan.md), [gjeldende sprintstatus](.docs/implementation-artifacts/sprint-status.yaml), [5.1-review](.docs/implementation-artifacts/story-5-1-review.md), [5.2-review](.docs/implementation-artifacts/story-5-2-review.md).
+- Prosess: [promptlogg og mekanisme](.docs/process/prompts/README.md), [5.3-prompt](.docs/process/prompts/2026-10-22-story-5-3.md), [5.3-arbeidsøkt](.docs/process/arbeidsokter/2026-10-22-story-5-3.md), [forrige mini-sprint](.docs/process/arbeidsokter/2026-10-21-mini-sprint-3-3-3-4.md).
+- Kursgrunnlag: [sensorveiledning](.docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf) og [faglærerens brief-tilbakemelding](.docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md).
 
-- [Story 1.1 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-11-etablere-reproduserbar-startstruktur-og-importgrenser)
-- [Story 1.2 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-12-starte-den-bygde-lokale-appen-med-godkjent-appskall)
-- [Story 1.3 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-13-registrere-og-bevare-finansverdier-for-ett-objekt)
-- [Story 1.4 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-14-validere-tall-og-normalisere-kjent-månedsgrunnlag-eksakt)
-- [Story 1.5 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-15-gjøre-kilder-kostnadsinnhold-og-uløste-konflikter-kontrollerbare)
-- [Story 1.6 og akseptansekriterier](.docs/planning-artifacts/epics.md#story-16-vurdere-kritiske-mangler-med-fast-kodebegrunnelse)
-- [Arkitektur og AD-1–AD-10](.docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md)
-- [SPEC og adoptert planverk](.docs/specs/spec-IBE160/SPEC.md)
-- [Sprintplan](.docs/implementation-artifacts/sprint-plan.md) og [sprintstatus](.docs/implementation-artifacts/sprint-status.yaml)
-- [Faktisk verifikasjon av Story 1.1](.docs/implementation-artifacts/story-1-1-verifikasjon.md)
-- [Story 1.2 og implementeringsnotater](.docs/implementation-artifacts/spec-1-2-starte-den-bygde-lokale-appen-med-godkjent-appskall.md)
-- [Arbeidsøkt for Story 1.2](.docs/process/arbeidsokter/2026-10-16-story-1-2.md)
-- [Uavhengig review av Story 1.2](.docs/implementation-artifacts/story-1-2-review.md)
-- [Story 1.3 og implementeringsnotater](.docs/implementation-artifacts/spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt.md)
-- [Arbeidsøkt for Story 1.3](.docs/process/arbeidsokter/2026-10-17-story-1-3.md)
-- [Story 1.4 og implementeringsnotater](.docs/implementation-artifacts/spec-1-4-validere-tall-og-normalisere-kjent-manedsgrunnlag-eksakt.md)
-- [Arbeidsøkt for Story 1.4](.docs/process/arbeidsokter/2026-10-19-story-1-4.md)
-- [Lagrede brukerprompter](.docs/process/prompts/README.md)
-
-## Medlemmer
-
-- Mads Semb Christophersen
+Gruppeprosjekt i **IBE160 Programmering med KI**, Høgskolen i Molde, høsten 2026. Medlem: Mads Semb Christophersen. Startstrukturen er tilpasset [Vites offisielle react-ts-starter](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).

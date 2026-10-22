@@ -1,0 +1,24 @@
+Åpnet, finnes, ikke tom: tests/fixtures/property-cases/README.md
+Åpnet, finnes, ikke tom: tests/fixtures/property-cases/expected.json
+Åpnet, finnes, ikke tom: .docs/implementation-artifacts/story-5-1-verifikasjon.md
+Åpnet, finnes, ikke tom: .docs/implementation-artifacts/story-5-2-manuell-kontroll.md
+Åpnet, finnes, ikke tom: .docs/implementation-artifacts/story-5-3-verifikasjon.md
+Åpnet, finnes, ikke tom: src/backend/README.md
+Åpnet, finnes, ikke tom: src/backend/analysis/data/README.md
+Åpnet, finnes, ikke tom: .docs/specs/spec-IBE160/SPEC.md
+Åpnet, finnes, ikke tom: .docs/planning-artifacts/epics.md#story-53-dokumentere-en-komplett-oppskrift-for-lokal-demo-og-tester
+Åpnet, finnes, ikke tom: .docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md
+Åpnet, finnes, ikke tom: .docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md
+Åpnet, finnes, ikke tom: .docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md
+Åpnet, finnes, ikke tom: .docs/implementation-artifacts/sprint-plan.md
+Åpnet, finnes, ikke tom: .docs/implementation-artifacts/sprint-status.yaml
+Åpnet, finnes, ikke tom: .docs/implementation-artifacts/story-5-1-review.md
+Åpnet, finnes, ikke tom: .docs/implementation-artifacts/story-5-2-review.md
+Åpnet, finnes, ikke tom: .docs/process/prompts/README.md
+Åpnet, finnes, ikke tom: .docs/process/prompts/2026-10-22-story-5-3.md
+Åpnet, finnes, ikke tom: .docs/process/arbeidsokter/2026-10-22-story-5-3.md
+Åpnet, finnes, ikke tom: .docs/process/arbeidsokter/2026-10-21-mini-sprint-3-3-3-4.md
+Åpnet, finnes, ikke tom: .docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf
+Åpnet, finnes, ikke tom: .docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md
+Ekstern eksisterende starterreferanse, ikke nettverifisert: https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts
+Lokale README-lenker: 22 bestått

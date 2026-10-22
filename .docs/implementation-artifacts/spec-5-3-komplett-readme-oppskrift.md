@@ -2,11 +2,11 @@
 title: 'Story 5.3 — Komplett README-oppskrift'
 type: 'chore'
 created: '2026-10-22'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '5-3-dokumentere-en-komplett-oppskrift-for-lokal-demo-og-tester'
 baseline_commit: '0ddbeb7132d7790fdb5bf63bd2bca9bc0d6d82a4'
-review_loop_iteration: 0
+review_loop_iteration: 1
 context:
   - '{project-root}/.docs/implementation-artifacts/epic-5-context.md'
 ---
@@ -59,6 +59,25 @@ Ingen uløst intentgap eller irreversibel handling. Dokumentasjonsendring med fa
 
 ## Review Triage Log
 
+### Review Findings
+
+Uavhengig full BMAD-review 2026-10-22: fire ferske lag sekvensielt. 0 decision-needed, 9 patch, 0 defer, 2 rejected. Eksplisitt mini-sprintbestilling autoriserer rettingene uten ny rutinebekreftelse.
+
+- [x] [Review][Patch] B1: Presiser at lagrede demo-uttrekk er kontrollerte fiktive data, ikke tidligere live-kjøring. [README.md:5]
+- [x] [Review][Patch] B2: Definer P/L/D/J/Ymin ved casetabellen. [README.md:29]
+- [x] [Review][Patch] B3: Nevn F3s blanke L direkte i registreringssteget. [README.md:36]
+- [x] [Review][Patch] B4: Skill betegnelsen 0 fra JSON null i verifikasjonsrad M4. [story-5-3-verifikasjon.md:57]
+- [x] [Review][Patch] B5: Oppgi forventet resultat for den dokumenterte J=0-varianten. [README.md:64]
+- [x] [Review][Patch] B7: Avslutt disponibelt Avvis-case med eksplisitt reset før originalfasit brukes. [README.md:66]
+- [x] [Review][Patch] B8: Vis hvor eksisterende Playwright-feilbevis finnes. [README.md:90]
+- [x] [Review][Patch] B9: Bevar eksakt kjørbar negativ TCP-probe og faktisk ny kjøring. [story-5-3-offline-probe.txt:1]
+- [x] [Review][Patch] E1: Assert forventet antall funn før støtteprøvens kontroll-løkke. [story-5-3-oppskrift-kontroll.mjs:49]
+
+#### Rejected
+
+- B6 — false som ufullstendig påkrevd Avklart-oppskrift: originalcaset bruker Uavklart. Valgfri variant beskriver begge nødvendige felt og krever tydelig fiktiv merking; ingen full Avklart-variant påstås prøvd eller kreves i5.3 AC3.
+- B10 — low, rejected: støtteharnessens assertioner skriver konkret stack/forventet/faktisk og to feilkjøringer er bevart. Ny failure-diagnostikkramme for denne engangs støtteprøven legger kompleksitet uten vanlig brukerbehov; eksisterende Playwright-suiter har retained traces/screenshots. Ingen falsk beståttpåstand følger av manglende ekstra artefakt.
+
 ## Verification
 
 Faktisk npm ci, build, demo, dev, Chromium-forberedelse, typecheck/lint, npm test, komponenter og bygget-app/dev-E2E kjøres sekvensielt. Manuell UI og automatisk nettblokkert støtte rapporteres separat. Lokale lenker og git diff --check kontrolleres. Endelig AC-checkpoint settes først etter kjøring.
@@ -67,3 +86,6 @@ Faktisk npm ci, build, demo, dev, Chromium-forberedelse, typecheck/lint, npm tes
 Implementert til review: README er fullstendig omskrevet til faktisk nåstatus og én reproduserbar oppskrift. Kjørbar automatisk støtteprøve `story-5-3-oppskrift-kontroll.mjs` er bevart som etterprøvbart bevis på faktiske UI-handlinger/ekte standarddemo, ikke README-teksttest eller produktinngang. To harnessfeil og installasjons-/nettprofilavvik er dokumentert med faktisk endelig negativ probe og grønne kjøringer. Ingen produktkode/pakke-/låsfilendring. Se [egenverifikasjon](story-5-3-verifikasjon.md).
 
 Avsluttende verifikasjon: npm ci og Chromium-forberedelse med nett exit0; faktisk egen manuell UI og automatisk standarddemo-støtte bestått. Korrekt eksternnettsperre/env-i: typecheck/lint/build, Vitest962/962, komponenter37/37, bygget-app114/114/dev3/3.22 lokale README-lenker åpnet/validert. Ingen uløst produktfeil, annen person/S6/live/Linux ikke verifisert. Checkpoint in-review/review; separat reviewer avgjør done.
+
+
+Uavhengig review bestått 2026-10-22: fire ferske lag sekvensielt,9 rettede low-funn,2 konkret avviste kandidater,0 uløste/defer. Se [reviewrapport](story-5-3-review.md) for full individuell triage og relevant faktisk omkontroll. Ny negativ TCP-probe gir EPERM/exit0, standarddemo-støtte med funnantall/J0-fasit exit0,22 lenker/syntaks/diff-check bestått. Produktkode/pakker/låsfil uendret; eksisterende full suite gjelder og orkestrator kjører sluttregresjon. Status done etter review, ingen S6/live-godkjenning.

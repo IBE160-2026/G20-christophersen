@@ -47,6 +47,7 @@ async function analyze(name) {
 }
 async function control(id) {
   await page.getByRole('button',{name:'Gå til Kontroller funn',exact:true}).click()
+  await expect(page.locator('.finding-list > li')).toHaveCount(id === 'F4' ? 2 : 1)
   for (const row of await page.locator('.finding-list > li').all()) {
     await row.locator('.finding-select').click()
     await expect(page.locator('.textLayer')).toContainText(id === 'F4' && (await row.locator('.finding-select').innerText()).startsWith('TG3') ? 'Alvorlig lekkasje i tak' : 'Slitt overflate')
@@ -102,6 +103,7 @@ try {
   await analyze('F3-tilstandsrapport.pdf')
   await control('F3')
   await expect(page.locator('#recommendation-title')).toHaveText('Gå videre')
+  await expect(page.locator('.metric-value')).toHaveText(['11,875 %','1 500 000 kr/år','9,375 %','1 500 000 kr/år'])
   console.log('Feil/retur: invalid-format → Dokumentfeil; ekte F3-PDF i uttrykkelig rettet variant → kontroll/resultat (ikke opprinnelig F3-fasit)')
   expect(external).toEqual([])
   console.log('Ekstern browsertrafikk: 0; eksplisitt route-sperre aktiv. Ingen live/KI-nøkkel.')

@@ -2,7 +2,7 @@
 
 Lokal førstevurdering av **ett boligutleieobjekt**, laget for investorens tidlige sortering. Brukeren registrerer og kontrollerer økonomiske forutsetninger, leser tilstandsrapportens original, kontrollerer TG2/TG3-funn og får en kodebestemt anbefaling: **Gå videre**, **Forkast** eller **Innhent mer informasjon**. Beregningene er bruttoyield, NOI, nettoyield og kontantstrøm før skatt. Investoren tar beslutningen; dette er ingen teknisk godkjenning eller komplett investeringsanalyse.
 
-Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rapporter, menneskelig kontroll/korrigering, separat TG3-avklaring og revisjonsbundet resultat. Demo er standard og krever **ingen API-nøkkel, miljøfil, konto eller betalt tjeneste**. Faktisk live-uttrekk og separat kvalitets-/tidsevaluering er påkrevd v1-arbeid i Epic 4, som ennå ikke er implementert. Demo beviser ingen live-kvalitet eller live-tid. Automatisk søk, markedsdata, rangering og lagring mellom økter er utenfor denne smale v1.
+Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rapporter, menneskelig kontroll/korrigering, separat TG3-avklaring og revisjonsbundet resultat. Uttrekkene er kontrollerte fiktive demodata, skrevet for demoen; de stammer ikke fra en faktisk KI-/live-kjøring. Demo er standard og krever **ingen API-nøkkel, miljøfil, konto eller betalt tjeneste**. Faktisk live-uttrekk og separat kvalitets-/tidsevaluering er påkrevd v1-arbeid i Epic 4, som ennå ikke er implementert. Demo beviser ingen live-kvalitet eller live-tid. Automatisk søk, markedsdata, rangering og lagring mellom økter er utenfor denne smale v1.
 
 ## Installer og start demo
 
@@ -26,6 +26,8 @@ Oppskriften er egenprøvd på macOS 26.6.2 arm64; andre plattformer er ikke egen
 
 Bruk de innsjekkede PDF-ene i [tests/fixtures/property-cases](tests/fixtures/property-cases/README.md) og den forhåndsdefinerte [expected.json](tests/fixtures/property-cases/expected.json). Finansdata ligger separat fra rapportene. Bruk bare disse fiktive dataene i oppskriften. Bare **uendrede F1–F4-originalbytes** har lagrede demosvar; ny filidentitet gir ingen live-fallback.
 
+**P** er totalpris inklusive eventuell fellesgjeld, uten kjøpsomkostninger. **L** er brutto leieinntekt, **D** eierbetalte driftskostnader uten renter/avdrag, **J** gjeldsbetjening (renter og avdrag inklusive eventuell fellesgjeld), og **Ymin** ditt minimumskrav til nettoyield.
+
 | Case / rapportfil | P (NOK) | L (NOK/år) | D (NOK/år) | J (NOK/år) | Ymin | Forventet utfall etter nødvendig kontroll |
 |---|---:|---:|---:|---:|---:|---|
 | `F1-tilstandsrapport.pdf` | 16000000 | 1900000 | 400000 | 800000 | 7 % | Gå videre |
@@ -33,7 +35,7 @@ Bruk de innsjekkede PDF-ene i [tests/fixtures/property-cases](tests/fixtures/pro
 | `F3-tilstandsrapport.pdf` | 16000000 | **blank** | 400000 | 800000 | 7 % | Innhent mer informasjon lokalt i Tallgrunnlag; ingen gyldig hovedstart |
 | `F4-tilstandsrapport.pdf` | 16000000 | 1900000 | 400000 | 800000 | 7 % | Innhent mer informasjon: alvorlig TG3 Uavklart |
 
-1. I **Tallgrunnlag** skriver du fem tall fra valgt case. For **L, D og J** velger du **År** og **2026**. Velg **Egen forutsetning** for hvert felts opphav og skriv eksempelvis «F1 — kontrollert fiktiv P fra expected.json» i kilde/forutsetning (tilpass felt og case). For L velger du **Forventet leie**. Tall fra rapporten fylles ikke inn automatisk.
+1. I **Tallgrunnlag** skriver du tall fra valgt case; **la L være blank for F3**. For **L, D og J** velger du **År** og **2026**. Velg **Egen forutsetning** for hvert felts opphav og skriv eksempelvis «F1 — kontrollert fiktiv P fra expected.json» i kilde/forutsetning (tilpass felt og case). For L velger du **Forventet leie**. Tall fra rapporten fylles ikke inn automatisk.
 2. Under **Kostnadsinnhold i D og J**, bruk **Legg til kostnadsinnhold** for postene nedenfor. Samlet beløp og rentedel/avdrag må oppgis, også 0. La **Inngår allerede i** være **Selvstendig post**. Perioden følger D (År 2026). Postene forklarer allerede registrerte D/J og legges ikke til totalene en gang til.
 
    | Navn på post | Samlet beløp | Herav renter/avdrag |
@@ -61,9 +63,9 @@ F4-tallene er **Delgrunnlag** og overstyrer ikke TG3-mangelen. Start et uavhengi
 
 ## Prøv blank/null, feil, korrigering og retur
 
-- **Blank og 0:** Fra bekreftet F1, gå tilbake til Tallgrunnlag og slett L; forsøk bekreftelse. Manglende leie forklares lokalt og er aldri 0. Sett L tilbake til 1900000 med kontrollert kilde før du prøver separat J=0. Fjern gjeldsposten fra kostnadsinnholdet, og behold fem driftsposter. Velg den synlige særskilte nullkontrollen for J før du bekrefter tallgrunnlaget igjen. Registrert 0 alene er ubekreftet. P må være større enn 0. Sett J=800000 og legg tilbake gjeldsposten før du sammenligner med original F1-fasit.
+- **Blank og 0:** Fra bekreftet F1, gå tilbake til Tallgrunnlag og slett L; forsøk bekreftelse. Manglende leie forklares lokalt og er aldri 0. Sett L tilbake til 1900000 med kontrollert kilde før du prøver separat J=0. Fjern gjeldsposten fra kostnadsinnholdet, og behold fem driftsposter. Velg den synlige særskilte nullkontrollen for J før du bekrefter tallgrunnlaget igjen. Registrert 0 alene er ubekreftet. P må være større enn 0. Ved nytt resultat med ellers uendret bekreftet F1-grunnlag er yieldene/NOI uendret, kontantstrømmen 1500000 kr/år og anbefalingen Gå videre. Sett J=800000 og legg tilbake gjeldsposten før du sammenligner med original F1-fasit.
 - **Feil rapport:** Etter gyldige tall, velg `invalid-format.pdf` i samme fixturemappe og Start analyse. Forvent dokumentfeil, konkret lokal forklaring/handling og ingen vellykket tomliste. Velg deretter en uendret støttet rapport (for eksempel F1), start analyse og gjennomfør kontrollen igjen med ditt eksplisitt registrerte tallgrunnlag. En endret F1-PDF eller annen egen rapport kan være gyldig PDF uten å ha et lagret demosvar. Demo oppfinner ikke et svar.
-- **Korrigering:** På et disponibelt F1-case: velg funnet → **Korriger**, skriv et utkast, og prøv **Avbryt**. Ubrukt utkast endrer ikke gjeldende grunnlag. Prøv deretter en liten fiktiv tekstretting og **Bruk korrigering**. Original og brukerkorrigert opphav beholdes; bekreft funnet og listen på nytt. PDF-side må være en faktisk posisjon 1–4. **Avvis** beholder originalen som historikk, tar funnet ut av aktiv liste og er ingen teknisk godkjenning.
+- **Korrigering:** På et disponibelt F1-case: velg funnet → **Korriger**, skriv et utkast, og prøv **Avbryt**. Ubrukt utkast endrer ikke gjeldende grunnlag. Prøv deretter en liten fiktiv tekstretting og **Bruk korrigering**. Original og brukerkorrigert opphav beholdes; bekreft funnet og listen på nytt. PDF-side må være en faktisk posisjon 1–4. **Avvis** beholder originalen som historikk, tar funnet ut av aktiv liste og er ingen teknisk godkjenning. Avslutt dette disponible caset med sideoppdatering og registrer/kontroller F1 fra start før du igjen bruker originalfasiten.
 - **Retur og nytt resultat:** Fra F1-resultat velger du **Endre tallgrunnlag**. Uendret retur bevarer bekreftelser. Endre L til 1400000 med oppdatert kildebeskrivelse; gammelt resultat blir **Utdatert** og kan bare leses som historisk. Bekreft endret tallgrunnlag, gå tilbake til kontroll og beregn på nytt. Uendret rapportuttrekk gjenbrukes; nettoyield blir 6,250 % og anbefalingen Forkast. Dette er en endret F1-finansvariant. Faktisk rapportbytte krever ny analyse og ny funn-/listekontroll. Brukt funnendring krever berørt ny kontroll/listebekreftelse; separat TG3-endring krever gyldig ny TG3-håndtering og nytt resultat.
 
 ## Utvikling og tester
@@ -90,6 +92,8 @@ npm run test:e2e
 Kjør sekvensielt fra reporoten med port 3000 ledig. `npm run test:e2e` bygger automatisk, starter/stopper først bygget demo og deretter dev. Vitest bruker lokale moduler, ekte fiktive PDF-er og HTTP-integrasjon. Komponenttester viser faktiske React-resultatkomponenter i Chromium. E2E dekker hovedflyt, kontrollporter, feil/retur, originalvisning, nøkkeltall, anbefalinger og fokus/responsivitet. Enkelte spesialutfall bruker en **kontrolladapter ved produktets adaptergrense** eller kontrollerte HTTP-svar; dette er testinnganger, ikke live-KI. Hele testoppskriften krever ingen betalt KI-tjeneste eller nøkkel. Browserforberedelsen krever vanligvis nedlasting; på Linux må nødvendige systembiblioteker også være installert før nettfri testkjøring.
 
 Testene kontrollerer også sentral finans-/terskellogikk og blank/null/feiltilstander mot uavhengig fasit. De beviser ikke manuell lesbarhet, alle hjelpemidler eller live-uttrekkskvalitet. Se [samlet automatisk verifikasjon 5.1](.docs/implementation-artifacts/story-5-1-verifikasjon.md), [manuell UX-kontroll 5.2](.docs/implementation-artifacts/story-5-2-manuell-kontroll.md) og [egen README-gjennomkjøring 5.3](.docs/implementation-artifacts/story-5-3-verifikasjon.md). Egen gjennomkjøring er forberedelse; **annen person i rent miljø/S6 (5.4) er ennå ikke gjennomført**.
+
+Ved Playwright-feil ligger beholdte spor og skjermbilder i `test-results/`. Åpne en faktisk generert `trace.zip` med `npx playwright show-trace <sti-til-trace.zip>`; erstatt plassholderen med filens sti. Disse genererte feilartefaktene er Git-ignorert.
 
 ## Struktur og sporbarhet
 

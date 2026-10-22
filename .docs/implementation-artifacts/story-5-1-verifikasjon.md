@@ -1,10 +1,10 @@
 # Story 5.1 — samlet automatisk demoverifikasjon
 
-Dato: 2026-10-22. Status: implementering til uavhengig review; ingen done-påstand.
+Dato: 2026-10-22. Status: done etter [separat uavhengig BMAD-review](story-5-1-review.md) og full grønn sluttregresjon. Resultatene nedenfor beskriver implementeringskjøringen; reviewrapporten dokumenterer siste tillegg/omkjøring.
 
 ## Versjon, grunnlag og avgrensning
 
-Baseline er `8b28fa296a2f37072b8f583290e2a9ec8791be00` (git rev-parse HEAD før arbeid). Testet kode er denne revisjonen pluss `tests/integration/demo-screening.test.ts`; øvrige endringer er kontekst/spec/status og bevis. Implementeringscommit identifiseres med full Git-ID i arbeidsøkten/overleveringen. Ingen produktkode er endret.
+Baseline er `8b28fa296a2f37072b8f583290e2a9ec8791be00` (git rev-parse HEAD før arbeid). Implementeringscommit er `28028b955823517607f8402151be84f04443e0f2`. Testet kode er baseline pluss `tests/integration/demo-screening.test.ts`; øvrige endringer er kontekst/spec/status og bevis. Reviewets tillegg og tester identifiseres i [reviewrapporten](story-5-1-review.md). Ingen produktkode er endret.
 
 Autoritet: [Story 5.1 AC1–5](../planning-artifacts/epics.md), [SPEC](../specs/spec-IBE160/SPEC.md) med kompanjonger, [sprintplan](sprint-plan.md), [sprintstatus](sprint-status.yaml), final UX/arkitektur destillert i [Epic 5-kontekst](epic-5-context.md). Kursgrunnlag er eksisterende PDFKit-baserte [sensoruttrekk](../planning-artifacts/prds/prd-IBE160-2026-10-10/kildeuttrekk-sensorveiledning.md) fra den lenkede originale PDF-en og [faglærerfeedback](../planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md): kjent finansfasit, kjørbare meningsfulle tester og konkrete prosess-/reviewbevis. Ingen krav om prosentdekning eller nye testtyper er lagt til.
 
@@ -99,6 +99,8 @@ Forkortelser: U=`tests/unit/`, I=`tests/integration/`, E=`tests/e2e/`, K=`tests/
 ## AC3/4: feil, kontroll og endring ved faktisk grense
 
 U/http-pipeline-races + I/http-analysis/review prøver faktisk duplikatlås, abort/cleanup, forsinkede svar og adapterkall. E/report-analysis prøver ordinær HTTP/kontrolladapter med kilde/usikkerhet, completed tomliste mot failed/delresultat og utkast/Bruk/Avbryt/Avvis. E/screening-result 3.8/3.9 prøver fornyelse etter finans-/funn-/TG3-endring og ny rapport, med faktisk ett/totalt to POST og historisk/gjeldende visning. E/report-analysis lokale feilprøver og U/screening-result-navigation beviser at utilstrekkelig grunnlag sperrer normal Resultat-vei. K/screening-result prøver utilgjengelige tall/mangler ved komponentgrensen. Ingen test introduserer produktnavigasjon eller omgår brukerbekreftelser i hovedreisen.
+
+Den nye integrasjonens kallteller beviser ett adapterkall i den direkte analysepipelinen. Reducerhandlingene gjør ikke HTTP-kall; fravær av ekstra forespørsler ved kontroll/navigasjon bevises av de eksisterende HTTP-/E2E-testene ovenfor.
 
 ## Vurdering av testsensitivitet
 

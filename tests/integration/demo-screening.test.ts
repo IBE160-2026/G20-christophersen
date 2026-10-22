@@ -98,6 +98,10 @@ describe('Story 5.1 AC1/2/4 — faktisk PDF → demoadapter → kontroll → fin
 
     // Den rene snapshotgrensen støtter mangelfasit selv når UI-porten er sperret.
     const snapshot = calculateResultSnapshot(state)
+    expect(snapshot.assessment.basis.reportBasis.outcome).toEqual(outcome)
+    expect(Object.keys(snapshot.assessment.metrics).sort()).toEqual([
+      'cashFlowBeforeTax', 'grossYield', 'netYield', 'noi',
+    ])
     expect(snapshot.assessment).toMatchObject({ recommendation: expected.recommendation,
       priority: expected.priority, partialBasis: expected.partialBasis })
     expect(snapshot.assessment.triggers.map(trigger => trigger.code)).toEqual(expected.codes)

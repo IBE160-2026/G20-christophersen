@@ -2,7 +2,7 @@
 title: 'Story 5.1 — Samlet automatisk demoverifikasjon'
 type: 'chore'
 created: '2026-10-22'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 story_key: '5-1-etterprøve-den-samlede-demoen-med-meningsfulle-automatiserte'
 baseline_commit: '8b28fa296a2f37072b8f583290e2a9ec8791be00'
@@ -68,6 +68,30 @@ context:
 ## Spec Change Log
 
 ## Review Triage Log
+
+Full uavhengig review: [rapport](story-5-1-review.md). Alle kandidater nedenfor er fra blind-hunter; øvrige tre lag fullførte uten funn. Fire direkte patcher er utført, seks kandidater avvist; ingen produkt-/kravendring.
+
+| ID | Kandidat | Dom / bevis / håndtering |
+|---|---|---|
+| 1 | Full implementeringscommit mangler i bevart arbeidsøkt. | low → patch. Baseline var dokumentert, men den lovede endelige ID-en manglet. Full `28028b955823517607f8402151be84f04443e0f2` er lagt til arbeidsøkt og verifikasjon. |
+| 2 | Lokale tall/anbefalinger utgjør en konkurrerende finansfasit. | false. Tallene er identiske håndskrevne PRD-/Story 2.2-forventninger (F1 1500000/700000, F2 1000000/200000), ikke generert fra adapter/beregning. `expected.json` leverer input og PDF-funn; lokale forventninger til eksakte ratioer/koder gir uavhengig kontroll. Ingen motstrid eller konkurrerende kravfasit er påvist. |
+| 3 | Kalltelleren kan tolkes som HTTP-bevis etter navigasjon. | low → patch. Direkte `analyzeDocument` kjøres før økten; reduceren utfører ikke HTTP. Rapporten presiserer direkte pipelinekall og peker til eksisterende HTTP/E2E for fravær av ekstra forespørsler ved kontroll/endring. |
+| 4 | Individuell bekreftelse kan implisitt bekrefte listen uten at integrasjonen merker det. | false som samlet verifikasjonshull. `finding-list-control.test.ts` AC1 sjekker etter enkeltfunn at `listConfirmationRevision` er null og informasjon fortsatt kreves, før separat listehandling. Dette inngår i kjørt suite og den nye relevante omkjøringen. Den nye testen trenger ikke gjenta hver allerede prøvd mellomtilstand. |
+| 5 | F4 bør ikke eksplisitt registrere Uavklart før listekontroll. | false. Produktkontrakten krever separat eksplisitt TG3-håndtering. `finding-list-control.test.ts` AC3 viser at listebekreftelse alene gir `tg3Handled:false`, tom TG3-registrering og ufullført kontroll; eksplisitt Uavklart fullfører kontroll uten å avklare TG3. Å utelate handlingen ville teste feil hovedreiseforventning. |
+| 6 | F3-løkken kan passere vakuøst dersom metrikker mangler. | low → patch. `Object.values` alene sikrer ikke kardinalitet. Alle fire metrikknavn sjekkes nå eksplisitt før unavailable/null-assertions. |
+| 7 | Revisjoner sammenlignes bare med reducerens egne verdier. | false som samlet hull. Dette uendrede forløpet har listRevision 0, siden ingen brukt korrigering/avvisning skjer; respons/enkeltfunn er ikke revisjonsøkninger. `result-snapshot.test.ts` AC1 forventer eksplisitt listRevision/listConfirmationRevision 0, finding revision 0 og tg3Revision 0; endringsmatrisen sjekker eksakt +1. `finding-list-control.test.ts` sjekker konkret 1 etter brukt endring. |
+| 8 | Finansbinding mangler i ny integrasjon. | false som samlet verifikasjonshull. `result-snapshot.test.ts` AC1 sjekker alle fem finansbekreftelser, finansgrunnlag og binding; AC2-matrisen sjekker hver endrings +1 og opphevet berørt bekreftelse. Disse prøvene kjøres i regresjonen og omkjøringen. Ingen endret finansbinding i denne storyen. |
+| 9 | Integrasjonen mangler full begrunnelse/neste handling. | false som samlet verifikasjonshull. `complete-screening.test.ts` F1/F2, AT-18/19 og FR-5 prøver fulle faste tekster/handlinger ved ren funksjonsgrense. Verifikasjonen sier uttrykkelig at disse ligger i U/complete-screening; ny integrasjon beskrives med eksakte tall/koder/kontrollport. Ingen påstand om at denne ene testen alene erstatter hele suiten. |
+| 10 | Backendfunn kan falle ut av snapshotbasis uten at tall/anbefaling endres. | low → patch. Den nye integrasjonen sjekket backendfunn, men hele outcome ved snapshotgrensen manglet. Snapshotets `reportBasis.outcome` sammenlignes nå med faktisk analysert, allerede uavhengig verifisert PDF-utfall for alle fire case. |
+
+## Review Findings
+
+- [x] [Review][Patch] ID 1: Fast implementeringscommit i arbeidsøkt/verifikasjon.
+- [x] [Review][Patch] ID 3: Avgrenset direkte adapterkallteller fra HTTP/E2E-bevis.
+- [x] [Review][Patch] ID 6: Eksakt sett av fire metrikker før F3-løkken.
+- [x] [Review][Patch] ID 10: Hele faktiske rapportutfallet er bevart i snapshotbasis.
+
+Rejected: ID 2/4/5/7/8/9 er false med individuelle tilbakevisninger i triageloggen. Ingen uløste tiltak eller defer. Full sluttregresjon: 962 Vitest, 114 bygget-app, 3 dev, 37 komponenter; type/lint/build/diffkontroll bestått. Se [reviewrapport og råbevis](story-5-1-review.md).
 
 ## Verification
 

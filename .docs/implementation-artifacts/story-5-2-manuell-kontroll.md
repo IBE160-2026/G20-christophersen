@@ -67,3 +67,6 @@ Se rålogger for bygge-/typekontroll, lint, relevant E2E og full suite. Disse kj
 - `git diff --check`: bestått. Ingen feil i de avsluttende sekvensielle kontrollene.
 
 Story er in-review/review; uavhengig review er neste checkpoint. Ingen done fra implementeringsagenten.
+
+
+Implementeringscommit (faktisk kode og de kjørte testene): `51a4754b4485caa43eab2fd937473f7c3c490f7a`. Dette etterfølgende bevischeckpointet endrer bare dokumentasjon av commit-ID; ingen kildekode/testforventning er endret etter regresjonen.

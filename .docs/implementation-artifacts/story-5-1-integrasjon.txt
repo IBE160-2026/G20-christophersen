@@ -1,0 +1,12 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/integration/demo-screening.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  13:50:45
+   Duration  1.71s (tests 82%, import 15%, transform 3%)

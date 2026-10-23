@@ -30,7 +30,9 @@ async function start() {
     next()
   })
 
-  const analysis = createAnalysisRouter()
+  const mode = process.env.ANALYSIS_MODE ?? 'demo'
+  if (mode !== 'demo' && mode !== 'live') throw new Error('Ugyldig lokal analysemodus')
+  const analysis = createAnalysisRouter({ mode })
   app.use('/api', analysis)
 
   // Andre API-er er ikke tilgjengelige i semester-v1.
@@ -104,7 +106,7 @@ async function start() {
     process.exitCode = 1
   })
   server.listen(port, host, () => {
-    console.log(`Property Acquisition Agent · ${development ? 'Utvikling' : 'Demo'} · ${address}`)
+    console.log(`Property Acquisition Agent · ${development ? 'Utvikling' : mode === 'live' ? 'Live analyse' : 'Demo'} · ${address}`)
   })
 }
 

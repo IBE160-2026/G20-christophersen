@@ -14,6 +14,7 @@ export interface SelectedReport {
   hash: string
 }
 export interface ReportState {
+  mode: 'demo' | 'live'
   generation: number
   status: 'missing' | 'selecting' | 'ready' | 'analysing' | 'completed' | 'failed'
   selected: SelectedReport | null
@@ -41,8 +42,8 @@ export type ReportAction =
   | { type: 'report-error'; generation: number; code: string }
   | { type: 'report-abandon' }
   | { type: 'report-list-visible'; generation: number }
-export function createReportState(): ReportState {
-  return { view: { findingId: null, pdfPage: null, zoom: 1 }, generation: 0, status: 'missing', selected: null, active: null, outcome: null, error: null, listVisibleGeneration: null,
+export function createReportState(mode: 'demo' | 'live' = 'demo'): ReportState {
+  return { mode, view: { findingId: null, pdfPage: null, zoom: 1 }, generation: 0, status: 'missing', selected: null, active: null, outcome: null, error: null, listVisibleGeneration: null,
     findingControls: [], tg3Revision: 0, tg3Resolutions: [], listRevision: 0, listConfirmationRevision: null }
 }
 function fail(state: ReportState, code: string): ReportState {
@@ -108,7 +109,7 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
   if (action.type === 'report-view') return action.generation === state.generation && state.selected
     ? { ...state, view: action.view } : state
   if (action.type === 'report-selecting') return action.generation > state.generation
-    ? { ...createReportState(), generation: action.generation, status: 'selecting' } : state
+    ? { ...createReportState(state.mode), generation: action.generation, status: 'selecting' } : state
   if (action.type === 'report-selected') return action.generation === state.generation && state.status === 'selecting'
     ? { ...state, status: 'ready', selected: action.selected } : state
   if (action.type === 'report-abandon') return state.status === 'analysing' || state.status === 'selecting'
@@ -129,7 +130,7 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
   if (correlation.sessionId !== state.active.sessionId || correlation.requestId !== state.active.requestId
     || correlation.generation !== state.generation || outcome.requestId !== state.active.requestId
     || outcome.reportHash !== state.selected?.hash || outcome.documentName !== state.selected?.file.name.trim()
-    || outcome.mode !== 'demo') return fail(state, 'metadata-mismatch')
+    || outcome.mode !== state.mode) return fail(state, 'metadata-mismatch')
   if (!action.ok && outcome.status === 'completed') return fail(state, 'transport-failure')
   return { ...state, status: outcome.status, active: null, outcome, error: outcome.status === 'failed' ? outcome.error.code : null }
 }

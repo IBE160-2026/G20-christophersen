@@ -1,3 +1,4 @@
+import { analysisModeLabel } from '../../contracts/analysis-http.ts'
 import type { Dispatch } from 'react'
 import type { ScreeningAssessment } from '../../contracts/screening.ts'
 import type { FindingListBasis } from '../../contracts/finding-control.ts'
@@ -124,7 +125,7 @@ export function ScreeningResult({ session, dispatch }: { session: SessionState; 
       })}</ol>
       {!sameOriginal && historical && <p>Den historiske originalrapporten er erstattet i aktiv økt. Historiske kildehenvisninger er bevart; gjeldende PDF er et annet grunnlag.</p>}
       <details className="result-detail"><summary>Analyseopphav og rapportidentitet</summary>
-        <p>Demo · lagret KI-uttrekk. Finans, regler og anbefaling er kodebestemt fra det samme grunnlaget.</p>
+        <p>{analysisModeLabel(session.report.mode)}. Finans, regler og anbefaling er kodebestemt fra det samme grunnlaget.</p>
         <p>Rapporthash: {basis.reportIdentity?.reportHash ?? 'Ingen'}</p>
         {outcome && <p>Uttrekksversjon: {outcome.extractionVersion} · Kontraktversjon: {outcome.contractVersion} · Forespørsel: {outcome.requestId}</p>}
         {extraction?.limitations.map((text, index) => <p key={index}>Begrensning: {text}</p>)}

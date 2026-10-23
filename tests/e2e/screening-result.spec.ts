@@ -1,3 +1,6 @@
+import express from 'express'
+import { createServer } from 'node:http'
+import { createAnalysisRouter } from '../../src/backend/http/analysis-route.ts'
 import { test, expect } from '@playwright/test'
 import type { Page, Route } from '@playwright/test'
 import { fileURLToPath } from 'node:url'
@@ -7,8 +10,28 @@ import { AnalysisHttpCorrelationSchema } from '../../src/contracts/analysis-http
 import { bindAnalysisOutcome } from '../../src/contracts/analysis-validation.ts'
 import oracle from '../fixtures/property-cases/expected.json' with { type: 'json' }
 
+for (const mode of ['demo', 'live'] as const) {
+test.describe(`Story 4.3 ${mode} — samme kodebestemte resultat`, () => {
+let modeUrl: string
+let close: () => Promise<void>
+test.beforeAll(async () => {
+  const app = express()
+  const analysis = createAnalysisRouter({ mode, adapterModule: new URL('../helpers/report-case-adapter.ts', import.meta.url).href })
+  app.use('/api', analysis)
+  app.use(express.static(fileURLToPath(new URL('../../dist', import.meta.url))))
+  const server = createServer(app)
+  await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve) })
+  const address = server.address()
+  if (!address || typeof address === 'string') throw new Error('No listener')
+  modeUrl = `http://127.0.0.1:${address.port}`
+  close = async () => {
+    const closed = new Promise<void>(resolve => server.close(() => resolve()))
+    server.closeAllConnections(); await analysis.stop(); await closed
+  }
+})
+test.afterAll(async () => { await close?.() })
 async function controlled(page: Page, caseId: 'F1' | 'F2' | 'F4', rejectUncertain = false) {
-  await page.goto('/')
+  await page.goto(modeUrl)
   for (const [field, value] of Object.entries({ P: '16000000', L: caseId === 'F2' ? '1400000' : '1900000', D: '400000', J: '800000', Ymin: '7' })) {
     await page.locator(`#value-${field}`).fill(value)
     await page.locator(`#source-kind-${field}`).selectOption('assumption')
@@ -39,10 +62,10 @@ for (const [id, recommendation, expected] of [
   ['F2', 'Forkast', ['8,750 %', '1 000 000 kr/år', '6,250 %', '200 000 kr/år']],
   ['F4', 'Innhent mer informasjon', ['11,875 %', '1 500 000 kr/år', '9,375 %', '700 000 kr/år']],
 ] as const) {
-  test(`3.7 AC1/2/5/6 ${id}: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus`, async ({ page, baseURL }, testInfo) => {
+  test(`3.7 AC1/2/5/6 ${id}: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus`, async ({ page }, testInfo) => {
     let calls = 0
     const external: string[] = []
-    page.on('request', req => { if (req.url().endsWith('/api/analysis')) calls++; if (!req.url().startsWith(baseURL!)) external.push(req.url()) })
+    page.on('request', req => { if (req.url().endsWith('/api/analysis')) calls++; if (!req.url().startsWith(modeUrl)) external.push(req.url()) })
     await controlled(page, id)
     const go = page.getByRole('button', { name: 'Beregn og vis resultat', exact: true })
     await go.focus(); await go.press('Enter')
@@ -61,7 +84,7 @@ for (const [id, recommendation, expected] of [
     await expect(page.locator('.metric-value')).toHaveText([...expected])
     await expect(page.locator('.recommendation details')).toHaveCount(0)
     await expect(page.locator('.result-next-action')).toContainText(id === 'F1' ? 'Gå videre til grundigere vurdering/befaring.' : id === 'F2' ? 'Forkast objektet' : 'avklaringsgrunnlag')
-    await expect(page.locator('.app-header')).toContainText('Demo · lagret KI-uttrekk')
+    await expect(page.locator('.app-header')).toContainText(mode === 'live' ? 'Live analyse' : 'Demo · lagret KI-uttrekk')
     if (id === 'F4') {
       await expect(page.locator('.result-severe')).toBeVisible()
       await expect(page.locator('.result-severe')).toHaveText('TG3 · Alvorlig lekkasje i tak')
@@ -181,7 +204,7 @@ test('review E1/A1: avvist fremmed originalkilde velger aldri en side i aktiv PD
     const fixture = oracle.cases.find(item => item.caseId === 'F1')!
     const bytes = readFileSync(new URL(`../fixtures/property-cases/${fixture.documentName}`, import.meta.url))
     // Kontrollert kontrakt ved HTTP-grensen; de tre hovedcasene prøver ordinær PDF-/demopipeline.
-    const outcome = bindAnalysisOutcome({ contractVersion: '2', extractionVersion: '1', mode: 'demo',
+    const outcome = bindAnalysisOutcome({ contractVersion: '2', extractionVersion: '1', mode,
       requestId: correlation.requestId, reportHash: createHash('sha256').update(bytes).digest('hex'), documentName: fixture.documentName,
       pageCount: fixture.pageCount, pages: Array.from({ length: fixture.pageCount }, (_, index) => ({ pdfPage: index + 1, text: 'Fiktiv rapport', status: 'readable', reason: null })) }, {
       contractVersion: '2', extractionVersion: '1', status: 'completed', limitations: [], findings: [{ findingId: 'wrong-source', grade: 'TG2', description: 'Feil KI-kilde',
@@ -248,11 +271,11 @@ async function returnThroughControls(page: Page) {
   await expect(page.locator('.result-stale')).toHaveCount(0)
 }
 
-test('3.8 BT-12 AC1/2/4/5: offline ugyldig→rettet→bekreftet L gir F2 uten ny analyse og med fokus/status', async ({ page, baseURL }, testInfo) => {
+test('3.8 BT-12 AC1/2/4/5: offline ugyldig→rettet→bekreftet L gir F2 uten ny analyse og med fokus/status', async ({ page }, testInfo) => {
   let calls = 0
   const external: string[] = []
   await page.route('**/*', async route => {
-    if (new URL(route.request().url()).origin !== new URL(baseURL!).origin) {
+    if (new URL(route.request().url()).origin !== new URL(modeUrl).origin) {
       external.push(route.request().url()); await route.abort(); return
     }
     if (route.request().url().endsWith('/api/analysis')) calls++
@@ -404,10 +427,10 @@ async function completeReplacement(page: Page) {
   await page.getByRole('button', { name: 'Vis resultat', exact: true }).click()
 }
 
-test('3.9 AC1/2/6 AT-13/16 RT-11/13: utkast, Avbryt, ugyldig Bruk og ny kontroll i bygget offline demo', async ({ page, baseURL }, testInfo) => {
+test('3.9 AC1/2/6 AT-13/16 RT-11/13: utkast, Avbryt, ugyldig Bruk og ny kontroll i bygget offline demo', async ({ page }, testInfo) => {
   let calls = 0
   const external: string[] = []
-  await page.route('**/*', route => route.request().url().startsWith(baseURL!) ? route.continue() : (external.push(route.request().url()), route.abort()))
+  await page.route('**/*', route => route.request().url().startsWith(modeUrl) ? route.continue() : (external.push(route.request().url()), route.abort()))
   page.on('request', request => { if (request.url().endsWith('/api/analysis')) calls++ })
   await controlled(page, 'F1')
   await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
@@ -641,3 +664,6 @@ test('3.9 AC5: kontrollert sent svar fra forlatt rapport kan ikke overstyre ny r
   await expect(page.locator('.metric-value')).toHaveText(f1Metrics)
   expect(calls).toBe(2)
 })
+
+})
+}

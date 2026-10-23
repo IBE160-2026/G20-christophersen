@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Request, Response } from 'express'
-import { AnalysisHttpCorrelationSchema, AnalysisHttpResponseSchema } from '../../contracts/analysis-http.ts'
+import { AnalysisStartupSchema, AnalysisHttpCorrelationSchema, AnalysisHttpResponseSchema } from '../../contracts/analysis-http.ts'
 import type { AnalysisHttpRejectionCode } from '../../contracts/analysis-http.ts'
 import { HttpRejection, receivePdf } from './receive-pdf.ts'
 import { runPipeline } from './run-pipeline.ts'
@@ -9,6 +9,11 @@ import type { PipelineOptions } from './run-pipeline.ts'
 /** Server-instance lifetime equals process lifetime in the loopback server. No report cache. */
 export function createAnalysisRouter(options: PipelineOptions = {}) {
   const router = Router()
+  const startup = AnalysisStartupSchema.parse({ mode: options.mode ?? 'demo' })
+  router.get('/analysis-config', (_request, response) => {
+    response.setHeader('Cache-Control', 'no-store')
+    response.json(startup)
+  })
   const active = new Set<string>()
   const markers = new Set<string>()
   const pending = new Set<Promise<void>>()

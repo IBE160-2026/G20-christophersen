@@ -14,3 +14,7 @@ installasjonen. Package-/lockfil forble byteidentiske. Ingen tidligere
 SSL-feil er reprodusert. Historikken ovenfor beholdes som datert testbevis.
 Se [råutdata](story-1-3-ren-installasjon-2026-10-19.txt) og
 [gjenopptaksøkten](../process/arbeidsokter/2026-10-19-story-1-4-orkestrering.md).
+
+- source_spec: `spec-4-3-bruke-live-analysen-i-samme-kontroll-og-resultatflyt.md`
+  summary: Bevare nyttig første feilårsak eller forklare duplikatsperren ved manuell Start etter terminal analysefeil.
+  evidence: B3-review bekrefter baselineoppførsel i ReportAnalysis canStart (failed tillates) og analysis-route sin varige markør. Et nytt manuelt forsøk kan erstatte første feiltekst med duplicate-analysis. Ingen automatisk retry eller ny flyt innført i 4.3; forbedringen gjelder eksisterende felles demo/live-oppførsel.

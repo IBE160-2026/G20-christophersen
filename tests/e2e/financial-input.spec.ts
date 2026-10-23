@@ -23,7 +23,7 @@ test('1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplis
 
 test('1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjengelig retur', async ({ page }) => {
   const analysisRequests: string[] = []
-  page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api')) analysisRequests.push(request.url()) })
+  page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api') && new URL(request.url()).pathname !== '/api/analysis-config') analysisRequests.push(request.url()) })
   await page.goto('/')
   for (const [field, value] of Object.entries({ P: '16000000', L: '1900000', D: '400000', J: '800000', Ymin: '7' })) {
     await page.locator(`#value-${field}`).fill(value)
@@ -120,7 +120,7 @@ test('1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflik
     if (!route.request().url().startsWith('http://127.0.0.1:3000/')) await route.abort()
     else await route.continue()
   })
-  page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api')) apiRequests.push(request.url()) })
+  page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api') && new URL(request.url()).pathname !== '/api/analysis-config') apiRequests.push(request.url()) })
   await page.goto('/')
   for (const field of fields) {
     await page.locator(`#source-kind-${field}`).selectOption('assumption')
@@ -289,7 +289,7 @@ async function registerF1(page: import('@playwright/test').Page) {
 
 test('1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret retur, retting og øktslutt', async ({ page }) => {
   const api: string[] = []
-  page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api')) api.push(request.url()) })
+  page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api') && new URL(request.url()).pathname !== '/api/analysis-config') api.push(request.url()) })
   await page.goto('/')
   await registerF1(page)
   await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()

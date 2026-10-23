@@ -1,3 +1,4 @@
+import { analysisModeLabel } from '../../contracts/analysis-http.ts'
 import { useEffect, useRef } from 'react'
 import { validateTg3Resolution } from '../../domain/tg3-resolution.ts'
 import { sourceTarget } from '../pdf/source-page.ts'
@@ -44,7 +45,7 @@ export function ReportAnalysis({ session, dispatch, client }: {
   const canStart = isFinancialConfirmed(session) && report.selected !== null && ['ready', 'failed'].includes(report.status)
   return <section className="financial-input report-analysis" aria-labelledby="report-next-title">
     <h2 id="report-next-title">Rapportgrunnlag</h2>
-    <p>Demo · lagret KI-uttrekk. Velg én tekstbasert PDF på høyst 30 sider og 50 MiB.</p>
+    <p>{analysisModeLabel(session.report.mode)}. Velg én tekstbasert PDF på høyst 30 sider og 50 MiB.</p>
     {session.currentStep === 'tilstandsrapport' && <><label htmlFor="report-file">Velg tilstandsrapport (PDF)</label>
     <input id="report-file" type="file" accept="application/pdf,.pdf" onChange={event => { void client.select(event.currentTarget.files?.[0] ?? null, report) }} /></>}
     {report.selected && <p className="report-identity">Gjeldende dokument: <strong>{report.selected.file.name}</strong><br />SHA-256: {report.selected.hash}</p>}

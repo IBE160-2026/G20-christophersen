@@ -21,3 +21,8 @@ export const AnalysisHttpResponseSchema = z.discriminatedUnion('kind', [
 ]).refine(response => response.kind !== 'analysis' || response.correlation.requestId === response.outcome.requestId,
   { message: 'HTTP-korrelasjonen må ha samme requestId som analyseutfallet.' })
 export type AnalysisHttpResponse = z.infer<typeof AnalysisHttpResponseSchema>
+
+/** Safe startup metadata: no provider settings or secrets cross this boundary. */
+export const AnalysisStartupSchema = z.strictObject({ mode: z.enum(['demo', 'live']) })
+export type AnalysisStartup = z.infer<typeof AnalysisStartupSchema>
+export const analysisModeLabel = (mode: AnalysisStartup['mode']) => mode === 'live' ? 'Live analyse' : 'Demo · lagret KI-uttrekk'

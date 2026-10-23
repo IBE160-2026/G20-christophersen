@@ -11,11 +11,14 @@ import rejectionOracle from '../fixtures/finding-control/rt12-expected.json' wit
 
 import tg3Oracle from '../fixtures/finding-control/tg3-expected.json' with { type: 'json' }
 
+for (const mode of ['demo', 'live'] as const) {
+test.describe(`Story 4.3 ${mode} — felles kontrollflyt`, () => {
 let url: string
+let caseUrl: string
 let close: () => Promise<void>
-test.beforeAll(async () => {
+test.beforeAll(async ({ baseURL }) => {
   const app = express()
-  const analysis = createAnalysisRouter({ adapterModule: new URL('../helpers/report-ui-adapter.ts', import.meta.url).href })
+  const analysis = createAnalysisRouter({ mode, adapterModule: new URL('../helpers/report-ui-adapter.ts', import.meta.url).href })
   app.use('/api', analysis)
   app.use(express.static(fileURLToPath(new URL('../../dist', import.meta.url))))
   const server = createServer(app)
@@ -27,10 +30,29 @@ test.beforeAll(async () => {
     const closed = new Promise<void>(resolve => server.close(() => resolve()))
     server.closeAllConnections(); await analysis.stop(); await closed
   }
+  caseUrl = baseURL!
+  if (mode === 'live') {
+    const fixtureApp = express()
+    const fixtureAnalysis = createAnalysisRouter({ mode, adapterModule: new URL('../helpers/report-case-adapter.ts', import.meta.url).href })
+    fixtureApp.use('/api', fixtureAnalysis)
+    fixtureApp.use(express.static(fileURLToPath(new URL('../../dist', import.meta.url))))
+    const fixtureServer = createServer(fixtureApp)
+    await new Promise<void>((resolve, reject) => { fixtureServer.once('error', reject); fixtureServer.listen(0, '127.0.0.1', resolve) })
+    const fixtureAddress = fixtureServer.address()
+    if (!fixtureAddress || typeof fixtureAddress === 'string') throw new Error('No listener')
+    caseUrl = `http://127.0.0.1:${fixtureAddress.port}`
+    const closeControl = close
+    close = async () => {
+      const fixtureClosed = new Promise<void>(resolve => fixtureServer.close(() => resolve()))
+      fixtureServer.closeAllConnections(); await fixtureAnalysis.stop(); await fixtureClosed
+      await closeControl()
+    }
+  }
 })
 test.afterAll(async () => { await close?.() })
 async function enter(page: Page, address = url) {
   await page.goto(address)
+  await expect(page.locator('.app-header')).toContainText(mode === 'live' ? 'Live analyse' : 'Demo · lagret KI-uttrekk')
   for (const [field, value] of Object.entries({ P: '16000000', L: '1900000', D: '400000', J: '800000', Ymin: '7' })) {
     await page.locator(`#value-${field}`).fill(value)
     await page.locator(`#source-kind-${field}`).selectOption('assumption')
@@ -181,10 +203,10 @@ test('2.6 AC3: rapportbytte og forlatt pågående analyse forkaster gamle svar o
   await expect(page.locator('.report-findings')).toHaveCount(0)
 })
 
-test('2.6: produksjonsdemo viser faktiske F4-funn uten ekstern trafikk', async ({ page, baseURL }, testInfo) => {
+test('2.6: produksjonsdemo viser faktiske F4-funn uten ekstern trafikk', async ({ page }, testInfo) => {
   const external: string[] = []
-  page.on('request', request => { if (!request.url().startsWith(baseURL!)) external.push(request.url()) })
-  await enter(page, baseURL)
+  page.on('request', request => { if (!request.url().startsWith(caseUrl)) external.push(request.url()) })
+  await enter(page, caseUrl)
   await page.locator('#report-file').setInputFiles(fileURLToPath(new URL('../fixtures/property-cases/F4-tilstandsrapport.pdf', import.meta.url)))
   await expect(page.locator('#analysis-status')).toContainText('Rapport valgt')
   await page.getByRole('button', { name: 'Start analyse' }).click(); await showList(page)
@@ -298,24 +320,24 @@ for (const failure of ['transport', 'invalid-json'] as const) {
   })
 }
 
-async function originalF4(page: Page, baseURL: string | undefined) {
-  await enter(page, baseURL)
+async function originalF4(page: Page) {
+  await enter(page, caseUrl)
   await page.locator('#report-file').setInputFiles(fileURLToPath(new URL('../fixtures/property-cases/F4-tilstandsrapport.pdf', import.meta.url)))
   await expect(page.locator('#analysis-status')).toContainText('Rapport valgt')
   await page.getByRole('button', { name: 'Start analyse' }).click(); await showList(page)
 }
 
-test('2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/zoom og beholdt fokus', async ({ page, baseURL }) => {
+test('2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/zoom og beholdt fokus', async ({ page }) => {
   const external: string[] = []
   const workers: string[] = []
   let calls = 0
   page.on('request', request => {
-    if (!request.url().startsWith(baseURL!)) external.push(request.url())
+    if (!request.url().startsWith(caseUrl)) external.push(request.url())
     if (request.url().includes('pdf.worker')) workers.push(request.url())
     if (request.url().endsWith('/api/analysis')) calls++
   })
-  await page.route('**/*', route => route.request().url().startsWith(baseURL!) ? route.continue() : route.abort())
-  await originalF4(page, baseURL)
+  await page.route('**/*', route => route.request().url().startsWith(caseUrl) ? route.continue() : route.abort())
+  await originalF4(page)
   const finding = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
   await finding.focus(); await finding.press('Enter')
   await expect(page.locator('#pdf-status')).toContainText('PDF-side 4: Originalside tilgjengelig')
@@ -340,9 +362,9 @@ test('2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/
   expect(calls).toBe(1); expect(external).toEqual([]); expect(workers.length).toBeGreaterThan(0)
 })
 
-test('2.7 AC3/5: smalt panel har headingfokus, fokusfelle, Esc/retur og bevart valg/posisjon', async ({ page, baseURL }) => {
+test('2.7 AC3/5: smalt panel har headingfokus, fokusfelle, Esc/retur og bevart valg/posisjon', async ({ page }) => {
   await page.setViewportSize({ width: 850, height: 700 })
-  await originalF4(page, baseURL)
+  await originalF4(page)
   const finding = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
   await finding.click()
   await expect(page.locator('.pdf-viewer')).toHaveCount(0)
@@ -388,8 +410,8 @@ test('2.7 AC4 RT-7/8: usikker kilde gjettes ikke og workerfeil er synlig uten ny
   await expect(page.locator('#analysis-status')).toContainText('Analyse fullført')
 })
 
-test('2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og originalen kan gjenbrukes', async ({ page, baseURL }) => {
-  await originalF4(page, baseURL)
+test('2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og originalen kan gjenbrukes', async ({ page }) => {
+  await originalF4(page)
   const a = page.getByRole('button', { name: 'TG2 · Slitt overflate på baderomsgulv', exact: true })
   const b = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
   await b.click(); await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
@@ -419,8 +441,8 @@ test('2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og orig
   await expect(page.locator('[data-pdf-page="2"]')).toBeVisible()
 })
 
-test('2.7 AC4: faktisk renderfeil skjuler gammel side, beholder dokument/side og starter ikke analyse', async ({ page, baseURL }) => {
-  await originalF4(page, baseURL)
+test('2.7 AC4: faktisk renderfeil skjuler gammel side, beholder dokument/side og starter ikke analyse', async ({ page }) => {
+  await originalF4(page)
   await page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true }).click()
   await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
   await page.evaluate(() => {
@@ -442,11 +464,11 @@ test('2.7 AC4 RT-7: kjent men ugyldig kildeside viser faktisk mangel uten gjette
   await expect(page.getByRole('button', { name: 'Neste PDF-side' })).toBeDisabled()
 })
 
-test('2.7 cleanup/lasting: ventende worker gir ærlig status og frigjøres ved trinnretur', async ({ page, baseURL }) => {
+test('2.7 cleanup/lasting: ventende worker gir ærlig status og frigjøres ved trinnretur', async ({ page }) => {
   let release!: () => void
   const held = new Promise<void>(resolve => { release = resolve })
   await page.route('**/pdf.worker*', async route => { await held; await route.continue().catch(() => undefined) })
-  await originalF4(page, baseURL)
+  await originalF4(page)
   const finding = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
   await finding.click()
   await expect(page.locator('#pdf-status')).toContainText('PDF-side 4: Laster original-PDF')
@@ -462,8 +484,8 @@ test('2.7 cleanup/lasting: ventende worker gir ærlig status og frigjøres ved t
   await expect.poll(() => page.workers().length).toBe(0)
 })
 
-test('2.7 visuell QA: 1440, 1280, smalt panel og sterk zoom bevarer kilder/kontroller', async ({ page, baseURL }, testInfo) => {
-  await originalF4(page, baseURL)
+test('2.7 visuell QA: 1440, 1280, smalt panel og sterk zoom bevarer kilder/kontroller', async ({ page }, testInfo) => {
+  await originalF4(page)
   await page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true }).click()
   for (const [width, height] of [[1440, 900], [1280, 800]]) {
     await page.setViewportSize({ width: width!, height: height! })
@@ -496,8 +518,8 @@ test('2.7 kontrakt: usikker grad med kjent kilde og utelatt valgfri originalhash
   await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
 })
 
-test('2.7 uavhengig review: terminal renderfeil avslutter busy og ny naboside kan vises', async ({ page, baseURL }) => {
-  await originalF4(page, baseURL)
+test('2.7 uavhengig review: terminal renderfeil avslutter busy og ny naboside kan vises', async ({ page }) => {
+  await originalF4(page)
   await page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true }).click()
   await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
   await page.evaluate(() => {
@@ -516,8 +538,8 @@ test('2.7 uavhengig review: terminal renderfeil avslutter busy og ny naboside ka
   await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
 })
 
-test('2.7 uavhengig review: Hel side passer i leseregion og 1199/1200-grensen bevarer kilde', async ({ page, baseURL }, testInfo) => {
-  await originalF4(page, baseURL)
+test('2.7 uavhengig review: Hel side passer i leseregion og 1199/1200-grensen bevarer kilde', async ({ page }, testInfo) => {
+  await originalF4(page)
   const finding = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
   await finding.focus(); await finding.press('Enter')
   for (const [width, height] of [[1440, 900], [1280, 800], [1200, 650]]) {
@@ -539,8 +561,8 @@ test('2.7 uavhengig review: Hel side passer i leseregion og 1199/1200-grensen be
   await expect(finding).toHaveAttribute('aria-pressed', 'true')
 })
 
-test('2.7 uavhengig review: rapportbytte under ventende render frigjør gammel original og nullstiller visning', async ({ page, baseURL }) => {
-  await originalF4(page, baseURL)
+test('2.7 uavhengig review: rapportbytte under ventende render frigjør gammel original og nullstiller visning', async ({ page }) => {
+  await originalF4(page)
   await page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true }).click()
   await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
   await page.evaluate(() => {
@@ -1354,3 +1376,38 @@ test.describe('Story 2.11 — gjeldende liste og lokal tilstrekkelighet', () => 
       await expect(page.getByRole('button', { name: /Resultat Trinn 4/ })).toHaveAttribute('aria-disabled', 'true')
     })
 })
+
+if (mode === 'live') test('4.3 AC3: production missing-key failure remains visible in built live flow', async ({ page }) => {
+  const previousKey = process.env.OPENAI_API_KEY
+  delete process.env.OPENAI_API_KEY
+  const app = express()
+  let permissions = 0
+  const analysis = createAnalysisRouter({ mode, onLifecycle: event => {
+    if (event.kind === 'adapter-permitted') permissions++
+  } })
+  app.use('/api', analysis)
+  app.use(express.static(fileURLToPath(new URL('../../dist', import.meta.url))))
+  const server = createServer(app)
+  try {
+    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+    const address = server.address()
+    if (!address || typeof address === 'string') throw new Error('No listener')
+    await enter(page, `http://127.0.0.1:${address.port}`)
+    await choose(page, 'missing-key.pdf')
+    await page.getByRole('button', { name: 'Start analyse', exact: true }).click()
+    await expect(page.locator('.field-issue')).toContainText('Live-analyse kunne ikke konfigureres')
+    await expect(page.locator('.field-issue')).toContainText('OPENAI_API_KEY')
+    await expect(page.locator('.local-deficiencies')).toContainText('Innhent mer informasjon')
+    await expect(page.locator('.finding-list')).toHaveCount(0)
+    await expect(page.locator('.app-header')).toContainText('Live analyse')
+    expect(permissions).toBe(1)
+  } finally {
+    const closed = new Promise<void>(resolve => server.close(() => resolve()))
+    server.closeAllConnections(); await analysis.stop(); await closed
+    if (previousKey === undefined) delete process.env.OPENAI_API_KEY
+    else process.env.OPENAI_API_KEY = previousKey
+  }
+})
+
+})
+}

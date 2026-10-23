@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { AnalysisHttpResponseSchema } from '../../src/contracts/analysis-http.ts'
+import { AnalysisStartupSchema, AnalysisHttpResponseSchema } from '../../src/contracts/analysis-http.ts'
 import { createFailedAnalysis } from '../../src/contracts/analysis-validation.ts'
 
 describe('HTTP-konvoluttens doble request-identitet', () => {
@@ -12,4 +12,11 @@ describe('HTTP-konvoluttens doble request-identitet', () => {
     expect(AnalysisHttpResponseSchema.safeParse({ ...envelope, correlation: { ...envelope.correlation, requestId: 'request-2' } }).success).toBe(false)
     expect(AnalysisHttpResponseSchema.safeParse({ ...envelope, outcome: { ...outcome, requestId: 'request-2' } }).success).toBe(false)
   })
+})
+
+it('4.3: startup metadata accepts only explicit safe mode, never settings or secrets', () => {
+  for (const mode of ['demo', 'live']) expect(AnalysisStartupSchema.parse({ mode })).toEqual({ mode })
+  for (const invalid of [{}, { mode: 'unknown' }, { mode: 'live', apiKey: 'fictional' }, { mode: 'live', settings: {} }]) {
+    expect(AnalysisStartupSchema.safeParse(invalid).success).toBe(false)
+  }
 })

@@ -19,7 +19,7 @@ const safeError = (code: 'timeout' | 'interrupted' | 'transport-failure' | 'inva
   }[code])
 
 /** One request, one absolute deadline. Factory-bound abort belongs to the caller. */
-export function createLiveAdapter(backend: LiveBackend, options: { signal?: AbortSignal } = {}): AnalysisAdapter {
+export function createLiveAdapter(backend: LiveBackend, options: { signal?: AbortSignal; onRequestStart?: (startedAt: bigint) => void } = {}): AnalysisAdapter {
   return { mode: 'live', async analyze(input) {
     const document = DocumentBasisSchema.parse(input)
     if (document.mode !== 'live' || getDocumentBasisError(document)) throw safeError('adapter-failure')
@@ -55,6 +55,7 @@ export function createLiveAdapter(backend: LiveBackend, options: { signal?: Abor
     let failure: AnalysisAdapterError | undefined
     try {
       check()
+      options.onRequestStart?.(process.hrtime.bigint())
       const transport = backend.responses.create(request, { signal: controller.signal }).asResponse()
       void transport.then(response => {
         if (controller.signal.aborted) void response.body?.cancel().catch(() => {})

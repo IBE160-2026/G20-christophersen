@@ -237,3 +237,17 @@ describe('Story 2.6 — uavhengige fase-3-raceprøver', () => {
     expect(fetcher).toHaveBeenCalledTimes(2)
   })
 })
+
+for (const mode of ['demo', 'live'] as const) {
+  it(`4.3: ${mode} mode is bound to session, survives replacement and rejects mismatched outcome`, () => {
+    let report = reportReducer(createReportState(mode), { type: 'report-selecting', generation: 1 })
+    report = reportReducer(report, { type: 'report-selected', generation: 1, selected: { file, bytes, hash } })
+    report = reportReducer(report, { type: 'report-start', correlation })
+    const body = response()
+    const accepted = receive({ ...body, outcome: { ...body.outcome, mode } }, report)
+    expect(accepted.status).toBe('completed')
+    expect(receive({ ...body, outcome: { ...body.outcome, mode: mode === 'live' ? 'demo' : 'live' } }, report).error).toBe('metadata-mismatch')
+    expect(reportReducer(accepted, { type: 'report-selecting', generation: 2 }).mode).toBe(mode)
+    expect(createInitialSession(mode).report.mode).toBe(mode)
+  })
+}

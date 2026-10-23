@@ -2,8 +2,8 @@ import type { AnalysisAdapter } from '../../src/backend/analysis/adapter.ts'
 import { CONTRACT_VERSION, EXTRACTION_VERSION } from '../../src/contracts/document-analysis.ts'
 
 /** Kun kontrolladapter for bygget-app-prøver ved den ordinære adaptergrensen. */
-export const createAdapter = (): AnalysisAdapter => ({
-  mode: 'demo',
+export const createAdapter = (mode: 'demo' | 'live' = 'demo'): AnalysisAdapter => ({
+  mode,
   async analyze(document) {
     const findings = [{ findingId: 'ui-TG3', description: 'Kontrollert lekkasje', grade: 'TG3',
       source: { documentName: document.documentName, reportHash: document.reportHash, pdfPage: 2 }, uncertainties: [] as string[] }]

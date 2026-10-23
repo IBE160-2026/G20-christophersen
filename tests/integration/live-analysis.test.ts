@@ -85,7 +85,7 @@ describe('Story 4.2 — faktisk PDF → live SDK (offline) → samme kontroll/fi
       expect(extraction.document.pages[finding.source.pdfPage - 1]!.text).toContain(finding.description)
     }
 
-    let state = createInitialSession()
+    let state = createInitialSession('live')
     for (const field of ['P', 'L', 'D', 'J', 'Ymin'] as const) {
       state = sessionReducer(state, { type: 'register-value', field, rawValue: fixture.financialInputs[field] ?? '' })
       state = sessionReducer(state, { type: 'register-source', field,
@@ -112,7 +112,7 @@ describe('Story 4.2 — faktisk PDF → live SDK (offline) → samme kontroll/fi
     state = sessionReducer(state, { type: 'report-selected', generation: 1, selected })
     state = sessionReducer(state, { type: 'report-start', correlation })
     state = sessionReducer(state, { type: 'report-response', correlation, ok: true,
-      body: { kind: 'analysis', correlation, outcome: { ...outcome, mode: 'demo' } } })
+      body: { kind: 'analysis', correlation, outcome: outcome } })
     expect(findingListAssessment(state.report).controlCompleted).toBe(false)
     expect(state.resultSnapshot).toBeNull()
     expect(sessionReducer(state, { type: 'navigate', step: 'resultat' })).toBe(state)
@@ -133,7 +133,7 @@ describe('Story 4.2 — faktisk PDF → live SDK (offline) → samme kontroll/fi
 
     // Den rene snapshotgrensen støtter mangelfasit selv når UI-porten er sperret.
     const snapshot = calculateResultSnapshot(state)
-    expect(snapshot.assessment.basis.reportBasis.outcome).toEqual({ ...outcome, mode: 'demo' })
+    expect(snapshot.assessment.basis.reportBasis.outcome).toEqual(outcome)
     expect(Object.keys(snapshot.assessment.metrics).sort()).toEqual([
       'cashFlowBeforeTax', 'grossYield', 'netYield', 'noi',
     ])

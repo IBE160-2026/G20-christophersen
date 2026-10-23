@@ -31,8 +31,8 @@ Dette er en intern leverandørgrense for 4.2, ikke et HTTP-svar.
 Kontrollert `fetch` kan injiseres ved konstruksjon; 4.2 bruker requestens
 abortsignal og håndhever én absolutt 120 s-frist gjennom transport, lesing og
 terminal validering. SDK-timeout alene er ikke den absolutte adapterfristen.
-4.3 kobler senere lokal dokumentfase på 60 s og livefase på 120 s til HTTP.
-Dagens HTTP-/UI-flyt og demoens supervisor bruker fortsatt eksisterende demo.
+Story 4.3 kobler lokal dokumentfase på 60 s og livefase på 120 s til HTTP.
+HTTP/UI bruker lokal moduskonfigurasjon; demo beholder sin samlede 60 s-frist.
 Abort beviser ikke at leverandørbehandling eller belastning stopper.
 
 [R1](../../.docs/planning-artifacts/r1-live-ki-semester-v1.md) beholder hele
@@ -45,7 +45,8 @@ for offline-, transport-, build- og nøkkelgrensebevis. S2/S5 er ikke evaluert.
 
 `server.ts` serverer bygget app fra `dist/` på `127.0.0.1:3000`. Utvikling
 bruker Vite-middleware i samme Express-prosess. `POST /api/analysis` tilbyr
-lokal demoanalyse etter Story 2.5. Andre API-ruter svarer 404.
+demo eller live etter lokal konfigurasjon. `GET /api/analysis-config` gir bare
+trygg modusmetadata. Andre API-ruter svarer 404.
 
 `documents/validate-pdf.ts` (Story 2.2) mottar bytes og et dokumentnavn som
 visningsmetadata. `validatePdf` bruker låst `pdfjs-dist@6.4.299` legacy-build,
@@ -294,8 +295,8 @@ const outcome = await analyzeDocument(document, adapter)
 ```
 
 Importer factoryen fra `analysis/live-adapter.ts`. Signalet bindes til én
-request ved konstruksjon; kalleren eier AbortController. HTTP/UI velger fortsatt
-demo; fasekobling og duplikatsperre for live leveres i Story 4.3.
+request ved konstruksjon; kalleren eier AbortController. HTTP/UI støtter nå begge
+moduser gjennom samme prosess- og kontrollflyt (Story 4.3).
 
 `live-request.ts` versjonerer prompt/schema som **1/1**, med uendret felles
 kontrakt/uttrekk **2/1**. Requesten bruker `gpt-6.1-sol`, low, Standard,
@@ -331,3 +332,47 @@ Kjør `npm test -- tests/unit/live-adapter.test.ts tests/integration/live-analys
 Testene bruker ekte pinnet SDK med kontrollert fetch, faktiske PDF.js-fixtures
 og eksisterende kontroll-/finans-/screeningregler, helt uten betalt API.
 Se [Story 4.2-verifikasjon](../../.docs/implementation-artifacts/story-4-2-verifikasjon.md).
+
+
+## Lokal modus og HTTP/UI — Story 4.3
+
+Demo er standard: `npm run build` og `npm run demo` oppretter ingen KI-klient
+og trenger ingen nøkkel eller eksternt nett under vurderingsflyten.
+Live velges kun lokalt i backend: `ANALYSIS_MODE=live npm run demo`, med
+`OPENAI_API_KEY` allerede satt i backendmiljøet. Ingen nøkkelverdi skal skrives i
+kommandohistorikk, repo, frontend eller logger. Dette er en oppstartsoppskrift,
+ikke en bestilling av betalte forsøk; R1s budsjett-/kontorutine gjelder før
+reell kjøring i Story 4.4/4.5. Ukjent `ANALYSIS_MODE` stopper oppstart.
+Ved endring av lokal modus: start serveren på nytt og last appen på nytt
+slik at en ny økt får riktig oppstartsmodus.
+Manglende nøkkel i live gir en trygg analysefeil etter dokumentkontroll,
+uten fallback eller automatisk nytt forsøk.
+
+`GET /api/analysis-config` gir bare `{ mode: "demo" | "live" }` med no-store.
+Frontend validerer strengt før økten opprettes; ugyldige metadata gir lokal
+oppstartsfeil. Modus følger rapportbytter, merkes i alle fire trinn og må
+samsvare med analyseutfallet i tillegg til hash/navn/korrelasjon/generasjon.
+Ingen klientheader velger modus, leverandør eller kjørbar kode.
+
+Eksplisitt Start analyse bruker fortsatt ett ventende `POST /api/analysis`.
+Supervisoren eier 60 000 ms lokal dokumentfrist; demo beholder denne fristen
+gjennom hele adapteren. For live skifter fasen etter komplett godkjent
+dokumentgrunnlag og varig duplikatmarkør. Live-adapterens monotone 120 000 ms
+frist starter ved leverandørforespørselen. Et internt IPC-håndtrykk lar
+supervisorens reservefrist følge det faktiske transportstarttidspunktet,
+inklusive IPC-forsinkelse; modul-/klientinitialisering trekker ikke fra
+transportvinduet. Initialisering etter dokumentgodkjenning har også en
+stoppbar 120 s reservefrist. Bare ett transportstarthåndtrykk godtas.
+
+Ved feil, abort eller timeout terminerer supervisoren hele barneprosessen
+og avventer faktisk OS-close før request-låsen frigjøres. Dette rydder også
+PDF-/tekstkopier, SDK-transport og parsertråder. Den innholdsløse markøren for
+økt/modus/hash består til serverstopp, også etter abort. Ny requestId eller
+generasjon omgår ikke sperren. Kontroll-/finans-/funn-/TG3-endringer bruker
+samme uttrekk og samme kodeautoriteter uten nye modellkall.
+
+Testmoduler for dokument, adapter og offline-fetch kan kun injiseres fra
+betrodd lokal routerkonstruksjon. Serverens miljø og HTTP-input velger aldri
+slike moduler. Offline-fetch-prøven bruker den vanlige produksjonskomposisjonen,
+ekte pinnet SDK og adapter; den er ingen reell live-kjøring eller S2/S5-bevis.
+Se [Story 4.3-verifikasjon](../../.docs/implementation-artifacts/story-4-3-verifikasjon.md).

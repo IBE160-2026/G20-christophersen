@@ -267,3 +267,29 @@ test('Story 2.5: faktisk demoserver analyserer én multipart-PDF med backendhash
     mode: 'demo', documentName: name, pageCount: 4, findings: [{ findingId: 'F1-TG2-1', grade: 'TG2' }],
   } })
 })
+
+test('4.3 startup: invalid or secret-bearing metadata blocks boot without a mode fallback', async ({ page }) => {
+  await page.route('**/api/analysis-config', route => route.fulfill({ json: { mode: 'live', apiKey: 'fictional-must-not-be-trusted' } }))
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: 'Arbeidsflaten kunne ikke lastes' })).toBeVisible()
+  await expect(page.getByText('Last siden på nytt for å hente lokal analysemodus.')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Start analyse', exact: true })).toHaveCount(0)
+  await expect(page.getByText('fictional-must-not-be-trusted')).toHaveCount(0)
+})
+
+test('4.3 startup: stalled metadata shows status and a bounded safe error', async ({ page }) => {
+  await page.clock.install()
+  let release!: () => void
+  const held = new Promise<void>(resolve => { release = resolve })
+  await page.route('**/api/analysis-config', async route => {
+    await held
+    await route.fulfill({ json: { mode: 'demo' } }).catch(() => undefined)
+  })
+  try {
+    await page.goto('/')
+    await expect(page.getByRole('status')).toHaveText('Laster arbeidsflaten …')
+    await page.clock.fastForward(10_000)
+    await expect(page.getByRole('heading', { name: 'Arbeidsflaten kunne ikke lastes' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Start analyse', exact: true })).toHaveCount(0)
+  } finally { release() }
+})

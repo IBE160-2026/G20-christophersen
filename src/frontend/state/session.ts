@@ -39,7 +39,7 @@ export type SessionAction = ReportAction
   | { type: 'change-cost'; id: string; update: Partial<Omit<CostItem, 'id'>> }
   | { type: 'remove-cost'; id: string }
 
-export function createInitialSession(): SessionState {
+export function createInitialSession(mode: 'demo' | 'live' = 'demo'): SessionState {
   const source = (): FinancialSource => ({ kind: '', description: '', conflict: null })
   return {
     financial: {
@@ -52,7 +52,7 @@ export function createInitialSession(): SessionState {
     sources: { P: source(), L: { ...source(), rentNature: '' }, D: source(), J: source(), Ymin: source() },
     costItems: [],
     nextCostId: 1,
-    currentStep: 'tallgrunnlag', report: createReportState(),
+    currentStep: 'tallgrunnlag', report: createReportState(mode),
     financialRevision: 0, changedFields: [], explicitZeros: [], confirmationAttempts: 0,
     resultSnapshot: null, resultChanges: [],
   }

@@ -1,3 +1,4 @@
+import { analysisModeLabel } from '../contracts/analysis-http.ts'
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { ReportClient } from './analysis/report-client.ts'
 import { analysisStatus, findingListAssessment } from './state/report.ts'
@@ -7,8 +8,8 @@ import { selectResult } from './state/result.ts'
 import { FinancialInput } from './screens/FinancialInput.tsx'
 import { createInitialSession, isFinancialConfirmed, sessionReducer } from './state/session.ts'
 
-function App() {
-  const [session, dispatch] = useReducer(sessionReducer, undefined, createInitialSession)
+function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
+  const [session, dispatch] = useReducer(sessionReducer, mode, createInitialSession)
   const [client] = useState(() => new ReportClient(dispatch))
   useEffect(() => {
     if (session.report.status !== 'analysing') client.abort()
@@ -32,7 +33,7 @@ function App() {
       <a className="skip-link" href={`#${session.currentStep}`}>Hopp til arbeidsinnhold</a>
       <header className="app-header">
         <p className="product-name">Property Acquisition Agent</p>
-        <p className="meta">Demo · lagret KI-uttrekk</p>
+        <p className="meta">{analysisModeLabel(session.report.mode)}</p>
       </header>
       <nav className="step-navigation" aria-label="Vurderingens fire trinn">
         <ol className="stepper">

@@ -281,3 +281,53 @@ backendfeil, abort, cleanup-feil med levende worker og synkrone heng/sen retur.
 Prosessens faktiske avslutning kontrolleres før neste forsøk. PDF-fixtures og
 lagrede demosvar endres ikke. Dette er HTTP-/ressursbevis, ingen frontend,
 PDF-visning, live-timeout eller S2/S5/S6-godkjenning.
+
+## Live-uttrekk ved adaptergrensen — Story 4.2
+
+Etter ferdig dokumentfase kan kode konstruere live-adapteren slik:
+
+```ts
+const backend = createAnalysisBackend('live')
+if (backend.mode !== 'live') throw new Error('Live-oppsett kreves')
+const adapter = createLiveAdapter(backend, { signal })
+const outcome = await analyzeDocument(document, adapter)
+```
+
+Importer factoryen fra `analysis/live-adapter.ts`. Signalet bindes til én
+request ved konstruksjon; kalleren eier AbortController. HTTP/UI velger fortsatt
+demo; fasekobling og duplikatsperre for live leveres i Story 4.3.
+
+`live-request.ts` versjonerer prompt/schema som **1/1**, med uendret felles
+kontrakt/uttrekk **2/1**. Requesten bruker `gpt-6.1-sol`, low, Standard,
+`max_output_tokens: 128000` (inklusive reasoning), `truncation: 'disabled'`,
+`store: false` og strict Responses `text.format`. Hele `DocumentBasis`, inklusive
+navn/hash, alle fysiske sideposisjoner, tekst, blanke sider, statuser og årsaker,
+serialiseres uendret i ett tekstinput. Ingen funnantallsgrense, avkorting,
+filtrering, OCR, chunking, retry, reparasjon eller fallback brukes.
+Leverandøren kontrollerer hele requesten, inklusive prompt/schema, mot
+1 050 000 tokens kontekst i samme forsøk. Det gjøres ingen lokal eksakt
+tokentelling eller påstand om garantert plass til hele outputbudsjettet.
+Kapasitetsfeil blir trygg transportfeil; incomplete avvises også med tekst.
+
+Adapteren bruker SDK `asResponse()` og leser body selv. Én monoton absolutt
+120 000 ms-frist omfatter transport, body, parsing, kilde-/kontraktvalidering og
+cleanup. `abortable-fetch.ts` binder også SDK-eid lesing av HTTP-feilbody til
+signalet etter headere. Reader kanselleres; underliggende cancel-promise kan
+ikke forlenge fristen. Native fetch får samtidig abortsignalet. JSON-parsing og
+felles `bindAnalysisOutcome` kjører i en eid Node-worker som termineres og
+avventes i alle utfall. Sene svar forkastes, timere/lyttere/reader/tråd ryddes,
+og fristen kontrolleres igjen før retur. Abort/deadline gir henholdsvis
+`interrupted`/`timeout`; rå leverandør-/parserfeil returneres eller logges ikke.
+Abort garanterer ingen stans i leverandørbehandling eller belastning.
+
+Bare terminalt completed svar med ett fullstendig, schema-/kontraktvalidert
+uttrekk kan fullføre. Avslag, manglende status/felt, ugyldig JSON, duplikat-ID,
+blanksidekilde og ufullstendig output gir `invalid-response`. Uklar grad,
+tallstrengside, manglende kilde og kildemotstrid beholdes som originale usikre
+kandidater. Modellen får ingen myndighet over kodeidentitet, finans eller
+brukerbekreftelse. Strukturvalidering er ikke semantisk kvalitet eller S2.
+
+Kjør `npm test -- tests/unit/live-adapter.test.ts tests/integration/live-analysis.test.ts`.
+Testene bruker ekte pinnet SDK med kontrollert fetch, faktiske PDF.js-fixtures
+og eksisterende kontroll-/finans-/screeningregler, helt uten betalt API.
+Se [Story 4.2-verifikasjon](../../.docs/implementation-artifacts/story-4-2-verifikasjon.md).

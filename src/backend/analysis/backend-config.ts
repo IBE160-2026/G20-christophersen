@@ -1,4 +1,5 @@
 import OpenAI from 'openai'
+import { abortableFetch } from './abortable-fetch.ts'
 import type { ClientOptions } from 'openai'
 import { AnalysisAdapterError } from './adapter.ts'
 import type { AnalysisAdapter } from './adapter.ts'
@@ -56,7 +57,7 @@ export function createAnalysisBackend(mode: unknown = 'demo', dependencies: Depe
       logLevel: 'off',
       logger: silentLogger,
       dangerouslyAllowBrowser: false,
-      ...(dependencies.fetch ? { fetch: dependencies.fetch } : {}),
+      fetch: abortableFetch(dependencies.fetch ?? globalThis.fetch),
     })
     // SDK-instance og nøkkel forblir i closure, uten serialiserbar oppstartsmetadata.
     // Requestens signal og absolutt adapterfrist eies av 4.2.

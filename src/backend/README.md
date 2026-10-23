@@ -4,6 +4,45 @@ Denne grensen eier HTTP, dokumentbehandling og analyseadaptere etter
 AD-1/AD-9. HTTP bruker dokument-/analysekomponenter og felles contracts.
 Backend leverer dokument-/analyseutfall; finans og anbefaling eies av domain.
 
+## Lokal klientkonfigurasjon — Story 4.1
+
+`analysis/backend-config.ts` tilbyr `createAnalysisBackend()` eller
+`createAnalysisBackend('demo')`, som gir eksisterende lokal demo-adapter uten
+miljølesing, KI-klient eller transportkall. Eksplisitt
+`createAnalysisBackend('live')` leser bare backendens `OPENAI_API_KEY` og
+konstruerer én klient, uten å starte en forespørsel. Sett nøkkelen i lokalt
+backendmiljø; den skal aldri føres i frontend, Vite-variabler eller Git.
+Manglende/tom nøkkel, whitespace/kontrolltegn eller ugyldig modus gir
+kodeeid `AnalysisAdapterError` (`adapter-failure`), uten råverdier eller fallback.
+Lokal syntakskontroll bekrefter ikke nøkkelens konto-/modelltilgang.
+
+`openai@6.9.1` er eksakt pinnet i pakke- og låsfil. Kompatibilitet er kontrollert
+mot installert offisiell SDK-kode og [offisiell OpenAI TypeScript-dokumentasjon](https://developers.openai.com/api/reference/typescript):
+Responses `create`, `reasoning.effort: 'low'`, `service_tier: 'default'`,
+`text.format` med JSON Schema og requestens `signal` finnes i denne versjonen.
+SDK tillater eksplisitt modell-ID som streng. R1s valgte modell er
+`gpt-6.1-sol`; API er Responses, SDK `maxRetries: 0` og `timeout: 120000`.
+Offisielt API-endepunkt settes i kode; organisasjon, prosjekt og webhook er
+eksplisitt null. SDK-logging er avslått og har en stille logger, også hvis
+`OPENAI_LOG` er satt. SDK-instance/nøkkel skjules i en closure; live-resultatet
+eksponerer bare trygg `settings`-metadata og backendens bundne `responses.create`.
+Dette er en intern leverandørgrense for 4.2, ikke et HTTP-svar.
+
+Kontrollert `fetch` kan injiseres ved konstruksjon; 4.2 bruker requestens
+abortsignal og håndhever én absolutt 120 s-frist gjennom transport, lesing og
+terminal validering. SDK-timeout alene er ikke den absolutte adapterfristen.
+4.3 kobler senere lokal dokumentfase på 60 s og livefase på 120 s til HTTP.
+Dagens HTTP-/UI-flyt og demoens supervisor bruker fortsatt eksisterende demo.
+Abort beviser ikke at leverandørbehandling eller belastning stopper.
+
+[R1](../../.docs/planning-artifacts/r1-live-ki-semester-v1.md) beholder hele
+30-sidersgrunnlaget, 1 050 000 tokens kontekst og 128 000 maksimal output
+inklusive reasoning. 4.2 vurderer komplett serialisert input mot dette uten
+skjult avkorting. R1s daterte prisgrunnlag og kostnadsrutine innen USD 20 totalt
+gjelder før senere, uttrykkelige live-forsøk; ingen betalte kall er gjort i 4.1.
+Se [4.1-verifikasjonen](../../.docs/implementation-artifacts/story-4-1-verifikasjon.md)
+for offline-, transport-, build- og nøkkelgrensebevis. S2/S5 er ikke evaluert.
+
 `server.ts` serverer bygget app fra `dist/` på `127.0.0.1:3000`. Utvikling
 bruker Vite-middleware i samme Express-prosess. `POST /api/analysis` tilbyr
 lokal demoanalyse etter Story 2.5. Andre API-ruter svarer 404.

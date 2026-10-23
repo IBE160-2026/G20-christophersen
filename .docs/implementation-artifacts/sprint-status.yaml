@@ -74,8 +74,8 @@ development_status:
   3-9-oppdatere-resultat-etter-rapportkontroll-og-separat-tg3-endr: done
   epic-3-retrospective: optional
 
-  epic-4: backlog
-  4-1-konfigurere-valgt-live-leverandør-uten-å-eksponere-nøkkelen: backlog
+  epic-4: in-progress
+  4-1-konfigurere-valgt-live-leverandør-uten-å-eksponere-nøkkelen: review
   4-2-analysere-hele-det-sidemerkede-rapportgrunnlaget-i-ett-ki-ka: backlog
   4-3-bruke-live-analysen-i-samme-kontroll-og-resultatflyt: backlog
   4-4-gjennomføre-ekte-live-analyse-og-evaluere-opprinnelig-uttrek: backlog

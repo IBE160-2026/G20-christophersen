@@ -2,10 +2,10 @@
 title: 'Story 4.3 — Bruke live-analysen i samme kontroll- og resultatflyt'
 type: 'feature'
 created: '2026-10-23'
-status: 'in-review'
+status: 'done'
 baseline_commit: 'c24f15e82680a27327eaf9e1981679fe719bf91c'
 route: 'dispatch'
-review_loop_iteration: 0
+review_loop_iteration: 1
 context:
   - '{project-root}/.docs/planning-artifacts/r1-live-ki-semester-v1.md'
   - '{project-root}/.docs/specs/spec-IBE160/SPEC.md'
@@ -97,3 +97,27 @@ Tre uavhengige reviewere (blind, kanttilfeller og verifikasjonsgap) leste arbeid
 Alle konkrete funn i endringen er lukket; ett eksisterende forbedringspunkt er utsatt. Se [verifikasjon](story-4-3-verifikasjon.md) og [arbeidsøkt](../process/arbeidsokter/2026-10-23-story-4-3.md). Story-status beholdes in-review etter brukerens bestilling; sprintstatus settes review før commit.
 
 Sluttkontroll: også ny build/demooppstart med 204 frontendfiler og 0 nøkkellekkasjer består under OS-nettsperre. README-status er avstemt med levert integrasjon uten påstand om 4.4/4.5-evaluering. Sprintstatus er review.
+
+## Nytt code review av fdd86dc — 2026-10-23
+
+Fire uavhengige lag: blind hunter, edge-case hunter, verification-gap og acceptance auditor. Alle leverte; edge-case-laget rapporterte ingen funn. Ingen konkret runtime-overtredelse av AC1–AC6, R1 eller kontraktene ble påvist. Den nye bestillingen autoriserer retting og done etter bestått kontroll; tidligere tekst om å beholde review gjelder implementeringshåndoffen.
+
+### Review Findings
+
+- [x] [Review][Patch] C4/V1, medium: produksjonens transportstart-IPC manglet regresjonsvern. Ny `live-pipeline-wiring.test.ts` kjører faktisk barneprosess, produksjonsadapter og SDK med offline-transport og kontrollert supervisorklokke. Fullføring ved 124 s fra tillatelse /119 s fra transport tillates. Isolerte mutasjoner uten IPC og uten fristutvidelse feiler. Ingen runtimeendring.
+- [x] [Review][Patch] A1, medium: manuell live-UX-kontroll var ikke dokumentert. Utført via native Chrome/UI med offline-kontrolladapter; modus, analyse-/feilstatus, fokus, tastatur og faktisk synlig liste kontrollert. Se ny reviewarbeidsøkt.
+- [x] [Review][Defer] C2, medium: Start etter terminal feil kan erstatte opprinnelig feil med duplicate-analysis. Baselineforhold allerede registrert i deferred-work; ikke rettet eller duplisert i ledgeren.
+
+### Rejected
+
+| ID | Dom | Individuelt bevis / avgrensning |
+|---|---|---|
+| C1 | low, avvist | Overlevende demofane etter omkonfigurering til live er en reell driftskant, allerede triagert B2. Dokumentert oppsett krever ny lasting. Ny modusprotokoll for en slik omkonfigurering er ikke en direkte retting innen støttet oppstart. |
+| C3 | false | Den lokale konfigurasjonsruten returnerer bare strengvalidert `{mode}`. Ingen støttet vei gir den vilkårlig store JSON-bodyen kandidaten forutsetter. |
+| C5 | false | Kontrolltransporten teller faktiske fetch-kall og kaster ved kall nr. 2; SDK-/adaptertester dekker ingen retry. Påstanden om manglende bevis for ett transportforsøk holder ikke samlet. |
+| C6 | false | R1 krever faktisk ressursstans, ikke separat graceful abortsignal før SIGKILL. HTTP-testen avventer reell prosess-close før låsfrigjøring; eide transportressurser avsluttes med prosessen. |
+| C7 | false som nytt 4.3-funn | Muligheten for endret pageCount i betrodd context-IPC finnes i baseline. Produksjonsbarnet følger fast protokoll og sender ingen slik mutasjon etter tillatelse. Ingen nåbar ny feil er vist. |
+| C8 | false | Produksjonsbarnet bruker aktuell monoton tid. Eldre fabrikkerte tidsstempler gir trygg timeout uten fullføring eller fristforlengelse; ingen brudd på R1 er demonstrert. |
+| C9 | low, avvist | Entry-test krever ledig dokumentert port 3000. Portkonflikt med en allerede kjørende app er et lokalt testvilkår; ny portkonfigurasjon/preload tilfører mer enn en direkte retting. Sluttregresjon kjøres med ledig port. |
+
+C4 og V1 er vurdert hver for seg som medium, samme verifikasjonshull og felles patch. A1 er et separat verifikasjonsfunn. Ingen beslutning eller nye produktkrav er nødvendig. Endelig testresultat og status føres i verifikasjonsrapporten.

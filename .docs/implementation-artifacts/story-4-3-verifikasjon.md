@@ -50,3 +50,23 @@ Tre uavhengige reviewlag er kjørt og individuelt triagert i specen. Alle konkre
 1047/1047-tallet ovenfor gjelder full Vitest før de nye reviewtestene; det er ikke feilaktig omtalt som en ny samlet kjøring av et senere testantall. Ingen betalt API, faktisk KI-evaluering eller arbeid i 4.4 er utført.
 
 Ny build-/demooppstartskontroll etter bootstraprettingen: `env -u OPENAI_API_KEY -u ANALYSIS_MODE PATH=... sandbox-exec -f .docs/implementation-artifacts/story-5-3-nettprofil.sb node tests/helpers/verify-analysis-build.mjs` — **bestått, 204 frontendfiler og 0 nøkkellekkasjer**. Siste lint og diff-whitespacekontroll består. Root-README-status er avstemt med levert 4.3; faktiske live-evalueringer er fortsatt uttrykkelig gjenstående.
+
+## Selvstendig code review av commit fdd86dc — 2026-10-23
+
+Fire uavhengige BMAD-lag er triagert i storyspecen. Ingen ny runtimefeil ble påvist. To verifikasjonshull er lukket: faktisk transportstart-IPC/fristsammensetning og dokumentert manuell live-UX. Ny test kjører ekte produksjonsbarn/adapter/SDK med offline-fetch og kontrollert supervisortid; både fjernet IPC og fjernet fristutvidelse gir feil i isolerte mutasjonskopier. Målrettet testsett: 62/62 bestått (55 wiring/fase/adapter + 7 live-HTTP).
+
+Manuell live-modus/-feil/-tastatur/-status er kontrollert i native Chrome mot bygget app med eksisterende kontrolladapter. Se [arbeidsøkt med bestilling og observasjoner](../process/arbeidsokter/2026-10-23-story-4-3-code-review.md). Ingen faktiske leverandørforsøk.
+
+Nye komplette regresjonskjøringer med Node 24.21.0, uten API-nøkkel/modus i miljøet, eksisterende Playwright-cache og OS-sperret eksternt nett:
+
+- Bygget-app-E2E, `playwright test --workers=2`: **189/189 bestått**, 2,8 min.
+- Dev/offline-E2E, `playwright test --config playwright.dev.config.ts`: **3/3 bestått**.
+- Komponenter, `npm run test:components`: **37/37 bestått**.
+- `npm run typecheck`, `npm run lint` og build: **bestått**. Build inngikk i første `npm run test:e2e`; etterpå er bare tester og dokumentasjon endret.
+- `verify-analysis-build.mjs`: **bestått**, faktisk build/demooppstart, **204 frontendfiler, 0 nøkkellekkasjer**.
+- Første samtidige Playwright-kjøringer kolliderte i delt artefaktmappe: 185/189 med fire ENOENT-teardownfeil; ny separat komplett kjøring ovenfor er grønn. Ingen produktretting for kjøreoppsettet.
+- Første full Vitest: 1056/1058, cleanup-testens 5 s-frist og kjent chunked-upload-EPIPE. Separat full omkjøring etter patch: 1058/1059, kun samme EPIPE. Begge feilbaner er i eldre Story 2.5-tester; ingen kode utenfor 4.3 er endret. Sluttkjøring med én worker registreres nedenfor.
+
+Kjørelogger i arbeidsmiljøet: `/private/tmp/story43-review-e2e-final.txt`, `story43-review-dev-final.txt`, `story43-review-components.txt`, `story43-review-vitest-serial.txt` og `story43-review-build-boundary.txt`. Kildene og endelige utfall er bevart her; tempfilene er ikke leveranseavhengigheter.
+
+Sluttkjøring `npm test -- --maxWorkers=1`: **38/38 filer, 1059/1059 tester bestått**, 129,59 s. Dette er en komplett grønn regresjon etter reviewpatchen, inklusive den tidligere EPIPE-prøven. Ingen test er hoppet over eller gitt automatisk retry. Full E2E/dev/komponentregresjon og øvrige kontroller ovenfor består. `git diff --check` består. Story 4.3 er godkjent og satt done; sprintstatus synkronisert. 4.4/4.5 forblir backlog. Lokal commit, ingen push.

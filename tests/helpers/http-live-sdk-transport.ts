@@ -1,4 +1,4 @@
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 
   let calls = 0
   export const fetch: typeof globalThis.fetch = async (_url, init) => {
@@ -7,6 +7,12 @@ import { writeFile } from 'node:fs/promises'
     const request = JSON.parse(String(init?.body))
     const document = JSON.parse(request.input[0].content[0].text)
     if (document.mode !== 'live' || document.pages.length !== document.pageCount) throw new Error('Incomplete document')
+    const releaseFile = new URL(import.meta.url).searchParams.get('release')
+    if (releaseFile) {
+      while (await readFile(releaseFile, 'utf8').catch(() => '') !== 'release') {
+        await new Promise(resolve => setTimeout(resolve, 10))
+      }
+    }
     if (document.documentName === 'transport.pdf') return new Response('{}', { status: 429 })
     if (document.documentName === 'invalid.pdf') return new Response('{}')
     if (document.documentName === 'incomplete.pdf') return new Response(JSON.stringify({ status: 'incomplete', output: [] }))

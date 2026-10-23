@@ -32,7 +32,7 @@
 # development_status er gruppert per epic, ikke etter implementeringsrekkefølge.
 # BMADs generiske statusanbefaling håndhever ikke avhengigheter eller porter.
 generated: 10-16-2026 18:23
-last_updated: 10-22-2026
+last_updated: 10-23-2026
 project: IBE160
 project_key: NOKEY
 tracking_system: file-system
@@ -120,11 +120,12 @@ clarification_gates:
     closed_on: 2026-10-20
     decision_record: .docs/planning-artifacts/r3-http-ressurser-semester-v1.md
   R1:
-    status: open
+    status: closed
     owner: Mads + live-integrasjon
     before_stories: ['4.1', '4.2', '4.3', '4.4', '4.5']
-    subject: Leverandør, modell/SDK, kapasitet, pris/budsjett og live-timeouter
-    decision_record: null
+    subject: OpenAI GPT-6.1 Sol / Responses / strict schema / low; 120 s uten retry; sekvensielt innen USD 20
+    closed_on: 2026-10-23
+    decision_record: .docs/planning-artifacts/r1-live-ki-semester-v1.md
   R4-S6:
     readiness_issue: R4
     status: open

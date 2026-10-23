@@ -11,6 +11,11 @@ implementation_owner: Backendansvar
 
 # R3 — HTTP-ressurser og dokumentlivsløp i semester-v1
 
+Oppfølging 2026-10-23: [R1 er lukket](r1-live-ki-semester-v1.md) med separat
+hard live-frist 120 s etter lokal dokumentfase, uten retry. R3s lokale
+PDF-/demo-frist 60 s og øvrige ressurs-/cleanupgrenser bevares. Formuleringer
+om uavklart live-timeout nedenfor dokumenterer R3-vedtaket fra 2026-10-20.
+
 **R3 er lukket som beslutningsport 2026-10-20.** Mads har eksplisitt vedtatt
 grensene nedenfor før Story 2.5. Dette konkretiserer eksisterende Deferred i
 AD-5/AD-9 og Story 2.5; det er ingen implementering eller bestått produkttest.

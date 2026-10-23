@@ -1491,6 +1491,15 @@ Investoren kan eksplisitt starte én faktisk KI-analyse av en ny støttet rappor
 
 ### Gjennomføringsport før implementering
 
+**R1 er lukket 2026-10-23** gjennom [Mads' vedtatte live-oppsett og testbudsjett](r1-live-ki-semester-v1.md).
+OpenAI GPT-6.1 Sol/Responses/offisiell JS/TS-SDK, strict Structured Outputs,
+reasoning low, ett kall med hele PDF.js-grunnlaget, hard live-frist 120 s,
+ingen retry, backendmiljønøkkel og offline demo er avklart. Datert pris-/
+kapasitetsgrunnlag, USD 20 totalt, sekvensielle forsøk og stopp ved budsjett
+står i beslutningen. R2/R3 og S5 er avstemt; faktisk kontogrense verifiseres
+før live-test. Dette oppfyller porten beskrevet nedenfor uten å endre story-AC.
+Epic 4 er ikke startet, og ingen live-/S2-/S5-bevis påstås fra portlukking.
+
 Mads + live-integrasjon avklarer og dokumenterer leverandør, eksakt modell/SDK, kontekst-/outputkapasitet, datert prisgrunnlag, prosjektbudsjett/beregnet testkostnad og konkrete leverandør-/live-timeouter før berørt implementering og før betalte tester. Dette viderefører brukerens presisering og arkitekturens Deferred; ingen verdier velges gjennom denne storygodkjenningen. Valget skal håndtere hele det støttede sidemerkede grunnlaget i ett kall uten skjult avkorting/retry. Dersom dette krever endring av låst støtte, kontrakt eller arkitektur, må Mads spørres først.
 
 PDF-lesbarhet i 2.3 og upload-/HTTP-ressurser/opprydding i 2.5 beholder sine tidligere avklaringspunkter. De utsettes ikke til denne epicen. Live-integrasjonen må passe disse grensene. S5s medianmål er ingen hard femminutters timeout. Budsjett/kostnad følges som gjennomføringsdokumentasjon; ingen ny appfunksjon for betaling eller budsjetthåndheving bestilles.

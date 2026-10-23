@@ -11,10 +11,35 @@ finalValidation: coverage-and-structure-pass
 epicsWorkflowClosure: complete
 epicsWorkflowClosed: 2026-10-16
 implementationStarted: false
-lastReadinessUpdate: 2026-10-20
+lastReadinessUpdate: 2026-10-23
 ---
 
 # Implementation readiness — Property Acquisition Agent
+
+## Oppfølging av R1 — lukket 2026-10-23
+
+**R1 er lukket som beslutningsport; samlet vurdering er fortsatt CONCERNS.**
+[Mads' R1-beslutning](r1-live-ki-semester-v1.md) fastsetter OpenAI
+GPT-6.1 Sol (`gpt-6.1-sol`), Responses API, offisiell JS/TS-SDK, strengt
+Structured Outputs-schema og reasoning low. Hele PDF.js-grunnlaget brukes
+i ett kall, uten OCR/vision/retry. Egen hard live-frist er 120 s etter lokal
+dokumentfase; R3s lokale 60 s-frist og S5s evalueringsmål holdes atskilt.
+Nøkkel forblir i backendmiljøet og demo fungerer offline uten KI-klient.
+
+USD 20 totalt er godkjent testbudsjett, med sekvensielle kjøringer og stopp
+ved nådd ramme. Datert Standard-pris ($2/M input, $10/M output, med angitt
+langkontekstprising), modellgrenser, kostnadsestimater og testmatrise er
+dokumentert. Forventet kapasitet er tilstrekkelig for én-kall-per-rapport;
+faktisk modelltilgang/kontogrense verifiseres før live-test.
+
+Dette fyller eksisterende Deferred og er avstemt mot Epic 4/4.1–4.5,
+AD-3–AD-6/AD-9/AD-10, SPEC og R2/R3. Ingen låste produktkrav, story-AC,
+runtime-schemas eller kontraktversjoner er endret. Ingen kode, installasjon,
+produkttest eller live-kjøring er utført ved portlukking. Epic 4 og 4.1–4.5
+forblir backlog. Direkte forutsetninger for 4.1 (1.2/2.4/2.5) er done;
+ingen beslutningsblocker før 4.1 gjenstår. R4-S5/R4-S6 er fortsatt åpne ved
+sine måle-/kjøreporter. Eldre oppfølginger nedenfor er historikk; gjeldende
+story-/portstatus står i sprintregisteret. Implementering krever senere bestilling.
 
 ## Oppfølging av R3 — lukket 2026-10-20
 
@@ -142,9 +167,9 @@ Dette er dokumenterte porter, ikke nye produktkrav eller tillatelse til å endre
 
 | ID / prioritet | Hvor og hva gjenstår | Ansvarlig / senest før | Hva lukker punktet |
 |---|---|---|---|
-| R1 — høy for live | Epic 4s gjennomføringsport og 4.1/4.2/4.4: leverandør, eksakt modell/SDK, kontekst/output, pris/budsjett og live-timeouter er ikke valgt her. | Mads + live-integrasjon, før Epic 4 implementeres og før betalte tester. | Dokumentert valgt oppsett med datert pris-/kostnadsgrunnlag, kapasitet for hele støttede rapportgrunnlaget i ett kall, avtalt budsjett og testbare timeout-/retryinnstillinger. Ingen ny leverandørplattform eller hard S5-timeout. |
+| R1 — **lukket 2026-10-23** | [Godkjent OpenAI-/Responses-oppsett](r1-live-ki-semester-v1.md), strict schema/low, 120 s live-frist uten retry, datert kapasitet/pris og USD 20 totalt med sekvensielle forsøk. | Mads + live-integrasjon, før Epic 4; faktisk kontogrense/nøkkel og restbudsjett kontrolleres før live-test. | Beslutningen er avstemt mot 4.1–4.5, AD-3–AD-6/AD-9/AD-10, SPEC og R2/R3. Testbar timeout-/retry-/schemamatrisen leveres først ved implementering; ingen live-/S2-/S5-påstand. R4 består. |
 | R2 — **lukket 2026-10-20** | [Godkjent deterministisk PDF.js-regel](r2-pdf-lesbarhet-semester-v1.md) med konservativ blankdeteksjon, blokkerende unreadable/unknown/incomplete og forventede fixtureutfall. | Dokumentansvar + Mads, før Story 2.3. | Beslutningen er avstemt mot Story 2.3, AD-3/AD-4, SPEC og kontraktversjon 2. PDF-ekstraktor/blankdetektor og faktiske fixturetester er fortsatt 2.3-arbeid, ikke bevis fra portlukkingen. |
-| R3 — **lukket 2026-10-20** | [Godkjente upload-/bodygrenser, lokal 60 s-frist og ressurslivsløp](r3-http-ressurser-semester-v1.md); ingen serverpersistens eller retry. | Mads + Backendansvar, før Story 2.5; live-timeout og avstemming mot live forblir R1 før Epic 4. | Verdier, tidlig avvisning, abort-/feil-/timeout-cleanup og beholdt duplikatmarkør er dokumentert og konsistenskontrollert. Håndhevelse og produkttester gjenstår i 2.5; portlukking er ikke implementeringsbevis. 30-sidersscope og S5 bevares. |
+| R3 — **lukket 2026-10-20** | [Godkjente upload-/bodygrenser, lokal 60 s-frist og ressurslivsløp](r3-http-ressurser-semester-v1.md); ingen serverpersistens eller retry. | Mads + Backendansvar, før Story 2.5; live avstemt ved lukket R1 2026-10-23. | Verdier, tidlig avvisning, abort-/feil-/timeout-cleanup og beholdt duplikatmarkør er dokumentert og konsistenskontrollert. 2.5 er done; live-fasegrensene integreres/testes i 4.3. Portlukking er ikke implementeringsbevis. 30-sidersscope og S5 bevares. |
 | R4 — middels, ekstern | 4.5 og 5.4: faktisk person til menneskelig kontroll/manuell referanse og en annen person/rent miljø til S6 må organiseres. | Mads/evalueringsansvarlig, før de respektive målingene/kjøringene. | Avtalt faktisk gjennomføring og senere reelle måle-/kjørebevis. Agentens egen kjøring eller en utfylt plan er ikke bestått S5/S6. |
 
 R1–R3 finnes allerede i låst arkitektur/SPEC og i de godkjente storyene. Avklaringen skjer innen den registrerte kontrakten; om den krever endring av produktkrav, scope, finans, regler, UX, arkitektur eller grensekontrakt, skal Mads spørres før endring. Readiness-kontrollen har ikke valgt verdier eller endret grunnlaget.

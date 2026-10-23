@@ -71,8 +71,35 @@ som beholdes til serverstopp. Én samlet hard frist på 60 000 ms gjelder
 lokal PDF-/demo-prosessering, med reell stans og sikker cleanup ved
 normalretur/feil/abort/timeout. Byte-/tekstreferanser beholdes ikke i backend
 etter requestslutt. Fristens omfang, tidlig avvisning og testmatrise står i
-beslutningen; live-timeout velges ved R1, ikke fra S5. Håndhevelse leveres
+beslutningen; separat live-frist er fastsatt ved R1 nedenfor, ikke fra S5. Håndhevelse leveres
 i Story 2.5; eksisterende runtime-kontrakter/versjoner endres ikke her.
+
+[R1-beslutningen 2026-10-23](../../planning-artifacts/r1-live-ki-semester-v1.md)
+konkretiserer live-adapteren: OpenAI `gpt-6.1-sol`, Responses API via
+offisiell `openai`-SDK, reasoning low, Standard og Structured Outputs med
+strengt schema (`text.format`, `type: "json_schema"`, `strict: true`).
+Hele eksisterende side-taggede PDF.js-grunnlaget går i ett kall uten
+OCR/vision. Felles contracts og backend eier fortsatt terminalstatus,
+identitet og validering; leverandørskjema er ingen ny app-DTO.
+
+Etter lokal dokumentfase med R3s 60 s-frist har live-adapteren én absolutt
+120 000 ms-frist fra forespørselsstart til terminalt validert adapterutfall.
+SDK `timeout: 120000` og `maxRetries: 0` kombineres med abort og håndhevet
+frist; verken responsheadere eller deloutput starter ny frist. Ved deadline
+stoppes transport/lesing og eide lokale ressurser, sent svar forkastes og
+utfallet er analysefeil med eksisterende `timeout`-kode. Duplikatmarkør til
+serverstopp og aktiv request-lås gjennom cleanup bevares. Abort garanterer
+ikke at leverandørens behandling/belastning stopper. Demo beholder samlet
+lokal 60 s-frist. S5 ≤5 minutter er evalueringsmål, ingen av disse fristene.
+Fasegrensene implementeres først i Epic 4.
+
+`OPENAI_API_KEY` leses kun fra backendmiljøet; demo oppretter ingen klient.
+Live-tester kjøres sekvensielt innen totalt USD 20 med forbruksavstemming,
+reservasjon og stopp etter R1s kostnadsrutine. Faktisk kontogrense verifiseres
+før live-test; ingen budsjettdashboard eller ny appfunksjon innføres.
+Avslag, schemafeil, kjent avkorting eller ikke-terminalt/ufullstendig
+leverandørsvar er analysefeil uten nytt kall; gyldig struktur beviser ikke S2.
+Kontrakt-/uttrekksversjon 2/1 og runtime-schemas bevares ved portlukking.
 
 Demo bruker samme dokumentpipeline og kontrakt som live. Lagret uttrekk må passe SHA-256 av originalbytes og kontrakt-/uttrekksversjon; mismatch/manglende fixture er analysefeil uten live-fallback. Lokal konfigurasjon velger modus, demo er standard og oppretter ingen KI-klient. Hele flyten viser Demo · lagret KI-uttrekk eller Live analyse.
 

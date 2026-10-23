@@ -7,7 +7,7 @@ paradigm: functional core / imperative shell
 scope: Låst v1 som lokal desktop-webapp med én sekvensiell rapportanalysepipeline
 status: final
 created: 2026-10-14
-updated: 2026-10-20
+updated: 2026-10-23
 binds: [UJ-1, FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7, FR-8, FR-9, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-17, FR-18, NFR-1, NFR-2, NFR-3, NFR-4, NFR-5, S1, S2, S3, S4, S5, S6]
 sources:
   - ../../briefs/brief-IBE160-2026-09-15/brief.md
@@ -83,14 +83,26 @@ R3 er [lukket 2026-10-20](../../r3-http-ressurser-semester-v1.md): vedtatte
 upload-/bodygrenser, én aktiv request per session/flyt, lokal PDF-/demo-frist
 og in-memory cleanup konkretiserer AD-5/AD-9. Cleanup frigjør requestens
 PDF-/tekstressurser, men beholder den innholdsløse duplikatmarkøren til
-serverstopp. Live-AI-timeout forblir R1; S5 er fortsatt et evalueringsmål.
-Håndhevelse og HTTP-testbevis leveres i Story 2.5.
+serverstopp. [R1 er lukket 2026-10-23](../../r1-live-ki-semester-v1.md):
+egen absolutt 120 s-frist gjelder live-adapteren etter lokal dokumentfase;
+60 s beholdes for lokal PDF/demo, og S5 er fortsatt et evalueringsmål.
+R3s håndhevelse og HTTP-testbevis hører til Story 2.5; live-fasegrensene
+integreres og etterprøves først i Story 4.3.
 
 ### AD-6 — Felles demo/live-adapter og entydig rapportbinding [ADOPTED]
 
 - **Binds:** FR-6/FR-15–FR-18; NFR-3/NFR-4; S6; Q-4.
 - **Prevents:** Egne demoregler, feil rapport/uttrekk-par og skjulte betalte fallback-kall.
 - **Rule:** Demo og live bruker samme PDF-mottak, dokumentvalidering og sidemerkede uttrekk før en smal adaptergrense. Adapterinput er det versjonerte sidemerkede dokumentgrunnlaget; retur og feil følger AD-4. Demo slår opp lagret, strukturert uttrekk med samsvarende SHA-256 av PDF-bytes og kontrakt-/uttrekksversjon. Feil/manglende fixture gir analysefeil, aldri live-fallback. Backend velger modus fra eksplisitt lokal konfigurasjon; demo er standard og oppretter ingen KI-klient. UI viser **Demo · lagret KI-uttrekk** eller **Live analyse** gjennom hele flyten. Kontroll, korrigering, TG3, finans og screening er identiske etter retur. Uendret rapportuttrekk gjenbrukes i aktiv økt; finans-/funn-/TG3-endringer gjør ingen KI-kall. Ny rapport ugyldiggjør tidligere rapportgrunnlag og krever ny analyse/kontroll. Testadaptere kan injiseres ved samme grense. Demo dokumenterer systemflyt/kjørbarhet, ikke live KI-kvalitet eller live-tid.
+
+R1 konkretiserer live-siden med OpenAI GPT-6.1 Sol (`gpt-6.1-sol`),
+Responses API, offisiell JS/TS-SDK (`openai`), strict Structured Outputs og
+eksplisitt reasoning low/Standard. Ett kall med hele PDF.js-tekstgrunnlaget,
+`maxRetries: 0`, `timeout: 120000` og håndhevet absolutt frist følger AD-3–AD-5.
+Backend leser `OPENAI_API_KEY` fra miljøet. Ingen OCR/vision eller ny
+appkontrakt innføres. SDK-versjon/schema/prompt pinnes og testes først i
+4.1/4.2; fasegrenser/cleanup integreres i 4.3. Pris, kapasitet og USD 20 med
+sekvensielle live-forsøk og budsjettstopp står i [R1-beslutningen](../../r1-live-ki-semester-v1.md).
 
 ```mermaid
 flowchart LR
@@ -227,8 +239,8 @@ Planlagt verifikasjon ved implementering, uten krav om en ny dekningsprosent:
 
 | Gjenstående valg / arbeid | Eier og seneste avklaringspunkt |
 | --- | --- |
-| KI-leverandør, modell, SDK, kontekst/outputgrenser, pris og budsjett | Mads og live-integrasjon før adapterimplementering/betalte tester. Må håndtere hele støttede sidemerkede grunnlaget i ett kall uten skjult avkorting/retry. Kontrakten og demoen avhenger ikke av valget; det bygges ikke et flerleverandørrammeverk. |
-| HTTP-ressursgrenser og opprydding — R3 lukket 2026-10-20 | [Godkjent R3-beslutning og testmatrise](../../r3-http-ressurser-semester-v1.md): én PDF ≤50 MiB, JSON/metadata ≤1 MiB, in-memory uten persistens, én aktiv request per session/flyt, ingen retry og hard lokal PDF-/demo-frist 60 s med sikker cleanup. Story 2.5 implementerer/verifiserer; live-timeout forblir R1 før Epic 4. 30 sider, SHA-256, demo og S5 bevares. |
+| Live KI-oppsett — R1 lukket 2026-10-23 | [Godkjent R1-beslutning](../../r1-live-ki-semester-v1.md) fyller leverandør-/modell-/SDK-valg, kapasitet/pris, USD 20 og testbare tids-/retrygrenser. Mads/live-integrasjon verifiserer faktisk kontogrense før live-test. Implementering og transport-/schema-/fasetester gjenstår i 4.1–4.3; ingen portstopp før 4.1. |
+| HTTP-ressursgrenser og opprydding — R3 lukket 2026-10-20 | [Godkjent R3-beslutning og testmatrise](../../r3-http-ressurser-semester-v1.md): én PDF ≤50 MiB, JSON/metadata ≤1 MiB, in-memory uten persistens, én aktiv request per session/flyt, ingen retry og hard lokal PDF-/demo-frist 60 s med sikker cleanup. Story 2.5 implementerer/verifiserer; R1 fastsetter separat live-frist 120 s, som integreres i 4.3. 30 sider, SHA-256, demo og S5 bevares. |
 | PDF-lesbarhetskontroll og layoutbevaring — R2-beslutning lukket 2026-10-20 | [Godkjent deterministisk regel og fixtureutfall](../../r2-pdf-lesbarhet-semester-v1.md) gjelder før gyldig grunnlag. Selve ekstraksjonen, blankdetektoren og PDF-testbevis gjenstår i Story 2.3. Tabeller/kolonner, tegnkoding og blandet tekst/bilde kontrolleres mot fasit; ukjent/upålitelig lesing blir ikke falsk suksess eller OCR/vision. |
 | Detaljerte felt/schemas, prompt og endelige script-/miljøvariabelnavn | Implementering innen AD-1–AD-10. Én felles kontraktkode eier feltene; ingen uavhengige moduler kan definere konkurrerende former. Ingen produktfunksjon opprettes gjennom teknisk detaljering. |
 | Faktiske fixtures, installasjon/typekontroll, tester, S2/S5/S6-bevis og README | Implementering/evaluering. Rapporter/fasit fastsettes før KI-evaluering; kode/låsfil og rent miljø verifiserer startstakken. Dokumentkontroll er ikke produktverifikasjon. |

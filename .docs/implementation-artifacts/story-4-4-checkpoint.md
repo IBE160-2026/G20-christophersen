@@ -71,9 +71,9 @@ deretter ny BMAD code review-agent. Ingen 4.5 eller endring av låste krav.
 
 ## Kontroll og prosesspor
 
-Dette er et dokumentcheckpoint. Root-agenten kjører og rapporterer eksisterende
-relevante tester/full regresjon separat; dette notatet påstår ingen bestått
-testkjøring. Arbeidsnotatet er kontrollert med `git diff --check` før commit.
+Dette er et dokumentcheckpoint. Root-agentens avsluttende regresjon er
+rapportert nedenfor. Arbeidsnotatet er kontrollert med `git diff --check`
+før commit.
 Kursføringer er brukt via eksisterende
 [sensoruttrekk](../planning-artifacts/prds/prd-IBE160-2026-10-10/kildeuttrekk-sensorveiledning.md)
 og godkjente planartefakter: auditerbar prosess, smalt scope og ærlig skille
@@ -81,3 +81,25 @@ mellom planlagt og faktisk verifisert funksjonalitet. Ingen nye kurskrav.
 
 Bestilling og stoppgrunnlag er bevart i
 [arbeidsøkten](../process/arbeidsokter/2026-10-23-story-4-4-checkpoint.md).
+
+## Avsluttende regresjon
+
+Root kjørte eksisterende full regresjon etter checkpointcommiten
+`1e3d156b0bb22a2a3aaf57bba0c5b998ab42c7e3`, uten produktendringer.
+Node 24.21.0 og npm 11.19.0 ble brukt, med eksisterende Playwright-cache,
+`OPENAI_API_KEY` og `ANALYSIS_MODE` fjernet fra testmiljøet og prosjektets
+`story-5-3-nettprofil.sb` som tillater lokal loopback og sperrer eksternt nett.
+
+- Typekontroll, lint og produksjonsbuild: bestått.
+- Vitest, `npm test -- --maxWorkers=1`: 38 filer, 1059/1059 bestått.
+- Bygget-app-E2E: 189/189 bestått.
+- Dev/offline-E2E: 3/3 bestått.
+- Komponenttester: 37/37 bestått.
+- `verify-analysis-build.mjs`: build/demooppstart bestått, 204 frontendfiler
+  kontrollert, 0 nøkkellekkasjer.
+
+Alle kommandoer fullførte med exitkode 0. Ingen tester ble rettet, hoppet
+over eller kjørt med automatisk retry. Rålogg i arbeidsmiljøet:
+`/private/tmp/story44-checkpoint-regression.txt`; resultatene er bevart her
+slik at tempfilen ikke er en leveranseavhengighet. Disse kontrollerte
+offline-testene endrer ikke statusen for live/S2 eller Story 4.4/4.5.

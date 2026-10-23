@@ -1,0 +1,62 @@
+{
+  "contractVersion": "2",
+  "extractionVersion": "1",
+  "requestId": "27f81020-1477-44a4-a2ed-205358fad0ad",
+  "reportHash": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+  "documentName": "F4-tilstandsrapport.pdf",
+  "mode": "live",
+  "pageCount": 4,
+  "status": "completed",
+  "validationScope": "structure-and-source",
+  "findings": [
+    {
+      "kind": "checkable",
+      "findingId": "F4-001",
+      "grade": "TG2",
+      "description": "Slitt overflate på baderomsgulv.",
+      "source": {
+        "documentName": "F4-tilstandsrapport.pdf",
+        "reportHash": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+        "pdfPage": 2
+      },
+      "original": {
+        "findingId": "F4-001",
+        "description": "Slitt overflate på baderomsgulv.",
+        "grade": "TG2",
+        "source": {
+          "documentName": "F4-tilstandsrapport.pdf",
+          "reportHash": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+          "pdfPage": 2
+        },
+        "uncertainties": []
+      }
+    },
+    {
+      "kind": "checkable",
+      "findingId": "F4-002",
+      "grade": "TG3",
+      "description": "Alvorlig lekkasje i tak. Rapporten oppgir at funnet krever videre avklaring før forsvarlig screening.",
+      "source": {
+        "documentName": "F4-tilstandsrapport.pdf",
+        "reportHash": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+        "pdfPage": 4
+      },
+      "original": {
+        "findingId": "F4-002",
+        "description": "Alvorlig lekkasje i tak. Rapporten oppgir at funnet krever videre avklaring før forsvarlig screening.",
+        "grade": "TG3",
+        "source": {
+          "documentName": "F4-tilstandsrapport.pdf",
+          "reportHash": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+          "pdfPage": 4
+        },
+        "uncertainties": []
+      }
+    }
+  ],
+  "uncertainCandidates": [],
+  "limitations": [
+    "Uttrekket bygger på den oppgitte teksten fra fire PDF-sider, ikke visuell kontroll av originalfilen.",
+    "Rapporten er fiktive testdata og beskriver ingen reell eiendom."
+  ]
+}

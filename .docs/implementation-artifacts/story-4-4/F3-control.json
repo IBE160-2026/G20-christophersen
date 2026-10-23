@@ -1,0 +1,13 @@
+{
+  "boundary": "production adapter",
+  "financialInputs": {
+    "P": "16000000",
+    "L": null,
+    "D": "400000",
+    "J": "800000",
+    "Ymin": "7"
+  },
+  "L": null,
+  "mainFlowStarted": false,
+  "s5Measured": false
+}

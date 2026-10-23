@@ -1,0 +1,23 @@
+{
+  "label": "Sluttmanifest etter review — ikke historiske forsøksversjoner",
+  "generatedAtUtc": "2026-10-23T15:24:41.594019+00:00",
+  "historicalAttemptHashes": false,
+  "historicalHelperSnapshotsPreserved": false,
+  "scope": "SHA-256 for endelige hjelperfiler etter review. Tidligere helperversjoner under originalforsøkene kan ikke rekonstrueres fra dette manifestet.",
+  "originalEvidencePreserved": "Ingen originale planer, providersvar, requests, dispatch eller receipts er omskrevet. Originale request-/dispatch-hash dekker prompt/schema; planenes commit-hash identifiserer produktkoden.",
+  "files": {
+    "tools/story-4-4/README.md": "cd273645fc30d9a50b4340573d76d669a4c8a0675a499f7cf83f605705d2c789",
+    "tools/story-4-4/evaluate-s2.test.mjs": "08322056c0af7f1726c9feb16a66dbe13e9f1fdf453207635ee26e01220b8cfd",
+    "tools/story-4-4/evaluate-s2.ts": "4982a98375cbe9a248e2f62c959fbb94e4b31b987bc4ed54f04b8bee62f06963",
+    "tools/story-4-4/observe-transport.mjs": "70392570dafd18af29452addb42e452b3bebe1860f1707e71346666a3659cbe4",
+    "tools/story-4-4/run-safety.mjs": "719895320569b97ae8bc5ca4cf36bef066a37da46d3b26651be167736a6578ce",
+    "tools/story-4-4/run-safety.test.mjs": "0bf03486690cd45af8e22a093b9e133b1ace859f22ac4ebbebb64e364958c01f",
+    "tools/story-4-4/run.mjs": "129bf5806f9d0c30e9f1e7948fa140cb0ebdf6f669c33f8e144b33e6923bfb11"
+  },
+  "targetedVerification": {
+    "command": "node --test tools/story-4-4/evaluate-s2.test.mjs tools/story-4-4/run-safety.test.mjs",
+    "passed": 13,
+    "failed": 0,
+    "providerCalls": 0
+  }
+}

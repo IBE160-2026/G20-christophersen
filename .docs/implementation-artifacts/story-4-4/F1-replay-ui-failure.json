@@ -1,0 +1,4 @@
+{
+  "at": "2026-10-23T15:11:17.255Z",
+  "reason": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Array [\n    \"11,875 %\",\n-   \"1 500 000 kr/år\",\n+   \"1 500 000 kr/år\",\n    \"9,375 %\",\n-   \"700 000 kr/år\",\n+   \"700 000 kr/år\",\n  ]"
+}

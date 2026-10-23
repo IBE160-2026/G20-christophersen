@@ -1,0 +1,75 @@
+{
+  "method": "Agent semantic assessment of each original against locked oracle and PDF.js basis; see verification report. Completed independent evaluation: ../story-4-4-uavhengig-evaluering.md. AC6 and original F1 continuous-main-flow evidence remain incomplete.",
+  "assessments": [
+    {
+      "expectedId": "F1-TG2-1",
+      "grade": "TG2",
+      "originalCorrectDescriptionAndGrade": true,
+      "originalCorrectPhysicalPage": true
+    },
+    {
+      "expectedId": "F2-TG2-1",
+      "grade": "TG2",
+      "originalCorrectDescriptionAndGrade": true,
+      "originalCorrectPhysicalPage": true
+    },
+    {
+      "expectedId": "F3-TG2-1",
+      "grade": "TG2",
+      "originalCorrectDescriptionAndGrade": true,
+      "originalCorrectPhysicalPage": true
+    },
+    {
+      "expectedId": "F4-TG2-1",
+      "grade": "TG2",
+      "originalCorrectDescriptionAndGrade": true,
+      "originalCorrectPhysicalPage": true
+    },
+    {
+      "expectedId": "F4-TG3-1",
+      "grade": "TG3",
+      "originalCorrectDescriptionAndGrade": true,
+      "originalCorrectPhysicalPage": true
+    }
+  ],
+  "result": {
+    "tg2": {
+      "total": 4,
+      "correct": 4,
+      "missedOrWrong": []
+    },
+    "tg3": {
+      "total": 1,
+      "correct": 1,
+      "missedOrWrong": []
+    },
+    "inventedFindings": 0,
+    "passed": true
+  },
+  "expectedFindings": [
+    {
+      "expectedId": "F1-TG2-1",
+      "grade": "TG2"
+    },
+    {
+      "expectedId": "F2-TG2-1",
+      "grade": "TG2"
+    },
+    {
+      "expectedId": "F3-TG2-1",
+      "grade": "TG2"
+    },
+    {
+      "expectedId": "F4-TG2-1",
+      "grade": "TG2"
+    },
+    {
+      "expectedId": "F4-TG3-1",
+      "grade": "TG3"
+    }
+  ],
+  "expectedSource": {
+    "path": "tests/fixtures/property-cases/expected.json",
+    "sha256": "d485669a4764a10b8a7ac8e451d1cc75836bc7f431a610bbdd1dc93288f20fce"
+  }
+}

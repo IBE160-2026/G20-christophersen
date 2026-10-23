@@ -1,0 +1,17 @@
+{
+  "dato": "2026-10-23",
+  "root_integrity_checks": "passed",
+  "original_analysis_responses": 4,
+  "unique_provider_ids": 4,
+  "input_tokens_including_preflight": 3881,
+  "output_tokens_including_preflight": 831,
+  "cost_usd_including_preflight": "0.016072",
+  "operational_limit_usd": 2,
+  "remaining_usd": "1.983928",
+  "oracle_sha256": "d485669a4764a10b8a7ac8e451d1cc75836bc7f431a610bbdd1dc93288f20fce",
+  "post_review_helper_hashes_match": true,
+  "product_and_fixtures_unchanged": true,
+  "secret_value_scan": "passed",
+  "files_scanned": 67,
+  "scope": "Lokal bevis-/kostnadsintegritet; ikke leverandørfaktura eller ny live-kjøring."
+}

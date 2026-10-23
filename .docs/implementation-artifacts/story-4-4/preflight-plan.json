@@ -1,0 +1,29 @@
+{
+  "dato": "2026-10-23",
+  "baseline": "d378399f8637b8b1feb7418646d745aee245c4ca",
+  "grunnlag": "Brukerens manuelle kostnadskontroll i denne bestillingen",
+  "hard_spend_limit_usd": 2,
+  "tidligere_prosjektforbruk_usd": 0,
+  "prepaid_saldo_usd": 5,
+  "r1_maksbudsjett_usd": 20,
+  "operativ_grense_usd": 2,
+  "planlagt_preflight": {
+    "antall": 1,
+    "automatisk_retry": false,
+    "endpoint": "POST /v1/responses",
+    "model": "gpt-6.1-sol",
+    "reasoning": {
+      "effort": "low"
+    },
+    "service_tier": "default",
+    "store": false,
+    "max_output_tokens": 16,
+    "input": "Reply OK.",
+    "reservasjon_usd": 0.01,
+    "pris_usd_per_million": {
+      "input": 2,
+      "output_inkl_reasoning": 10
+    }
+  },
+  "videre": "Bare ved tilstrekkelig RPM/TPM og budsjett: F1–F4 sekvensielt etter eksisterende AC, med egen reservasjon før hvert kall. Ingen 4.5."
+}

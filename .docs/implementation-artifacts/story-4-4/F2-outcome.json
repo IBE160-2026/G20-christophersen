@@ -1,0 +1,39 @@
+{
+  "contractVersion": "2",
+  "extractionVersion": "1",
+  "requestId": "97528c08-1c5b-4e09-b87e-30e6106e3d83",
+  "reportHash": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+  "documentName": "F2-tilstandsrapport.pdf",
+  "mode": "live",
+  "pageCount": 4,
+  "status": "completed",
+  "validationScope": "structure-and-source",
+  "findings": [
+    {
+      "kind": "checkable",
+      "findingId": "funn-001",
+      "grade": "TG2",
+      "description": "Slitt overflate på baderomsgulv.",
+      "source": {
+        "documentName": "F2-tilstandsrapport.pdf",
+        "reportHash": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+        "pdfPage": 2
+      },
+      "original": {
+        "findingId": "funn-001",
+        "description": "Slitt overflate på baderomsgulv.",
+        "grade": "TG2",
+        "source": {
+          "documentName": "F2-tilstandsrapport.pdf",
+          "reportHash": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+          "pdfPage": 2
+        },
+        "uncertainties": []
+      }
+    }
+  ],
+  "uncertainCandidates": [],
+  "limitations": [
+    "Grunnlaget er en fiktiv rapport med fire sider og beskriver ingen reell eiendom. Uttrekket er basert på den oppgitte sideteksten."
+  ]
+}

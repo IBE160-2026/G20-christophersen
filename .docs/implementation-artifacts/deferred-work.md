@@ -18,3 +18,7 @@ Se [råutdata](story-1-3-ren-installasjon-2026-10-19.txt) og
 - source_spec: `spec-4-3-bruke-live-analysen-i-samme-kontroll-og-resultatflyt.md`
   summary: Bevare nyttig første feilårsak eller forklare duplikatsperren ved manuell Start etter terminal analysefeil.
   evidence: B3-review bekrefter baselineoppførsel i ReportAnalysis canStart (failed tillates) og analysis-route sin varige markør. Et nytt manuelt forsøk kan erstatte første feiltekst med duplicate-analysis. Ingen automatisk retry eller ny flyt innført i 4.3; forbedringen gjelder eksisterende felles demo/live-oppførsel.
+
+- source_spec: `spec-4-4-gjennomfore-live-og-evaluere-s2.md`
+  summary: Avklare og rette at generelle leverandørbegrensninger fra fullført live-uttrekk gjør F1/F2s rapportgrunnlag ufullført og overstyrer forventet screening.
+  evidence: Uendrede originale F1/F2-provider/outcome og resultatbilder fra Story 4.4 viser limitations om fiktiv rapport/tekstinput. Eksisterende src/domain/finding-control.ts behandler alle limitations som incomplete-report. Tall og S2 er korrekte, men AC6 er delvis. Ved retting må bevart originaluttrekk brukes i offline-regresjon; ekte rapportmangler/usikkerhet skal fortsatt sperre. Ingen automatisk fjerning av limitations, nytt låst krav eller produktretting utført i evalueringsleveransen. Se story-4-4-uavhengig-evaluering.md.

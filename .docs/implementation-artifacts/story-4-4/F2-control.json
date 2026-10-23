@@ -1,0 +1,24 @@
+{
+  "replay": false,
+  "expectedRecommendation": "Forkast",
+  "expectedRecommendationMatched": false,
+  "sourceChecks": [
+    {
+      "selected": "TG2 · Slitt overflate på baderomsgulv.",
+      "source": "TG2 · Slitt overflate på baderomsgulv.\n\nF2-tilstandsrapport.pdf · PDF-side 2 av 4\n\nForrige PDF-side\nNeste PDF-side\nPDF-zoom\nHel side\n150 %\n200 %\n300 %\n\nF2-tilstandsrapport.pdf · PDF-side 2: Originalside tilgjengelig.\n\nF2 | FIKTIV TILSTANDSRAPPORT\n\n\nBad - registrert avvik\n\n\nTilstandsgrad: TG2\n\n\nSlitt overflate på baderomsgulv\n\n\nDette er den forhåndsdefinerte funnteksten for testcaset.\n\n\nIngen reparasjonskostnad er anslått.\n\n\nKun testdata - ingen teknisk godkjenning eller markedsverdi\n\n\nPDF-posisjon 2",
+      "originalText": "F2 | FIKTIV TILSTANDSRAPPORT\n\n\nBad - registrert avvik\n\n\nTilstandsgrad: TG2\n\n\nSlitt overflate på baderomsgulv\n\n\nDette er den forhåndsdefinerte funnteksten for testcaset.\n\n\nIngen reparasjonskostnad er anslått.\n\n\nKun testdata - ingen teknisk godkjenning eller markedsverdi\n\n\nPDF-posisjon 2",
+      "at": "2026-10-23T15:12:11.619Z"
+    }
+  ],
+  "method": "Automated UI actions and rendered PDF text/page checks; agent separately evaluates original extraction. No human timing measurement.",
+  "recommendation": "Innhent mer informasjon",
+  "metrics": [
+    "8,750 %",
+    "1 000 000 kr/år",
+    "6,250 %",
+    "200 000 kr/år"
+  ],
+  "apiCalls": 1,
+  "corrections": 0,
+  "s5Measured": false
+}

@@ -1,0 +1,16 @@
+{
+  "receivedAt": "2026-10-23T15:12:36.421Z",
+  "status": 200,
+  "headers": {
+    "content-type": "application/json",
+    "openai-processing-ms": "5065",
+    "openai-version": "2020-10-01",
+    "x-ratelimit-limit-requests": "5000",
+    "x-ratelimit-limit-tokens": "1000000",
+    "x-ratelimit-remaining-requests": "4999",
+    "x-ratelimit-remaining-tokens": "999951",
+    "x-ratelimit-reset-requests": "12ms",
+    "x-ratelimit-reset-tokens": "2ms",
+    "x-request-id": "req_f6195962bb454533b52c5a1e81dcb129"
+  }
+}

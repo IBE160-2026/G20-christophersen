@@ -1,5 +1,36 @@
 # Story 4.4 — rent checkpoint før live-kjøring
 
+## Siste tilstand 2026-10-23 — live gjennomført, til review med avvik
+
+Tidligere kontoblokkering er avklart med brukerens manuelle kontroll:
+USD 2 hard spend limit, USD 0 tidligere prosjektforbruk og USD 5 prepaid.
+USD 2 beholdes som strengere operativ ramme innen R1 USD 20.
+Minimalt Responses-kall ga HTTP 200 og headere 5000 RPM / 1000000 TPM.
+F1–F4 er deretter kjørt sekvensielt med ekte produksjonsadapter, ett kall
+per rapport og ingen retry. Total inklusive minimalkall: 3881 inputtokens,
+831 outputtokens og beregnet kostnad USD 0.016072. Ingen ukjent belastning.
+
+Uavhengig S2-kontroll: 4/4 TG2 og 1/1 TG3 med riktig fysisk PDF-side,
+ingen oppdiktede eller oversette. F4 TG3 er fysisk side 4 / trykt side 2.
+F3 er kjørt ved adaptergrensen med L=null og ingen S5-hovedstart.
+
+**Akseptanseforbehold:** F1/F2 gir Innhent mer informasjon fra modellens
+generelle limitations; dette avviker fra forventet screening ved tilstrekkelig
+rapportgrunnlag. F1s sluttkontroll/resultat er bare fullstendig bevist via
+separat lokalt replay av originaluttrekket, uten nytt leverandørkall. AC6 er
+derfor delvis. Originaler og fasit er bevart; produktavviket er sporet i
+[deferred-work](deferred-work.md). Story 4.4 leveres til review med avvik,
+ikke done eller fullt produktgodkjent. Ingen Story 4.5 eller S5-måling.
+
+Videre arbeid skal starte fra [sluttkontroll](story-4-4-sluttkontroll.md),
+[live-verifikasjon](story-4-4-verifikasjon.md),
+[uavhengig evaluering](story-4-4-uavhengig-evaluering.md) og
+[spec/reviewtriage](spec-4-4-gjennomfore-live-og-evaluere-s2.md).
+Ikke kjør de fire forsøkene på nytt automatisk; gamle request-/provider-/
+outcome-/receiptfiler er originale bevis. Eventuelt nytt budsjettavklart
+forsøk må få ny identitet og egen reservasjon. Resten av checkpointet er
+historiske preflighttilstander.
+
 ## Gjenopptak 2026-10-23 kl. 16:53 CEST — stopp ved kontoverifikasjon
 
 Ny preflight på `dbd3369f4f665fe822d93d98190512d4a087550a` (`main`).

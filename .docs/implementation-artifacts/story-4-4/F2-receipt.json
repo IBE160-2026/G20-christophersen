@@ -1,0 +1,23 @@
+{
+  "finishedAt": "2026-10-23T15:12:11.801Z",
+  "usage": {
+    "input_tokens": 972,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 149,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 1121
+  },
+  "serviceTier": "default",
+  "returnedModel": "gpt-6.1-sol",
+  "costUsd": 0.003434,
+  "cumulativeProjectUsd": 0.006888,
+  "unknownCost": false,
+  "oracleSha256After": "d485669a4764a10b8a7ac8e451d1cc75836bc7f431a610bbdd1dc93288f20fce",
+  "attempts": 1,
+  "retries": 0
+}

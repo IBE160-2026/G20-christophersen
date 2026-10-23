@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-23T15:13:18.294Z",
+  "actualRequestSha256": "b3be26926c5e143151d6df117f41e50b2a9b607e116d8db56c1676a0704408bf",
+  "serializedBytes": 3948,
+  "reservationUsd": 1.48,
+  "costBeforeUsd": 0.010694,
+  "identityNormalization": "Only code-generated requestId differs from prepared basis; all other request bytes validated"
+}

@@ -78,7 +78,7 @@ development_status:
   4-1-konfigurere-valgt-live-leverandør-uten-å-eksponere-nøkkelen: done
   4-2-analysere-hele-det-sidemerkede-rapportgrunnlaget-i-ett-ki-ka: done
   4-3-bruke-live-analysen-i-samme-kontroll-og-resultatflyt: done
-  4-4-gjennomføre-ekte-live-analyse-og-evaluere-opprinnelig-uttrek: backlog
+  4-4-gjennomføre-ekte-live-analyse-og-evaluere-opprinnelig-uttrek: review
   4-5-måle-live-analyse-og-menneskelig-kontroll-etter-s5-protokoll: backlog
   epic-4-retrospective: optional
 

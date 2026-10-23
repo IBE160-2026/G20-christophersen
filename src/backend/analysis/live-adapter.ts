@@ -51,7 +51,8 @@ export function createLiveAdapter(backend: LiveBackend, options: { signal?: Abor
     }
     timer = setTimeout(expire, Math.max(0, deadline - performance.now()))
     let cleanupFailed = false
-    let result: AdapterOutcome
+    let result: AdapterOutcome | undefined
+    let failure: AnalysisAdapterError | undefined
     try {
       check()
       const transport = backend.responses.create(request, { signal: controller.signal }).asResponse()
@@ -83,16 +84,16 @@ export function createLiveAdapter(backend: LiveBackend, options: { signal?: Abor
       check()
       result = outcome
     } catch (error) {
-      check()
-      if (error instanceof AnalysisAdapterError) throw error
-      throw safeError('transport-failure')
+      failure = error instanceof AnalysisAdapterError ? error : safeError('transport-failure')
     } finally {
       if (timer) clearTimeout(timer)
       options.signal?.removeEventListener('abort', stop)
       controller.abort()
       if (reader) {
-        void reader.cancel().catch(() => {})
-        reader.releaseLock()
+        try {
+          void reader.cancel().catch(() => {})
+          reader.releaseLock()
+        } catch { cleanupFailed = true }
       }
       if (worker) {
         try { await worker.terminate() } catch { cleanupFailed = true }
@@ -103,6 +104,8 @@ export function createLiveAdapter(backend: LiveBackend, options: { signal?: Abor
     if (performance.now() >= deadline) throw safeError('timeout')
     if (options.signal?.aborted) throw safeError('interrupted')
     if (cleanupFailed) throw safeError('adapter-failure')
+    if (failure) throw failure
+    if (!result) throw safeError('adapter-failure')
     return result
   } }
 }

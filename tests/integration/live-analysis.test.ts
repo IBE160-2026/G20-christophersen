@@ -36,7 +36,33 @@ describe('Story 4.2 — faktisk PDF → live SDK (offline) → samme kontroll/fi
     const backend = createAnalysisBackend('live', { environment: { OPENAI_API_KEY: 'fictional-offline-only' }, fetch: async (_url, init) => {
       const body = JSON.parse(String(init?.body))
       expect(JSON.parse(body.input[0].content[0].text)).toEqual(extraction.document)
-      expect(body).toMatchObject({ model: 'gpt-6.1-sol', reasoning: { effort: 'low' }, service_tier: 'default', max_output_tokens: 128000, truncation: 'disabled', text: { format: { strict: true } } })
+      expect(body).toMatchObject({ model: 'gpt-6.1-sol', reasoning: { effort: 'low' }, service_tier: 'default', max_output_tokens: 128000, truncation: 'disabled', store: false })
+      // Independent contract expectations against the serialized SDK request;
+      // do not import the production schema into its own regression assertion.
+      expect(body.text.format).toEqual({
+        type: 'json_schema', name: 'report_extraction_v1', strict: true,
+        schema: {
+          type: 'object', additionalProperties: false, required: ['findings', 'limitations'],
+          properties: {
+            findings: { type: 'array', items: {
+              type: 'object', additionalProperties: false,
+              required: ['findingId', 'description', 'grade', 'source', 'uncertainties'],
+              properties: {
+                findingId: { type: 'string' }, description: { type: 'string' }, grade: { type: ['string', 'null'] },
+                source: { anyOf: [{ type: 'null' }, {
+                  type: 'object', additionalProperties: false, required: ['documentName', 'reportHash', 'pdfPage'],
+                  properties: {
+                    documentName: { type: ['string', 'null'] }, reportHash: { type: ['string', 'null'] },
+                    pdfPage: { type: ['number', 'string', 'null'] },
+                  },
+                }] },
+                uncertainties: { type: 'array', items: { type: 'string' } },
+              },
+            } },
+            limitations: { type: 'array', items: { type: 'string' } },
+          },
+        },
+      })
       const result = { findings: fixture.findings.map(finding => ({ findingId: finding.id, grade: finding.grade, description: finding.description, source: { documentName: fixture.documentName, reportHash: format.reportHash, pdfPage: finding.pdfPage }, uncertainties: [] })), limitations: [] }
       return new Response(JSON.stringify({ status: 'completed', output: [{ type: 'message', role: 'assistant', status: 'completed', content: [{ type: 'output_text', text: JSON.stringify(result) }] }] }))
     } })

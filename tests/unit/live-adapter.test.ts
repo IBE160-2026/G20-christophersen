@@ -28,6 +28,11 @@ describe('Story 4.2 — controlled real SDK transport', () => {
     expect(terminate.mock.instances[0]).toMatchObject({ threadId: -1 })
   })
   it.each([
+    { ...envelope(), error: { code: 'provider-error', message: 'PRIVATE' } },
+    { ...envelope(), output: [{ ...envelope().output[0], content: [...envelope().output[0]!.content, ...envelope().output[0]!.content] }] },
+    { ...envelope(), output: [{ type: 'unknown-output' }, ...envelope().output] },
+    { ...envelope(), output: [{ type: 'reasoning', summary: [] }] },
+    ...['incomplete', 'in_progress'].map(status => ({ ...envelope(), output: [{ type: 'reasoning', status, summary: [] }, ...envelope().output] })),
     {}, { status: 'incomplete', output: envelope().output }, { ...envelope(), incomplete_details: { reason: 'max_output_tokens' } },
     { ...envelope(), status: 'failed' }, { ...envelope(), output: [{ type: 'message', status: 'completed', role: 'assistant', content: [{ type: 'refusal', refusal: 'no' }] }] },
     envelope({ findings: [] }), envelope({ findings: 'wrong', limitations: [] }), envelope({ ...empty, P: '1' }),
@@ -186,4 +191,37 @@ it('aborts hung transport before headers at the absolute deadline', async () => 
   expect(await pending).toMatchObject({ status: 'failed', error: { code: 'timeout' } })
   expect(signal?.aborted).toBe(true)
   expect(fetch).toHaveBeenCalledTimes(1)
+})
+
+
+describe('review F1/F2 — terminalization after real worker cleanup', () => {
+  it.each(['completed', undefined])('allows valid reasoning status %s plus message', async status => {
+    const value = { ...envelope(), output: [{ type: 'reasoning', ...(status === undefined ? {} : { status }), summary: [] }, ...envelope().output] }
+    const fetch = vi.fn<typeof globalThis.fetch>(async () => reply(value))
+    expect(await analyzeDocument(document, setup(fetch))).toMatchObject({ status: 'completed', findings: [] })
+    expect(fetch).toHaveBeenCalledTimes(1)
+  })
+  it.each(['deadline', 'abort', 'cleanup-failure'] as const)('applies %s after cleanup on a failed extraction', async variant => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] })
+    const abort = new AbortController()
+    const original = Worker.prototype.terminate
+    const terminate = vi.spyOn(Worker.prototype, 'terminate').mockImplementation(async function (this: Worker) {
+      const exit = await original.call(this)
+      expect(this.threadId).toBe(-1)
+      if (variant === 'deadline') await vi.advanceTimersByTimeAsync(120001)
+      else if (variant === 'abort') abort.abort()
+      else throw new Error('PRIVATE cleanup failure')
+      return exit
+    })
+    const fetch = vi.fn<typeof globalThis.fetch>(async () => reply({ status: 'completed', output: [] }))
+    const outcome = await analyzeDocument(document, setup(fetch, abort.signal))
+    expect(outcome).toMatchObject({ status: 'failed', error: {
+      code: variant === 'deadline' ? 'timeout' : variant === 'abort' ? 'interrupted' : 'adapter-failure',
+    } })
+    expect(JSON.stringify(outcome)).not.toContain('PRIVATE')
+    expect(terminate).toHaveBeenCalledTimes(1)
+    expect(terminate.mock.instances[0]).toMatchObject({ threadId: -1 })
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(vi.getTimerCount()).toBe(0)
+  })
 })

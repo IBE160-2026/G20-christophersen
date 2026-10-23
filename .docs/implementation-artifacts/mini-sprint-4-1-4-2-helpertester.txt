@@ -1,0 +1,14 @@
+✔ byggfrist stopper både eid byggprosess og dens barn med trygg feil (511.087916ms)
+✔ byggfeil eksponerer bare kodeeid feil (35.728875ms)
+✔ HTTP-frist avbryter venting på headere (107.949875ms)
+✔ HTTP-frist avbryter uavsluttet body (104.736917ms)
+✔ servercleanup avventer faktisk close (normal stopp) (45.371083ms)
+✔ servercleanup avventer faktisk close (SIGTERM ignoreres) (115.786583ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 982.366667

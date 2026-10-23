@@ -16,7 +16,10 @@ try {
     || !Array.isArray(response.output) || response.output.length === 0) throw new Error()
   const texts: string[] = []
   for (const item of response.output) {
-    if (item.type === 'reasoning') continue
+    if (item.type === 'reasoning') {
+      if (item.status != null && item.status !== 'completed') throw new Error()
+      continue
+    }
     if (item.type !== 'message' || item.status !== 'completed' || item.role !== 'assistant'
       || !Array.isArray(item.content) || item.content.length === 0) throw new Error()
     for (const content of item.content) {

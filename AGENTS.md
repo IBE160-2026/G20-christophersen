@@ -10,3 +10,11 @@ Use these references when relevant, but do not invent requirements that are not 
 Keep the project aligned with the approved product direction and preserve traceability from planning artifacts to implementation.
 
 Store important prompts and AI work sessions in the repository so the development process remains auditable.
+
+## Prompt logs and working-tree checks
+
+- An untracked `.docs/process/prompts/session-*.jsonl` belonging to the active Codex session is expected process evidence and must not, by itself, trigger a dirty-tree stop.
+- Normally include the active session's prompt log in the same local commit as the story or review it documents.
+- Do not delete, rewrite, or move earlier prompt logs.
+- Dirty-tree stops still apply to other unexpected or unknown files and changes.
+- If it is unclear whether a prompt log belongs to the active session, stop and clarify rather than assuming.

@@ -1,5 +1,61 @@
 # Story 4.4 — rent checkpoint før live-kjøring
 
+## Gjenopptak 2026-10-23 kl. 16:53 CEST — stopp ved kontoverifikasjon
+
+Ny preflight på `dbd3369f4f665fe822d93d98190512d4a087550a` (`main`).
+Bestillingen var å fortsette 4.4, kontrollere nøkkel/modell/kontogrenser og
+gjenværende USD 20 før F1–F4, evaluere originaluttrekk mot S2, avslutte i
+review og committe lokalt uten push. Brukerens stoppregel ved fortsatt
+konfigurasjonsfeil gjelder før live-kjøring.
+
+| Kontroll | Faktisk resultat |
+|---|---|
+| `OPENAI_API_KEY` | Tilgjengelig og ikke tom. Bare boolsk tilstedeværelse skrevet ut. |
+| Modelloppslag | `GET /v1/models/gpt-6.1-sol`: HTTP 200, returnert modell-ID samsvarer. Dette verifiserer lesetilgang til modellen, ikke Responses-/betalingskvote. |
+| RPM/TPM | Modelloppslaget returnerte ingen `x-ratelimit-*`-headere. Faktiske grenser er fortsatt ukjente. |
+| Kostnadsinnsyn | `GET /v1/organization/costs?start_time=1788220800&limit=1`: HTTP 403. Ingen kostnadsdata mottatt eller avstemt. Responsbody ble ikke skrevet ut. |
+| Administrasjonsoppsett | `OPENAI_ADMIN_KEY`, `OPENAI_ADMIN_API_KEY`, `OPENAI_PROJECT_ID`, `OPENAI_PROJECT`, `OPENAI_ORG_ID` og `OPENAI_ORGANIZATION` mangler. Bare tilstedeværelse kontrollert. |
+| Gjenværende prosjektramme | Ikke verifisert. Tidligere samlet forbruk og uavklarte belastninger er fortsatt ukjente; USD 20 kan ikke regnes som ledig saldo. |
+
+Første modelloppslag i sandbox feilet med `URLError` før HTTP-svar.
+Samme lesekontroll med godkjent nettverkstilgang ga HTTP 200. Kostnadskallet
+ble også kjørt med godkjent nettverkstilgang; HTTP 403 er derfor et konkret
+innsynsproblem, ikke bare sandboxens nettbegrensning. Ingen nøkkelverdi,
+Authorization-header eller rå feilbody er skrevet til terminal eller repo.
+
+OpenAI Docs ble kontrollert samme dato:
+[Admin APIs](https://developers.openai.com/api/docs/guides/admin-apis)
+krever adminnøkkel for administrasjonsendepunktene;
+[prosjektgrenser](https://developers.openai.com/api/reference/go/resources/admin/subresources/organization/subresources/projects/subresources/rate_limits)
+leses for en kjent prosjekt-ID. Modell-/prissiden for
+[gpt-6.1-sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol)
+og [rate-limit-guiden](https://developers.openai.com/api/docs/guides/rate-limits)
+erstatter ikke faktiske kontodata.
+
+**Stoppgrunn:** manglende verifiserbart kontoinnsyn og avstemt restbudsjett.
+Før neste gjenopptak må kontoansvarlig dokumentere riktig prosjekt, modellens
+faktiske RPM/TPM, betalings-/forbruksgrense, samlet tidligere prosjektkostnad
+og eventuelle uavklarte belastninger. Dette kan gjøres med daterte, hemmelighetsfrie
+opplysninger fra kontoens Limits/Usage/Costs, eller med nødvendig sikkert
+tilgjengelig admininnsyn og prosjektidentitet. Ikke lim inn nøkler i chat/repo.
+
+F1–F4 er ikke kjørt i dette gjenopptaket. S2 er ikke evaluert. Antall
+genereringsforsøk: 0; genereringstokens: 0; ny API-genereringskostnad: USD 0.
+To HTTP-lesekall nådde leverandøren (modell 200, kostnad 403); ett tidligere
+lokalt transportforsøk feilet. Ingen Responses-kall, retry, implementering,
+evaluator, code review eller Story 4.5 er startet. Story 4.4 og 4.5 beholder
+backlog; review ville vært uriktig uten leveransebevis.
+
+Bare dokumentasjon endres. Produkttester er ikke kjørt på nytt; regresjonen
+nedenfor gjelder forrige checkpoint. Ny dokumentkontroll og lokal commit
+registreres i arbeidsnotatet. Eksisterende usporede JSONL-økter bevares urørt.
+Prosesspor: [gjenopptaksnotat](../process/arbeidsokter/2026-10-23-story-4-4-gjenopptak.md).
+
+---
+
+Resten av dokumentet beskriver det opprinnelige checkpointet før nøkkelen
+ble tilgjengelig, og beholdes som historisk bevis.
+
 Dato: 2026-10-23. Status: stoppet før implementering og betalt forsøk.
 Baseline: `91d4c8661a413d4bdded8a59e92ef91a635bb057` på `main`.
 

@@ -1,0 +1,148 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+stderr | tests/integration/demo-analysis.test.ts
+Warning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+
+stderr | tests/integration/demo-screening.test.ts
+Warning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+
+stderr | tests/integration/pdf-format.test.ts
+Warning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+
+stderr | tests/integration/pdf-extraction.test.ts
+Warning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+
+Warning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `DOMMatrix`, rendering may be broken.
+Warning: Cannot polyfill `Path2D`, rendering may be broken.
+ ✓ tests/integration/http-analysis-review.test.ts (2 tests) 1236ms
+   ✓ Story 2.5 – uavhengige HTTP-/ressursprøver i review (2)
+     ✓ to reelle prosesser som når samme markør får bare én adaptertillatelse og begge termineres 1139ms
+ ✓ tests/unit/result-snapshot.test.ts (62 tests) 153ms
+ ✓ tests/unit/http-receive-pdf.test.ts (5 tests) 1826ms
+   ✓ HTTP strømparser – eksakte metadata- og chunkgrenser (5)
+     ✓ fragmentert stor metadata skannes én gang og små filchunks samles i faste blokker 1619ms
+ ✓ tests/unit/thresholds.test.ts (83 tests) 156ms
+ ✓ tests/unit/report-session.test.ts (28 tests) 196ms
+ ✓ tests/unit/complete-screening.test.ts (72 tests) 171ms
+ ✓ tests/unit/finance.test.ts (67 tests) 187ms
+ ✓ tests/integration/demo-screening.test.ts (4 tests) 2438ms
+   ✓ Story 5.1 AC1/2/4 — faktisk PDF → demoadapter → kontroll → finans/screening (4)
+     ✓ F1: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 908ms
+     ✓ F2: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 551ms
+     ✓ F3: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 506ms
+     ✓ F4: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 471ms
+ ✓ tests/unit/financial-result-renewal.test.ts (20 tests) 79ms
+ ✓ tests/unit/demo-analysis.test.ts (35 tests) 57ms
+ ✓ tests/unit/financial-presentation.test.ts (49 tests) 142ms
+ ✓ tests/unit/finding-control.test.ts (33 tests) 36ms
+ ✓ tests/unit/financial-validation.test.ts (51 tests) 55ms
+ ✓ tests/unit/report-result-renewal.test.ts (18 tests) 75ms
+ ✓ tests/unit/financial-confirmation.test.ts (52 tests) 41ms
+ ✓ tests/unit/finding-list-control.test.ts (18 tests) 21ms
+ ✓ tests/unit/screening.test.ts (36 tests) 24ms
+ ✓ tests/unit/screening-result-navigation.test.ts (5 tests) 55ms
+ ✓ tests/unit/document-analysis.test.ts (107 tests) 40ms
+ ✓ tests/unit/financial-basis.test.ts (32 tests) 28ms
+ ✓ tests/unit/pdf-extraction.test.ts (14 tests) 11ms
+ ✓ tests/unit/tg3-resolution.test.ts (26 tests) 38ms
+ ✓ tests/unit/session.test.ts (9 tests) 13ms
+ ✓ tests/unit/analysis-http.test.ts (1 test) 9ms
+ ✓ tests/unit/http-pipeline-races.test.ts (3 tests) 10ms
+ ✓ tests/unit/pdf-source.test.ts (5 tests) 6ms
+ ✓ tests/unit/http-pipeline-initialization.test.ts (3 tests) 4ms
+ ✓ tests/integration/demo-analysis.test.ts (14 tests) 6780ms
+   ✓ Story 2.4 AC1/AC3 – ekte PDF-pipeline og lokale lagrede svar (8)
+     ✓ standard demo virker i ny prosess uten miljønøkler og med nettfunksjoner sperret 1148ms
+     ✓ F1-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 541ms
+     ✓ F2-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 475ms
+     ✓ F3-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 524ms
+     ✓ F4-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 449ms
+     ✓ samme PDF gir identisk resultat ved gjentakelse og etter mutert retur 536ms
+     ✓ samme adapter holder samtidige F1/F4-kall og returmutasjoner adskilt 717ms
+     ✓ identiske bytes med nytt navn finner samme hash uten å skrive om originalkilden 328ms
+   ✓ Story 2.4 AC2 – riktig rapport, ingen cache fra annen PDF (6)
+     ✓ F2 under F1-navn får F2-hash og aldri F1-uttrekket 341ms
+     ✓ F1-tilstandsrapport-endret.pdf gir manglende demosvar selv under F1-navn 381ms
+     ✓ text-30-pages.pdf gir manglende demosvar selv under F1-navn 348ms
+     ✓ mixed-status.pdf stanser før demooppslag og bevarer dokumentfeil 352ms
+     ✓ uncertain-content.pdf stanser før demooppslag og bevarer dokumentfeil 314ms
+     ✓ blank-variants.pdf stanser før demooppslag og bevarer dokumentfeil 325ms
+ ✓ tests/integration/pdf-format.test.ts (42 tests) 7797ms
+   ✓ Story 2.2 AC1 – faktiske bytes og sidegrense (RT-1 formatdel / RT-2) (22)
+     ✓ godtar 30 sider, bevarer faktisk sidetall og alle originalbytes 632ms
+     ✓ bevarer støtte for text-30-pages-object-stream.pdf 472ms
+     ✓ traverserer også nestede Kids selv når både root og gren underrapporterer Count 500ms
+     ✓ sidetretraverseringen avviser skadet referanse også når den ligger etter deklarert siste side 394ms
+   ✓ Story 2.2 AC2 – SHA-256 gjelder originalbytes, navn er metadata (3)
+     ✓ gir endrede, fortsatt gyldige PDF-bytes ny hash ved samme navn 350ms
+   ✓ Story 2.2 AC3 – format er delutfall, ingen lesbarhet eller analysefullføring (11)
+     ✓ rydder ekte PDF.js-workers ved suksess, sideavvisning og parserfeil 348ms
+     ✓ avslutter den faktiske sidetre-workeren ved suksess, sidegrense og skadet tre 450ms
+ ✓ tests/integration/pdf-extraction.test.ts (44 tests) 14225ms
+   ✓ Story 2.3 AC1/AC2 – ekte parser og fysisk kilde (11)
+     ✓ F1-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter 921ms
+     ✓ F2-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter 573ms
+     ✓ F3-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter 503ms
+     ✓ F4-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter 575ms
+     ✓ bevarer tabellrader, kolonneblokker, norske tegn og blandet tekst/bilde fra separat fasit 520ms
+     ✓ beholder alle 30 sider i text-30-pages.pdf 605ms
+     ✓ beholder alle 30 sider i text-30-pages-object-stream.pdf 376ms
+     ✓ beholder alle 30 sider i text-30-pages-linearized.pdf 358ms
+     ✓ bruker faktisk bladrekkefølge når både rot og nestet gren har feil Count 322ms
+     ✓ ukjent fysisk mapping blir aldri godkjent som readable og alle 2.2-posisjoner beholdes 311ms
+     ✓ bevarer snapshot, originalhash og navn når parseren får kopi av en Buffer-slice 382ms
+   ✓ Story 2.3 AC3/AC4 – konservativ blankregel og fullføringssperre (15)
+     ✓ blank-variants.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 325ms
+     ✓ textless-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 349ms
+     ✓ mixed-status.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 321ms
+     ✓ uncertain-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 360ms
+     ✓ catalog-xfa.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 304ms
+     ✓ encrypted-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 304ms
+     ✓ blank alene blokkerer ikke sammen med lesbar rapporttekst 306ms
+     ✓ beholder alle uleste fysiske sider og kjente årsaker etter en blank side 316ms
+     ✓ den eksisterende vektorfixturen blir aldri blank 311ms
+   ✓ Story 2.3 – workeropprydding og trygge driftsfeil (9)
+     ✓ avslutter den faktiske uttrekksworkeren etter layout.pdf 303ms
+     ✓ ryddet tråd og trygg melding når siste terminate avvises 301ms
+   ✓ Story 2.3 review – faktisk PDF-regresjon (9)
+     ✓ laster sammensatt fonts innebygde CMaps fra lokal PDF.js-pakke 302ms
+     ✓ bevarer trygt kjent årsakskategori for uavklart dekoding og referanse 328ms
+ ✓ tests/integration/http-analysis.test.ts (22 tests) 77726ms
+   ✓ Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp (22)
+     ✓ F1 følger faktisk PDF og uavhengig fasit med ett adapterkall 1909ms
+     ✓ F2 følger faktisk PDF og uavhengig fasit med ett adapterkall 1583ms
+     ✓ F3 følger faktisk PDF og uavhengig fasit med ett adapterkall 1148ms
+     ✓ F4 følger faktisk PDF og uavhengig fasit med ett adapterkall 1077ms
+     ✓ navn og MIME er bare metadata, feil signatur/container er dokumentfeil 902ms
+     ✓ PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked 1326ms
+     ✓ vilkårlige chunks og falsk boundary bevarer originalbytehash 507ms
+     ✓ aktiv lås gjelder under upload med andre requestId/generasjon og slipper etter abort 572ms
+     ✓ http-adapter-failure.ts gir trygg feil uten retry og beholder markør 963ms
+     ✓ http-adapter-invalid.ts gir trygg feil uten retry og beholder markør 942ms
+     ✓ aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon 670ms
+     ✓ without-text-layer.pdf blir dokumentfeil uten adaptertillatelse eller varig markør 911ms
+     ✓ text-31-pages.pdf blir dokumentfeil uten adaptertillatelse eller varig markør 633ms
+     ✓ klientabort under parser stopper synkront heng og lar samme session starte igjen 515ms
+     ✓ én reell 60 s-frist stopper parserheng, adapterheng og sen retur etter flere steg 60489ms
+     ✓ eide inputbytes tømmes ved suksess, adapterfeil, duplikatavvisning og abort 1815ms
+     ✓ serverstopp venter på faktisk cleanup av en request med hengende adapter 454ms
+     ✓ klientabort under adapter terminerer prosessen og beholder duplikatsperre 917ms
+
+ Test Files  31 passed (31)
+      Tests  962 passed (962)
+   Start at  10:59:39
+   Duration  78.05s (tests 97%, import 2%, transform 1%)

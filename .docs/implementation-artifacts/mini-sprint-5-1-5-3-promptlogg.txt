@@ -1,0 +1,12 @@
+test_concurrent_writers (test_log_user_prompt.PromptLoggingTests.test_concurrent_writers) ... ok
+test_daily_fallback (test_log_user_prompt.PromptLoggingTests.test_daily_fallback) ... ok
+test_errors_never_echo_input (test_log_user_prompt.PromptLoggingTests.test_errors_never_echo_input) ... ok
+test_invalid_events_do_not_write (test_log_user_prompt.PromptLoggingTests.test_invalid_events_do_not_write) ... ok
+test_redaction (test_log_user_prompt.PromptLoggingTests.test_redaction) ... ok
+test_symlink_is_not_followed (test_log_user_prompt.PromptLoggingTests.test_symlink_is_not_followed) ... ok
+test_unicode_multiline_and_allowed_fields_only (test_log_user_prompt.PromptLoggingTests.test_unicode_multiline_and_allowed_fields_only) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.082s
+
+OK

@@ -107,5 +107,4 @@ måleimplementasjon, full produkttest eller faktisk TT-/S5-gjennomføring.
 | AC6 | Ikke gjennomført: faktisk samme-case manuell referanse mangler |
 
 Gjenstående nødvendige avklaringer står i [draft-spec](spec-4-5-male-live-analyse-og-menneskelig-kontroll.md).
-Dette checkpointet setter ikke Story 4.5 til review/done eller R4-S5 til
-closed; person er avklart, øvrig preflight gjenstår. Epic 4 kan ikke lukkes; 5.4/ekstern S6 og 5.5 er urørt.
+Story 4.5 står fortsatt backlog/draft. Etter brukerens forenklingsbestilling er R4-S5 lukket på avklart person/miljø/metode og konto; intern preflight og lokal helper er klargjort. Faktiske menneskelige målinger og 4.4 B2 gjenstår. Epic 4 kan ikke lukkes; 5.4/ekstern S6 og 5.5 er urørt.

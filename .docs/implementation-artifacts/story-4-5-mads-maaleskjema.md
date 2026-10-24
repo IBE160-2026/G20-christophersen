@@ -21,21 +21,21 @@ Mennesketidene nedenfor fylles først fra faktisk gjennomføring.
 | Faktisk gjennomføringsdato og tidssone | |
 | Maskin / OS-versjon | macOS 26.6.2 (25G83), arm64; lest med sw_vers/uname 2026-10-24 |
 | Nettleser / versjon | Google Chrome 155.0.8059.85 installert; valgt for forsøket |
-| Appadresse / tydelig Live analyse | http://127.0.0.1:3000; modus kontrolleres ved lokal oppstart før overlevering |
+| Appadresse / tydelig Live analyse | http://127.0.0.1:3000; GET / og /api/analysis-config verifisert HTTP 200/live uten analyse-POST |
 | Full kodecommit etter bestått regresjon | Produkt: 43c0a693d7517c59835078205bfe72611697dc05; 1082 Vitest / 195 E2E / 3 dev / 37 komponent / 13 sikkerhet bestått. Ny manuell hjelper identifiseres separat i forsøksplanen. |
-| Arbeidstreet ved måling / eventuell avviksliste | |
+| Arbeidstreet ved måling / eventuell avviksliste | Ved klargjøring kun ny intern dokumentasjon/helper; ingen endret produktkode. Codex registrerer faktisk status ved forsøket. |
 | Video-/opptaksprogram og filformat | Valgt: macOS Skift–Cmd–5, kontinuerlig skjermopptak. Faktisk format/oppløsning leses fra levert fil. |
 | Prøveopptak lesbart, klikk/liste synlig, fil/bildefrekvens | Kontrolleres fra levert originalopptak av Codex; Mads skal ikke registrere tekniske videofelt. |
 | Felles tidsgrunnlag | Opptakets relative tidsposisjoner; Codex leser faktisk oppløsning og regner varigheter fra synlige hendelser. |
 | Mads har forstått start/stopp og er klar | |
 | Tidligere kjennskap til casene/fasit/app | |
-| Root har bekreftet originaluttrekk-/HTTP-/kostnadsopptak i ny mappe | |
+| Root har bekreftet originaluttrekk-/HTTP-/kostnadsopptak i ny mappe | Ja: separat reviewet manuell helper, ny mappe S5-2026-10-24-F1-01, eksklusive writes; teknisk oppstartskontroll med kun GET bestått. |
 | Dagens pris/kilde/dato (root, uten API-kall) | 2026-10-24: [OpenAI Docs](https://developers.openai.com/api/docs/models/gpt-6.1-sol), USD/MTok input 2, cached 0.10, cache write 2.50, output 10; default, kort kontekst. |
 | Faktisk konto-/prosjektgrense og tilgjengelig dekning kontrollert | Mads bekreftet 2026-10-24 uendret USD 2-grense og intet annet forbruk; tidligere prepaid USD 5. Dette er brukerbekreftelse, ikke nytt admin-API-innsyn. |
 | Tidligere prosjektforbruk avstemt (historisk USD 0.016072) | USD 0.016072 fra originale receipts, bruker bekrefter intet annet forbruk 2026-10-24. |
 | Eventuelle andre/ukjente belastninger avstemt | Ingen, eksplisitt bekreftet av Mads 2026-10-24. |
 | Konservativ reservasjon for første forsøk / gjenværende dekning | USD 1.53 inkl. konservativ cache-write-sats: 100000 × 2.50/1e6 + 128000 × 10/1e6. Maksimum samlet USD 1.546072 < USD 2 < R1 USD 20. Ny plan håndhever dette før transport. |
-| Root: R4-S5 faktisk lukket og første F1-forsøk eksplisitt klart | |
+| Root: R4-S5 faktisk lukket og første F1-forsøk eksplisitt klart | R4-S5 closed på person/miljø/metode og konto. Root-preflight godkjenner lokal arming for Mads sitt senere klikk; faktisk menneskelig gjennomføring ikke startet. Se intern F1-preflight og separat armed.json. |
 
 R1: GPT-6.1 Sol `gpt-6.1-sol`, SDK 6.9.1, Responses, low/default,
 prompt/schema 1/1, kontrakt/uttrekk 2/1, max output 128000, deadline 120000 ms,

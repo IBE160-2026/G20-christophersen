@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-10-24T14:55:42.167105+00:00",
+  "rootHttp": 200,
+  "analysisConfig": {
+    "mode": "live"
+  },
+  "analysisPostRequests": 0,
+  "providerRequests": 0,
+  "humanActions": 0,
+  "attemptFilesAbsent": true,
+  "mode": "unarmed-free-GET-only"
+}

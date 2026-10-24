@@ -98,3 +98,29 @@ Kursgrunnlaget er fulgt via sensoruttrekk/faglærertilbakemelding og de
 godkjente planartefaktene: sporbar faktisk evaluering og ærlige bevisgrenser.
 Ingen låste krav eller fasit er tilpasset for å få bestått. Endelig arbeid og
 aktiv promptlogg samles i en lokal commit; ingen push.
+
+## Senere forenkling og faktisk F1-preflight samme dag
+
+Mads ba deretter om å slippe detaljskjemaet. Det er beholdt internt og fylt
+med tekniske opplysninger fra repo/maskin. Den korte operative instruksen er
+[egen F1-instruks](../../implementation-artifacts/story-4-5-f1-instruks.md).
+Mads bekreftet USD 2 og intet annet forbruk/ukjente belastninger etter USD
+0.016072. OpenAI Docs-pris er åpnet på nytt; modellens lesende oppslag ga
+HTTP 200. Ingen Responses-kall. Konservativ ny reservasjon er USD 1.53.
+
+Person/miljø/metode/konto er nå dokumentert, og R4-S5 er closed. Det er ikke
+påstand om faktisk menneskelig gjennomføring. Den tidligere open-statusen
+over beskriver det opprinnelige checkpointet, før denne nye brukerbestillingen.
+Separat helper er implementert og uavhengig reviewet; 8 offlineprøver består.
+Ett lifecyclefunn ble rettet: rene dokument-/beviscommits tillates etter
+codecommit, mens eksakt kilde-/buildfingeravtrykk fortsatt kreves.
+
+Ny kanonisk F1-plan er forberedt, uarmet lokal server er kontrollert med
+bare GET, og root har deretter eksplisitt armert lokal server for Mads sitt
+senere klikk. Sluttkontroll av GET viste HTTP 200/live og fravær av faktisk
+analyse-/dispatch-/usagefiler og paidlock. Ingen analyse-POST, leverandørkall,
+menneskehandling eller mennesketid er utført av agenten. Faktiske tider står
+blanke. Originaler og produktkode er urørt. Eksakt plan/approval/GET-bevis
+finnes under `story-4-5/S5-2026-10-24-F1-01/` i implementation-artifacts.
+Ingen teststart, retry eller Story 5.5. 4.4 review, 4.5 backlog og Epic 4
+in-progress består; neste handling er Mads sin filmede gjennomføring.

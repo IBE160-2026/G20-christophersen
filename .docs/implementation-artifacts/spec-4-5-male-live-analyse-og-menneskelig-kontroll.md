@@ -79,8 +79,10 @@ faktiske oppsett/metodebekreftelse, uten betalt start.
 
 ## Verification
 
-Kontroller registrering mot TT-1–TT-9 og avstem komplett forsøksliste, originaler, kvalitet og kostnader. Protokollfasit kan kontrolleres offline, men faktisk S5 krever menneskelig gjennomføring. Kun dokumentforberedelse foreligger; sprintstory forblir backlog, utkastet kan ikke settes ready-for-dev med åpne spørsmål.
+Kontroller registrering mot TT-1–TT-9 og avstem komplett forsøksliste, originaler, kvalitet og kostnader. Protokollfasit kan kontrolleres offline, men faktisk S5 krever menneskelig gjennomføring. Dokumenter og separat manuell bevishelper er klargjort; sprintstory forblir backlog/draft fordi 4.4s faktiske F1-sluttbevis og menneskelige S5-målinger gjenstår.
 
 ## Forenkling 2026-10-24
 
 Ny brukerbestilling erstatter den omfattende manuelle utfyllingen med kort operativ instruks. Separat lokal manuell helper oppfanger originale tekniske bevis; den klikker aldri analyse eller menneskekontroll. Teknisk preflight og helperreview dokumenteres separat. Faktiske S5-AC gjenstår.
+
+Nyere preflightstatus: R4-S5 er closed på dokumentert person/miljø/metode og kontobekreftelse. Helperreview og 8 offlineprøver består. Den lokale siden er klargjort for Mads sitt senere klikk; kun GET er brukt av root, 0 analyse-POST/leverandørkall. Dette erstatter den eldre reviewloggens daværende open-status, uten å endre historisk review eller utlede faktisk S5.

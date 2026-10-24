@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-24T14:57:29.495518+00:00",
+  "localUrl": "http://127.0.0.1:3000",
+  "mode": "live",
+  "armedForHumanClick": true,
+  "rootHttp": 200,
+  "analysisConfigHttp": 200,
+  "analysisPostRequestsAtHandoff": 0,
+  "providerRequestsAtHandoff": 0,
+  "humanActionsByAgent": 0,
+  "newGenerationCostUsd": 0,
+  "paidLockAbsent": true,
+  "s5Observations": 0,
+  "nextAction": "Mads follows short instruction; agent stops before test"
+}

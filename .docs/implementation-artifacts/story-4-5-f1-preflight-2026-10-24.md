@@ -49,3 +49,30 @@ Produktkode, fixtures, modell/prompt/schema og låste krav er urørt i denne
 klargjøringen. Helperreview, offlinekontroll og lokal oppstartsverifikasjon
 registreres separat før overlevering. Ingen faktisk analyse eller menneskelig
 måling er gjennomført. Ny genereringskostnad fra agenten: USD 0.
+
+## Faktisk lokal klargjøring
+
+Helperkoden er committet som `ed5b5473390fb12c24ea493d1b36515ff9a297c3`.
+[Uavhengig review](story-4-5-f1-helper-review.md) består etter retting av
+commitbinding ved rene bevis-/dokumentcommits. Åtte offlineprøver bestod
+uten nøkkel med OS-nettsperre og lokal loopback; ingen produktkode er endret.
+
+Kanonisk `prepare` er kjørt uten API-nøkkel. Det opprettet ny plan og nøyaktig
+forventet request, begge eksklusivt, i
+`story-4-5/S5-2026-10-24-F1-01/`. Planens `armed:false`/pending er det
+uforanderlige forberedelsesøyeblikket. En senere separat `armed.json` bærer
+eventuell eksplisitt tillatelse; den historiske planen omskrives aldri.
+
+Lokal uarmet server er startet og kontrollert med bare GET `/` og
+`/api/analysis-config`: HTTP 200, ekte live-modus. Serveren ble deretter
+stoppet. `startup-verification.json` bevarer dette: 0 analyse-POST,
+0 providerrequests, 0 menneskehandlinger, ingen forsøks-/dispatchfiler.
+Dette er teknisk oppstartskontroll, ikke en F1-analyse eller S5-observasjon.
+
+Root godkjenner nå at samme kilde/build, med konto/metode/pris ovenfor,
+kan armeres lokalt for **bare Mads' senere Start analyse**. Lokal arming/server-
+oppstart er forberedelse og gjør ingen analyse. Ingen ny Mads-klar-runde eller
+teknisk utfylling kreves. Root attesterer ikke menneskelig opptak eller beredskap;
+Mads skal starte opptaket og følge kortinstruksen før han eventuelt klikker.
+Et faktisk trykk bruker engangstillatelsen. Mads stopper etter F1; alle feil
+bevares og ingen retry utføres. Faktiske kostnader avstemmes før mer live-arbeid.

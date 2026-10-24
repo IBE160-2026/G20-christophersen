@@ -32,7 +32,7 @@
 # development_status er gruppert per epic, ikke etter implementeringsrekkefølge.
 # BMADs generiske statusanbefaling håndhever ikke avhengigheter eller porter.
 generated: 10-16-2026 18:23
-last_updated: 10-23-2026
+last_updated: 10-24-2026
 project: IBE160
 project_key: NOKEY
 tracking_system: file-system
@@ -135,7 +135,7 @@ clarification_gates:
     decision_record: null
   R4-S5:
     readiness_issue: R4
-    status: open
+    status: closed
     owner: Mads / evalueringsansvarlig
     before_stories: ['4.5']
     also_before: S5-målepunkter i 4.4 dersom de samles for gjenbruk i 4.5

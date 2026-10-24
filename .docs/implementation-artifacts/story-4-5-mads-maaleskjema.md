@@ -5,21 +5,13 @@ Mads er deltaker. Utvalg: F1/F2/F4, ett planlagt nytt forsøk per case,
 sekvensielt; F3 med L=null er utenfor. Ingen tidligere målinger gjenbrukes.
 Ingen automatisk retry eller automatisk menneskekontroll.
 
-## Gjør dette nå — stopp før betalt start
+## Internt prosessbevis — fylles av Codex
 
-1. Fyll ut oppsettet nedenfor og bekreft at du selv skal kontrollere rapporten
-   og gjøre manuell referanse. Ikke oppgi API-nøkkel eller kontodetaljer her.
-2. Velg kontinuerlig skjermopptak som viser PDF/app og menneskehandlingene.
-   På Mac kan du bruke Skift–Cmd–5. Prøv et **lokalt, ubetalt** kort opptak og
-   kontroller at teksten/klikkene kan leses. Registrer filnavn og faktisk
-   bildefrekvens/tidsoppløsning. Stopp opptaket før konto/nøkkel vises.
-3. Meld til root: «Mads klar», OS/nettleser, opptaksmetode og hvor prøvefilen
-   ligger. Root ferdigstiller regresjon, fryser kodeversjonen og klargjør
-   oppfanging av nye originaluttrekk/kostnad før betalt Start analyse.
-
-**Stopp her til root har bekreftet port og preflight.** Du skal ikke kjøre
-`tools/story-4-4/run.mjs` eller starte analysen nå. Originalmapper skal bevares.
-Resten er den konkrete oppskriften for avtalt gjennomføring.
+Mads skal ikke fylle dette detaljskjemaet. Den korte operative instruksen
+ligger i [F1-instruksen](story-4-5-f1-instruks.md). Codex henter tekniske
+metadata, hasher, versjoner, varigheter og kostnader fra repo og originalbevis.
+Mads utfører bare vurderingen og leverer opptak/notater og observerte resultater.
+Mennesketidene nedenfor fylles først fra faktisk gjennomføring.
 
 ## Oppsett og preflight — faktisk bekreftelse før første forsøk
 
@@ -27,22 +19,22 @@ Resten er den konkrete oppskriften for avtalt gjennomføring.
 |---|---|
 | Deltaker | Mads (bekreftet av bruker 2026-10-24) |
 | Faktisk gjennomføringsdato og tidssone | |
-| Maskin / OS-versjon | |
-| Nettleser / versjon | |
-| Appadresse / tydelig Live analyse | |
-| Full kodecommit etter bestått regresjon | |
+| Maskin / OS-versjon | macOS 26.6.2 (25G83), arm64; lest med sw_vers/uname 2026-10-24 |
+| Nettleser / versjon | Google Chrome 155.0.8059.85 installert; valgt for forsøket |
+| Appadresse / tydelig Live analyse | http://127.0.0.1:3000; modus kontrolleres ved lokal oppstart før overlevering |
+| Full kodecommit etter bestått regresjon | Produkt: 43c0a693d7517c59835078205bfe72611697dc05; 1082 Vitest / 195 E2E / 3 dev / 37 komponent / 13 sikkerhet bestått. Ny manuell hjelper identifiseres separat i forsøksplanen. |
 | Arbeidstreet ved måling / eventuell avviksliste | |
-| Video-/opptaksprogram og filformat | |
-| Prøveopptak lesbart, klikk/liste synlig, fil/bildefrekvens | |
-| Felles tidsgrunnlag | Kontinuerlig opptaks relative tid fra filstart, faktisk oppløsning fylles inn: |
+| Video-/opptaksprogram og filformat | Valgt: macOS Skift–Cmd–5, kontinuerlig skjermopptak. Faktisk format/oppløsning leses fra levert fil. |
+| Prøveopptak lesbart, klikk/liste synlig, fil/bildefrekvens | Kontrolleres fra levert originalopptak av Codex; Mads skal ikke registrere tekniske videofelt. |
+| Felles tidsgrunnlag | Opptakets relative tidsposisjoner; Codex leser faktisk oppløsning og regner varigheter fra synlige hendelser. |
 | Mads har forstått start/stopp og er klar | |
 | Tidligere kjennskap til casene/fasit/app | |
 | Root har bekreftet originaluttrekk-/HTTP-/kostnadsopptak i ny mappe | |
-| Dagens pris/kilde/dato (root, uten API-kall) | |
-| Faktisk konto-/prosjektgrense og tilgjengelig dekning kontrollert | |
-| Tidligere prosjektforbruk avstemt (historisk USD 0.016072) | |
-| Eventuelle andre/ukjente belastninger avstemt | |
-| Konservativ reservasjon for første forsøk / gjenværende dekning | |
+| Dagens pris/kilde/dato (root, uten API-kall) | 2026-10-24: [OpenAI Docs](https://developers.openai.com/api/docs/models/gpt-6.1-sol), USD/MTok input 2, cached 0.10, cache write 2.50, output 10; default, kort kontekst. |
+| Faktisk konto-/prosjektgrense og tilgjengelig dekning kontrollert | Mads bekreftet 2026-10-24 uendret USD 2-grense og intet annet forbruk; tidligere prepaid USD 5. Dette er brukerbekreftelse, ikke nytt admin-API-innsyn. |
+| Tidligere prosjektforbruk avstemt (historisk USD 0.016072) | USD 0.016072 fra originale receipts, bruker bekrefter intet annet forbruk 2026-10-24. |
+| Eventuelle andre/ukjente belastninger avstemt | Ingen, eksplisitt bekreftet av Mads 2026-10-24. |
+| Konservativ reservasjon for første forsøk / gjenværende dekning | USD 1.53 inkl. konservativ cache-write-sats: 100000 × 2.50/1e6 + 128000 × 10/1e6. Maksimum samlet USD 1.546072 < USD 2 < R1 USD 20. Ny plan håndhever dette før transport. |
 | Root: R4-S5 faktisk lukket og første F1-forsøk eksplisitt klart | |
 
 R1: GPT-6.1 Sol `gpt-6.1-sol`, SDK 6.9.1, Responses, low/default,

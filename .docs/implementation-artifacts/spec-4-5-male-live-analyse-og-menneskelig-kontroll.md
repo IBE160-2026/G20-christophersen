@@ -25,10 +25,13 @@ Gjennomfør og dokumenter eksisterende S5-protokoll med faktisk live-analyse, me
 
 </frozen-after-approval>
 
-## Open Questions
+## Gjennomføringsstatus
 
-- Mads er bekreftet primærbruker og deltaker. Hvilket faktisk miljø/nettleser brukes, er video-/tidsmetoden prøvd, og er Mads klar? Alternativer: bekreft oppsettet i skjemaet / utsett betalt start. Tider står blanke frem til faktisk gjennomføring.
-- Er dagens konto, pris, tidligere forbruk, ukjente belastninger og reservasjon avstemt før betalt start? Alternativer: dokumenter preflight og start ett eksplisitt forsøk / stopp. Ingen tidligere S5-registreringer skal gjenbrukes, uansett mulig teknisk gjenbruk.
+Mads er bekreftet deltaker; miljø er hentet lokalt, metode er fastlagt og konto
+bekreftet uendret 2026-10-24. R4-S5 er closed på dette grunnlaget. Detaljskjema
+fylles av Codex; Mads får kun `story-4-5-f1-instruks.md`. Faktisk F1-live-
+sluttkontroll/B2 og menneskelig måling gjenstår; 4.4-review/4.5-backlog består.
+Ingen tidligere S5-registreringer skal gjenbrukes.
 
 ## Code Map
 
@@ -44,8 +47,9 @@ Gjennomfør og dokumenter eksisterende S5-protokoll med faktisk live-analyse, me
 
 **Execution:**
 - [x] Protokollcheckpointet: undersøk gjenbruk, spor TT-fasit og dokumenter mangler uten å starte måling.
-- [x] `.docs/planning-artifacts/r4-s5-mads-gjennomforing-2026-10-24.md`: delvis avklart person/utvalg, lenket fra fortsatt åpen port.
-- [ ] `.docs/implementation-artifacts/story-4-5-mads-maaleskjema.md`: Mads bekrefter faktisk miljø/tidsmetode/startberedskap; root dokumenterer kontopreflight før første betalte start.
+- [x] `.docs/planning-artifacts/r4-s5-mads-gjennomforing-2026-10-24.md`: avklart person/miljø/metode og konto etter forenklet overlevering, lenket fra lukket R4-S5.
+- [x] `.docs/implementation-artifacts/story-4-5-f1-preflight-2026-10-24.md`: Codex fyller teknisk miljø/pris/budsjett og dokumenterer Mads sin kontobekreftelse.
+- [x] `.docs/implementation-artifacts/story-4-5-f1-instruks.md`: kort menneskelig instruks; detaljskjemaet beholdes internt.
 - [ ] Nye forsøksbevis under `.docs/implementation-artifacts/story-4-5/`: registrer hvert planlagt forsøk og faktisk hendelsesgrunnlag; bevar feil og originaluttrekk.
 - [ ] `.docs/implementation-artifacts/story-4-5-verifikasjon.md`: sammenstill faktiske tider, separate medianer, manuell referanse, S1–S5-status og AC1–AC6 med versjonsspor.
 - [ ] Uavhengig BMAD-review; rett verifiserte funn og sett done bare hvis samtlige AC består.
@@ -76,3 +80,7 @@ faktiske oppsett/metodebekreftelse, uten betalt start.
 ## Verification
 
 Kontroller registrering mot TT-1–TT-9 og avstem komplett forsøksliste, originaler, kvalitet og kostnader. Protokollfasit kan kontrolleres offline, men faktisk S5 krever menneskelig gjennomføring. Kun dokumentforberedelse foreligger; sprintstory forblir backlog, utkastet kan ikke settes ready-for-dev med åpne spørsmål.
+
+## Forenkling 2026-10-24
+
+Ny brukerbestilling erstatter den omfattende manuelle utfyllingen med kort operativ instruks. Separat lokal manuell helper oppfanger originale tekniske bevis; den klikker aldri analyse eller menneskekontroll. Teknisk preflight og helperreview dokumenteres separat. Faktiske S5-AC gjenstår.

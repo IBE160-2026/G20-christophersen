@@ -6,7 +6,7 @@ referanse er produsert. Story 4.5 forblir backlog; draft-spec er ikke en
 implementert eller reviewbestått story.
 
 Kontrollert kildeversjon: `34a9ea6cb9b764ed14cf1a0e04912899fa7d7c6b`.
-Story 4.3 er done. B1 er siden rettet og [uavhengig reviewbestått](story-4-4-b1-uavhengig-review-2026-10-24.md); 4.4 er fortsatt review fordi B2 trenger ny faktisk F1-live-sluttkontroll. R4-S5 er fortsatt open, nå med [datert delavklaring](../planning-artifacts/r4-s5-mads-gjennomforing-2026-10-24.md). Mads er bekreftet deltaker; faktisk miljø/tidsmetode/startberedskap og konto må avstemmes før betalt start. Ingen tidligere S5-registreringer skal gjenbrukes etter brukerens nye beslutning.
+Story 4.3 er done. B1 er siden rettet og [uavhengig reviewbestått](story-4-4-b1-uavhengig-review-2026-10-24.md); 4.4 er fortsatt review fordi B2 trenger ny faktisk F1-live-sluttkontroll. R4-S5s person/miljø/metode er nå avklart i [datert beslutning](../planning-artifacts/r4-s5-mads-gjennomforing-2026-10-24.md); porten er closed. Mads er deltaker, teknisk miljø er lest lokalt, og konto er bekreftet uendret av Mads. Faktiske menneskehandlinger og S5-målinger gjenstår. Ingen tidligere S5-registreringer skal gjenbrukes etter brukerens nye beslutning.
 
 ## Autoritativt grunnlag
 
@@ -44,15 +44,15 @@ ledig budsjett og eventuelle ukjente belastninger må avstemmes før nye forsøk
 
 ## Konkret neste gjennomføring
 
-Bruk [Mads sitt måleskjema](story-4-5-mads-maaleskjema.md). Det inneholder eksakte start-/stoppregler, menneskelige aktiviteter, bevis og blanke tidsfelt. Forhåndsutvalg er **F1/F2/F4, ett planlagt nytt forsøk per case**, sekvensielt, ingen automatisk retry. Dette er et konkret forsøksutvalg, ikke et nytt minimumkrav. F3 med L=null har ikke gyldig S5-start og er utenfor.
+Bruk [den korte F1-instruksen](story-4-5-f1-instruks.md). [Detaljskjemaet](story-4-5-mads-maaleskjema.md) fylles internt av Codex. Det inneholder eksakte start-/stoppregler, menneskelige aktiviteter, bevis og blanke tidsfelt. Forhåndsutvalg er **F1/F2/F4, ett planlagt nytt forsøk per case**, sekvensielt, ingen automatisk retry. Dette er et konkret forsøksutvalg, ikke et nytt minimumkrav. F3 med L=null har ikke gyldig S5-start og er utenfor.
 
-1. Mads bekrefter miljø, kontinuerlig skjermopptak/tidsmetode og startberedskap. Root avstemmer konto/pris/forbruk/reservasjon og fryser full commit etter regresjon. Ingen nøkkel/kontoinformasjon filmes.
+1. Root har hentet teknisk miljø og avstemt konto/pris/forbruk/reservasjon i [intern preflight](story-4-5-f1-preflight-2026-10-24.md). Mads filmer og utfører vurderingen selv. Ingen nøkkel/kontoinformasjon filmes.
 2. Etter faktisk lukket R4-S5 gjennomfører Mads første nye F1-runde som **4.4 AC6-livekontroll med samtidige S5-punkter**. Dette følger sprintplanens uttrykkelige adgang til innsamling i 4.4 etter portlukking; det er ikke selvstendig ferdig 4.5 eller omgåelse av 4.4.
 3. Oppfanging av nye originale leverandør-/HTTP-/uttrekks-/kostnadsbevis må klargjøres med ny forsøksidentitet i egen mappe før Start analyse. De faktiske svarene og kostnadene registreres under og etter forsøket. Gamle `tools/story-4-4/run.mjs`-kommandoer skal ikke kjøres for denne manuelle runden: de automatiserer kontroll og kan skrive i originalmappen. Ingen kommando som overskriver 4.4-originaler er autorisert.
 4. Etter F1 vurderes B2 og aktuell 4.4-akseptanse uavhengig. Først etter bestått 4.4 fortsetter resterende F2/F4 som 4.5. Feil/ufullstendige målepunkter bevares og diskuteres før eventuelt nytt eksplisitt forsøk med ny ID og ny preflight.
 5. Mads gjennomfører manuell referanse på samme caser etter skjemaets avgrensning; ingen anslag, simulering, agentklikk eller replay er menneskelig bevis. Sammenstill alle forsøk, separate medianer og S1–S4 før uavhengig 4.5-review.
 
-**Neste menneskelige checkpoint:** Mads fyller bare oppsett/startberedskap i skjemaet og melder klar. Ingen betalt Start analyse før root har bekreftet ferdig regresjon, oppfangingsmetode for nye originalbevis og konto/preflight. Faktiske måletider fylles først under gjennomføringen.
+**Neste menneskelige checkpoint:** Mads følger kun kortinstruksen og leverer originalopptak, notat og faktisk anbefaling/feil. Han fyller ingen teknisk tabell. Root klargjør ny originaloppfanging og lokal server før overleveringen; ingen faktisk analyse startes av agenten.
 
 ## Registreringsgrunnlag per faktisk forsøk
 

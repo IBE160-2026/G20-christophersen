@@ -108,3 +108,17 @@ B3–B8 og E1–E3 er lukket i verktøyene. B2/B9/B10 er håndtert med korrekt
 bevis-/statusavgrensning. B1s eksisterende produktavvik er sporet, og F1s
 opprinnelige sluttflyt er fortsatt et bevisforbehold. Full AC6 er ikke krysset
 av. Story 4.4 er review etter brukerens bestilling, Story 4.5 backlog.
+
+### Gjenopptatt kontroll 2026-10-24
+
+| ID | Dom/rute | Selvstendig bevis og håndtering |
+|---|---|---|
+| B1 | medium / defer | carried: Samme ubetingede mapping av limitations i finding-control består. 51 målrettede produktprøver er grønne; separat sekvensiell reviewer bekrefter at kontrakt/state mangler en avklaringshandling for generelle begrensninger. Ingen automatisk tekstklassifisering eller tilsidesettelse er innført. Eksisterende defer-entry beholdes uten duplikat. |
+| B2 | medium / dokumentpatch | carried: F1-receipt har fortsatt uiControlCompleted=false; komplett sluttflyt finnes bare som replay. Historisk bevis kan ikke produseres offline. Ny rapport presiserer at eventuelt nytt sporbarhets-/budsjettavklart forsøk først vurderes etter trygg løsning av B1. |
+
+Se [gjenopptatt AC6-review](story-4-4-gjenopptatt-review-2026-10-24.md).
+13 S2-/sikkerhetsprøver består på nytt uten nøkkel med OS-nettsperre.
+Ingen nye live-kall, kostnad USD 0. S2-originaler og eksisterende positive
+resultater beholdes. Produktretting krever eksplisitt valg av hvordan generelle
+begrensninger kan avklares uten å skjule reelle mangler. AC6 er fortsatt åpen;
+spec/sprint forblir in-review/review, ingen done-påstand.

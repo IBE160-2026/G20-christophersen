@@ -6,6 +6,7 @@ import { sourceTarget } from '../pdf/source-page.ts'
 import { validateTg3Resolution } from '../../domain/tg3-resolution.ts'
 import { assessFindingList } from '../../domain/finding-control.ts'
 import { formatFinancialMetrics } from '../../presentation/finance.ts'
+import { LimitationReviewDetails } from './LimitationReview.tsx'
 import { FinancialMetrics } from '../components/FinancialMetrics.tsx'
 import { selectResult } from '../state/result.ts'
 import { isFinancialConfirmed } from '../state/session.ts'
@@ -128,7 +129,7 @@ export function ScreeningResult({ session, dispatch }: { session: SessionState; 
         <p>{analysisModeLabel(session.report.mode)}. Finans, regler og anbefaling er kodebestemt fra det samme grunnlaget.</p>
         <p>Rapporthash: {basis.reportIdentity?.reportHash ?? 'Ingen'}</p>
         {outcome && <p>Uttrekksversjon: {outcome.extractionVersion} · Kontraktversjon: {outcome.contractVersion} · Forespørsel: {outcome.requestId}</p>}
-        {extraction?.limitations.map((text, index) => <p key={index}>Begrensning: {text}</p>)}
+        {extraction && extraction.limitations.length > 0 && <ul>{extraction.limitations.map((_text, index) => <li key={index}><LimitationReviewDetails basis={basis} index={index} /></li>)}</ul>}
       </details>
     </section>
     <div className="result-actions">

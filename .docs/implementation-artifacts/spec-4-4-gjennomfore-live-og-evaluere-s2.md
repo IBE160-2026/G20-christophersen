@@ -122,3 +122,21 @@ Ingen nye live-kall, kostnad USD 0. S2-originaler og eksisterende positive
 resultater beholdes. Produktretting krever eksplisitt valg av hvordan generelle
 begrensninger kan avklares uten å skjule reelle mangler. AC6 er fortsatt åpen;
 spec/sprint forblir in-review/review, ingen done-påstand.
+
+### Godkjent tilleggsbeslutning 2026-10-24
+
+Brukeren har eksplisitt godkjent en separat vurdering av generell
+rapportbegrensning. Denne nyere bestillingen overstyrer tidligere avgrensning
+om ingen produktfunksjon for den konkrete B1-rettingen; originalt frozen-innhold
+beholdes som historikk. Se [beslutning og implementeringsplan](story-4-4-begrensningsvurdering-2026-10-24.md).
+
+- [x] Kontrakt/domain/state/UI: eksplisitt brukerbekreftet vurdering per generell begrensning, original/årsak/revisjonsbinding og ingen generell blocker-override.
+- [x] Målrettede tester: tom/stale begrunnelse/binding, revisjonsendringer, originalbevaring, resultatsnapshot og fortsatt typed/kritisk blokkering.
+- [x] Offline replay av originale F1/F2 for riktig kodeutfall uten nye modellkall; F4s TG3 Uavklart består.
+- [ ] Uavhengig sekvensiell review hos neste agent; B2 beholdes åpen til faktisk nytt gyldig live-hovedflytbevis.
+
+Implementeringscheckpoint: build/typecheck/lint bestått, 136/136 målrettede
+unitprøver og 6/6 bygget-app-originalreplay-prøver bestått med OS-nettsperre
+og uten nøkkel. 77 originale/fasit-/modellkontraktfiler er byteidentiske mot
+HEAD. B1-produktrettingen er klar til ny uavhengig review, B2 forblir åpen.
+Ingen nye live-kall, ingen done-påstand. Se beslutningsfilens faktiske bevis.

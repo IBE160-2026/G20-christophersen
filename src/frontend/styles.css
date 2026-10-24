@@ -400,3 +400,8 @@ h1 {
 .result-origin h4 { margin: var(--space-3) 0 var(--space-2); }
 .result-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 .screening-result-historical .result-report { background: var(--surface-subtle); padding: var(--space-4); }
+
+/* Story 4.4: eksplisitt menneskelig vurdering, uendret originaltekst. */
+.limitation-reviews > li { margin-block: var(--space-4); overflow-wrap: anywhere; }
+.limitation-declaration { display: flex; align-items: flex-start; gap: var(--space-2); margin-block: var(--space-3); }
+.limitation-review input[type="checkbox"] { flex: 0 0 auto; width: 18px; min-height: 18px; margin-top: 2px; }

@@ -8,6 +8,7 @@ export interface ResultBinding {
   listRevision: number
   listConfirmationRevision: number | null
   findingConfirmations: { findingId: string; revision: number; confirmedRevision: number | null }[]
+  limitationReviewRevision: number
   tg3Revision: number
   report: {
     generation: number

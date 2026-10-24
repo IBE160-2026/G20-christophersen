@@ -25,6 +25,8 @@ export interface FindingListBasis {
   outcome: AnalysisOutcome | null
   error: string | null
   reportIdentity: { reportHash: string; documentName: string } | null
+  limitationReviews?: LimitationReview[]
+  tg3Revision?: number
   controls: FindingControl[]
   listRevision: number
   listConfirmationRevision: number | null
@@ -38,3 +40,17 @@ export interface FindingListAssessment {
   controlCompleted: boolean
   reportDeficiencies: KnownReportDeficiency[]
 }
+
+/** Separat menneskelig vurdering; original begrensning er aldri endret. */
+export const LimitationReviewSchema = z.strictObject({
+  index: z.number().int().nonnegative(),
+  original: z.string().min(1),
+  declaration: z.literal('general-noncritical'),
+  reason: z.string().trim().min(1),
+  reportHash: z.string().regex(/^[a-f0-9]{64}$/),
+  documentName: z.string().min(1),
+  requestId: z.string().min(1),
+  listRevision: z.number().int().nonnegative(),
+  tg3Revision: z.number().int().nonnegative(),
+})
+export type LimitationReview = z.infer<typeof LimitationReviewSchema>

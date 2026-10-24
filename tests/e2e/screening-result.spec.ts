@@ -57,6 +57,80 @@ async function controlled(page: Page, caseId: 'F1' | 'F2' | 'F4', rejectUncertai
   await page.getByRole('button', { name: 'Bekreft gjeldende liste', exact: true }).click()
   await expect(page.locator('.finding-list-control')).toHaveAttribute('data-control-completed', /\d+/)
 }
+for (const [id, expected] of [['F1', 'Gå videre'], ['F2', 'Forkast'], ['F4', 'Innhent mer informasjon']] as const) {
+  test(`4.4 B1 offline originalreplay ${id}: eksplisitt begrensningsvurdering og fortsatt TG3-vern`, async ({ page }, testInfo) => {
+    const originalText = readFileSync(new URL(`../../.docs/implementation-artifacts/story-4-4/${id}-outcome.json`, import.meta.url), 'utf8')
+    const original = JSON.parse(originalText)
+    let calls = 0
+    await page.route('**/api/analysis', async route => {
+      calls++
+      const headers = await route.request().allHeaders()
+      const correlation = AnalysisHttpCorrelationSchema.parse({ sessionId: headers['x-session-id'], requestId: headers['x-request-id'], generation: Number(headers['x-analysis-generation']) })
+      // Bare korrelasjon/modus tilpasses denne offline-replayøkten. Originalfilen røres aldri.
+      await route.fulfill({ json: { kind: 'analysis', correlation, outcome: { ...original, mode, requestId: correlation.requestId } } })
+    })
+    await controlled(page, id)
+    await expect(page.locator('.local-deficiencies')).toContainText(original.limitations[0])
+    const rows = page.locator('.limitation-reviews > li')
+    await expect(rows).toHaveCount(original.limitations.length)
+    for (let index = 0; index < original.limitations.length; index++) {
+      const row = rows.nth(index)
+      const save = row.getByRole('button', { name: `Kontrollert og ikke kritisk for screening — begrensning ${index + 1}`, exact: true })
+      await expect(row).toContainText(original.limitations[index])
+      await expect(save).toBeDisabled()
+      await row.getByRole('textbox').fill('Kontrollert mot originalrapporten. Generell informasjon om fiktivt opphav og modellens tekstgrunnlag, ingen manglende kritisk rapportinformasjon.')
+      await expect(save).toBeDisabled()
+      await row.getByRole('checkbox').check()
+      await save.click()
+      await expect(row).toContainText('Brukerbekreftet vurdering: kontrollert og ikke kritisk for screening i denne revisjonen.')
+      await expect(row.getByRole('button', { name: `Trekk tilbake vurdering av begrensning ${index + 1}`, exact: true })).toBeFocused()
+      await expect(row).toContainText(original.limitations[index])
+    }
+    if (id === 'F4') await expect(page.locator('.local-deficiencies')).toContainText('Alvorlig TG3 er uavklart')
+    else await expect(page.locator('.report-sufficiency')).toBeVisible()
+    await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+    await expect(page.locator('#recommendation-title')).toHaveText(expected)
+    const details = page.locator('.result-report details').filter({ has: page.locator('summary', { hasText: 'Analyseopphav og rapportidentitet' }) })
+    await details.locator('summary').click()
+    await expect(details).toContainText(original.limitations[0])
+    await expect(details).toContainText('Din begrunnelse:')
+    await expect(details).toContainText('Ikke et KI-faktum')
+    await testInfo.attach(`${id}-offline-begrensningsvurdering`, { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' })
+    await page.getByRole('button', { name: 'Gå tilbake til rapportfunn', exact: true }).click()
+    await page.getByRole('button', { name: 'Trekk tilbake vurdering av begrensning 1', exact: true }).click()
+    await expect(rows.first().getByRole('textbox')).toBeFocused()
+    await expect(rows.first().getByRole('checkbox')).not.toBeChecked()
+    await expect(page.locator('.local-deficiencies')).toContainText(original.limitations[0])
+    await page.getByRole('button', { name: 'Vis resultat', exact: true }).click()
+    await expect(page.locator('#recommendation-title')).toHaveText('Innhent mer informasjon')
+    if (id === 'F1') {
+      // Reviewfunn: domain-invalidasjon må også vises i UI, uten å gjenbruke
+      // tidligere erklæring eller usendt utkast etter ny funnrevisjon.
+      await page.getByRole('button', { name: 'Gå tilbake til rapportfunn', exact: true }).click()
+      const limitation = rows.first()
+      await limitation.getByRole('textbox').fill('Ny eksplisitt vurdering mot originalen.')
+      await limitation.getByRole('checkbox').check()
+      await limitation.getByRole('button', { name: 'Kontrollert og ikke kritisk for screening — begrensning 1', exact: true }).click()
+      const finding = page.locator('.finding-list > li').first()
+      for (const description of ['Kontrollert slitasje fra originalrapporten', 'Slitt overflate på baderomsgulv']) {
+        await finding.getByRole('button', { name: 'Korriger', exact: true }).click()
+        await finding.getByLabel('Beskrivelse fra rapporten', { exact: true }).fill(description)
+        await finding.getByRole('button', { name: 'Bruk korrigering', exact: true }).click()
+        await expect(limitation).toContainText('Tidligere brukervurdering — gjelder ikke gjeldende rapportgrunnlag.')
+        await expect(limitation).toContainText('Din begrunnelse: Ny eksplisitt vurdering mot originalen.')
+        await expect(limitation.getByRole('textbox')).toHaveValue('')
+        await expect(limitation.getByRole('checkbox')).not.toBeChecked()
+        await expect(limitation.getByRole('button', { name: 'Kontrollert og ikke kritisk for screening — begrensning 1', exact: true })).toBeDisabled()
+        await expect(page.locator('.local-deficiencies')).toContainText(original.limitations[0])
+        // Etter første endring skal også et usendt, ferdig utfylt utkast tømmes.
+        await limitation.getByRole('textbox').fill('Usendt vurdering av forrige revisjon')
+        await limitation.getByRole('checkbox').check()
+      }
+    }
+    expect(calls).toBe(1)
+    expect(readFileSync(new URL(`../../.docs/implementation-artifacts/story-4-4/${id}-outcome.json`, import.meta.url), 'utf8')).toBe(originalText)
+  })
+}
 for (const [id, recommendation, expected] of [
   ['F1', 'Gå videre', ['11,875 %', '1 500 000 kr/år', '9,375 %', '700 000 kr/år']],
   ['F2', 'Forkast', ['8,750 %', '1 000 000 kr/år', '6,250 %', '200 000 kr/år']],

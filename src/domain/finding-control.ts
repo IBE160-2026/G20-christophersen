@@ -1,4 +1,4 @@
-import { FindingCorrectionSchema } from '../contracts/finding-control.ts'
+import { FindingCorrectionSchema, LimitationReviewSchema } from '../contracts/finding-control.ts'
 import type { FindingDraft, FindingErrors, FindingListBasis, FindingListAssessment } from '../contracts/finding-control.ts'
 import type { AnalysisContext } from '../contracts/document-analysis.ts'
 import { sameTg3Basis, validateTg3Resolution } from './tg3-resolution.ts'
@@ -56,7 +56,9 @@ export function assessFindingList(basis: FindingListBasis): FindingListAssessmen
         for (const text of candidate.original.uncertainties) reportDeficiencies.push({ code: 'incomplete-report', reason: `${candidate.findingId}: ${text}` })
       }
     }
-    for (const limitation of extraction.limitations) reportDeficiencies.push({ code: 'incomplete-report', reason: limitation })
+    for (const [index, limitation] of extraction.limitations.entries()) {
+      if (!applicableLimitationReview(basis, index)) reportDeficiencies.push({ code: 'incomplete-report', reason: limitation })
+    }
   }
   const canConfirm = Boolean(completed && pendingFindingIds.length === 0)
   const confirmed = canConfirm && basis.listConfirmationRevision === basis.listRevision
@@ -64,4 +66,22 @@ export function assessFindingList(basis: FindingListBasis): FindingListAssessmen
   const tg3Handled = !missingTg3Basis && basis.tg3Findings.every(({ current, resolution }) => validateTg3Resolution(current, resolution).applicable
     || (resolution?.status === 'unresolved' && sameTg3Basis(resolution.binding, current)))
   return { canConfirm, confirmed, pendingFindingIds, tg3Handled, controlCompleted: confirmed && tg3Handled, reportDeficiencies }
+}
+
+/** Beviser binding og eksplisitt brukerhandling, aldri fritekstens semantikk.
+ * Påvirker bare én generell limitation; øvrige mangler vurderes uavhengig. */
+export function applicableLimitationReview(basis: FindingListBasis, index: number) {
+  const outcome = basis.outcome
+  if (basis.status !== 'completed' || basis.error || outcome?.status !== 'completed'
+    || basis.reportIdentity?.reportHash !== outcome.reportHash || basis.reportIdentity.documentName !== outcome.documentName) return null
+  for (const value of basis.limitationReviews ?? []) {
+    const parsed = LimitationReviewSchema.safeParse(value)
+    if (!parsed.success) continue
+    const review = parsed.data
+    if (review.index === index && review.original === outcome.limitations[index]
+      && review.reportHash === outcome.reportHash && review.documentName === outcome.documentName
+      && review.requestId === outcome.requestId && review.listRevision === basis.listRevision
+      && review.tg3Revision === (basis.tg3Revision ?? 0)) return review
+  }
+  return null
 }

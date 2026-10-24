@@ -2,7 +2,8 @@ import { AnalysisHttpResponseSchema } from '../../contracts/analysis-http.ts'
 import type { AnalysisHttpCorrelation } from '../../contracts/analysis-http.ts'
 import type { AnalysisOutcome } from '../../contracts/document-analysis.ts'
 import { evaluateKnownDeficiencies } from '../../domain/screening.ts'
-import type { FindingControl, FindingDraft } from '../../contracts/finding-control.ts'
+import { LimitationReviewSchema } from '../../contracts/finding-control.ts'
+import type { FindingControl, FindingDraft, LimitationReview } from '../../contracts/finding-control.ts'
 import { assessFindingList, validateFindingCorrection } from '../../domain/finding-control.ts'
 import { sameTg3Basis } from '../../domain/tg3-resolution.ts'
 import type { Tg3Field, Tg3Resolution, Tg3Finding } from '../../contracts/tg3-resolution.ts'
@@ -26,10 +27,14 @@ export interface ReportState {
   findingControls: FindingControl[]
   tg3Revision: number
   tg3Resolutions: { findingId: string; resolution: Tg3Resolution }[]
+  limitationReviews: LimitationReview[]
+  limitationReviewRevision: number
   listRevision: number
   listConfirmationRevision: number | null
 }
 export type ReportAction =
+  | { type: 'report-limitation-review'; generation: number; review: LimitationReview }
+  | { type: 'report-limitation-revoke'; generation: number; index: number }
   | { type: 'report-list-confirm'; generation: number; reportHash: string; documentName: string; listRevision: number }
   | { type: 'report-tg3-register'; generation: number; findingId: string; field: Tg3Field; value: string }
   | { type: 'report-finding-edit' | 'report-finding-apply' | 'report-finding-cancel' | 'report-finding-confirm' | 'report-finding-reject'; generation: number; findingId: string }
@@ -44,7 +49,7 @@ export type ReportAction =
   | { type: 'report-list-visible'; generation: number }
 export function createReportState(mode: 'demo' | 'live' = 'demo'): ReportState {
   return { mode, view: { findingId: null, pdfPage: null, zoom: 1 }, generation: 0, status: 'missing', selected: null, active: null, outcome: null, error: null, listVisibleGeneration: null,
-    findingControls: [], tg3Revision: 0, tg3Resolutions: [], listRevision: 0, listConfirmationRevision: null }
+    limitationReviews: [], limitationReviewRevision: 0, findingControls: [], tg3Revision: 0, tg3Resolutions: [], listRevision: 0, listConfirmationRevision: null }
 }
 function fail(state: ReportState, code: string): ReportState {
   return { ...state, status: 'failed', active: null, outcome: null, error: code, listVisibleGeneration: null }
@@ -54,6 +59,22 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
     && action.documentName === state.selected.file.name.trim() && action.listRevision === state.listRevision
     && findingListAssessment(state).canConfirm && !findingListAssessment(state).confirmed
     ? { ...state, listConfirmationRevision: state.listRevision } : state
+  if (action.type === 'report-limitation-review' || action.type === 'report-limitation-revoke') {
+    const outcome = state.outcome
+    if (action.generation !== state.generation || state.status !== 'completed' || state.error || outcome?.status !== 'completed'
+      || state.selected?.hash !== outcome.reportHash || state.selected.file.name.trim() !== outcome.documentName) return state
+    if (action.type === 'report-limitation-revoke') {
+      if (!state.limitationReviews.some(item => item.index === action.index)) return state
+      return { ...state, limitationReviews: state.limitationReviews.filter(item => item.index !== action.index), limitationReviewRevision: state.limitationReviewRevision + 1 }
+    }
+    const parsed = LimitationReviewSchema.safeParse(action.review)
+    if (!parsed.success) return state
+    const review = parsed.data
+    if (review.reportHash !== outcome.reportHash || review.documentName !== outcome.documentName || review.requestId !== outcome.requestId
+      || review.original !== outcome.limitations[review.index] || review.listRevision !== state.listRevision || review.tg3Revision !== state.tg3Revision) return state
+    return { ...state, limitationReviews: [...state.limitationReviews.filter(item => item.index !== review.index), review],
+      limitationReviewRevision: state.limitationReviewRevision + 1 }
+  }
   if ('findingId' in action) {
     const outcome = state.outcome
     if (state.status !== 'completed' || outcome?.status !== 'completed' || action.generation !== state.generation
@@ -119,7 +140,7 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
   if (action.type === 'report-error') return action.generation === state.generation ? fail(state, action.code) : state
   if (action.type === 'report-start') return state.selected && action.correlation.generation === state.generation
     && (state.status === 'ready' || state.status === 'failed')
-    ? { ...state, status: 'analysing', active: action.correlation, outcome: null, error: null, listVisibleGeneration: null } : state
+    ? { ...state, limitationReviews: [], limitationReviewRevision: state.limitationReviewRevision + 1, status: 'analysing', active: action.correlation, outcome: null, error: null, listVisibleGeneration: null } : state
   if (!state.active || state.status !== 'analysing' || action.correlation.generation !== state.generation
     || action.correlation.requestId !== state.active.requestId || action.correlation.sessionId !== state.active.sessionId) return state
   const parsed = AnalysisHttpResponseSchema.safeParse(action.body)
@@ -164,6 +185,7 @@ export function currentTg3Findings(state: ReportState): Tg3Finding[] {
 export function findingListBasis(state: ReportState) {
   return { status: state.status, outcome: state.outcome, error: state.error,
     reportIdentity: state.selected ? { reportHash: state.selected.hash, documentName: state.selected.file.name.trim() } : null,
+    limitationReviews: state.limitationReviews, tg3Revision: state.tg3Revision,
     controls: state.findingControls, listRevision: state.listRevision, listConfirmationRevision: state.listConfirmationRevision,
     tg3Findings: currentTg3Findings(state) }
 }

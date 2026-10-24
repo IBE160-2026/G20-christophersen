@@ -14,7 +14,7 @@ export function resultBinding(state: SessionState): ResultBinding {
     findingConfirmations: report.findingControls.filter(control => control.revision !== 0 || control.confirmedRevision !== null)
       .map(({ findingId, revision, confirmedRevision }) => ({ findingId, revision, confirmedRevision }))
       .sort((a, b) => a.findingId < b.findingId ? -1 : a.findingId > b.findingId ? 1 : 0),
-    tg3Revision: report.tg3Revision,
+    limitationReviewRevision: report.limitationReviewRevision, tg3Revision: report.tg3Revision,
     report: { generation: report.generation, reportHash: report.selected?.hash ?? null,
       documentName: report.selected?.file.name.trim() ?? null, requestId: report.outcome?.requestId ?? null,
       status: report.status, error: report.error },
@@ -74,6 +74,9 @@ export function describeResultChange(action: SessionAction, before: SessionState
   if (action.type === 'report-tg3-register') return { kind: 'tg3', target: action.findingId,
     message: `${action.findingId}: TG3-${{ status: 'status', reason: 'begrunnelse', basis: 'grunnlag' }[action.field]} er endret.`,
     nextAction: 'Kontroller registrert TG3-avklaring mot gjeldende rapportforhold etter FR-5, og beregn resultatet på nytt.' }
+  if (action.type === 'report-limitation-review' || action.type === 'report-limitation-revoke') return { kind: 'report', target: 'limitation',
+    message: 'Brukerens vurdering av en generell rapportbegrensning er endret.',
+    nextAction: 'Kontroller begrensningen og gjeldende begrunnelse, og beregn resultatet på nytt.' }
   if ('findingId' in action) return { kind: action.type === 'report-finding-confirm' ? 'confirmation' : 'finding', target: action.findingId,
     message: `${action.findingId}: ${action.type === 'report-finding-reject' ? 'funnet er avvist' : action.type === 'report-finding-confirm' ? 'enkeltfunnkontrollen er bekreftet' : 'korrigering er brukt'}.`,
     nextAction: action.type === 'report-finding-reject'

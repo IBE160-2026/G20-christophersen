@@ -5,6 +5,7 @@ import { sourceTarget } from '../pdf/source-page.ts'
 import { SourceReview } from '../pdf/SourceReview.tsx'
 import { Tg3Resolution, PreviousTg3Resolution } from './Tg3Resolution.tsx'
 import { FindingControl } from './FindingControl.tsx'
+import { LimitationReviewControl } from './LimitationReview.tsx'
 import { FindingListControl } from './FindingListControl.tsx'
 import type { Dispatch } from 'react'
 import type { ReportClient } from '../analysis/report-client.ts'
@@ -103,7 +104,7 @@ export function ReportAnalysis({ session, dispatch, client }: {
         </li>})}
       </ol>
       </SourceReview>
-      {extraction.limitations.length > 0 && <div><h3>Begrensninger</h3><ul>{extraction.limitations.map((text, index) => <li key={index}>{text}</li>)}</ul></div>}
+      {extraction.limitations.length > 0 && <div><h3>Begrensninger</h3><ul className="limitation-reviews">{extraction.limitations.map((text, index) => <LimitationReviewControl key={`${outcome?.requestId}-${report.listRevision}-${report.tg3Revision}-${index}-${text}`} report={report} index={index} dispatch={dispatch} />)}</ul></div>}
       <p>Fullført analyse er ikke brukerens kontroll eller bekreftelse av funnlisten.</p>
       {outcome?.status === 'completed' && <FindingListControl report={report} dispatch={dispatch} />}
     </section>}

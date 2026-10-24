@@ -140,4 +140,4 @@ clarification_gates:
     before_stories: ['4.5']
     also_before: S5-målepunkter i 4.4 dersom de samles for gjenbruk i 4.5
     subject: Faktisk person/miljø for kontroll, måling og samme-case manuell referanse
-    decision_record: null
+    decision_record: .docs/planning-artifacts/r4-s5-mads-gjennomforing-2026-10-24.md

@@ -1,5 +1,7 @@
 # Story 4.5 — protokollcheckpoint 2026-10-24
 
+**Nyeste status: STOPPET av Mads 2026-10-24. R4-S5 open/suspended; ingen måling/start. Se [dokumentsporing](story-4-5-f1-dokumentsporing-2026-10-24.md). Oppsettet nedenfor beskriver tidligere forberedelse, ikke en gjeldende starttillatelse.**
+
 **Status: forberedt, faktisk gjennomføring blokkert; S5 ikke verifisert.**
 Ingen nye live-kall, ny kostnad USD 0. Ingen S5-observasjoner eller manuell
 referanse er produsert. Story 4.5 forblir backlog; draft-spec er ikke en

@@ -1,5 +1,7 @@
 # Intern F1-live-preflight — 2026-10-24
 
+**STOPPET av Mads 2026-10-24. Ikke gjennomfør måling eller Start analyse. Serveren er stoppet, tidligere arming er ugyldiggjort. Se [dokumentsporing og caseegnethet](story-4-5-f1-dokumentsporing-2026-10-24.md).**
+
 Mads bestiller forenklet operativ instruks, teknisk utfylling av Codex og
 F1-preflight før overlevering. Ingen faktisk test, kildekontroll eller analyse
 skal startes på hans vegne. Detaljskjemaet er beholdt som internt prosessbevis.

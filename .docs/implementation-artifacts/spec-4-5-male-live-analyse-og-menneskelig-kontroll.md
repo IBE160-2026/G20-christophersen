@@ -86,3 +86,7 @@ Kontroller registrering mot TT-1–TT-9 og avstem komplett forsøksliste, origin
 Ny brukerbestilling erstatter den omfattende manuelle utfyllingen med kort operativ instruks. Separat lokal manuell helper oppfanger originale tekniske bevis; den klikker aldri analyse eller menneskekontroll. Teknisk preflight og helperreview dokumenteres separat. Faktiske S5-AC gjenstår.
 
 Nyere preflightstatus: R4-S5 er closed på dokumentert person/miljø/metode og kontobekreftelse. Helperreview og 8 offlineprøver består. Den lokale siden er klargjort for Mads sitt senere klikk; kun GET er brukt av root, 0 analyse-POST/leverandørkall. Dette erstatter den eldre reviewloggens daværende open-status, uten å endre historisk review eller utlede faktisk S5.
+
+## Eksplisitt stopp 2026-10-24
+
+Mads har stoppet Story 4.5 før tidsmåling. Serveren er stoppet og gammel arming er ugyldiggjort. R4-S5 står igjen open/suspended. [Dokumentsporingen](story-4-5-f1-dokumentsporing-2026-10-24.md) bekrefter samme F1-PDF i historisk live-input og dagens fil: 1 TG2/0 TG3. S2 4/4 TG2 og 1/1 TG3 gjelder samlet F1–F4. Ingen fixture/fasit endres. S5-caseegnethet og begrenset konklusjon må avklares før noe gjenopptas; ingen ny test/måling autorisert av denne kontrollen.

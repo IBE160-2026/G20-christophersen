@@ -1,0 +1,10 @@
+{
+  "stoppedAt": "2026-10-24T15:17:30.692475+00:00",
+  "reason": "Mads explicitly stops S5 pending source provenance and case suitability audit",
+  "serverPid": 18446,
+  "signal": "SIGTERM",
+  "existingApprovalInvalidatedByGateEvidenceHash": true,
+  "humanMeasurementStatus": "not attested",
+  "analysisAttemptFilePresent": false,
+  "dispatchPresent": false
+}

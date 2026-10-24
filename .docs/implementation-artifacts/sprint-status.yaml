@@ -135,7 +135,7 @@ clarification_gates:
     decision_record: null
   R4-S5:
     readiness_issue: R4
-    status: closed
+    status: open
     owner: Mads / evalueringsansvarlig
     before_stories: ['4.5']
     also_before: S5-målepunkter i 4.4 dersom de samles for gjenbruk i 4.5

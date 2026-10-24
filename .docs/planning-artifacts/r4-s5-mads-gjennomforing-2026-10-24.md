@@ -1,9 +1,9 @@
 ---
 title: 'R4-S5 — Mads og faktisk manuell gjennomføring'
 date: 2026-10-24
-decision_status: closed
+decision_status: suspended
 gate: R4-S5
-gate_status: closed
+gate_status: open
 decision_owner: Mads
 before_stories: ['4.5']
 ---
@@ -69,3 +69,7 @@ er Codex sitt interne registreringsgrunnlag. Faktiske bevis og uavhengig
 review kreves fortsatt før 4.4/4.5 kan settes done.
 
 Story 5.4/R4-S6 og 5.5 er urørt.
+
+## STOPP fra Mads 2026-10-24
+
+Mads har uttrykkelig stoppet Story 4.5 før menneskelig tidsmåling og bedt om dokument-/fasitsporing og vurdering av caseegnethet. Lokal armed-server er stoppet. R4-S5 settes tilbake til open/suspended inntil dokumentkontroll og egnethet er avklart. Denne daterte endringen ugyldiggjør filhashen i tidligere armed.json, slik at gammel arming ikke kan gjenbrukes. Ingen fixture, fasit eller tidligere originalbevis er endret.

@@ -124,3 +124,28 @@ blanke. Originaler og produktkode er urørt. Eksakt plan/approval/GET-bevis
 finnes under `story-4-5/S5-2026-10-24-F1-01/` i implementation-artifacts.
 Ingen teststart, retry eller Story 5.5. 4.4 review, 4.5 backlog og Epic 4
 in-progress består; neste handling er Mads sin filmede gjennomføring.
+
+## Eksplisitt stopp og dokumentkontroll etter manuell F1-inspeksjon
+
+Mads så ett TG2 og ingen TG3 i F1 og ba om stopp og kontroll før måling.
+Armed-serveren ble identifisert som vår egen manuelle helper og stoppet med
+SIGTERM. R4-S5 ble satt open/suspended, og endringen av gatebeviset
+ugyldiggjør den tidligere armingens hashbinding. Lokal validateApproval-prøve
+bekrefter avvisning. Ingen analyse-attempt/dispatch var registrert.
+
+Ny lesende sporing fra dagens PDF-bytes gjennom ny PDF.js-ekstraksjon,
+historisk basis og faktisk providerrequest bekrefter eksakt samme input.
+Aktuell fil er identisk med opprinnelig Git-blob; actual/normalized request-
+hasher stemmer med original dispatch/plan. Alle fire sider er også rendret
+og visuelt inspisert på nytt. F1 har ett TG2 på side 2 og ingen TG3.
+S2s 4/4 TG2 og 1/1 TG3 er samlede F1–F4-tall; TG3 er kun i F4.
+Dette er en kommunikasjons-/aggregeringspresisering, ingen fixtureendring.
+
+F1 er en minimal syntetisk PDF og gir bare begrenset menneskelig tidsbevis
+for en trivial kontrolloppgave. S5 forblir stoppet før caseegnethet/utvalg er
+avklart. Ingen representativitet eller generell tidsgevinst påstås.
+Rapport og maskinbevis finnes i story-4-5-f1-dokumentsporing-2026-10-24.md og
+story-4-5-f1-sporingskontroll-2026-10-24.json under implementation-artifacts.
+Ingen produktkode, fixture, fasit, historisk provider/request/receipt eller
+S2-score er endret. Nye betalte kall/kostnader: 0 / USD 0. Aktiv promptlogg
+følger den lokale stopp-/sporingscommiten. Ingen push, 5.4/5.5 urørt.

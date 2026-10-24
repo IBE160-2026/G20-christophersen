@@ -1,5 +1,7 @@
 # Mads — måleskjema og faktisk gjennomføring av S5
 
+**STOPPET av Mads 2026-10-24. Ikke gjennomfør måling eller Start analyse. Serveren er stoppet, tidligere arming er ugyldiggjort. Se [dokumentsporing og caseegnethet](story-4-5-f1-dokumentsporing-2026-10-24.md).**
+
 **Ikke startet. Alle mennesketider er blanke.** Plan-ID `S5-2026-10-24`.
 Mads er deltaker. Utvalg: F1/F2/F4, ett planlagt nytt forsøk per case,
 sekvensielt; F3 med L=null er utenfor. Ingen tidligere målinger gjenbrukes.

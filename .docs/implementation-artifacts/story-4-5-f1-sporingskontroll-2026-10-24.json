@@ -1,0 +1,115 @@
+{
+  "pdfSha256": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+  "historicalPlanPdfMatches": true,
+  "actualRequestDocument": "F1-tilstandsrapport.pdf",
+  "actualRequestId": "6597753c-a3cf-4b9a-a07c-410bfeaf120e",
+  "pageCount": 4,
+  "historicalBasisEqualsFreshPdfExtraction": true,
+  "originalProviderInputPagesEqualCurrentPdf": true,
+  "actualRequestHash": "da0f8f74d09d3de0df7a7b3242bac58311ff52c0970f45a6db7a528dc6a916f4",
+  "actualHashMatchesDispatch": true,
+  "normalizedRequestHash": "a1d42854f8ba63f575dc613c9d2ff4d441791f0b36357eedf1a9a0a8d58d51b0",
+  "normalizedHashMatchesOriginalPlan": true,
+  "normalizedRequestEqualsCurrentProductionCreateLiveRequest": true,
+  "newS5PreparedPagesMatchCurrentPdf": true,
+  "newS5ReportHashMatches": true,
+  "providerFindings": [
+    {
+      "findingId": "F1-001",
+      "description": "Slitt overflate på baderomsgulv.",
+      "grade": "TG2",
+      "source": {
+        "documentName": "F1-tilstandsrapport.pdf",
+        "reportHash": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+        "pdfPage": 2
+      },
+      "uncertainties": []
+    }
+  ],
+  "adapterOriginals": [
+    {
+      "findingId": "F1-001",
+      "description": "Slitt overflate på baderomsgulv.",
+      "grade": "TG2",
+      "source": {
+        "documentName": "F1-tilstandsrapport.pdf",
+        "reportHash": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+        "pdfPage": 2
+      },
+      "uncertainties": []
+    }
+  ],
+  "perCaseOracle": [
+    {
+      "caseId": "F1",
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "caseId": "F2",
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "caseId": "F3",
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "caseId": "F4",
+      "tg2": 1,
+      "tg3": 1
+    }
+  ],
+  "demoTopLevelKeys": [
+    "reportHash",
+    "contractVersion",
+    "extractionVersion",
+    "outcome"
+  ],
+  "demoRawEqualsProvider": false,
+  "currentPdfText": [
+    {
+      "pdfPage": 1,
+      "text": "F1 | FIKTIV TILSTANDSRAPPORT\nRapport og opphav\nF1-tilstandsrapport.pdf\nFiktivt øvingsobjekt. Ingen virkelig adresse eller person.\nRapporten er skrevet for kontrollerte IBE160-tester.\nFunn kontrolleres mot originalsidene i denne filen.\nØkonomiske testforutsetninger finnes separat i expected.json.\nKun testdata - ingen teknisk godkjenning eller markedsverdi\nPDF-posisjon 1",
+      "status": "readable",
+      "reason": null
+    },
+    {
+      "pdfPage": 2,
+      "text": "F1 | FIKTIV TILSTANDSRAPPORT\nBad - registrert avvik\nTilstandsgrad: TG2\nSlitt overflate på baderomsgulv\nDette er den forhåndsdefinerte funnteksten for testcaset.\nIngen reparasjonskostnad er anslått.\nKun testdata - ingen teknisk godkjenning eller markedsverdi\nPDF-posisjon 2",
+      "status": "readable",
+      "reason": null
+    },
+    {
+      "pdfPage": 3,
+      "text": "F1 | FIKTIV TILSTANDSRAPPORT\nAvgrensning og kontroll\nDette er en kort, fiktiv rapportfixture med fire PDF-sider.\nRapporten beskriver ingen reell eiendom.\nFilposisjon telles fra 1, uavhengig av trykte sidetall.\nInnholdet er forhåndsbestemt før analyse eller modellbruk.\nKun testdata - ingen teknisk godkjenning eller markedsverdi\nPDF-posisjon 3",
+      "status": "readable",
+      "reason": null
+    },
+    {
+      "pdfPage": 4,
+      "text": "F1 | FIKTIV TILSTANDSRAPPORT\nAvslutning\nIngen ytterligere registrerte avvik i denne testcasen.\nDette er ikke en bekreftelse av analyse eller lesbarhet.\nBrukerens kontroll og bekreftelser håndteres separat.\nKun testdata - ingen teknisk godkjenning eller markedsverdi\nPDF-posisjon 4",
+      "status": "readable",
+      "reason": null
+    }
+  ],
+  "originalGitPdfSha256": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+  "originalGitBytesMatchCurrentPdf": true,
+  "demoFindings": [
+    {
+      "findingId": "F1-TG2-1",
+      "description": "Slitt overflate på baderomsgulv",
+      "grade": "TG2",
+      "source": {
+        "documentName": "F1-tilstandsrapport.pdf",
+        "reportHash": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+        "pdfPage": 2
+      },
+      "uncertainties": []
+    }
+  ],
+  "serverStopped": true,
+  "oldApprovalRejected": true,
+  "providerCallsThisAudit": 0
+}

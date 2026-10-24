@@ -1,5 +1,7 @@
 # F1 — din gjennomføring
 
+**STOPPET av Mads 2026-10-24. Ikke gjennomfør måling eller Start analyse. Serveren er stoppet, tidligere arming er ugyldiggjort. Se [dokumentsporing og caseegnethet](story-4-5-f1-dokumentsporing-2026-10-24.md).**
+
 1. **Åpne** et blankt notat. Ha `tests/fixtures/property-cases/F1-tilstandsrapport.pdf` klar. Start skjermopptak med **Skift–Cmd–5**, slik at PDF, notat og senere apphandlinger er lesbare. Behold originalopptaket.
 
 2. **Manuell vurdering først:** Tiden starter idet du åpner F1-PDF-en for å lese den. Les hele rapporten uten KI-listen. Noter TG2/TG3, beskrivelse, fysisk PDF-side og eventuell usikkerhet. Kontroller notatene mot originalen. Tiden stopper når listen er ferdig kontrollert og du skriver **«Manuell kontroll ferdig»** i notatet. Behold notatet.

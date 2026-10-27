@@ -2,4 +2,4 @@
 
 ## Sesjonslogg
 
-Når en oppgave eller økt avsluttes, før sluttoppsummeringen, bruk `sesjonslogg`-skillen: dokumenter Oppgave + Plan + Resultat + åpne punkter i `.logs/<bruker>/`, og før åpne punkter i `.logs/<bruker>/issues.md`. Skillen committer loggfila lokalt; push gjør du selv. Gruppens egne regler for commit og språk gjelder foran dette.
+Følg prosjektregelen «Issue tracking» i `AGENTS.md`: `.docs/implementation-artifacts/deferred-work.md` er eneste sentrale oversikt over utsatte feil og forbedringer. Bevar historikk og lenk til story-/reviewbevis; lukk bare dokumentert løste punkter med dato, relevant commit og godkjent verifikasjon. Bruk eksisterende `.docs/process/` for nødvendig sesjonsdokumentasjon. Ikke opprett `.logs/` eller parallelle `issues.md`-systemer, og ikke bruk `sesjonslogg`-skillen til dette. Eksisterende automatisk Codex-promptlogging beholdes uendret. Commit og push følger den konkrete bestillingen.

@@ -57,3 +57,20 @@ Faktisk kode-/bevischeckpoint: `f105216703033a34163ce9eb94df9f060fd4a0ce`. Etter
 lukkedokumentasjon og eksportkvittering endrer ingen produktkode eller
 testforventning. [Endelig kilderelevans](pre-submission-2026-10-27/final-source-relevance.json)
 bekrefter at siste reviewtillegg bare er én ny requestId-test, prøvd 35/35.
+
+
+## Eksportretting ved midnatt 27.–28. oktober
+
+Første faktiske eksport fra d25d1a6 stoppet på gyldig tar-rotmappe uten
+avsluttende skråstrek. [Feilkvitteringen](pre-submission-2026-10-27/export-attempt-1.json)
+og initial kode beholdes. PG5 er registrert sentralt; ingen pakke ble
+hevdet klar eller overlevert. Katalogsjekken godtar nå nøyaktig rotmappe
+eller underkatalog under prefikset; vanlige filer må fortsatt kontrolleres
+mot hver Git-blob og modus. [To negative og én positiv fixtureprøve](pre-submission-2026-10-27/export-guards-complete.json)
+består. Positiv fixture er et uttrykkelig fiktivt isolert Git-repo, ikke
+IBE160-produkt eller ekstern S6.
+
+En ny kontekstfri BMAD-reviewer brukte eksplisitt kanttilfelle-linsen på
+rettingen og bevisene: [ingen funn](pre-submission-2026-10-27/export-fix-review.json).
+Ingen produktkode/testforventning ble endret. Faktisk produktarkiv
+verifiseres etter rettingscommit; ekstern S6 står fortsatt urørt.

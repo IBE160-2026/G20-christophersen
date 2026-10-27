@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-28",
+  "skill": "bmad-review",
+  "lens": "edge-case-hunter",
+  "reviewer": "export_fix_review",
+  "reviewedDiffSha256": "bb5545f2311ba01b9ae4c0677059bfa1e72820d30df9b864ad3e848abe74e758",
+  "findings": [],
+  "testEvidence": "export-guards-complete.json",
+  "externalS6Executed": false
+}

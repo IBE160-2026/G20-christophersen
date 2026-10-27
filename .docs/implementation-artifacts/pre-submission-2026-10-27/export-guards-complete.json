@@ -1,0 +1,27 @@
+{
+  "scriptSha256": "982365a951afcda93e63b9abc8bf38d6790bec4c4f9e854f2454e30e65e00791",
+  "externalS6Executed": false,
+  "scenarios": [
+    {
+      "scenario": "untracked-source",
+      "exitCode": 1,
+      "archiveCreated": false,
+      "expected": "Avvist før eksport",
+      "fixtureOnly": true
+    },
+    {
+      "scenario": "modified-tsconfig",
+      "exitCode": 1,
+      "archiveCreated": false,
+      "expected": "Avvist før eksport",
+      "fixtureOnly": true
+    },
+    {
+      "scenario": "clean-positive-fixture",
+      "exitCode": 0,
+      "archiveCreated": true,
+      "trackedFilesByteVerified": 2,
+      "fixtureOnly": true
+    }
+  ]
+}

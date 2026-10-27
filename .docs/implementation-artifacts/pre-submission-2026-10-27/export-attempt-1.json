@@ -1,0 +1,8 @@
+{
+  "sourceCommit": "d25d1a6c418ce8b37dd65f6c06714c4fa473c1a0",
+  "exitCode": 1,
+  "receiptCreated": false,
+  "externalS6Executed": false,
+  "failure": "TarFile fjerner avsluttende skråstrek fra rotmappe. Assertion member.name.startswith(prefix) avviste gyldig rotmappe før innholdskontroll. Ingen eksport overlevert.",
+  "initialScriptSha256": "80b919fa9b6050289c4865980dddd3da5d232cd6e35bae582e62b36fc0df03b8"
+}

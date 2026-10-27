@@ -33,8 +33,10 @@ seen=set()
 with tarfile.open(archive,'r:gz') as tar:
  assert tar.pax_headers.get('comment')==revision,'Arkivets Git-revisjon stemmer ikke'
  for member in tar.getmembers():
+  if member.isdir():
+   assert member.name==prefix.rstrip('/') or member.name.startswith(prefix)
+   continue
   assert member.name.startswith(prefix)
-  if member.isdir():continue
   assert member.isfile(),'Bare vanlige filer tillates'
   name=member.name[len(prefix):];assert name in entries and name not in seen
   data=tar.extractfile(member).read()

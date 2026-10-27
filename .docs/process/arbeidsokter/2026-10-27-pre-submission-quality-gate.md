@@ -71,3 +71,16 @@ kontrollen bekrefter 4.4 done, 4.5/epic4 in-progress, 5.4 backlog,
 5.5/epic5 in-progress, R4-S6 open og uendret S5-W1. Første generiske
 YAML-probe matchet også epic-retrospective-nøkler og ble presisert til
 akkurat epic-nøkkelen; ingen statusfil ble endret for å få kontrollen grønn.
+
+
+## Videreført over midnatt — 2026-10-28
+
+Etter dokumentasjonscheckpoint d25d1a6 forsøkte hovedagenten faktisk
+S6-eksport. Den stoppet på tarfiles normalisering av rotmappenavnet, før
+kvittering eller overlevering. Første kjørt eksportscript og feilen er
+bevart. Minimal kataloggrense rettet; isolert fixture viser nå både gyldig
+eksport og avvisning av untracked kilde/endret tsconfig. Separat kontekstfri
+bmad-review kanttilfelle-review returnerte []. Ingen app-/finans-/screening-
+kode eller testforventning ble endret av eksportrettingen. PG5 lukkes først
+med faktisk rettingscommit og relevant kontroll. Dato i filnavn viser
+øktstart 27. oktober; avsluttende checkpoint skjer 28. oktober.

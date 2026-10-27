@@ -22,6 +22,13 @@ with tempfile.TemporaryDirectory(prefix='ibe160-export-guards-',dir='/private/tm
   assert result.returncode!=0 and not created
   if case=='untracked-source':(fixture/'src/uncommitted.ts').unlink();(fixture/'src').rmdir()
   else:(fixture/'tsconfig.json').write_text('{}\n')
+ # Positivt tilfelle etter at begge lokale mutasjoner er ryddet.
+ result=subprocess.run(['python3',str(script),revision],cwd=fixture,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=20)
+ assert result.returncode==0,result.stderr.decode()
+ receipt=json.loads(result.stdout)
+ assert receipt['sourceCommit']==revision and receipt['trackedFilesByteVerified']==2
+ assert not receipt['externalS6Executed'] and not receipt['installExecuted']
+ records.append({'scenario':'clean-positive-fixture','exitCode':0,'archiveCreated':True,'trackedFilesByteVerified':2,'fixtureOnly':True})
 record={'scriptSha256':hashlib.sha256(script.read_bytes()).hexdigest(),'externalS6Executed':False,'scenarios':records}
-(out/'export-guards.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+(out/'export-guards-complete.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(record,ensure_ascii=False))

@@ -21,6 +21,7 @@ er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 | Pre-submission PG2 — misvisende TG3-eksempel | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
 | Pre-submission PG3 — unntak i arbeidstreskann | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
 | Pre-submission PG4 — fullstendig S6-eksport | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
+| Pre-submission PG5 — tar-rotmappe i eksportkontroll | Åpen | Første faktiske positive eksport stoppet på rotmappe uten avsluttende skråstrek. Se registrering nedenfor. |
 
 ## Deferred from: code review of spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt (2026-10-17)
 
@@ -262,3 +263,13 @@ avviser ikke-ignorerte usporede leveransefiler. Faktiske
 avviser både ny kildefil og endret tsconfig før arkivoppretting. Uavhengig
 rekontroll fant ingen restfunn. Lukking gjelder feil i eksportkontrollen;
 faktisk S6-eksport og ekstern gjennomføring har separate bevisgrenser.
+
+## Pre-submission PG5 — tar-rotmappe, registrert åpen 2026-10-27
+
+**Status: Åpen.** Første faktiske eksport fra d25d1a6 stoppet før
+kvittering: Python tarfile presenterer rotmappen uten avsluttende skråstrek.
+Eksportkontrollen avviste derfor et gyldig rotmappenavn. Ingen feil pakke
+ble overlevert eller ekstern test utført. Krav: CAP-8, 5.4 AC1 og 5.5 AC6.
+[Opprinnelig feil](pre-submission-2026-10-27/export-attempt-1.json) og
+initial kjørt script bevares. Rett bare kataloggrensen; alle vanlige filer
+må fortsatt verifiseres mot eksakt commit.

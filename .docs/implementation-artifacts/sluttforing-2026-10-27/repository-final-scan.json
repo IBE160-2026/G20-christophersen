@@ -1,6 +1,6 @@
 {
   "basis": "8497fe584387636d7bd715c009682c6e72899a99 + leveringsendringer",
-  "fileCount": 48,
+  "fileCount": 56,
   "patterns": [
     "openai-key",
     "aws-key",
@@ -11,6 +11,10 @@
     {
       "file": ".docs/implementation-artifacts/deferred-work.md",
       "sha256": "ee86f1633dbceeb921688014e803536aa00c633f21af6bb9a181364a862563a2"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27-review.md",
+      "sha256": "29b3c31496e7eb0d29aa3edb9fc0e9aa1a0dcfdc928e79d174501974e3e86b9b"
     },
     {
       "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-build.txt",
@@ -81,8 +85,12 @@
       "sha256": "c7f0a544afb9cd6a53a00295224cd02cf875c7bfb305140d78e93c8d37c9e646"
     },
     {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/executed-standard-port-check.py",
+      "sha256": "d93c42cf727e7cef80026c55d9095baa34e4148d446d225028a6303ff2d0e870"
+    },
+    {
       "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/local-links.json",
-      "sha256": "96fe7c9a0924a26f3b82cd3729959dcf845811ef9097edce7282a334df606e91"
+      "sha256": "29cf0a7adbcd47ee2318f84b39b66f8cceab45d74f90f652301469cd822b7cee"
     },
     {
       "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/patched-install.txt",
@@ -153,6 +161,26 @@
       "sha256": "8ad8c8570e823e4b6a7e0e6a8c537813ef0e18527b3dea6b47352f009d497e09"
     },
     {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/standard-port-build-key.txt",
+      "sha256": "954771479c69d17901dec844d404281f149f5d9b1fcc1b4ee6965c620b6052ef"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/standard-port-e2e.txt",
+      "sha256": "0ce6d1891d538cd0e7ac5ece4cb9b21793f1c89aebbff296560e1017f2cf0229"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/standard-port-regression.json",
+      "sha256": "ce16000fe479d1ea170f7c75f58ee03b68d20e81ffece9900ff0295aab05cd27"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/standard-port-source-check.json",
+      "sha256": "093ce31f250e4933d1ebd4edffce7cd17d16728fc8b89388bf2d3dc85e57f0ab"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/standard-port-startup.txt",
+      "sha256": "1b8330fc298af5a12d1d966a7d42583e8552b05dcbdbb18625950831ff5d551a"
+    },
+    {
       "file": ".docs/implementation-artifacts/sluttforing-leveringsreview-2026-10-27.md",
       "sha256": "9ee6e75ee8aeb6ce492717ffd010af88b2a91a269646e707eaebb727f302f493"
     },
@@ -174,11 +202,15 @@
     },
     {
       "file": ".docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md",
-      "sha256": "4b8abc872ab67fb715a2428c228c2247c363212c1798e18054123be6dae1acc1"
+      "sha256": "5012b1b132ca14f7f5ac9343a861d9ede64861e4c14e6b32e9fef7454eef201d"
     },
     {
       "file": ".docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md",
-      "sha256": "f27d57bc84f172062d06d828965a6fa9233f45feec5644a090d0bd4b76ef8f13"
+      "sha256": "0be1312ca3a098199a9e2cdc4861161b86c26e0f3e25a3c4e85ac5ea3bb34a01"
+    },
+    {
+      "file": ".docs/process/prompts/session-01a17efd-94fb-7371-9d49-49c778c25b46.jsonl",
+      "sha256": "595045ae60aadc4cf4f952889e98d29566626ac8b490e9ddf6af62a8e72ec174"
     },
     {
       "file": ".env.example",

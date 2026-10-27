@@ -167,5 +167,37 @@ D1 ble lukket først etter at denne faktiske rettings-/beviscommiten var
 opprettet og kontrollert. En siste lokal dokumentasjonscommit registrerer
 lukkingen; ingen ny produktkode eller testforventning er endret etter
 full grønn regresjon. Aktiv promptlogg inngår i UI-checkpointet og er ikke
-endret, flyttet eller omskrevet. Den eksisterende port3000-serveren er
+endret, flyttet eller omskrevet. Den eksisterende port 3000-serveren er
 fortsatt ikke stoppet av denne økten.
+
+## Sen godkjenning — uendrede tester på standardport 3000
+
+Etter sluttcheckpoint `9fd954dd5492e5d0187ad8d8674b0383351a862e` kom Mads'
+svar på den tidligere asynkrone portforespørselen: «Ja, stopp serveren og
+kjør testene». Opplysningene over om at eksisterende server ikke var stoppet
+beskriver situasjonen før dette svaret. PID 84360 ble kontrollert mot repoets
+arbeidsmappe og stoppet med SIGTERM. Port 3000 ble bekreftet ledig.
+
+Deretter ble de faktiske uendrede kommandoene kjørt i hovedrepoet på
+standardporten, med Node 24.21.0/npm 11.19.0, nøkkelfritt prosessmiljø og
+OS-nettsperre med loopback. Ingen porttilpasning eller produkt-/testendring.
+[188-filers kildekontroll](../../implementation-artifacts/sluttforing-2026-10-27/standard-port-source-check.json)
+bekrefter byteidentisk kilde/test og rettet låsfil fra den tidligere
+post-patch-runden.
+
+| Kommando / kontroll | Faktisk resultat |
+| --- | --- |
+| npm run test:e2e, inklusive build | 195 bygget-app + 3 dev bestått |
+| npm test -- tests/integration/server-mode.test.ts --maxWorkers=1 | 3/3 bestått |
+| node tests/helpers/verify-analysis-build.mjs | 204 frontendfiler, 0 nøkkellekkasjer; build/demooppstart bestått |
+
+[Standardportens indeks og rålogger](../../implementation-artifacts/sluttforing-2026-10-27/standard-port-regression.json)
+bevarer faktisk kommando, kildecommit, hovedrepo/port, exitstatus og varighet.
+Alle tre kontroller har exit 0. Tidligere 3107-bevis beholdes som historikk.
+Ingen testprosess lytter på 3000 etter avslutning; den gamle live-serveren
+startes ikke igjen. Ingen betalte API-kall, S5-forsøk eller ekstern S6.
+
+Aktiv promptlogg har fått brukerens godkjenning gjennom uendret automatisk
+logging og inngår i samme lokale testcheckpoint. 5.4/5.5-status og S5-W1
+beholdes. Dette er supplerende agentverifikasjon, ikke en annen persons
+README-baserte rene kjøring.

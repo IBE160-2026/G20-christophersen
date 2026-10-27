@@ -68,3 +68,12 @@ numerisk portreferanse i testkopien ble tilpasset. Forventningene er bevart;
 produktkoden ble ikke endret av portrettingen. GET-responsen fra eksisterende
 port 3000 brukes ikke som bestått bevis. Se [rå fullrunde](sluttforing-2026-10-27/final-e2e.txt)
 og [portrekontroll](sluttforing-2026-10-27/e2e-port-fix.txt).
+
+## Supplerende uendret standardportkjøring
+
+Etter Mads' sene godkjenning ble den eksisterende serveren stoppet og
+hovedrepoets uendrede README-E2E-kommando kjørt på 3000: 195/195 bygget-app
+og 3/3 dev. Produksjonsserverens tre modustester og bygg-/nøkkelgrense
+består også. [Råloggindeks](sluttforing-2026-10-27/standard-port-regression.json).
+Ingen ny kodeendring/reviewpåstand eller ekstern S6 inngår; tidligere
+porttilpasningsbevis beholdes.

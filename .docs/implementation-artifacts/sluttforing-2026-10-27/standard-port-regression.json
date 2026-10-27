@@ -1,0 +1,48 @@
+[
+  {
+    "check": "e2e",
+    "command": [
+      "npm",
+      "run",
+      "test:e2e"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "port": 3000,
+    "sourceRevision": "9fd954dd5492e5d0187ad8d8674b0383351a862e",
+    "sourceUnmodified": true,
+    "exitCode": 0,
+    "seconds": 110.21,
+    "log": "standard-port-e2e.txt"
+  },
+  {
+    "check": "startup",
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "tests/integration/server-mode.test.ts",
+      "--maxWorkers=1"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "port": 3000,
+    "sourceRevision": "9fd954dd5492e5d0187ad8d8674b0383351a862e",
+    "sourceUnmodified": true,
+    "exitCode": 0,
+    "seconds": 2.56,
+    "log": "standard-port-startup.txt"
+  },
+  {
+    "check": "build-key",
+    "command": [
+      "node",
+      "tests/helpers/verify-analysis-build.mjs"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "port": 3000,
+    "sourceRevision": "9fd954dd5492e5d0187ad8d8674b0383351a862e",
+    "sourceUnmodified": true,
+    "exitCode": 0,
+    "seconds": 4.65,
+    "log": "standard-port-build-key.txt"
+  }
+]

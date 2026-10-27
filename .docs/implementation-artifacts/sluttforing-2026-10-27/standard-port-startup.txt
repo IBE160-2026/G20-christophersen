@@ -1,0 +1,16 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/integration/server-mode.test.ts --maxWorkers=1
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ✓ tests/integration/server-mode.test.ts (3 tests) 2069ms
+   ✓ 4.3: actual server entry with ANALYSIS_MODE=(unset) 988ms
+   ✓ 4.3: actual server entry with ANALYSIS_MODE=live 913ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  22:21:35
+   Duration  2.21s (tests 97%, import 2%, transform 1%)
+

@@ -221,3 +221,16 @@ inkludert miljøpresedens, konkrete demo-/livekommandoer, versjonsbinding og
 B2-bevaring. [Sluttskann](sluttforing-2026-10-27/repository-final-scan.json)
 supplerer historikkskannen for nye leveringsfiler. Ingen bestått teknisk
 kontroll erstatter de åpne eksterne/akseptansemessige portene ovenfor.
+
+## Supplerende standardportverifikasjon etter Mads' godkjenning
+
+Den gamle serveren ble senere uttrykkelig godkjent stoppet. Hovedrepoets
+uendrede `npm run test:e2e` består på standardport 3000: 195 bygget-app og
+3 dev. De tre produksjonsserver-modustestene og build-/nøkkelgrensen
+(204 filer, 0 lekkasjer) består også. [Kommandoer og rålogger](sluttforing-2026-10-27/standard-port-regression.json)
+og [kildekontroll](sluttforing-2026-10-27/standard-port-source-check.json)
+gjelder kildecommit `9fd954dd5492e5d0187ad8d8674b0383351a862e`, uten
+porttilpasning eller endret kilde/test. Port 3000 er ledig etter kontrollen.
+Dette supplerer de tidligere isolerte bevisene og opphever portbegrensningen
+for de aktuelle prøvene. Det er fortsatt intern agentkontroll; S6 er ikke
+gjennomført og 5.4/5.5 settes ikke done.

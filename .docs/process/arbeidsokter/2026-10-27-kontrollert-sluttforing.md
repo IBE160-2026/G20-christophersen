@@ -201,3 +201,45 @@ Aktiv promptlogg har fått brukerens godkjenning gjennom uendret automatisk
 logging og inngår i samme lokale testcheckpoint. 5.4/5.5-status og S5-W1
 beholdes. Dette er supplerende agentverifikasjon, ikke en annen persons
 README-baserte rene kjøring.
+
+## Gjenopptak fra 5375e7f — overleveringspunkt
+
+Mads ba om å fortsette fra siste checkpoint, bevare beståtte tester og
+`5375e7faca5e09101e90671cf522f8bdc9c55e27`, unngå unødvendige fulle
+testkjøringer og stoppe ved neste nødvendige menneskelige handling.
+
+Checkpointgjennomgangen fant at den planlagte interne UX-runden, de
+uavhengige reviewene og forberedelsene til 5.4/5.5 allerede er dokumentert
+og verifisert. Ingen ubehandlede verifiserte funn fra sluttføringsreviewene
+er registrert. Tidligere utsatt 4.3 B3/C2 forblir åpent i den sentrale
+[oversikten](../../implementation-artifacts/deferred-work.md); denne
+gjennomgangen er ingen retting eller lukking av punktet.
+
+Produktkode, tester, låsfil og eksisterende test-/bildebevis er uendret
+fra `5375e7f`. De beståtte kjøringene beholdes som historiske faktiske
+resultater, uten å påstå at nye kjøringer er gjort. Ingen fulle tester,
+nye skjermbildeforsøk, leverandørkall eller S5-forsøk ble gjennomført i
+gjenopptaket. Bare denne prosessnotisen og den automatisk oppdaterte aktive
+promptloggen inngår i nytt lokalt checkpoint. Ingen push eller pull.
+
+Neste nødvendige menneskelige handling er at **Mads avtaler faktisk
+testperson og rent miljø for S6**, og gir personen en ren kopi av valgt
+leveransecommit sammen med den
+[korte instruksen](../../implementation-artifacts/story-5-4-ekstern-instruks.md).
+Den eksisterende [bevismalen](../../implementation-artifacts/story-5-4-forberedelse-2026-10-27.md)
+står fortsatt uten eksterne observasjoner. Personen må registrere den
+faktiske leveranserevisjonen og sine egne kommandoer, utfall og avvik.
+Et dokumentasjonscheckpoint erstatter ikke dette forsøket.
+
+Status beholdes: 5.4 backlog, R4-S6 open, 5.5 in-progress og 4.5
+in-progress med uendret S5-W1. Samlet leveringsakseptanse skjer etter
+ekte S6 og eventuell nødvendig retting/rekontroll. Eventuell offentlig
+deling av eksisterende kurskilder må også avklares av Mads, som beskrevet
+i [leveringskontrollen](../../implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md).
+Arbeidet stopper ved denne menneskelige gjennomføringsporten etter lokal
+commit; ingen blokkert story markeres done.
+
+Avgrenset kontroll i gjenopptaket: 191 lokale lenker i 10 dokumenter uten
+feil, YAML-parse med kontroll av story-status/S5-W1 og `git diff --check`
+bestått. Git bekrefter at 5375e7f er bevart i historikken og at bare
+prosessnotisen og aktiv promptlogg er endret siden checkpointet.

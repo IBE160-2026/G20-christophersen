@@ -3,6 +3,10 @@ title: 'Story 4.5 — Måle live-analyse og menneskelig kontroll'
 type: 'chore'
 created: '2026-10-24'
 status: 'in-progress'
+project_disposition: 'closed-with-accepted-deviations'
+acceptance_status: 'incomplete-under-locked-ac'
+waiver_record: 'story-4-5-s5-waiver-2026-10-27.md'
+further_s5_measurements: 'not-authorized'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
@@ -134,3 +138,24 @@ sammenligningsreferanse eller bestått S5 påstås. 4.5 og Epic4 forblir
 in-progress, 4.4done består. [Sentral åpen oppfølging](deferred-work.md)
 er oppdatert. Ingen ny analyse/måling eller endring av fryst benchmark,
 F1–F4, historisk S2, 5.4/S6 eller5.5 er utført i denne beviskontrollen.
+
+## Endelig prosjektbeslutning 2026-10-27 — S5-W1
+
+Mads har som produkteier/prosjektleder eksplisitt akseptert de dokumenterte
+avvikene og avsluttet all videre S5-testing for semester-v1. Gjeldende
+[waiver S5-W1 og AC-matrise](story-4-5-s5-waiver-2026-10-27.md) erstatter
+historiske anbefalinger om ny måleplan/ny gjennomføring. Ingen nye målinger,
+tester eller kall er autorisert. Originalbevisene og låste AC bevares.
+
+Aksepterte visningstider er 32:16 manuell TG-identifisering, 0:41 KI-analyse og
+5:18 menneskelig KI-kontroll; opprinnelige intervaller er uendret. Manuell
+referanse var ufullstendig, testen var ikke blind og tidsbesparelse er ikke
+formelt validert. AC2/AC4 er oppfylt innen dokumenterte observasjoner,
+AC1/AC3/AC6 delvis oppfylt, AC5 ikke fullt oppfylt. Ingen full AC-bestått eller
+full uavhengig Story 4.5-sluttreview påstås.
+
+Prosjektmessig avslutning er closed-with-accepted-deviations under S5-W1.
+Formell story/epic-status beholdes in-progress: eksisterende statusvokabular
+har ingen waiver-done, og alle AC er ikke dokumentert bestått. Dette betyr
+ikke at mer S5-testing pågår eller skal planlegges. Epic 4 er oppdatert med
+samme unntak, 4.1–4.4 done består. 5.4/S6 og5.5 er urørt.

@@ -80,8 +80,9 @@ development_status:
   4-3-bruke-live-analysen-i-samme-kontroll-og-resultatflyt: done
   4-4-gjennomføre-ekte-live-analyse-og-evaluere-opprinnelig-uttrek: done
   4-5-måle-live-analyse-og-menneskelig-kontroll-etter-s5-protokoll: in-progress
-  # Faktisk S5-B1-v1-opptak bevart; ufullstendig manuell referanse/avvik:
-  # story-4-5-s5-b1-v1-observasjon-2026-10-27.md. Ingen S5/done-akseptanse.
+  # S5-W1: S5-testing avsluttet med aksepterte avvik av Mads 2026-10-27.
+  # Formell AC-akseptanse ufullstendig; ingen flere S5-målinger autorisert.
+  # story-4-5-s5-waiver-2026-10-27.md; Epic4 er derfor ikke formelt done.
   epic-4-retrospective: optional
 
   epic-5: in-progress
@@ -97,6 +98,17 @@ development_status:
 sprint_plan_file: .docs/implementation-artifacts/sprint-plan.md
 readiness_report: .docs/planning-artifacts/implementation-readiness.md
 readiness_verdict: CONCERNS
+acceptance_waivers:
+  S5-W1:
+    decision_date: 2026-10-27
+    decision_owner: Mads / produkteier og prosjektleder
+    story: '4.5'
+    epic: '4'
+    project_disposition: closed-with-accepted-deviations
+    locked_ac_acceptance: incomplete
+    testing_closed: true
+    additional_s5_measurements_authorized: false
+    decision_record: .docs/implementation-artifacts/story-4-5-s5-waiver-2026-10-27.md
 planned_sprints:
   SP1: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7']
   SP2: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7']

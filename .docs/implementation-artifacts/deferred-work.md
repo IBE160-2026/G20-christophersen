@@ -15,7 +15,7 @@ er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 | Story 4.3 B3/C2 — første feilårsak ved ny Start | Åpen | Review utsetter uttrykkelig forbedringen; ingen dokumentert godkjent retting funnet. Se status under originalpunktet. |
 | Story 4.4 B1 — generelle rapportbegrensninger | Lukket 2026-10-24, avgrenset produktretting | Commit `43c0a693d7517c59835078205bfe72611697dc05`, bestått uavhengig B1-review og full offline-regresjon. Separat B2/live-akseptanse lukkes ikke av dette. |
 | Story 4.4 B2 — live-sluttbevis | Lukket 2026-10-27 | Nye originale F1/F2-sluttbevis, godkjent uavhengig sluttreview og regresjon i `5fa438e2047bd9f854e72688da32c7ef8b045c7d`. Historikken nedenfor beholdes. |
-| Story 4.5 — ufullstendig manuell S5-referanse og forsøksavvik | Åpen | Faktisk S5-B1-v1-forsøk er bevart; manuell begrensnings-/TG3-vurdering mangler, finans/nettleser avviker fra plan. Ingen komplett tidsgevinst godkjent. Se nytt punkt nedenfor. |
+| Story 4.5 — ufullstendig manuell S5-referanse og forsøksavvik | Akseptert avvik S5-W1, ikke rettet | Mads har avsluttet S5-testing 2026-10-27. Formell AC-akseptanse er ufullstendig; ingen videre målinger autorisert. Se [waiver](story-4-5-s5-waiver-2026-10-27.md) og beslutningstillegg nedenfor. |
 
 ## Deferred from: code review of spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt (2026-10-17)
 
@@ -120,3 +120,17 @@ i ettertid i den opprinnelige tiden. Se [faktisk observasjon og neste
 checkpoint](story-4-5-s5-b1-v1-observasjon-2026-10-27.md). Bevar første forsøk;
 avklar korrekt videre måleplan/læringseffekt før eventuell ny gjennomføring.
 Ingen automatisk retry, endret fasit eller ny KI-analyse bestilles her.
+
+### Story4.5 S5-W1 — avvik akseptert og målearbeid avsluttet 2026-10-27
+
+Mads har eksplisitt besluttet at det utførte S5-forsøket er tilstrekkelig
+arbeidsflyt-/tidsdokumentasjon for semester-v1 og at ingen flere S5-målinger
+skal gjennomføres. [Formelt waiver og AC-vurdering](story-4-5-s5-waiver-2026-10-27.md)
+er gjeldende beslutning; anbefalingen ovenfor om videre måleplan er historisk
+og skal ikke automatisk gjenopptas. Opprinnelige observasjoner/notat/hasher
+bevares. Den ufullstendige manuelle referansen, ikke-blind test, finans-/
+kontrollavvik og ikke formelt validert tidsbesparelse er aksepterte avvik,
+ikke rettede feil eller bestått S5. Formell4.5/Epic4-status er fortsatt
+in-progress med separat avslutningsmetadata. Ingen videre S5-målearbeid er
+bestilt; ingen ny test/reviewgodkjenning fabrikeres for å lukke avviket.
+Beslutningsrecord og aktiv promptlogg versjoneres i samme lokale commit.

@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-28",
+  "skill": "bmad-review",
+  "lens": "edge-case-hunter",
+  "reviewer": "export_fix_review",
+  "reviewedDiffSha256": "bf034db7bacd3870a401ee7fb478f3f0e360c66b39e759d366f21a90dc51c9da",
+  "archiveSourceCommit": "7e55652c8a172a129ca879596ed7fd1bc2f3b4f8",
+  "findings": [],
+  "scope": "Faktisk eksport-/kopikvittering, kildeidentitet, overlevering og ærlig story-/S5/S6-status. Les-only, ingen ekstern test."
+}

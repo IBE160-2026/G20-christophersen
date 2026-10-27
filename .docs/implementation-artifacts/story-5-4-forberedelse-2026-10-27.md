@@ -17,10 +17,12 @@ Autoritet: [låste AC1–AC5](../planning-artifacts/epics.md#story-54-la-en-anne
   fiktive F1–F4-data, alle tre anbefalinger, feil/retur/korrigering og tester.
 - UI-endringene er kontrollert mot eksisterende UX. Faktisk intern kontroll
   og bevisgrense står i [reviewrapporten](sluttforing-2026-10-27-review.md).
-- Mads velger den **endelige lokale leveransecommiten etter denne runden**
-  og gir en ren kopi av akkurat den til personen. Personen registrerer
-  full `git rev-parse HEAD` hvis Git finnes, ellers versjonsidentifikasjon
-  og hash/inventar fra Mads. Arbeidskopi med gamle node_modules/.env/dist
+- Den konkrete rene S6-kandidaten er frosset i
+  [overleveringskvitteringen 2026-10-28](story-5-4-s6-overlevering-2026-10-28.md).
+  Mads gir personen akkurat dette arkivet med sidefiler. Personen registrerer
+  full kildecommit og arkivhash fra kvitteringen; arkivet har ikke `.git`.
+  Ved annen faktisk Git-kopi registreres full `git rev-parse HEAD` og
+  relevant versjonskontroll. Arbeidskopi med gamle node_modules/.env/dist
   er ikke et rent installasjonsforsøk.
 
 ## Bevismal — ingen observasjoner registrert

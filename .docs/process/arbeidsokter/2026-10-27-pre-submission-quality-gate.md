@@ -84,3 +84,33 @@ bmad-review kanttilfelle-review returnerte []. Ingen app-/finans-/screening-
 kode eller testforventning ble endret av eksportrettingen. PG5 lukkes først
 med faktisk rettingscommit og relevant kontroll. Dato i filnavn viser
 øktstart 27. oktober; avsluttende checkpoint skjer 28. oktober.
+
+
+## Faktisk eksport og stopp ved ekstern gate
+
+Frosset S6-kilde: `7e55652c8a172a129ca879596ed7fd1bc2f3b4f8`.
+Alle 1578 filer er kontrollert byte/modus mot Git; arkivhash/kvittering
+og varig identisk Git-ignorert kopi under private/s6-handoff er registrert i
+[overleveringen](../../implementation-artifacts/story-5-4-s6-overlevering-2026-10-28.md).
+199 produkt-/test-/konfigurasjonsfiler i sluttmanifestet sammenlignes med
+eksportkilden; faktisk antall i maskinbeviset er autoritativt.
+Ingen installasjon eller ekstern person er brukt ved eksportkontrollen.
+PG5 lukkes med faktisk rettingscommit, positiv/negativ fixture,
+uavhengig review og faktisk verifisert produktarkiv.
+
+Påfølgende sluttcheckpoint inneholder kun dokumentasjons-/kvitteringsendring;
+arkivet er eksakt den navngitte kildecommiten. Ingen ny full regresjon er
+begrunnet av disse metadataendringene. Aktiv promptlogg inngår i f105216;
+ingen promptlogg er omskrevet, flyttet eller slettet. 5.4 backlog,
+R4-S6 open, 5.5 in-progress og 4.5/S5-W1 beholdes. Mads må organisere
+faktisk annen person/rent miljø og etterpå vurdere reelle avvik og samlet
+leveringsakseptanse. Ingen push/pull eller betalt API-kall er gjort.
+
+
+Siste les-only uavhengige overleveringsreview returnerte []. Endelig
+repo-/historikkskann før sluttcommit omfatter 2093 historiske blobs og
+1582 arbeidsfiler: ingen nye uavklarte mønstertreff/forbudte tracked stier;
+209 originale bevis er fortsatt byteidentiske. Dokumentkontrollen hadde
+302 lokale lenker i 16 dokumenter før den siste reviewlenken ble lagt til.
+Produkt, tester, README og build-/runtimekonfigurasjon er byteuendret siden
+den frosne S6-kilden. Endelig diff er bare dokumentasjon og kvitteringer.

@@ -1,0 +1,15 @@
+{
+  "purpose": "Intern klargjøring; ikke ekstern S6",
+  "sourceCommit": "7e55652c8a172a129ca879596ed7fd1bc2f3b4f8",
+  "gitTree": "f63150e7db374251ebb8128bf4dfb27f0e1d527c",
+  "archive": "/private/tmp/ibe160-s6-122r8mfz/ibe160-semester-v1-7e55652c8a17.tar.gz",
+  "archiveSha256": "a66e90e4b6ad090968a709ebbe7c2ab7d48080c54885be689b8edb22e00d8f8c",
+  "archiveBytes": 28661887,
+  "archivePrefix": "ibe160-semester-v1/",
+  "trackedFilesByteVerified": 1578,
+  "containsGitHistory": false,
+  "containsNodeModulesDistPrivateOrRealEnv": false,
+  "externalS6Executed": false,
+  "installExecuted": false,
+  "versionNote": "Arkivet inneholder nøyaktig kildecommiten, ikke senere dokumentasjonscommits eller denne kvitteringen. Personen registrerer sourceCommit og archiveSha256."
+}

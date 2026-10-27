@@ -132,3 +132,21 @@ Faktisk kode-/bevischeckpoint: `f105216703033a34163ce9eb94df9f060fd4a0ce`. Etter
 lukkedokumentasjon og eksportkvittering endrer ingen produktkode eller
 testforventning. [Endelig kilderelevans](pre-submission-2026-10-27/final-source-relevance.json)
 bekrefter at siste reviewtillegg bare er én ny requestId-test, prøvd 35/35.
+
+
+## Ferdig intern gate — 2026-10-28
+
+[Uavhengig slutt-review med full triage](pre-submission-review-2026-10-27.md)
+og separat eksportrettingsreview har ingen gjenstående verifiserte funn.
+B3/C2 og PG1–PG5 er verifisert lukket i den sentrale oversikten; første
+feilede eksportforsøk er bevart. Faktisk ren S6-kandidat, sidefiler og
+SHA-256 står i [overleveringen](story-5-4-s6-overlevering-2026-10-28.md).
+Arkivets 1578 filer er byte-/moduskontrollert mot eksakt Git-commit;
+[kilderelevansen](pre-submission-2026-10-27/s6-source-relevance.json)
+bekrefter samsvar med det siste verifiserte produkt-/testmanifestet.
+
+En verifisert identisk kopi er lagt i Git-ignorert `private/s6-handoff/`.
+Arkivet og dets midlertidige kopier committes ikke. Det inneholder ikke
+Git-historikken og er for ekstern S6, ikke en erstatning for prosjektets
+endelige Git-innlevering. Senere checkpoint registrerer bare disse bevisene
+og statuser, uten produkt-/testendring. Neste arbeid krever ekte testperson.

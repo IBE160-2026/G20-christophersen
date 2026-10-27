@@ -2,7 +2,7 @@
 title: 'Semester-v1: pre-submission quality gate'
 type: bugfix
 created: 2026-10-27
-status: in-review
+status: done
 route: dispatch
 baseline_commit: be895e0009ae133b3899e53236e2dfdcab853d5d
 review_loop_iteration: 0
@@ -78,7 +78,7 @@ fasitendring eller simulert ekstern S6. Ingen større omskriving.
   full regresjon dersom state-/miljøendringen tilsier det.
 - [x] Sensorrapport, uavhengig endringsreview, sentral issue-sporing og
   oppdatert 5.5-sporbarhet, uten parallelle buglister.
-- [ ] Ren S6-eksport av faktisk lokal commit, inventar/hash og kort
+- [x] Ren S6-eksport av faktisk lokal commit, inventar/hash og kort
   overlevering, uten falske eksterne observasjoner.
 
 **Acceptance Criteria:**
@@ -137,3 +137,10 @@ tekstforventninger), deretter 134 unit/6 E2E grønn rekontroll; 3 dev,
 37 komponent, 7 helper og 204 frontendfiler uten nøkkellekkasje. Etter
 review består ekstra requestId-regresjon, 35 report-session. Ingen ny
 produktkode etter grønn rekontroll. Se [samlet gate](pre-submission-quality-gate-2026-10-27.md).
+
+
+Intern quality gate er fullført 2026-10-28. Faktisk eksportkilde:
+`7e55652c8a172a129ca879596ed7fd1bc2f3b4f8`. [Kvittering/overlevering](story-5-4-s6-overlevering-2026-10-28.md).
+Dette er ferdigstillelse av bestilt intern forberedelse, ikke 5.4/5.5 done.
+PG5 fra første eksportforsøk er rettet, negativt/positivt prøvd og separat
+uavhengig reviewet. Ekte annen-person-S6 er neste nødvendige menneskelige gate.

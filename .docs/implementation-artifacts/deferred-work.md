@@ -21,7 +21,7 @@ er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 | Pre-submission PG2 — misvisende TG3-eksempel | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
 | Pre-submission PG3 — unntak i arbeidstreskann | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
 | Pre-submission PG4 — fullstendig S6-eksport | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
-| Pre-submission PG5 — tar-rotmappe i eksportkontroll | Åpen | Første faktiske positive eksport stoppet på rotmappe uten avsluttende skråstrek. Se registrering nedenfor. |
+| Pre-submission PG5 — tar-rotmappe i eksportkontroll | Lukket 2026-10-28 | Rettet i `7e55652c8a172a129ca879596ed7fd1bc2f3b4f8`; negativ/positiv fixture, uavhengig review og faktisk 1578-filers eksport består. Se datert lukking nedenfor. |
 
 ## Deferred from: code review of spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt (2026-10-17)
 
@@ -273,3 +273,15 @@ ble overlevert eller ekstern test utført. Krav: CAP-8, 5.4 AC1 og 5.5 AC6.
 [Opprinnelig feil](pre-submission-2026-10-27/export-attempt-1.json) og
 initial kjørt script bevares. Rett bare kataloggrensen; alle vanlige filer
 må fortsatt verifiseres mot eksakt commit.
+
+
+### PG5 — lukket 2026-10-28
+
+Faktisk rettings-/review-/fixturebeviscommit: `7e55652c8a172a129ca879596ed7fd1bc2f3b4f8`.
+Rotmappe uten avsluttende skråstrek godtas kun som katalog; alle vanlige
+filer er fortsatt prefix-/blob-/moduskontrollert.
+[To negative og én positiv fixture](pre-submission-2026-10-27/export-guards-complete.json),
+[separat uavhengig review uten funn](pre-submission-2026-10-27/export-fix-review.json)
+og [faktisk produktarkiv](pre-submission-2026-10-27/s6-export.json)
+består. 1578 filer er verifisert mot eksakt commit. Første feil/script
+beholdes; ingen ekstern S6-godkjenning utledes av lukkingen.

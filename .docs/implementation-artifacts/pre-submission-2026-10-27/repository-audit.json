@@ -1,6 +1,6 @@
 {
-  "historyRevision": "f105216703033a34163ce9eb94df9f060fd4a0ce",
-  "historyBlobCount": 2079,
+  "historyRevision": "7e55652c8a172a129ca879596ed7fd1bc2f3b4f8",
+  "historyBlobCount": 2093,
   "patterns": [
     "openai-key",
     "aws-key",
@@ -26,7 +26,7 @@
       "classification": "known fictional redaction test"
     }
   ],
-  "workingFilesChecked": 1573,
+  "workingFilesChecked": 1583,
   "workingMatchesWithoutValues": [
     {
       "object": "a5244f42eb371607a6c95b138491e7f817b767b2",

@@ -255,3 +255,10 @@ uten endrede avhengigheter er ikke nødvendig for å verifisere disse
 kode-/miljørettingene. Ingen betalte API-kall eller nye S5-forsøk inngår.
 5.5 forblir in-progress; 5.4/R4-S6 og den ufullstendige formelle S5-
 akseptansen skjules ikke av denne klargjøringen.
+
+Sluttføring 2026-10-28: B3/C2 og PG1–PG5 er verifisert lukket med
+faktiske commit-/review-/testlenker i sentral oversikt. Den
+[frosne S6-kopien](story-5-4-s6-overlevering-2026-10-28.md) er kontrollert
+mot eksakt Git-kilde og lagret lokalt utenfor versjonert innhold. Alle
+interne deler av denne bestilte quality-gaten er fullført; 5.4/S6 og
+samlet 5.5-akseptanse er fortsatt ikke fullført. S5-W1 er uendret.

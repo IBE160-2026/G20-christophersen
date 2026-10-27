@@ -168,3 +168,6 @@ delivery_preparation:
   story_5_5_record: .docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md
   s5_waiver_preserved: S5-W1
   pre_submission_gate_record: .docs/implementation-artifacts/pre-submission-quality-gate-2026-10-27.md
+  pre_submission_checked_on: 2026-10-28
+  s6_candidate_source_commit: 7e55652c8a172a129ca879596ed7fd1bc2f3b4f8
+  s6_handoff_record: .docs/implementation-artifacts/story-5-4-s6-overlevering-2026-10-28.md

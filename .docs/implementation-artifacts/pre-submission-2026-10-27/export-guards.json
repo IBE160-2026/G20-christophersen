@@ -1,0 +1,20 @@
+{
+  "scriptSha256": "80b919fa9b6050289c4865980dddd3da5d232cd6e35bae582e62b36fc0df03b8",
+  "externalS6Executed": false,
+  "scenarios": [
+    {
+      "scenario": "untracked-source",
+      "exitCode": 1,
+      "archiveCreated": false,
+      "expected": "Avvist før eksport",
+      "fixtureOnly": true
+    },
+    {
+      "scenario": "modified-tsconfig",
+      "exitCode": 1,
+      "archiveCreated": false,
+      "expected": "Avvist før eksport",
+      "fixtureOnly": true
+    }
+  ]
+}

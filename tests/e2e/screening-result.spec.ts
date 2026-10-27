@@ -152,7 +152,7 @@ for (const [id, recommendation, expected] of [
     await expect(page.locator('.result-triggers > li > p:first-child')).toHaveText(id === 'F1'
       ? ['Nettoyield oppfyller ditt avkastningskrav.', 'Kontantstrøm før skatt er null eller positiv.', 'Teknisk grunnlag er tilstrekkelig for førstevurdering.']
       : id === 'F2' ? ['Nettoyield er lavere enn ditt avkastningskrav.']
-        : ['Alvorlig TG3 er uavklart: F4-TG3-1: Alvorlig lekkasje i tak (F4-tilstandsrapport.pdf, PDF-side 4). Velg eksplisitt Avklart med nødvendig grunnlag, eller behold Uavklart. Oppgi en kort begrunnelse for at forholdet er tilstrekkelig avklart for førstevurdering. Oppgi konkret eksternt avklaringsgrunnlag, for eksempel kontroll fra autorisert elektriker med dato eller referanse.'])
+        : ['Alvorlig TG3 er uavklart: F4-TG3-1: Alvorlig lekkasje i tak (F4-tilstandsrapport.pdf, PDF-side 4). Velg eksplisitt Avklart med nødvendig grunnlag, eller behold Uavklart. Oppgi en kort begrunnelse for at forholdet er tilstrekkelig avklart for førstevurdering. Oppgi konkret eksternt avklaringsgrunnlag, for eksempel vurdering fra relevant fagkyndig med dato eller referanse.'])
     if (id !== 'F4') await expect(page.locator('.result-triggers')).toContainText(`Nettoyield: ${id === 'F1' ? '9,375' : '6,250'} % · Ditt avkastningskrav (Ymin): 7 %`)
     await expect(page.locator('#result-announcement')).toHaveText(`Resultat beregnet: ${recommendation}.`)
     await expect(page.locator('.metric-value')).toHaveText([...expected])

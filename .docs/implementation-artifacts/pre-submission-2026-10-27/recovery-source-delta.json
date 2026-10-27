@@ -1,0 +1,9 @@
+{
+  "changesAfterFirstFullRun": [
+    "src/frontend/state/report.ts",
+    "tests/e2e/report-analysis.spec.ts",
+    "tests/e2e/screening-result.spec.ts",
+    "tests/unit/report-session.test.ts"
+  ],
+  "reason": "Oppdatert generisk TG3-forventning; kort duplikatbeskjed i eksisterende live-region med relevante forventninger. Ingen finans-/screening-/backendendring."
+}

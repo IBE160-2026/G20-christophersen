@@ -1,0 +1,60 @@
+{
+  "historyRevision": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+  "historyBlobCount": 1999,
+  "patterns": [
+    "openai-key",
+    "aws-key",
+    "private-key"
+  ],
+  "matchesWithoutValues": [
+    {
+      "object": "a5244f42eb371607a6c95b138491e7f817b767b2",
+      "path": ".codex/hooks/test_log_user_prompt.py",
+      "pattern": "private-key",
+      "classification": "known fictional redaction test"
+    },
+    {
+      "object": "15dd4fc8e22945c84b570d5a6bfde0fc883e443c",
+      "path": ".docs/implementation-artifacts/story-4-4-b2/F2-B2-2026-10-27-01/executed-helper-source/tools__story-4-4__b2-lifecycle.test.mjs",
+      "pattern": "openai-key",
+      "classification": "known fictional redaction test"
+    },
+    {
+      "object": "d75f0e3826803e8c7ff4ba147bb8709071b07190",
+      "path": "tools/story-4-4/b2-lifecycle.test.mjs",
+      "pattern": "openai-key",
+      "classification": "known fictional redaction test"
+    }
+  ],
+  "workingFilesChecked": 1521,
+  "workingMatchesWithoutValues": [
+    {
+      "path": ".codex/hooks/test_log_user_prompt.py",
+      "pattern": "private-key",
+      "classification": "known fictional redaction test"
+    },
+    {
+      "path": ".docs/implementation-artifacts/story-4-4-b2/F2-B2-2026-10-27-01/executed-helper-source/tools__story-4-4__b2-lifecycle.test.mjs",
+      "pattern": "openai-key",
+      "classification": "known fictional redaction test"
+    },
+    {
+      "path": "tools/story-4-4/b2-lifecycle.test.mjs",
+      "pattern": "openai-key",
+      "classification": "known fictional redaction test"
+    }
+  ],
+  "forbiddenTrackedPaths": [],
+  "ignoreProbes": {
+    "node_modules/probe": true,
+    "dist/probe": true,
+    "private/probe": true,
+    ".env": true,
+    ".env.local": true,
+    "test-results/probe": true,
+    "playwright-report/probe": true
+  },
+  "originalEvidenceFilesChecked": 209,
+  "originalEvidenceChanged": [],
+  "limitation": "Mønstergjenkjenning, ikke garanti mot alle hemmelighetstyper eller rettighetsvurdering. Arbeidsfiler kontrolleres ved kjøring; fremtidige filer inngår ikke."
+}

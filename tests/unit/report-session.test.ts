@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import { bindAnalysisOutcome } from '../../src/contracts/analysis-validation.ts'
 import { CONTRACT_VERSION, EXTRACTION_VERSION } from '../../src/contracts/document-analysis.ts'
-import { createReportState, reportReducer, reportDeficiencies } from '../../src/frontend/state/report.ts'
+import { createReportState, reportReducer, reportDeficiencies, analysisStatus } from '../../src/frontend/state/report.ts'
 import type { ReportAction, ReportState } from '../../src/frontend/state/report.ts'
 import { createInitialSession, sessionReducer } from '../../src/frontend/state/session.ts'
 import { ReportClient } from '../../src/frontend/analysis/report-client.ts'
@@ -251,3 +251,68 @@ for (const mode of ['demo', 'live'] as const) {
     expect(createInitialSession(mode).report.mode).toBe(mode)
   })
 }
+
+
+describe('pre-submission — originalfeil ved manuell duplikatavvisning', () => {
+  function retry(state: ReportState) { return reportReducer(state, { type: 'report-start', correlation }) }
+  function duplicate(state: ReportState) { return receive({ kind: 'rejected', code: 'duplicate-analysis' }, retry(state), false) }
+  function failedOutcome() {
+    const body = response([candidate])
+    if (body.outcome.status !== 'completed') throw new Error('fixture')
+    const { findings, uncertainCandidates, limitations, ...metadata } = body.outcome
+    delete (metadata as Record<string, unknown>).validationScope
+    return { ...body, outcome: { ...metadata, status: 'failed', error: { kind: 'analysis', code: 'timeout', target: { kind: 'page', pdfPage: 1 }, reason: 'Tidsfrist ved PDF-side 1' },
+      partialResult: { completeness: 'incomplete', findings, uncertainCandidates, limitations: [...limitations, 'Delresultat'] } } }
+  }
+  it('bevarer validert årsak, side, delresultat og mangler ved andre og tredje Start', () => {
+    const first = receive(failedOutcome())
+    let state = first
+    for (let attempt = 0; attempt < 2; attempt++) {
+      state = duplicate(state)
+      expect(state).toMatchObject({ status: 'failed', error: 'timeout', active: null, previousFailure: { duplicateRejected: true, error: 'timeout' } })
+      expect(analysisStatus(state)).toBe('Duplikatsperren avviste nytt forsøk — opprinnelig analysefeil er beholdt (timeout). Rapportgrunnlaget er ufullført.')
+      expect(state.outcome).toBe(first.outcome)
+      expect(reportDeficiencies(state)).toEqual(reportDeficiencies(first))
+    }
+  })
+  it('sent originalsvar under nytt requestId lar retry og opprinnelig feil være urørt', () => {
+    const first = receive(failedOutcome())
+    const retryCorrelation = { ...correlation, requestId: 'retry-request' }
+    const retrying = reportReducer(first, { type: 'report-start', correlation: retryCorrelation })
+    expect(retrying.active?.requestId).not.toBe(first.outcome?.requestId)
+    const preserved = retrying.previousFailure
+    const afterLateOriginal = receive(response(), retrying)
+    expect(afterLateOriginal).toBe(retrying)
+    expect(afterLateOriginal.previousFailure).toBe(preserved)
+    expect(afterLateOriginal.status).toBe('analysing')
+    const rejected = reportReducer(afterLateOriginal, { type: 'report-response', correlation: retryCorrelation,
+      body: { kind: 'rejected', code: 'duplicate-analysis' }, ok: false })
+    expect(rejected).toMatchObject({ status: 'failed', active: null, error: 'timeout',
+      outcome: { status: 'failed', error: { reason: 'Tidsfrist ved PDF-side 1', target: { kind: 'page', pdfPage: 1 } },
+        partialResult: { completeness: 'incomplete', findings: [{ findingId: 'funn' }], limitations: ['Delresultat'] } } })
+    expect(rejected.outcome).toBe(first.outcome)
+    expect(rejected.previousFailure?.duplicateRejected).toBe(true)
+  })
+  it('bevarer lokal originalkode uten outcome, men gjør aldri duplicate til original', () => {
+    let state = reportReducer(active(), { type: 'report-error', generation: 1, code: 'transport-failure' })
+    state = duplicate(duplicate(state))
+    expect(state).toMatchObject({ status: 'failed', outcome: null, error: 'transport-failure', previousFailure: { error: 'transport-failure', duplicateRejected: true } })
+    expect(analysisStatus(state)).toBe('Duplikatsperren avviste nytt forsøk — opprinnelig analysefeil er beholdt (transport-failure). Rapportgrunnlaget er ufullført.')
+    expect(duplicate(receive({ kind: 'rejected', code: 'duplicate-analysis' })).previousFailure).toBeNull()
+  })
+  it('nytt gyldig svar etter transportfeil er legitimt og rydder feilminnet', () => {
+    const failed = reportReducer(active(), { type: 'report-error', generation: 1, code: 'transport-failure' })
+    const completed = receive(response(), retry(failed))
+    expect(completed).toMatchObject({ status: 'completed', error: null, previousFailure: null })
+  })
+  it('andre terminalutfall, filbytte og forlatt analyse rydder minnet; sent svar ignoreres', () => {
+    const retrying = retry(receive(failedOutcome()))
+    const rejected = receive({ kind: 'rejected', code: 'processing-timeout' }, retrying, false)
+    expect(rejected.previousFailure).toBeNull()
+    expect(reportReducer(retrying, { type: 'report-error', generation: 1, code: 'transport-failure' }).previousFailure).toBeNull()
+    for (const state of [reportReducer(retrying, { type: 'report-abandon' }), reportReducer(retrying, { type: 'report-selecting', generation: 2 })]) {
+      expect(state.previousFailure).toBeNull()
+      expect(receive({ kind: 'rejected', code: 'duplicate-analysis' }, state, false)).toBe(state)
+    }
+  })
+})

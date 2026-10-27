@@ -1,0 +1,15 @@
+[WebServer] (node:9216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:9227) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/report-analysis.spec.ts:147:1 › Story 4.3 demo — felles kontrollflyt › 2.6 AC4: analysefeil/delresultat og dokumentfeil er ufullført (3.3s)
+  ✓  2 tests/e2e/report-analysis.spec.ts:343:1 › Story 4.3 demo — felles kontrollflyt › pre-submission: duplikat etter transportfeil beholder originalkode uten outcome (626ms)
+  ✓  3 tests/e2e/report-analysis.spec.ts:147:1 › Story 4.3 live — felles kontrollflyt › 2.6 AC4: analysefeil/delresultat og dokumentfeil er ufullført (3.7s)
+  ✓  4 tests/e2e/report-analysis.spec.ts:343:1 › Story 4.3 live — felles kontrollflyt › pre-submission: duplikat etter transportfeil beholder originalkode uten outcome (576ms)
+  ✓  5 tests/e2e/screening-result.spec.ts:139:3 › Story 4.3 demo — samme kodebestemte resultat › 3.7 AC1/2/5/6 F4: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus (2.0s)
+  ✓  6 tests/e2e/screening-result.spec.ts:139:3 › Story 4.3 live — samme kodebestemte resultat › 3.7 AC1/2/5/6 F4: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus (2.1s)
+
+  6 passed (13.7s)

@@ -145,6 +145,15 @@ test('2.6 AC4: gyldig tomliste og alle usikkerheter gjennom ordinær kontrollada
 })
 
 test('2.6 AC4: analysefeil/delresultat og dokumentfeil er ufullført', async ({ page }) => {
+  await page.route('**/api/analysis', async route => {
+    const response = await route.fetch()
+    const body = await response.json()
+    if (body.kind === 'analysis' && body.outcome.status === 'failed' && body.outcome.error.code === 'timeout') {
+      body.outcome.error.reason = 'Tidsfrist ved kontroll av PDF-side 2'
+      body.outcome.error.target = { kind: 'page', pdfPage: 2 }
+    }
+    await route.fulfill({ response, json: body })
+  })
   await enter(page)
   await choose(page, 'partial.pdf'); await page.getByRole('button', { name: 'Start analyse' }).click()
   await expect(page.locator('#analysis-status')).toContainText('timeout')
@@ -152,6 +161,17 @@ test('2.6 AC4: analysefeil/delresultat og dokumentfeil er ufullført', async ({ 
   await expect(page.locator('.local-deficiencies')).toContainText('ufullført')
   await expect(page.getByRole('heading', { name: 'Delresultat — ufullstendig analyse' })).toBeVisible()
   await expect(page.locator('.report-findings')).not.toHaveAttribute('data-list-visible-generation')
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await page.getByRole('button', { name: 'Start analyse' }).click()
+    await expect(page.getByText(/Duplikatsperren avviste det nye forsøket/)).toBeVisible()
+    await expect(page.locator('#report-announcement')).toHaveText('Duplikatsperren avviste nytt forsøk — opprinnelig analysefeil er beholdt (timeout). Rapportgrunnlaget er ufullført.')
+    await expect(page.locator('#analysis-status')).toContainText('timeout')
+    await expect(page.getByRole('heading', { name: 'Delresultat — ufullstendig analyse' })).toBeVisible()
+    await expect(page.locator('.finding-list')).toContainText('Kontrollert lekkasje')
+    await expect(page.getByText('Tidsfrist ved kontroll av PDF-side 2', { exact: true })).toBeVisible()
+    await expect(page.getByText('Berørt PDF-side: 2', { exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Gå til Kontroller/ })).toHaveCount(0)
+  }
   await page.locator('#report-file').setInputFiles({ name: 'ødelagt.pdf', mimeType: 'application/pdf', buffer: Buffer.from('ikke PDF') })
   await expect(page.locator('#analysis-status')).toContainText('Rapport valgt')
   await page.getByRole('button', { name: 'Start analyse' }).click()
@@ -319,6 +339,28 @@ for (const failure of ['transport', 'invalid-json'] as const) {
     expect(calls).toBe(1)
   })
 }
+
+test('pre-submission: duplikat etter transportfeil beholder originalkode uten outcome', async ({ page }) => {
+  await enter(page); await choose(page)
+  let calls = 0
+  await page.route('**/api/analysis', async route => {
+    calls++
+    if (calls === 1) await route.abort('failed')
+    else await route.fulfill({ status: 409, json: { kind: 'rejected', code: 'duplicate-analysis' } })
+  })
+  const start = page.getByRole('button', { name: 'Start analyse' })
+  await start.click()
+  await expect(page.locator('#analysis-status')).toContainText('transport-failure')
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await start.click()
+    await expect(page.getByText(/Duplikatsperren avviste det nye forsøket/)).toContainText('transport-failure')
+    await expect(page.locator('#report-announcement')).toHaveText('Duplikatsperren avviste nytt forsøk — opprinnelig analysefeil er beholdt (transport-failure). Rapportgrunnlaget er ufullført.')
+    await expect(page.locator('#analysis-status')).toContainText('transport-failure')
+    await expect(page.locator('.report-findings')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: /Gå til Kontroller/ })).toHaveCount(0)
+  }
+  expect(calls).toBe(3)
+})
 
 async function originalF4(page: Page) {
   await enter(page, caseUrl)

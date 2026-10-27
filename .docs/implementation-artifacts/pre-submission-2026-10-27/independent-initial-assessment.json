@@ -1,0 +1,78 @@
+{
+  "baseline": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+  "method": "Tre uavhengige lesegjennomganger før endring; ingen tester/API eller ekstern S6 utført av reviewerene.",
+  "reviewers": [
+    "sensor_gate",
+    "result_gate",
+    "delivery_gate"
+  ],
+  "criteria": [
+    {
+      "criterion": 1,
+      "weight": 0.3,
+      "grade": "A"
+    },
+    {
+      "criterion": 2,
+      "weight": 0.2,
+      "grade": "B"
+    },
+    {
+      "criterion": 3,
+      "weight": 0.15,
+      "grade": "A"
+    },
+    {
+      "criterion": 4,
+      "weight": 0.1,
+      "grade": "B"
+    },
+    {
+      "criterion": 5,
+      "weight": 0.1,
+      "grade": "B"
+    },
+    {
+      "criterion": 6,
+      "weight": 0.1,
+      "grade": "B"
+    },
+    {
+      "criterion": 7,
+      "weight": 0.05,
+      "grade": "B"
+    }
+  ],
+  "weightedExample": 4.45,
+  "provisionalPart1": "B",
+  "uncertainty": "Stikkprøver og historiske bevis; intet karakterløfte, del 2 og ekstern S6 ikke vurdert.",
+  "findings": [
+    {
+      "reference": "PG1",
+      "source": "delivery_gate",
+      "verified": "Playwright arver live-modus/nøkkel; ekte analyse-POST i app-shell kan nå live. Build-helper arver også modus og venter på feil oppstartsmarkør.",
+      "priority": "Høy, test-/kostnadsgrense"
+    },
+    {
+      "reference": "4.3 B3/C2",
+      "source": "result_gate og sensor_gate",
+      "verified": "Nytt manuelt Start fra failed nuller outcome, deretter duplicate-analysis fjerner første årsak, mål og delresultat.",
+      "priority": "Middels, forståelig feilhåndtering"
+    },
+    {
+      "reference": "PG2",
+      "source": "sensor_gate og result_gate",
+      "verified": "Generisk TG3-veiledning ber om elektriker også for F4 taklekkasje, synlig i faktiske resultatbilder.",
+      "priority": "Lav–middels, faglig tillit og lav rettingskostnad"
+    }
+  ],
+  "subjective": [
+    "TG3-tekst på smal skjerm er lang/repetitiv; ingen ny informasjonsarkitektur begrunnet.",
+    "Omfattende UI-/state-moduler er vedlikeholdsrisiko, ikke grunn til omskriving før levering."
+  ],
+  "humanGates": [
+    "Ekte annen-person-S6 i rent dokumentert miljø",
+    "Eventuell offentlig deling av eksisterende kurskilder",
+    "Endelig leveringsakseptanse med bevart S5-W1"
+  ]
+}

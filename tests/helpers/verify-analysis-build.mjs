@@ -50,9 +50,13 @@ export async function stopChild(child, closed, graceMs = 2_000) {
   } finally { clearTimeout(timer) }
 }
 
+export function buildEnvironment(parent, key) {
+  return { ...parent, ANALYSIS_MODE: 'demo', OPENAI_API_KEY: key, OPENAI_LOG: 'debug' }
+}
+
 async function main() {
   const key = `fictional-${crypto.randomUUID()}`
-  const environment = { ...process.env, OPENAI_API_KEY: key, OPENAI_LOG: 'debug' }
+  const environment = buildEnvironment(process.env, key)
   const buildOutput = await runBuild('npm', ['run', 'build'], environment)
   assert.ok(!buildOutput.includes(key), 'Nøkkel i bygglogg')
   let files = 0

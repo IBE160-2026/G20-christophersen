@@ -54,11 +54,12 @@ export function ReportAnalysis({ session, dispatch, client }: {
     <p id="analysis-start-reason">{!isFinancialConfirmed(session) ? 'Kontroller og bekreft gyldig tallgrunnlag før analyse.'
       : !report.selected ? 'Velg én rapport før du starter analysen.'
         : report.status === 'completed' ? 'Uendret rapportuttrekk gjenbrukes. Velg en ny rapport for ny analyse.'
-          : report.status === 'analysing' ? 'En analyse pågår. Ny start er sperret.' : 'Start analyse sender den valgte rapporten én gang.'}</p>
+          : report.status === 'analysing' ? 'En analyse pågår. Ny start er sperret.' : report.status === 'failed' ? 'Start analyse gjør et nytt manuelt forsøk. En tidligere behandlet rapport kan avvises av duplikatsperren uten nytt analyseuttak.' : 'Start analyse sender den valgte rapporten én gang.'}</p>
     {session.currentStep === 'tilstandsrapport' && <button className="primary-action" type="button" aria-disabled={!canStart} aria-describedby="analysis-start-reason" onClick={() => { void client.start(isFinancialConfirmed(session), report) }}>Start analyse</button>}
     {report.status === 'analysing' && <button className="secondary-action" type="button" onClick={() => {
       dispatch({ type: 'report-abandon' }); client.abort()
     }}>Avbryt analyse</button>}
+    {report.status === 'failed' && report.previousFailure?.duplicateRejected && <p className="field-issue">Duplikatsperren avviste det nye forsøket (duplicate-analysis). Opprinnelig feil ({report.error}) og eventuelt delresultat er beholdt. Ingen ny analyse ble startet.</p>}
     {outcome?.status === 'failed' && <div className="field-issue">
       <p>{outcome.error.kind === 'document' ? 'Dokumentfeil' : 'Analysefeil'}: {outcome.error.code}.</p>
       <p>{outcome.error.reason ?? 'Årsaken er ikke kjent.'}</p>

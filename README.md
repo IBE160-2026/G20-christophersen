@@ -77,7 +77,7 @@ F4-tallene er **Delgrunnlag** og overstyrer ikke TG3-mangelen. Start et uavhengi
 Etter installasjon, med demo stoppet:
 
 ```sh
-npm run dev
+ANALYSIS_MODE=demo npm run dev
 ```
 
 Åpne **http://127.0.0.1:3000**. Dev bruker Vite-middleware/HMR i samme Express-prosess. Backendendringer krever stopp/start. Avslutt med Ctrl+C før demo/test.
@@ -93,7 +93,7 @@ npm run test:components
 npm run test:e2e
 ```
 
-Kjør sekvensielt fra reporoten med port 3000 ledig. `npm run test:e2e` bygger automatisk, starter/stopper først bygget demo og deretter dev. Vitest bruker lokale moduler, ekte fiktive PDF-er og HTTP-integrasjon. Komponenttester viser faktiske React-resultatkomponenter i Chromium. E2E dekker hovedflyt, kontrollporter, feil/retur, originalvisning, nøkkeltall, anbefalinger og fokus/responsivitet. Enkelte spesialutfall bruker en **kontrolladapter ved produktets adaptergrense** eller kontrollerte HTTP-svar; dette er testinnganger, ikke live-KI. Hele testoppskriften krever ingen betalt KI-tjeneste eller nøkkel. Browserforberedelsen krever vanligvis nedlasting; på Linux må nødvendige systembiblioteker også være installert før nettfri testkjøring.
+Kjør sekvensielt fra reporoten med port 3000 ledig. `npm run test:e2e` bygger automatisk, starter/stopper først bygget demo og deretter dev. Vitest bruker lokale moduler, ekte fiktive PDF-er og HTTP-integrasjon. Komponenttester viser faktiske React-resultatkomponenter i Chromium. E2E dekker hovedflyt, kontrollporter, feil/retur, originalvisning, nøkkeltall, anbefalinger og fokus/responsivitet. Enkelte spesialutfall bruker en **kontrolladapter ved produktets adaptergrense** eller kontrollerte HTTP-svar; dette er testinnganger, ikke live-KI. Playwright-serverne tvinger `ANALYSIS_MODE=demo` og tom `OPENAI_API_KEY`, også når terminalen har arvet live-miljø. Bygg-/oppstartskontrollen bruker eksplisitt demo og en fiktiv nøkkelsentinel for lekkasjekontroll. Hele testoppskriften krever ingen betalt KI-tjeneste eller nøkkel. Browserforberedelsen krever vanligvis nedlasting; på Linux må nødvendige systembiblioteker også være installert før nettfri testkjøring.
 
 Testene kontrollerer også sentral finans-/terskellogikk og blank/null/feiltilstander mot uavhengig fasit. De beviser ikke manuell lesbarhet, alle hjelpemidler eller live-uttrekkskvalitet. Se [samlet automatisk verifikasjon 5.1](.docs/implementation-artifacts/story-5-1-verifikasjon.md), [manuell UX-kontroll 5.2](.docs/implementation-artifacts/story-5-2-manuell-kontroll.md) og [egen README-gjennomkjøring 5.3](.docs/implementation-artifacts/story-5-3-verifikasjon.md). Egen gjennomkjøring er forberedelse; **annen person i rent miljø/S6 (5.4) er ennå ikke gjennomført**.
 
@@ -128,7 +128,7 @@ Bare eksplisitt Start analyse kan utløse det betalte uttrekket; tallberegning o
 
 ## Struktur og sporbarhet
 
-Se også [UI før/etter og review](.docs/implementation-artifacts/sluttforing-2026-10-27-review.md), [S6-forberedelse](.docs/implementation-artifacts/story-5-4-forberedelse-2026-10-27.md), [kort ekstern instruks](.docs/implementation-artifacts/story-5-4-ekstern-instruks.md), [leveringskontroll](.docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md) og [arbeidsøkt](.docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md).
+Se også [pre-submission quality gate](.docs/implementation-artifacts/pre-submission-quality-gate-2026-10-27.md), [UI før/etter og review](.docs/implementation-artifacts/sluttforing-2026-10-27-review.md), [S6-forberedelse](.docs/implementation-artifacts/story-5-4-forberedelse-2026-10-27.md), [kort ekstern instruks](.docs/implementation-artifacts/story-5-4-ekstern-instruks.md), [leveringskontroll](.docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md) og [arbeidsøkt](.docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md).
 
 | Plassering | Ansvar |
 |---|---|

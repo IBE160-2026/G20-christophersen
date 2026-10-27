@@ -1,0 +1,15 @@
+✔ byggfrist stopper både eid byggprosess og dens barn med trygg feil (516.9955ms)
+✔ byggfeil eksponerer bare kodeeid feil (50.40125ms)
+✔ HTTP-frist avbryter venting på headere (107.599292ms)
+✔ HTTP-frist avbryter uavsluttet body (104.687459ms)
+✔ servercleanup avventer faktisk close (normal stopp) (33.075417ms)
+✔ servercleanup avventer faktisk close (SIGTERM ignoreres) (84.445542ms)
+✔ arvet live erstattes med demo uten å fjerne fiktiv lekkasjesentinel (0.211333ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 960.33825

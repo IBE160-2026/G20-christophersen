@@ -1,0 +1,8 @@
+{
+  "changesSinceGreenRecovery": [
+    "tests/unit/report-session.test.ts"
+  ],
+  "productAndConfigUnchanged": true,
+  "targetedTestLog": "gate-distinct-retry-request-unit-followup.txt",
+  "sourceFilesChecked": 199
+}

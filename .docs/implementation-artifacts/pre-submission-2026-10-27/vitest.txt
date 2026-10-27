@@ -1,0 +1,136 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run --maxWorkers=1
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ✓ tests/integration/http-analysis.test.ts (22 tests) 80263ms
+   ✓ Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp (22)
+     ✓ F1 følger faktisk PDF og uavhengig fasit med ett adapterkall 1241ms
+     ✓ F2 følger faktisk PDF og uavhengig fasit med ett adapterkall 1329ms
+     ✓ F3 følger faktisk PDF og uavhengig fasit med ett adapterkall 1188ms
+     ✓ F4 følger faktisk PDF og uavhengig fasit med ett adapterkall 1180ms
+     ✓ navn og MIME er bare metadata, feil signatur/container er dokumentfeil 1152ms
+     ✓ PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked 1380ms
+     ✓ vilkårlige chunks og falsk boundary bevarer originalbytehash 676ms
+     ✓ aktiv lås gjelder under upload med andre requestId/generasjon og slipper etter abort 662ms
+     ✓ http-adapter-failure.ts gir trygg feil uten retry og beholder markør 1238ms
+     ✓ http-adapter-invalid.ts gir trygg feil uten retry og beholder markør 1255ms
+     ✓ aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon 918ms
+     ✓ without-text-layer.pdf blir dokumentfeil uten adaptertillatelse eller varig markør 1152ms
+     ✓ text-31-pages.pdf blir dokumentfeil uten adaptertillatelse eller varig markør 882ms
+     ✓ cleanup-feil i parser eier fortsatt workertråder som termineres med prosessen 528ms
+     ✓ klientabort under parser stopper synkront heng og lar samme session starte igjen 515ms
+     ✓ én reell 60 s-frist stopper parserheng, adapterheng og sen retur etter flere steg 60716ms
+     ✓ eide inputbytes tømmes ved suksess, adapterfeil, duplikatavvisning og abort 2351ms
+     ✓ serverstopp venter på faktisk cleanup av en request med hengende adapter 591ms
+     ✓ klientabort under adapter terminerer prosessen og beholder duplikatsperre 1195ms
+ ✓ tests/integration/pdf-extraction.test.ts (44 tests) 12150ms
+   ✓ Story 2.3 AC1/AC2 – ekte parser og fysisk kilde (11)
+     ✓ F1-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter 349ms
+     ✓ F3-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter 312ms
+     ✓ F4-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter 310ms
+     ✓ bevarer tabellrader, kolonneblokker, norske tegn og blandet tekst/bilde fra separat fasit 305ms
+     ✓ beholder alle 30 sider i text-30-pages.pdf 329ms
+     ✓ beholder alle 30 sider i text-30-pages-object-stream.pdf 336ms
+     ✓ beholder alle 30 sider i text-30-pages-linearized.pdf 331ms
+     ✓ bevarer snapshot, originalhash og navn når parseren får kopi av en Buffer-slice 302ms
+   ✓ Story 2.3 AC3/AC4 – konservativ blankregel og fullføringssperre (15)
+     ✓ mixed-status.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 400ms
+     ✓ uncertain-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 303ms
+     ✓ structural-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 318ms
+     ✓ catalog-empty-dict.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 367ms
+   ✓ Story 2.3 – workeropprydding og trygge driftsfeil (9)
+     ✓ ryddet tråd og trygg melding når siste terminate avvises 301ms
+   ✓ Story 2.3 review – faktisk PDF-regresjon (9)
+     ✓ laster sammensatt fonts innebygde CMaps fra lokal PDF.js-pakke 321ms
+ ✓ tests/integration/live-http.test.ts (7 tests) 7482ms
+   ✓ 4.3 AC1/3: real HTTP/process/SDK offline empty.pdf, durable duplicate and safe mode metadata 1322ms
+   ✓ 4.3 AC1/3: real HTTP/process/SDK offline transport.pdf, durable duplicate and safe mode metadata 1186ms
+   ✓ 4.3 AC1/3: real HTTP/process/SDK offline invalid.pdf, durable duplicate and safe mode metadata 1252ms
+   ✓ 4.3 AC1/3: real HTTP/process/SDK offline incomplete.pdf, durable duplicate and safe mode metadata 1257ms
+   ✓ 4.3 AC3: production missing key is safe live failure after document gate, never fallback 602ms
+   ✓ 4.3 AC5: abort terminates actual live child before lock release and marker survives 1191ms
+   ✓ 4.3 AC2: production HTTP/SDK preserves nonempty findings and source uncertainty 670ms
+ ✓ tests/integration/pdf-format.test.ts (42 tests) 5849ms
+   ✓ Story 2.2 AC2 – SHA-256 gjelder originalbytes, navn er metadata (3)
+     ✓ gir endrede, fortsatt gyldige PDF-bytes ny hash ved samme navn 351ms
+   ✓ Story 2.2 AC3 – format er delutfall, ingen lesbarhet eller analysefullføring (11)
+     ✓ avslutter den faktiske sidetre-workeren ved suksess, sidegrense og skadet tre 429ms
+ ✓ tests/integration/demo-analysis.test.ts (14 tests) 5130ms
+   ✓ Story 2.4 AC1/AC3 – ekte PDF-pipeline og lokale lagrede svar (8)
+     ✓ standard demo virker i ny prosess uten miljønøkler og med nettfunksjoner sperret 586ms
+     ✓ F1-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 370ms
+     ✓ F2-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 332ms
+     ✓ F3-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 359ms
+     ✓ F4-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit 334ms
+     ✓ samme PDF gir identisk resultat ved gjentakelse og etter mutert retur 327ms
+     ✓ samme adapter holder samtidige F1/F4-kall og returmutasjoner adskilt 639ms
+     ✓ identiske bytes med nytt navn finner samme hash uten å skrive om originalkilden 326ms
+   ✓ Story 2.4 AC2 – riktig rapport, ingen cache fra annen PDF (6)
+     ✓ F2 under F1-navn får F2-hash og aldri F1-uttrekket 309ms
+     ✓ F1-tilstandsrapport-endret.pdf gir manglende demosvar selv under F1-navn 311ms
+     ✓ text-30-pages.pdf gir manglende demosvar selv under F1-navn 339ms
+     ✓ mixed-status.pdf stanser før demooppslag og bevarer dokumentfeil 306ms
+     ✓ uncertain-content.pdf stanser før demooppslag og bevarer dokumentfeil 302ms
+ ✓ tests/integration/live-analysis.test.ts (6 tests) 2448ms
+   ✓ Story 4.2 — faktisk PDF → live SDK (offline) → samme kontroll/finans/screening (4)
+     ✓ F1: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 455ms
+     ✓ F2: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 393ms
+     ✓ F3: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 414ms
+     ✓ F4: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 393ms
+   ✓ serializes complete property-cases/text-30-pages.pdf in one attempt 420ms
+   ✓ serializes complete pdf-readability/readable-blank.pdf in one attempt 372ms
+ ✓ tests/unit/live-adapter.test.ts (42 tests) 2079ms
+ ✓ tests/integration/server-mode.test.ts (3 tests) 2207ms
+   ✓ 4.3: actual server entry with ANALYSIS_MODE=(unset) 1029ms
+   ✓ 4.3: actual server entry with ANALYSIS_MODE=live 1009ms
+ ✓ tests/integration/demo-screening.test.ts (4 tests) 1584ms
+   ✓ Story 5.1 AC1/2/4 — faktisk PDF → demoadapter → kontroll → finans/screening (4)
+     ✓ F1: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 463ms
+     ✓ F2: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 312ms
+     ✓ F3: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 463ms
+     ✓ F4: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall 345ms
+ ✓ tests/unit/http-receive-pdf.test.ts (5 tests) 800ms
+   ✓ HTTP strømparser – eksakte metadata- og chunkgrenser (5)
+     ✓ fragmentert stor metadata skannes én gang og små filchunks samles i faste blokker 734ms
+ ✓ tests/integration/http-analysis-review.test.ts (2 tests) 745ms
+   ✓ Story 2.5 – uavhengige HTTP-/ressursprøver i review (2)
+     ✓ to reelle prosesser som når samme markør får bare én adaptertillatelse og begge termineres 695ms
+ ✓ tests/integration/live-pipeline-wiring.test.ts (1 test) 714ms
+   ✓ 4.3 R1: actual production child grants a full transport deadline after initialization 713ms
+ ✓ tests/unit/playwright-environment.test.ts (1 test) 204ms
+ ✓ tests/unit/report-session.test.ts (34 tests) 236ms
+ ✓ tests/unit/result-snapshot.test.ts (62 tests) 79ms
+ ✓ tests/unit/financial-presentation.test.ts (49 tests) 66ms
+ ✓ tests/unit/thresholds.test.ts (83 tests) 60ms
+ ✓ tests/unit/complete-screening.test.ts (72 tests) 55ms
+ ✓ tests/unit/finance.test.ts (67 tests) 53ms
+ ✓ tests/unit/financial-result-renewal.test.ts (20 tests) 61ms
+ ✓ tests/unit/report-result-renewal.test.ts (18 tests) 48ms
+ ✓ tests/unit/limitation-review.test.ts (23 tests) 46ms
+ ✓ tests/unit/document-analysis.test.ts (107 tests) 28ms
+ ✓ tests/unit/backend-config.test.ts (23 tests) 27ms
+ ✓ tests/unit/financial-validation.test.ts (51 tests) 26ms
+ ✓ tests/unit/screening-result-navigation.test.ts (5 tests) 21ms
+ ✓ tests/unit/tg3-resolution.test.ts (27 tests) 17ms
+ ✓ tests/unit/finding-control.test.ts (33 tests) 19ms
+ ✓ tests/unit/financial-confirmation.test.ts (52 tests) 24ms
+ ✓ tests/unit/finding-list-control.test.ts (18 tests) 22ms
+ ✓ tests/unit/demo-analysis.test.ts (35 tests) 18ms
+ ✓ tests/unit/screening.test.ts (36 tests) 16ms
+ ✓ tests/unit/financial-basis.test.ts (32 tests) 16ms
+ ✓ tests/unit/live-pipeline-phases.test.ts (12 tests) 16ms
+ ✓ tests/unit/http-pipeline-races.test.ts (3 tests) 11ms
+ ✓ tests/unit/pdf-extraction.test.ts (14 tests) 7ms
+ ✓ tests/unit/session.test.ts (9 tests) 5ms
+ ✓ tests/unit/analysis-http.test.ts (2 tests) 5ms
+ ✓ tests/unit/http-pipeline-initialization.test.ts (3 tests) 8ms
+ ✓ tests/unit/pdf-source.test.ts (5 tests) 3ms
+
+ Test Files  40 passed (40)
+      Tests  1088 passed (1088)
+   Start at  23:41:57
+   Duration  128.74s (tests 97%, import 2%)
+

@@ -1,0 +1,9 @@
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  1 passed (1)
+      Tests  34 passed (34)
+   Start at  23:47:59
+   Duration  378ms (tests 65%, import 17%, transform 17%, worker 1%)
+

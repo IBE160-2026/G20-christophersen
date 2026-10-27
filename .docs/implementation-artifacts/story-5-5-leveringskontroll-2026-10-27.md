@@ -234,3 +234,24 @@ porttilpasning eller endret kilde/test. Port 3000 er ledig etter kontrollen.
 Dette supplerer de tidligere isolerte bevisene og opphever portbegrensningen
 for de aktuelle prøvene. Det er fortsatt intern agentkontroll; S6 er ikke
 gjennomført og 5.4/5.5 settes ikke done.
+
+## Supplerende pre-submission gate fra be895e0
+
+Den [uavhengige sensorsimuleringen](pre-submission-quality-gate-2026-10-27.md)
+vurderer alle sju kurskriterier med stikkprøvegrunnlag og usikkerhet. Det er
+ikke faktisk sensur eller en godkjenning av eksterne porter. Nye konkrete
+funn og lukkebevis føres bare i [deferred-work](deferred-work.md).
+
+| Berørt spor | Avgrenset ny retting / kontroll |
+| --- | --- |
+| NFR-3/NFR-4, CAP-8, AD-6/AD-9; AC3/AC6 | Playwright-serverne binder modus til demo og nøkkel til tom verdi; buildkontroll beholder egen fiktiv sentinel, men velger demo. README-devstart er eksplisitt demo. Arvet fiktiv live-konfigurasjon inngår i ny verifikasjon. |
+| FR-9/FR-18, NFR-1/NFR-2, AD-2/AD-4/AD-5; AC4/AC6 | Intern rapporttilstand bevarer første feil ved duplikatavvisning, også mål/delresultat og opprinnelig transportkode uten outcome. Filbytte, ny terminalretur og gamle svar er relevante negative grenser. Backend-/HTTP-/finans-/screeningkontrakter beholdes. |
+| FR-5/FR-18, CAP-4/CAP-6, NFR-2; AC4 | Generisk TG3-hjelpetekst bruker relevant fagkyndig i stedet for elektriker for alle forhold. Elektriske eksempler og alle regler/fasiter beholdes. |
+| AC1/AC2/AC5/AC6 | Supplerende råtester, uavhengig endringsreview, repo-/historikkskann og commitbundet ren S6-eksport samles i den nye gate-rapporten. Dette er ikke ekstern S6. |
+
+Tidligere tester og originale 4.4-/S5-bevis beholdes. Låsfil og dependency-
+versjoner er uendret fra forrige godkjente patch; en ny installasjon/audit
+uten endrede avhengigheter er ikke nødvendig for å verifisere disse
+kode-/miljørettingene. Ingen betalte API-kall eller nye S5-forsøk inngår.
+5.5 forblir in-progress; 5.4/R4-S6 og den ufullstendige formelle S5-
+akseptansen skjules ikke av denne klargjøringen.

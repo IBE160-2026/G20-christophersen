@@ -6,7 +6,7 @@ import { createServer } from 'node:http'
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { runBuild, probeHttp, stopChild } from './verify-analysis-build.mjs'
+import { runBuild, probeHttp, stopChild, buildEnvironment } from './verify-analysis-build.mjs'
 
 test('byggfrist stopper både eid byggprosess og dens barn med trygg feil', { timeout: 5_000 }, async () => {
   const directory = await mkdtemp(join(tmpdir(), 'ibe160-build-deadline-'))
@@ -62,3 +62,14 @@ for (const ignoreTerm of [false, true]) {
     }
   })
 }
+
+
+test('arvet live erstattes med demo uten å fjerne fiktiv lekkasjesentinel', () => {
+  const parent = { ANALYSIS_MODE: 'live', OPENAI_API_KEY: 'fictional-parent', PATH: '/controlled' }
+  const environment = buildEnvironment(parent, 'fictional-build-sentinel')
+  assert.equal(environment.ANALYSIS_MODE, 'demo')
+  assert.equal(environment.OPENAI_API_KEY, 'fictional-build-sentinel')
+  assert.equal(environment.OPENAI_LOG, 'debug')
+  assert.equal(environment.PATH, '/controlled')
+  assert.equal(parent.ANALYSIS_MODE, 'live')
+})

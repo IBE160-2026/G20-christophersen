@@ -1,0 +1,76 @@
+[
+  {
+    "check": "build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": false,
+    "exitCode": 0,
+    "seconds": 5.27,
+    "log": "build.txt"
+  },
+  {
+    "check": "targeted-e2e",
+    "command": [
+      "node",
+      "node_modules/@playwright/test/cli.js",
+      "test",
+      "report-analysis.spec.ts",
+      "--grep",
+      "analysefeil/delresultat|pre-submission",
+      "--workers=1"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": true,
+    "exitCode": 0,
+    "seconds": 10.36,
+    "log": "targeted-e2e.txt"
+  },
+  {
+    "check": "vitest",
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "--maxWorkers=1"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": false,
+    "exitCode": 0,
+    "seconds": 129.08,
+    "log": "vitest.txt"
+  },
+  {
+    "check": "e2e",
+    "command": [
+      "node",
+      "node_modules/@playwright/test/cli.js",
+      "test",
+      "--workers=2"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": true,
+    "exitCode": 1,
+    "seconds": 161.66,
+    "log": "e2e.txt"
+  }
+]

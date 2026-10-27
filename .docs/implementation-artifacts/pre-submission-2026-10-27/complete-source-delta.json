@@ -1,0 +1,12 @@
+{
+  "comparison": "Begge veier, supplerer historisk recovery-script uten å omskrive det",
+  "added": [],
+  "deleted": [],
+  "modified": [
+    "src/frontend/state/report.ts",
+    "tests/e2e/report-analysis.spec.ts",
+    "tests/e2e/screening-result.spec.ts",
+    "tests/unit/report-session.test.ts"
+  ],
+  "noOtherSourceChanges": true
+}

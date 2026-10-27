@@ -1,0 +1,164 @@
+[
+  {
+    "check": "recovery-build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": false,
+    "exitCode": 0,
+    "seconds": 4.62,
+    "log": "recovery-build.txt"
+  },
+  {
+    "check": "recovery-targeted-unit",
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "tests/unit/report-session.test.ts",
+      "tests/unit/tg3-resolution.test.ts",
+      "tests/unit/complete-screening.test.ts",
+      "tests/unit/playwright-environment.test.ts",
+      "--maxWorkers=1"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": false,
+    "exitCode": 0,
+    "seconds": 1.25,
+    "log": "recovery-targeted-unit.txt"
+  },
+  {
+    "check": "recovery-targeted-e2e",
+    "command": [
+      "node",
+      "node_modules/@playwright/test/cli.js",
+      "test",
+      "--grep",
+      "analysefeil/delresultat|pre-submission|3.7 AC1/2/5/6 F4",
+      "--workers=1"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": true,
+    "exitCode": 0,
+    "seconds": 14.04,
+    "log": "recovery-targeted-e2e.txt"
+  },
+  {
+    "check": "dev",
+    "command": [
+      "node",
+      "node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "playwright.dev.config.ts",
+      "--workers=1"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": true,
+    "exitCode": 0,
+    "seconds": 2.44,
+    "log": "dev.txt"
+  },
+  {
+    "check": "components",
+    "command": [
+      "npm",
+      "run",
+      "test:components"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": false,
+    "exitCode": 0,
+    "seconds": 5.2,
+    "log": "components.txt"
+  },
+  {
+    "check": "build-key",
+    "command": [
+      "node",
+      "tests/helpers/verify-analysis-build.mjs"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": true,
+    "exitCode": 0,
+    "seconds": 5.27,
+    "log": "build-key.txt"
+  },
+  {
+    "check": "build-helper",
+    "command": [
+      "node",
+      "--test",
+      "tests/helpers/verify-analysis-build.test.mjs"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": true,
+    "exitCode": 0,
+    "seconds": 1.01,
+    "log": "build-helper.txt"
+  },
+  {
+    "check": "lint",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": false,
+    "exitCode": 0,
+    "seconds": 0.22,
+    "log": "lint.txt"
+  },
+  {
+    "check": "visual",
+    "command": [
+      "node",
+      ".docs/implementation-artifacts/pre-submission-2026-10-27/executed-ui-inspection.mjs"
+    ],
+    "cwd": "/Users/madschristophersen/IBE160/G20-christophersen",
+    "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+    "sourceManifest": "regression-recovery-source-manifest.json",
+    "portMappingApplied": false,
+    "externalNetwork": "OS-denied; loopback allowed",
+    "fictionalInheritedLiveSentinel": false,
+    "exitCode": 0,
+    "seconds": 12.62,
+    "log": "visual.txt"
+  }
+]

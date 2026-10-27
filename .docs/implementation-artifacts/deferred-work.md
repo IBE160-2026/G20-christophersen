@@ -17,6 +17,10 @@ er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 | Story 4.4 B2 — live-sluttbevis | Lukket 2026-10-27 | Nye originale F1/F2-sluttbevis, godkjent uavhengig sluttreview og regresjon i `5fa438e2047bd9f854e72688da32c7ef8b045c7d`. Historikken nedenfor beholdes. |
 | Story 4.5 — ufullstendig manuell S5-referanse og forsøksavvik | Akseptert avvik S5-W1, ikke rettet | Mads har avsluttet S5-testing 2026-10-27. Formell AC-akseptanse er ufullstendig; ingen videre målinger autorisert. Se [waiver](story-4-5-s5-waiver-2026-10-27.md) og beslutningstillegg nedenfor. |
 | Story 5.5 D1 — transitiv body-parser | Lukket 2026-10-27 | Rettet i `8a091ea3fd175706ea147b05e8d6bce90724e54f`, fersk audit og full regresjon/review godkjent. Se [originalregistrering og lukking](#story-55-d1--transitiv-body-parser-registrert-åpen-2026-10-27). |
+| Pre-submission PG1 — arvet live-modus i testservere | Åpen | Uavhengig kontroll fant usikret Playwright-miljø og modusavhengig build-helper. Se originalregistrering nedenfor. |
+| Pre-submission PG2 — misvisende TG3-eksempel | Åpen | Generisk hjelpetekst viser elektriker også for taklekkasje. Se originalregistrering nedenfor. |
+| Pre-submission PG3 — unntak i arbeidstreskann | Åpen | Slutt-review fant at kjente fiktive treff ble godtatt ut fra filsti alene. Se originalregistrering nedenfor. |
+| Pre-submission PG4 — fullstendig S6-eksport | Åpen | Slutt-review fant at eksportens ferskhetskontroll overså untracked filer og enkelte konfigurasjonsfiler. Se originalregistrering nedenfor. |
 
 ## Deferred from: code review of spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt (2026-10-17)
 
@@ -163,3 +167,42 @@ har alle ni exit 0: 1082 unit/integrasjon, 195 bygget E2E, 3 dev/offline,
 med 204 filer/0 lekkasjer. Kilde-/låsfilmanifest matcher rettingscommiten.
 Dette er teknisk lukking av D1, ikke ekstern S6 eller full Story 5.5-akseptanse.
 Opprinnelig åpen registrering ovenfor beholdes som historikk.
+
+## Pre-submission PG1 — arvet live-modus, registrert åpen 2026-10-27
+
+**Status: Åpen.** Uavhengig leveringskontroll på be895e0 fant at
+`playwright.config.ts` og arvet dev-konfigurasjon starter backend uten å
+binde miljøet til demo. Med eksportert live-modus og nøkkel kan en faktisk
+analyse-POST i E2E bruke live. Build-/nøkkelhelperen erstatter nøkkelen med
+en fiktiv verdi, men arver modus og kan vente forgjeves på Demo-markøren.
+Krav: NFR-3/NFR-4, CAP-8, AD-6/AD-9 og 5.5 AC3/AC6.
+Se [uavhengig observasjon](pre-submission-2026-10-27/independent-initial-assessment.json)
+og [rettingsspec](spec-pre-submission-quality-gate-2026-10-27.md).
+Ingen betalt kjøring er utført for å demonstrere feilen.
+
+## Pre-submission PG2 — TG3-eksempel, registrert åpen 2026-10-27
+
+**Status: Åpen.** To uavhengige lesegjennomganger fant at
+`validateTg3Resolution` bruker elektriker som eksempel på avklaringsgrunnlag
+for alle TG3-forhold. Eksisterende F4-resultatbilder viser dette for alvorlig
+taklekkasje. Krav: FR-5/FR-18, NFR-2, CAP-4/CAP-6 og 5.5 AC4.
+Rett bare generisk veiledning til relevant fagkyndig; bevar låste elektriske
+eksempler, validering og fasit. Se
+[uavhengig observasjon](pre-submission-2026-10-27/independent-initial-assessment.json).
+
+## Pre-submission PG3 — arbeidstreskann, registrert åpen 2026-10-27
+
+**Status: Åpen.** Uavhengig slutt-review fant at den nye supplerende
+repo-auditen klassifiserte et mønstertreff i arbeidskopien som fiktivt ut
+fra kjent filsti alene. Nytt reelt innhold i den samme filen kunne da
+feilklassifiseres. Historikkskannen bruker allerede eksakt blob-ID/pattern.
+Krav: NFR-4, 5.5 AC5/AC6. Bind også arbeidstreunntaket til tidligere
+kontrollert blob og mønster. Ingen faktisk lekkasje er påvist.
+
+## Pre-submission PG4 — ren eksport, registrert åpen 2026-10-27
+
+**Status: Åpen.** Uavhengig slutt-review fant at det ennå ikke kjørte
+S6-eksportverktøyet bare sammenlignet et utvalg tracked filer. Untracked
+kode/tester og endret tsconfig kunne utelates fra den eksporterte commiten.
+Krav: CAP-8, 5.4 AC1 og 5.5 AC6. Krev komplett tracked samsvar og avvis
+untracked leveransefiler før eksport. Ingen feil eksport er overlevert.

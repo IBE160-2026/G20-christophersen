@@ -15,6 +15,7 @@ export default defineConfig({
   },
   webServer: {
     command: 'npm run demo',
+    env: { ANALYSIS_MODE: 'demo', OPENAI_API_KEY: '' },
     url: 'http://127.0.0.1:3000',
     reuseExistingServer: false,
   },

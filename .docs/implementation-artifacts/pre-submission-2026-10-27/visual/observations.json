@@ -1,0 +1,106 @@
+[
+  {
+    "width": 1440,
+    "state": "F1-resultat",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 1440,
+    "state": "F1-nokkeltall",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 1440,
+    "state": "F2-resultat",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 1440,
+    "state": "F2-nokkeltall",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 1440,
+    "state": "F4-resultat",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 1440,
+    "state": "F4-nokkeltall",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 1440,
+    "state": "opprinnelig-feil",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 1440,
+    "state": "duplikat-bevarer-feil",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 1440,
+    "externalRequests": 0
+  },
+  {
+    "width": 390,
+    "state": "F1-resultat",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 390,
+    "state": "F1-nokkeltall",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 390,
+    "state": "F2-resultat",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 390,
+    "state": "F2-nokkeltall",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 390,
+    "state": "F4-resultat",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 390,
+    "state": "F4-nokkeltall",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 390,
+    "state": "opprinnelig-feil",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 390,
+    "state": "duplikat-bevarer-feil",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "width": 390,
+    "externalRequests": 0
+  }
+]

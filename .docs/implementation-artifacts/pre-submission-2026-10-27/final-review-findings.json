@@ -1,0 +1,60 @@
+{
+  "baselineCommit": "be895e0009ae133b3899e53236e2dfdcab853d5d",
+  "stagedDiffBytes": 259417,
+  "stagedDiffSha256": "d7def9861809574f27735b631320f97c6ebbe17bbc3c6a2a36c75e16739c0016",
+  "blindFindingFloor": "min(floor(sqrt(259.417)+1),10)=10",
+  "blind": [
+    {
+      "id": "B1",
+      "claim": "Working-tree secret matches were accepted by pathname; bind to exact blob and pattern."
+    },
+    {
+      "id": "B2",
+      "claim": "Export ignored untracked source/tests."
+    },
+    {
+      "id": "B3",
+      "claim": "Export freshness omitted tsconfig and other tracked inputs."
+    },
+    {
+      "id": "B4",
+      "claim": "Recovery delta iterated only current paths, omitting deletions."
+    },
+    {
+      "id": "B5",
+      "claim": "Actual export receipt, source commit and checksum were not yet present."
+    },
+    {
+      "id": "B6",
+      "claim": "PG1/PG2/B3 closure evidence was not yet recorded."
+    },
+    {
+      "id": "B7",
+      "claim": "Spec remained in-review with pending documentation/export tasks."
+    },
+    {
+      "id": "B8",
+      "claim": "Final independent review result was not yet recorded."
+    },
+    {
+      "id": "B9",
+      "claim": "New reducer tests reused the same original/retry requestId."
+    },
+    {
+      "id": "B10",
+      "claim": "Historical regression runners lacked an overall subprocess timeout."
+    }
+  ],
+  "edge": [
+    {
+      "id": "E1",
+      "claim": "Known fixture pathname can acquire another matching secret; exact blob/pattern required."
+    },
+    {
+      "id": "E2",
+      "claim": "Export can omit untracked files or changed TypeScript configuration."
+    }
+  ],
+  "verification": "No verification gaps found.",
+  "formatNote": "Kort, men innholdstro registrering; triage beholder alle funn separat. Reviewere kjørte ingen nye tester."
+}

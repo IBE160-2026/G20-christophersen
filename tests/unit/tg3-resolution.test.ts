@@ -165,3 +165,10 @@ describe('Story 2.10 — forholdsbinding, negative overganger og revisjonsisolas
     expect(a.triggers.map(item => item.code)).toEqual(['incomplete-report', 'unresolved-tg3', 'unresolved-tg3'])
   })
 })
+
+
+it('taklekkasje får forholdsnøytral veiledning uten å endre validering', () => {
+  const roof = { ...current, description: 'Alvorlig lekkasje i tak' }
+  expect(validateTg3Resolution(roof, null).errors.basis).toBe('Oppgi konkret eksternt avklaringsgrunnlag, for eksempel vurdering fra relevant fagkyndig med dato eller referanse.')
+  expect(validateTg3Resolution(roof, { ...valid, binding: roof }).applicable).toBe(true)
+})

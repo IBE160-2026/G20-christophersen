@@ -1,0 +1,42 @@
+{
+  "caseId": "S5-B1-v1",
+  "pageCount": 14,
+  "encrypted": false,
+  "formFields": 0,
+  "a4Pages": 14,
+  "correctPhysicalFooters": 14,
+  "fictiveRunningHeaders": 14,
+  "nonEmptyTextPages": 14,
+  "wordsPerPageIncludingRunningText": [
+    297,
+    307,
+    294,
+    293,
+    296,
+    304,
+    318,
+    319,
+    316,
+    318,
+    311,
+    303,
+    311,
+    315
+  ],
+  "gradeCounts": {
+    "TG2": 8,
+    "TG3": 1
+  },
+  "passagesChecked": 54,
+  "extraGradeMarks": 0,
+  "oracleIdsPrintedInPdf": 0,
+  "deterministicRebuildInTemporaryDirectory": true,
+  "pdfSha256": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+  "tooling": {
+    "python": "3.12.14",
+    "pypdf": "6.1.3",
+    "reportlab": "4.4.4"
+  },
+  "providerCalls": 0,
+  "humanMeasurements": 0
+}

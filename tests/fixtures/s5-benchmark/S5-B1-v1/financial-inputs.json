@@ -1,0 +1,121 @@
+{
+  "caseId": "S5-B1-v1",
+  "version": "1",
+  "currency": "NOK",
+  "period": "year",
+  "year": "2026",
+  "provenance": "Forhåndsfastsatte kontrollerte, fiktive brukerforutsetninger til benchmarkcaset. Ikke markedsverdier, rapportuttrekk, faktiske betalinger eller menneskelige testregistreringer.",
+  "confirmationMeaning": "confirmed:true er kun kontrollstatus for det forhåndsdefinerte fixturegrunnlaget ved kontrakts-/fasitkontroll. Det er IKKE en registrering av at Mads har bekreftet felt i appen. Mads må selv registrere og faktisk bekrefte sitt grunnlag ved senere kjøring.",
+  "basis": {
+    "values": {
+      "P": {
+        "rawValue": "6000000",
+        "confirmed": true
+      },
+      "L": {
+        "rawValue": "480000",
+        "confirmed": true,
+        "period": "year",
+        "year": "2026"
+      },
+      "D": {
+        "rawValue": "120000",
+        "confirmed": true,
+        "period": "year",
+        "year": "2026"
+      },
+      "J": {
+        "rawValue": "240000",
+        "confirmed": true,
+        "period": "year",
+        "year": "2026"
+      },
+      "Ymin": {
+        "rawValue": "5.5",
+        "confirmed": true
+      }
+    },
+    "sources": {
+      "P": {
+        "kind": "assumption",
+        "description": "Kontrollert fiktiv brukerforutsetning: total kjøpesum inklusive eventuell fellesgjeld, uten kjøpsomkostninger. Ikke markedsverdi eller verdi fra rapporten.",
+        "conflict": null
+      },
+      "L": {
+        "kind": "assumption",
+        "description": "Kontrollert fiktiv brukerforutsetning: forventet samlet årsleie 2026 for hoveddel og sekundær utleiedel. Ikke faktiske leieinnbetalinger eller markedsevaluering.",
+        "conflict": null,
+        "rentNature": "expected"
+      },
+      "D": {
+        "kind": "assumption",
+        "description": "Kontrollert fiktiv brukerforutsetning: eierbetalt årsdrift 2026. Kommunale avgifter 30000, forsikring 18000, administrasjon 12000, løpende vedlikehold 60000. Ingen renter/avdrag; ingen overlapp. De 60000 i løpende vedlikehold gjelder ordinær årsdrift; engangsutbedring av rapportens kjente avvik, inkludert taklekkasjen, er ikke inkludert eller kostnadsberegnet.",
+        "conflict": null
+      },
+      "J": {
+        "kind": "assumption",
+        "description": "Kontrollert fiktiv brukerforutsetning: gjeldsbetjening 2026, renter 180000 og avdrag 60000, helt utenfor D. Ingen overlapp eller automatisk låneberegning.",
+        "conflict": null
+      },
+      "Ymin": {
+        "kind": "assumption",
+        "description": "Kontrollert fiktiv brukerforutsetning: minstekrav til nettoyield 5.5 prosent. Ikke et markedspåstått krav.",
+        "conflict": null
+      }
+    },
+    "costItems": [
+      {
+        "id": "municipal",
+        "label": "Kommunale avgifter",
+        "rawAmount": "30000",
+        "rawDebt": "0",
+        "includedIn": null
+      },
+      {
+        "id": "insurance",
+        "label": "Forsikring",
+        "rawAmount": "18000",
+        "rawDebt": "0",
+        "includedIn": null
+      },
+      {
+        "id": "administration",
+        "label": "Administrasjon",
+        "rawAmount": "12000",
+        "rawDebt": "0",
+        "includedIn": null
+      },
+      {
+        "id": "maintenance",
+        "label": "Løpende vedlikehold",
+        "rawAmount": "60000",
+        "rawDebt": "0",
+        "includedIn": null
+      },
+      {
+        "id": "interest",
+        "label": "Renter utenfor drift",
+        "rawAmount": "180000",
+        "rawDebt": "180000",
+        "includedIn": null
+      },
+      {
+        "id": "principal",
+        "label": "Avdrag utenfor drift",
+        "rawAmount": "60000",
+        "rawDebt": "60000",
+        "includedIn": null
+      }
+    ]
+  },
+  "costOverlap": false,
+  "expectedMetrics": {
+    "grossYieldPercent": "8",
+    "noi": "360000",
+    "netYieldPercent": "6",
+    "cashFlowBeforeTax": "120000"
+  },
+  "expectedRecommendation": "Innhent mer informasjon",
+  "recommendationReason": "Uavklart alvorlig taklekkasje og konkret kritisk usikkerhet går foran de økonomisk tilstrekkelige nøkkeltallene. Ingen faktisk TG3-avklaring følger av dette fixturegrunnlaget.",
+  "remediationCostScope": "Utbedringskostnader for kjente avvik er ukjente og holdt utenfor de kontrollerte årsdriftsforutsetningene. Nøkkeltallene er ikke avkastning etter renovering. Uavklart alvorlig lekkasje og kritisk usikkerhet består."
+}

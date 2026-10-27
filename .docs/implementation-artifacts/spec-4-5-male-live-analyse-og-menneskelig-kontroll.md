@@ -90,3 +90,17 @@ Nyere preflightstatus: R4-S5 er closed på dokumentert person/miljø/metode og k
 ## Eksplisitt stopp 2026-10-24
 
 Mads har stoppet Story 4.5 før tidsmåling. Serveren er stoppet og gammel arming er ugyldiggjort. R4-S5 står igjen open/suspended. [Dokumentsporingen](story-4-5-f1-dokumentsporing-2026-10-24.md) bekrefter samme F1-PDF i historisk live-input og dagens fil: 1 TG2/0 TG3. S2 4/4 TG2 og 1/1 TG3 gjelder samlet F1–F4. Ingen fixture/fasit endres. S5-caseegnethet og begrenset konklusjon må avklares før noe gjenopptas; ingen ny test/måling autorisert av denne kontrollen.
+
+## Gjeldende checkpoint 2026-10-27 — erstatter tidligere F1-plan
+
+Mads har stoppet F1-målingen og godkjent separat primært S5-case S5-B1-v1.
+Benchmarken er opprettet og fryst før første produksjonsuttrekk; se
+[fryst grunnlag](story-4-5-s5-b1-v1-frys.md) og
+[gjeldende åpen R4-S5](../planning-artifacts/r4-s5-benchmark-s5-b1-v1-2026-10-27.md).
+Tidligere gjennomføringsstatus og avkryssede F1-forberedelser over er historikk,
+ikke gyldig arming eller lukket port for benchmarken. F1–F4 og S2 er urørt.
+4.4 står fortsatt review med AC6/B2-avhengighet åpen; 4.5 er backlog/draft.
+Ingen faktiske S5-observasjoner, live-kall eller mennesketider er lagt til.
+Benchmarkdeloppgavens done gjelder bare forfattet og verifisert materiale.
+Eksisterende låste Story-AC og S5-definisjoner består. Før gjennomføring må
+ny casebundet preflight, bevisoppsamling og kort instruks klargjøres.

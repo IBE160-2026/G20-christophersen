@@ -32,7 +32,7 @@
 # development_status er gruppert per epic, ikke etter implementeringsrekkefølge.
 # BMADs generiske statusanbefaling håndhever ikke avhengigheter eller porter.
 generated: 10-16-2026 18:23
-last_updated: 10-24-2026
+last_updated: 10-27-2026
 project: IBE160
 project_key: NOKEY
 tracking_system: file-system
@@ -140,4 +140,4 @@ clarification_gates:
     before_stories: ['4.5']
     also_before: S5-målepunkter i 4.4 dersom de samles for gjenbruk i 4.5
     subject: Faktisk person/miljø for kontroll, måling og samme-case manuell referanse
-    decision_record: .docs/planning-artifacts/r4-s5-mads-gjennomforing-2026-10-24.md
+    decision_record: .docs/planning-artifacts/r4-s5-benchmark-s5-b1-v1-2026-10-27.md

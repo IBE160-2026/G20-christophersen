@@ -1,0 +1,60 @@
+{
+  "caseId": "S5-B1-v1",
+  "caseVersion": "1",
+  "freezeDate": "2026-10-27",
+  "state": "frozen-before-first-extraction-analysis",
+  "physicalPdfPages": 14,
+  "files": {
+    "S5-B1-v1-tilstandsrapport.pdf": {
+      "path": "S5-B1-v1-tilstandsrapport.pdf",
+      "sha256": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1"
+    },
+    "expected.json": {
+      "path": "expected.json",
+      "sha256": "8c7000bc06041f03e1090d7d9cfadf8dd679cdf6072931aad28c6af7cfc879a5"
+    },
+    "financial-inputs.json": {
+      "path": "financial-inputs.json",
+      "sha256": "7950e6632696c40594f9afb659d38165aa4ede40d5b43ceaac416be45737688a"
+    },
+    "report-source.json": {
+      "path": "report-source.json",
+      "sha256": "b732f792621043e0ac193c82aab894ed1c97199a78abef5ea8cfcc0373f4e9b5"
+    },
+    "generate.py": {
+      "path": "generate.py",
+      "sha256": "d48473ba6ecdcf8992fee7a11571600898423a40e0c5d642d477d921494798df"
+    },
+    "README.md": {
+      "path": "README.md",
+      "sha256": "43af22fd152fd64bbea8680509d0848cdaeeb11ed8394825f8e82b660f57f985"
+    }
+  },
+  "bindings": {
+    "originalPdf": "S5-B1-v1-tilstandsrapport.pdf",
+    "preAnalysisOracle": "expected.json",
+    "financialAssumptions": "financial-inputs.json",
+    "pageReference": "1-based physical PDF page; no offset",
+    "sameCaseRequiredForManualAiAndControl": true
+  },
+  "provenance": {
+    "reportAndOracle": "AI-assisted authored synthetic case, not extracted model output",
+    "independentQa": "separate blind agent review and two offline parsers; no human expert validation claimed",
+    "pdfGeneratorReadsOnly": "report-source.json",
+    "oracleMustNotBeProviderInput": true
+  },
+  "freezeEvidence": {
+    "record": ".docs/implementation-artifacts/story-4-5-s5-b1-v1-frys.md",
+    "commit": "the local git commit first adding this manifest and all bound files",
+    "productionAnalysisOrProviderCalls": 0,
+    "humanTimingMeasurements": 0,
+    "noPreviousS2EvidenceReused": true
+  },
+  "scope": {
+    "story44Dependency": "open: original AC6/B2 live completion and review still required",
+    "story45": "not done; no execution started",
+    "r4S5": "open; new case-specific preflight and execution setup required",
+    "immutableCases": "F1-F4 and historical S2 unchanged",
+    "futureChanges": "new case version; never adjust frozen oracle to match AI output"
+  }
+}

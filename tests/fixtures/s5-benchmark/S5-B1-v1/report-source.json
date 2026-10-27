@@ -1,0 +1,428 @@
+{
+  "caseId": "S5-B1-v1",
+  "version": "1",
+  "language": "nb",
+  "provenance": "AI-assistert forfatterskap av fullstendig fiktiv rapport. Ingen faktisk befaring eller rapportstandardsertifisering. Separat forhåndsfasit holdes utenfor generatoren.",
+  "pages": [
+    {
+      "title": "Rapportgrunnlag og eiendommen",
+      "intro": "Granlia er en fiktiv enebolig med sekundær utleiedel. Denne rapporten er AI-assistert forfattet som et kontrollert øvingsgrunnlag. Ingen faktisk befaring, navngitt sakkyndig eller sertifisert undersøkelse ligger bak beskrivelsene.",
+      "sections": [
+        {
+          "heading": "Bygning og bruk",
+          "paragraphs": [
+            "Bygningen er i dette caset oppført i 1987 med støpt underetasje, bindingsverk og saltak. Hoveddelen ligger på inngangsplanet, mens underetasjen har en mindre boenhet med egen inngang mot sør. Mot nord ligger deler av underetasjen under terreng. Et kaldt loft nås gjennom luke i hoveddelens gang. Rapportens romnavn brukes konsekvent for å skille de to delene. Langs vestfasaden ligger et lavt sidebygg som tilhører samme eiendom. Taket på dette begrenser innsynet i kledningsflatene ovenfor fra bakken."
+          ]
+        },
+        {
+          "heading": "Tilgjengelig underlag",
+          "paragraphs": [
+            "Det fiktive underlaget består av en enkel plantegning fra byggeåret, en materialoversikt for hovedbadet fra 2012 og en beskrivelse av innredning av underetasjen fra 2018. Ingen av dokumentene viser alle skjulte sjikt. Oppgitte årstall beskriver underlaget i øvingscaset og er ikke kontrollert mot offentlige registre. Bruk som utleiedel omtales beskrivende; rapporten vurderer ikke formell godkjenning eller andre rettslige forhold."
+          ]
+        },
+        {
+          "heading": "Rammer for beskrivelsene",
+          "paragraphs": [
+            "De beskrevne observasjonene er lagt til en tenkt gjennomgang 20. oktober 2026. Været er oppgitt som overskyet etter regn natten før, med omtrent åtte grader ute. Rommene er møblert, men ganglinjer og aktuelle kontrollsteder er tilgjengelige. Dette gir et sammenhengende scenario for å lese spor av vann og slitasje, uten at opplysningene er faktiske verifiseringer."
+          ]
+        },
+        {
+          "heading": "Hvordan rapporten leses",
+          "paragraphs": [
+            "Hvert tema beskriver tilgjengelige flater, observasjoner, betydning og videre kontrollpunkt. Tilstandsgrad fremgår ved omtalen av de aktuelle bygningsdelene. Øvrige beskrivelser angir tilgjengelighet, normale overflater og undersøkelsens avgrensning. Samlet vurdering på siste side samler kontrollpunktene og sammenhengene mellom dem. Reparasjonspriser, kjøpesum, leieinntekter og finansforutsetninger inngår ikke i dokumentet."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Metode og inspeksjonens grenser",
+      "intro": "Gjennomgangen er beskrevet som en visuell undersøkelse av tilgjengelige bygningsdeler, supplert med enkle funksjonsprøver og enkelte indikative målinger. Metoden er oppgitt for dette fiktive caset, uten påstand om etterlevelse av en bestemt rapportstandard.",
+      "sections": [
+        {
+          "heading": "Tilgang og registrering",
+          "paragraphs": [
+            "Rom, loftsluke og synlige tekniske installasjoner er lagt til grunn som tilgjengelige. Tepper er løftet ved de omtalte kjellerveggene, men store skap og fast innredning er ikke demontert. Utvendige flater er sett fra terreng, og takets nedre partier er vurdert fra en sikker arbeidsplattform. Beskrivelsen av taklekkasjen støttes også av synlige spor fra loftet. Det er ikke benyttet drone eller gjennomført lastprøver."
+          ]
+        },
+        {
+          "heading": "Generell inspeksjonsbegrensning",
+          "paragraphs": [
+            "Lukkede vegger og etasjeskillere er ikke åpnet. Rapporten beskriver derfor ikke tilstanden inne i alle skjulte konstruksjoner; fravær av synlige tegn på en tilgjengelig overflate er ikke dokumentasjon på feilfrie skjulte sjikt. Dette er en generell grense for den beskrevne metoden. Den skal leses sammen med de konkrete observasjonene og innebærer ikke at en påvist skade eller en uløst usikkerhet er undersøkt ferdig."
+          ]
+        },
+        {
+          "heading": "Målinger og opplysninger",
+          "paragraphs": [
+            "Fuktindikasjoner er brukt til å sammenligne nærliggende flater og velge kontrollpunkter. Tall fra et slikt instrument alene fastslår verken årsak eller varighet. Avstander og fall er enkle kontrollmålinger i den beskrevne situasjonen. Eieropplysninger om vedlikehold står atskilt fra observasjonene; manglende kvitteringer blir ikke erstattet med antatt utført arbeid. Ingen laboratorieprøver eller undersøkelser av mikrobiologisk vekst er beskrevet."
+          ]
+        },
+        {
+          "heading": "Videre avklaring",
+          "paragraphs": [
+            "Der rapporten peker på behov for åpning, fagkontroll eller observasjon under andre forhold, må dette skje som et eget arbeid. Et generelt metodeforbehold kan ikke avklare utbredelsen av vannskaden ved taket. Hvert kontrollpunkt må vurderes opp mot det aktuelle stedet og det tilgjengelige underlaget. Rapporten beskriver heller ikke teknisk godkjenning, garanti eller en fullstendig tilstandskartlegging av alle deler av eiendommen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Tomt, terreng og overflatevann",
+      "intro": "Tomten heller svakt fra nordøst mot sørvest. Nordveggen ligger nær en jordskråning, mens uteplassen ved utleiedelens inngang vender mot sør. Det finnes grusganger, et mindre plenfelt og et asfaltert innkjøringsparti.",
+      "sections": [
+        {
+          "heading": "Terreng ved nordøstre hjørne",
+          "paragraphs": [
+            "Tilstandsgrad: TG2. Terrenget ved nordøstre hjørne faller inn mot grunnmuren over et felt på omtrent tre meter, og regnvann samles i en grunn forsenkning inntil veggen. Ved den beskrevne gjennomgangen står det en sammenhengende vannstripe mellom plen og sokkel. Det er ikke synlig avskjærende renne på dette feltet. Observasjonen gjelder overflatevann og er ikke i seg selv en undersøkelse av drensledningene."
+          ]
+        },
+        {
+          "heading": "Betydning og kontrollpunkt",
+          "paragraphs": [
+            "Den lokale vannansamlingen øker belastningen på veggen som ligger mot terreng. Feltet bør derfor kartlegges med høyder og vannvei før tiltak velges. Sammenhengen med fuktsporene på innsiden må undersøkes, men rapporten fastslår ikke at terrengfallet er eneste årsak. Naboens terreng og ledninger er ikke undersøkt. Beskrivelsen gir ingen beregnet kapasitet for avledning under kraftige regnbyger."
+          ]
+        },
+        {
+          "heading": "Andre uteområder",
+          "paragraphs": [
+            "På sørsiden heller den synlige belegningen bort fra inngangsdøren. Det er en åpen kant mot grusarealet, og terskelen ligger høyere enn gangsonen. Risten utenfor døren er fri for større løvansamlinger i den beskrevne situasjonen. Langs vestveggen er grusen tørrere enn ved nordhjørnet. Disse lokale observasjonene sier ikke hvordan arealene fungerer gjennom en hel vintersesong eller ved snøsmelting."
+          ]
+        },
+        {
+          "heading": "Støttemur og vegetasjon",
+          "paragraphs": [
+            "En lav mur av betongblokker avgrenser plen mot innkjørselen. Det ses ikke utbuling eller ferske forskyvninger i den tilgjengelige muren. Busker står med avstand til den kledde fasaden, men et bed ligger inntil den pussede sokkelen ved nordveggen. Bedets høyde og vanningspraksis bør inngå i den videre kartleggingen av vannbelastningen. Ingen skjult fundamentering av støttemuren er kontrollert."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Grunnmur, drenering og kjellerrom",
+      "intro": "Underetasjen har betongvegger mot terreng og pusset sokkel over bakken. Langs nordveggen ligger et bodrom og en innvendig gang. Utleiedelens oppholdsrom ligger hovedsakelig mot den mer åpne sørsiden.",
+      "sections": [
+        {
+          "heading": "Innvendig vegg i nordre bod",
+          "paragraphs": [
+            "Tilstandsgrad: TG2. På innsiden av nordveggen i bodrommet er det saltutslag og avskalling av maling i et sammenhengende felt fra gulvet og omtrent tretti centimeter opp. Feltet er tydeligst nær hjørnet som vender mot terrengforsenkningen. Sammenlignende fuktindikasjon er høyere i dette feltet enn på veggpartiet ved døren. Det er ikke registrert fritt vann på gulvet under den beskrevne gjennomgangen."
+          ]
+        },
+        {
+          "heading": "Betydning og avgrensning",
+          "paragraphs": [
+            "Sporene er forenlige med gjentatt fuktbelastning i nedre veggsone, men årsak og varighet er ikke fastslått. Den utvendige vannbelastningen må ses i sammenheng med drenering, overflater og overgang mellom gulv og vegg. Malingsflak alene dokumenterer ikke bæresvikt. Rommet brukes som bod, og lagret utstyr bør ikke dekke kontrollområdet før videre vurdering. Rapporten angir ikke en ferdig tiltaksmetode."
+          ]
+        },
+        {
+          "heading": "Synlig dreneringsunderlag",
+          "paragraphs": [
+            "Eieropplysningen i caset er at dreneringen stammer fra byggeåret. Det foreligger ingen tegning som viser trase eller dybde. En synlig oppstikkende rensemulighet ved vestveggen er ikke åpnet, og ledningene er ikke kamerakontrollert. Alder og manglende dokumentasjon beskrives som underlag for videre undersøkelse, uten en separat gradsetting av en skjult ledning som ikke er sett."
+          ]
+        },
+        {
+          "heading": "Øvrige flater og videre kontroll",
+          "paragraphs": [
+            "Den tilgjengelige betongflaten ved søndre inngang har enkelte tynne overflateriss uten synlig nivåforskjell på tvers. Døren lar seg åpne uten subbing. Dette er lokale øyeblikksobservasjoner, ikke en måleserie for setninger. Videre arbeid bør dokumentere vannvei utvendig og undersøke det fuktbelastede feltet med egnet metode før eventuell innvendig overdekking. Å legge ny maling over sporene vil ikke avklare bakgrunnen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Fasader og utvendig treverk",
+      "intro": "Over den pussede sokkelen er veggene kledd med stående trepanel. Øst- og sørfasaden er mest værutsatt. Inngangspartiene har små overbygg, og et enkelt rekkverk av tre følger trappen ved hovedinngangen.",
+      "sections": [
+        {
+          "heading": "Nedre kledning mot øst",
+          "paragraphs": [
+            "Tilstandsgrad: TG2. De nederste endene av flere kledningsbord på østfasaden har åpne sprekker, avflasset overflatebehandling og mykt tre ved forsiktig mekanisk kontroll. Skadene er samlet i et felt under stuevinduet, nær sprutsonen fra en smal grusstripe. Tilstanden gjelder selve kledningsbordene. Bakliggende vindsperre og bindingsverk er ikke åpnet eller vurdert som synlig skade i denne rapporten."
+          ]
+        },
+        {
+          "heading": "Betydning og kontrollpunkt",
+          "paragraphs": [
+            "Nedbrutt treverk i bordendene gir redusert beskyttelse av fasaden på det aktuelle feltet. Videre kontroll bør avklare omfanget ved overgang til friskt tre og hvordan vann ledes bort fra vinduet og sokkelen. Det bør også undersøkes om luftespalten bak kledningen er sammenhengende. En eventuell åpning må dokumentere hva som faktisk finnes bak bordene; rapporten forutsetter ikke skjulte følgeskader som allerede påvist."
+          ]
+        },
+        {
+          "heading": "Øvrige fasadeflater",
+          "paragraphs": [
+            "På nordfasaden er malingen matt, men de tilgjengelige bordflatene fremstår uten tilsvarende myke partier. Rundt inngangsoverbygget er synlige skjøter hele. Det er avstand mellom nedre bordkant og belegningen ved hoveddøren. Kledningsflatene over taket på sidebygget er bare sett fra bakken. Denne begrensede synsvinkelen er en del av den visuelle metoden, ikke en separat påvist skade i høyden."
+          ]
+        },
+        {
+          "heading": "Overganger og vedlikeholdsopplysninger",
+          "paragraphs": [
+            "Eieropplysningen er at flere vegger sist ble malt i 2016, mens enkelte bord ble skiftet tidligere. Det foreligger ingen samlet arbeidsbeskrivelse som viser alle feltene. Synlige beslag over to vinduer leder vann foran kledningen, men utførelse bak sideomrammingen er ikke synlig. Rekkverket ved hovedinngangen står fast ved enkel håndprøve. Rapporten omfatter ikke dimensjonering eller en vurdering av skjulte innfestinger."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Vinduer, ytterdører og overganger",
+      "intro": "Hoveddelen har flere trevinduer fra byggeperioden og enkelte nyere isolerglassruter. I utleiedelen er to vinduer oppgitt skiftet ved innredningen i 2018. Vinduene er kontrollert fra de rommene som beskrives nedenfor.",
+      "sections": [
+        {
+          "heading": "Sørvindu i hovedsoverom",
+          "paragraphs": [
+            "Tilstandsgrad: TG2. Bunnkarmen i sørvinduet på hovedsoverommet har lokalt nedbrutt, mykt treverk ved høyre hjørne, og vindusrammen subber i den samme delen ved lukking. Det ses en åpen sprekk i overflatebehandlingen ved skjøten mellom bunnkarm og sidekarm. Beskrivelsen gjelder dette ene vinduet. Ingen av de andre undersøkte vinduene er gitt en tilsvarende vurdering på grunnlag av alder alene."
+          ]
+        },
+        {
+          "heading": "Betydning og kontrollpunkt",
+          "paragraphs": [
+            "Skaden svekker karmens funksjon og bør undersøkes med hensyn til utbredelse og tetthet i hjørneovergangen. Årsaken til subbingen bør avklares før en eventuell justering; rapporten fastslår ikke at justering alene vil løse treverksskaden. Det er ikke gjennomført slagregnprøve. Tilstanden i veggen under karmen er ukjent fordi innvendig og utvendig omramming ikke er demontert. Dette er en avgrensning ved det konkrete kontrollpunktet."
+          ]
+        },
+        {
+          "heading": "Andre vinduer",
+          "paragraphs": [
+            "De to vinduene mot sør i utleiedelen lar seg åpne og lukke med de tilgjengelige håndtakene. Det er ikke synlig kondens mellom glassene i disse rutene ved gjennomgangen. Vinduet i hoveddelens kjøkken har intakt innvendig listverk og fungerer ved enkel prøve. Det er ikke gjennomført måling av luftlekkasje eller en vurdering av varmeisolasjonen i hver enkelt glassrute."
+          ]
+        },
+        {
+          "heading": "Dører og terskler",
+          "paragraphs": [
+            "Hovedytterdøren har en hel synlig tetningslist og går i lås uten at dørbladet må løftes. Inngangsdøren til utleiedelen har vanlig overflateslitasje nederst mot utsiden. Overgangen mot belegningen er synlig og har ikke stående vann under den beskrevne kontrollen. Eventuelle terskelbeslag skjult bak listverk er ikke åpnet. Eieropplysning om tidligere justering av hoveddøren er ikke dokumentert med arbeidsordre, og brukes ikke som bevis for skjulte forhold."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Taktekking og aktiv vanninntrenging",
+      "intro": "Saltaket er tekket med betongtakstein og har et mindre takopplett mot øst. Tekkingen er i underlaget beskrevet som hovedsakelig fra byggeåret, med enkelte skiftede stein. Det finnes en gjennomføring for lufterør nær mønet.",
+      "sections": [
+        {
+          "heading": "Overgang ved østre takopplett",
+          "paragraphs": [
+            "Tilstandsgrad: TG3. Ved overgangen mellom hovedtaket og det østre takopplettet er det aktiv lekkasje: vann drypper fra undersiden av undertaket til en våt isolasjonssone på loftet. Nedenfor overgangen er det mørke vannspor på treverket, og et synlig bord har oppfliset, myk overflate ved lett kontroll. Utvendig ses en åpen skjøt i sidebeslaget ved det samme området. Den eksakte inntrengingsveien gjennom alle sjiktene er ikke fastslått."
+          ]
+        },
+        {
+          "heading": "Betydning og nødvendig avklaring",
+          "paragraphs": [
+            "Vanninntrengingen må håndteres og undersøkes før forholdet kan anses avklart. Omfanget av skade på sperrer, tilstøtende treverk og skjulte sjikt er ikke kjent. Dette er en konkret, kritisk usikkerhet knyttet til den aktive lekkasjen. Funnet av det synlige dryppstedet dokumenterer ikke hvor langt vannet har trengt inn. Årsak og skjult skadeomfang er fortsatt ikke avklart."
+          ]
+        },
+        {
+          "heading": "Tilgjengelig takflate",
+          "paragraphs": [
+            "Fra arbeidsplattformen er de nedre steinradene sett uten at det ble gått på takflaten. Noen stein har mosebelegg, men rapporten beskriver ikke dette som en separat skade. De synlige rennekrokene sitter i en jevn rekke. Den øvre tilslutningen ved takopplettet er bare delvis synlig fra utsiden. Funnstedet er derfor sett både utenfra og fra loftet, uten at en skjult årsak blir presentert som kjent."
+          ]
+        },
+        {
+          "heading": "Midlertidig håndtering og underlag",
+          "paragraphs": [
+            "I caset er det satt en beholder under dryppstedet for å begrense videre tilsøling av tilgjengelig gangbane. Dette er ikke en utbedring eller en teknisk kontroll. Eieropplysningen er at en misfarging ble sett etter en regnperiode tidligere samme høst, uten dokumentert reparasjon. Videre arbeid må kartlegge inntrengingsvei og skadeutbredelse, samt kontrollere berørte konstruksjoner før en eventuell lukking. Rapporten oppgir ingen pris eller sikker ferdig løsning."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Kaldt loft, lufting og isolasjon",
+      "intro": "Loftet nås gjennom luke i gangen. Det er en smal gangbane mellom luke og takopplett; øvrige flater er isolert. Området ved lekkasjen er omtalt på foregående side og holdes atskilt fra observasjonen ved vestre raft.",
+      "sections": [
+        {
+          "heading": "Luftespalte ved vestre raft",
+          "paragraphs": [
+            "Tilstandsgrad: TG2. Langs omtrent fire meter av vestre raft er luftespalten blokkert av mineralull som ligger presset mot undertaket, og det ses kondensstriper på undertakets innside i det samme feltet. Feltet ligger på motsatt side av loftet fra den aktive taklekkasjen. Det er ikke observert drypp eller et sammenhengende vannspor fra lekkasjestedet til denne delen. Observasjonen behandles derfor som et eget forhold, uten at en endelig fuktteknisk årsak er målt."
+          ]
+        },
+        {
+          "heading": "Betydning og kontrollpunkt",
+          "paragraphs": [
+            "Blokkert lufting kan gi utilstrekkelig uttørking i den kalde takkonstruksjonen. Kontrollpunktet er å undersøke luftvei fra raft og videre over isolasjonen, samt forholdet mellom inneluftlekkasjer og ventilasjon. Et enkelt flytt av isolasjon dokumenterer ikke i seg selv at konstruksjonen tørker ut som forutsatt. Det er ikke utført temperatur- eller fuktlogging over tid. Rapporten hevder heller ikke at synlige striper alene påviser en bestemt type vekst."
+          ]
+        },
+        {
+          "heading": "Loftsluke og gangbane",
+          "paragraphs": [
+            "Luken har en synlig pakning, men det er ikke gjennomført trykkprøving av overgangen. Gangbanen ligger stabilt ved den beskrevne tilgangen. Det er ikke lagret tunge gjenstander over isolasjonen. I den tilgjengelige midtsonen er isolasjonen jevnt fordelt, bortsett fra området rundt gjennomføringen for lufterøret hvor synligheten er begrenset av en kasse. Denne kassen er ikke demontert."
+          ]
+        },
+        {
+          "heading": "Underlag for videre kontroll",
+          "paragraphs": [
+            "Eieropplysningen er at noe isolasjon ble etterfylt i 2010. Det finnes ikke fotografier som viser før- og ettersituasjonen. Luftespalten ved vestre raft bør dokumenteres før materialer flyttes, slik at sammenhengen mellom oppbygning og observasjoner kan vurderes. Arbeid knyttet til lekkasjen og til loftsluftingen må holdes sporbare som ulike kontrollpunkter selv om de berører den samme overordnede takkonstruksjonen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Hovedbad - overflater og dusjsone",
+      "intro": "Hovedbadet ligger på inngangsplanet og har flislagt gulv og vegger. Materialoversikten oppgir overflatearbeider fra 2012. Det er dusjhjørne med glassdører, servant og gulvstående toalett. Rommet var i vanlig bruk i det fiktive forløpet.",
+      "sections": [
+        {
+          "heading": "Overgang i dusjhjørnet",
+          "paragraphs": [
+            "Tilstandsgrad: TG2. I hjørnet mellom dusjvegg og gulv er fugemassen sprukket og løsnet over en strekning på omtrent seksti centimeter, med en åpen kant inn mot hjørnet. Det ses mørk misfarging i den åpne fugen. Observasjonen gjelder den synlige overgangen i dusjsonen. Den dokumenterer ikke i seg selv membranbrudd bak flisene, men overgangen kan ikke beskrives som hel i den foreliggende tilstanden."
+          ]
+        },
+        {
+          "heading": "Betydning og kontrollpunkt",
+          "paragraphs": [
+            "Vann treffer hjørnet ved normal dusjing, og den åpne overgangen bør undersøkes og håndteres. Før en ny synlig fuge legges, må underlaget og tilslutningen vurderes slik at eventuell bakenforliggende skade ikke overses. Rapporten fastslår ikke om membranen går ubrutt bak hele feltet. Det foreligger heller ingen detaljtegning som viser denne hjørneløsningen. Fravær av synlig vann utenfor dusjen avklarer ikke utførelsen bak flisene."
+          ]
+        },
+        {
+          "heading": "Sluk og tilgjengelige flater",
+          "paragraphs": [
+            "Slukristen kan løftes, og det synlige slukområdet er rengjort nok til enkel visuell kontroll. Det er ikke gjennomført demontering av klemring eller membran. Ved en begrenset tapping mot sluket renner vannet inn uten oppstuving. Utenfor dusjsonen ses ikke løse fliser ved lett bankekontroll på de tilgjengelige feltene. Dette er ingen dokumentasjon av alle limflater eller skjulte sjikt."
+          ]
+        },
+        {
+          "heading": "Innredning og ventilasjon",
+          "paragraphs": [
+            "Servantskapet er tørt på den tilgjengelige bunnen. Den synlige rørkoblingen under servanten har ikke dråper etter en kort tapping. Avtrekksventilen ved taket holder et lett papirark under prøven, men luftmengde er ikke målt. Eieropplysninger om tidligere vedlikehold av fuger er ikke støttet av daterte bilder. Videre vurdering bør derfor baseres på den nå beskrevne overgangen og relevant dokumentasjon, uten å anta at arbeid er utført senere."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Bad i utleiedelen - gulv og vannvei",
+      "intro": "Badet i underetasjen er oppgitt innredet i 2018 og har dusjnisje, servant, toalett og opplegg for vaskemaskin. Gulvet er flislagt. Den synlige terskelen ved døren har en lav kant mot gangen.",
+      "sections": [
+        {
+          "heading": "Fall utenfor dusjnisjen",
+          "paragraphs": [
+            "Tilstandsgrad: TG2. På gulvet mellom vaskemaskinplassen og døren er det lokalt motfall, slik at vann ved en enkel kontroll blir stående i en dam og siger mot terskelen i stedet for mot sluket. Kontrollfeltet ligger utenfor dusjnisjen, og målingen gjelder dette tilgjengelige gulvpartiet. Det ble ikke registrert vann ute i gangen under den korte prøven. Dette endrer ikke observasjonen av vannretningen inne i rommet."
+          ]
+        },
+        {
+          "heading": "Betydning og kontrollpunkt",
+          "paragraphs": [
+            "Ved vannsøl eller lekkasje fra utstyr kan vann bli liggende i området nær døren. Videre kontroll bør kartlegge gulvgeometrien og overgangen mot terskelen før valg av løsning. Rapporten fastslår ikke at alle gulvflater har samme fall. Den beskriver heller ikke lekkasje gjennom membranen som påvist. Dokumentasjonen fra innredningen inneholder en materialliste, men ingen innmåling som kan erstatte kontrollen av det aktuelle feltet."
+          ]
+        },
+        {
+          "heading": "Dusjnisje og tilkoblinger",
+          "paragraphs": [
+            "Vann fra dusjhodet ledes mot sluket innenfor nisjen ved en kort funksjonsprøve. Risten er tilgjengelig, og det synlige området rundt sluket har ingen oppstuving under prøven. Vaskemaskinen er ikke kjørt gjennom et helt program. Synlig tilløpsslange og avløpsføring står uten knekk i den tilgjengelige delen. Skjulte tilkoblinger bak maskinen er ikke løsnet eller undersøkt ved demontering."
+          ]
+        },
+        {
+          "heading": "Bruk og videre dokumentasjon",
+          "paragraphs": [
+            "Døren kan lukkes uten å treffe gulvet. På veggen mot gangen ses ingen åpne flisfuger i de tilgjengelige feltene. Avtrekket er koblet til en liten romvifte, og viften starter med bryteren. Luftmengde og virkning ved langvarig dusjing er ikke målt. Ved videre arbeid bør oppbygningen ved terskelen dokumenteres sammen med vannveien fra det beskrevne motfallsfeltet. Rommets oppgitte alder gir ikke i seg selv svar på disse detaljene."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Kjøkken og synlige vannkoblinger",
+      "intro": "Hoveddelen har kjøkken på inngangsplanet. Utleiedelen har en mindre kjøkkeninnredning langs veggen mot gangen. Begge har synlig vannlås under vasken. Det er ikke oppgitt tidspunkt for alle endringer i skap og benkeplater.",
+      "sections": [
+        {
+          "heading": "Avløpskobling under utleiekjøkkenets vask",
+          "paragraphs": [
+            "Tilstandsgrad: TG2. Ved tapping fra blandebatteriet drypper det fra skjøten mellom vannlåsen og avløpsrøret i underskapet på utleiekjøkkenet, og skapbunnen har en fuktig, oppsvulmet kant rett under skjøten. Dryppet kan følges visuelt til koblingen under den korte prøven. Det ses ikke en tilsvarende dråpe fra de tilgjengelige tilløpskoblingene. Forholdet gjelder både den utette skjøten og den synlige lokale følgeskaden i samme underskap."
+          ]
+        },
+        {
+          "heading": "Betydning og kontrollpunkt",
+          "paragraphs": [
+            "Koblingen må undersøkes og tetthet gjenopprettes før normal bruk legges til grunn. Den oppsvulmede skapbunnen bør undersøkes for å avklare om fukten også har nådd materialene bak skapet. Bakplaten er ikke tatt av, så utbredelse bak innredningen er ikke kjent. Rapporten fremstiller ikke disse skjulte flatene som påvist skadet. En tørr klut under koblingen er ikke en kontroll av at lekkasjen er varig håndtert."
+          ]
+        },
+        {
+          "heading": "Hovedkjøkkenet",
+          "paragraphs": [
+            "Under vasken i hoveddelen er de synlige flatene tørre etter en kort tapping. Skapdørene fungerer ved enkel prøve. Benkeplaten har normal bruksslitasje og en hel synlig overgang langs veggen. Oppvaskmaskinen er ikke kjørt gjennom et helt program, og skjulte slanger bak maskinen er ikke kontrollert. Beskrivelsen av tilgjengelige flater kan derfor ikke brukes som en garanti for alle tilkoblinger bak innredningen."
+          ]
+        },
+        {
+          "heading": "Avtrekk og videre arbeid",
+          "paragraphs": [
+            "Begge kjøkken har mekanisk hette med synlig filter. Viftene starter ved bryterprøve, men avtrekksmengde og kanaltilstand er ikke målt. Eieropplysningen er at det løse vannlåssettet i utleiedelen ble montert etter en tidligere rengjøring; det finnes ingen datert arbeidsbeskrivelse. Denne opplysningen brukes som bakgrunn for å lokalisere kontrollpunktet, uten at den alene fastslår årsak eller dokumenterer en utført utbedring."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Røranlegg, varmtvann og romventilasjon",
+      "intro": "Vanninntaket ligger i et teknisk rom i underetasjen. Der finnes hovedstoppekran, varmtvannsbereder og synlige rørstrekk videre til de to delene av huset. Rapporten omhandler tilgjengelige deler og enkle funksjonsprøver.",
+      "sections": [
+        {
+          "heading": "Synlige rør og stoppekran",
+          "paragraphs": [
+            "Hovedstoppekranen kan betjenes ved en kort prøve og settes tilbake i opprinnelig stilling. Det sees ikke dråper rundt den synlige ventilspindelen etter prøven. Rør er ført gjennom etasjeskillet i kasser og sjakter som ikke er åpnet. Det foreligger ikke en oppdatert skisse over alle rørføringer. Dette beskriver underlagets avgrensning og er ikke en påvist skade i hvert skjult rørstrekk."
+          ]
+        },
+        {
+          "heading": "Varmtvannsbereder",
+          "paragraphs": [
+            "Berederen er merket med produksjonsår 2014 i det fiktive underlaget. Synlig kar under beholderen er tørt, og det er ikke sett korrosjon på de tilgjengelige koblingene. Sikkerhetsventilens funksjon er ikke aktivt utløst. Rapporten angir ikke restlevetid eller kapasitet ved samtidig bruk i begge boenhetene. Eieropplysningen om tilstrekkelig varmtvann ved vanlig bruk er ikke en utført belastningsmåling."
+          ]
+        },
+        {
+          "heading": "Ventilasjon i oppholdsrom",
+          "paragraphs": [
+            "Friskluftsventiler i to soverom kan åpnes og lukkes. Ved gjennomgangen står en ventil lukket; den lar seg åpne uten motstand. Luft føres videre gjennom dørspalter mot rom med avtrekk. Det er ikke gjennomført måleserie for inneklima, trykkforhold eller luftutskifting. En kort funksjonsprøve av en vifte skal ikke omtales som dokumentert kapasitet for alle rom eller alle årstider."
+          ]
+        },
+        {
+          "heading": "Sammenheng med bruk og kontrollpunkter",
+          "paragraphs": [
+            "Det er ikke observert et eget gradert avvik i det tilgjengelige tekniske rommet utover de konkrete vannrelaterte forholdene som er omtalt ved kjøkken og våtrom. Ved senere undersøkelser bør tilgjengelig dokumentasjon for rørføringer samles, særlig før inngrep i vegger eller gulv. Eventuelle endringer i bruk eller utstyr må vurderes mot faktisk kapasitet. Rapporten foreslår ikke nye installasjoner eller en teknisk dimensjonering på grunnlag av disse enkle prøvene."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Elektriske installasjoner, ildsted og innvendige flater",
+      "intro": "Sikringsskapet står i gangen ved hovedinngangen. Det er et lukket vedildsted i stuen, en innvendig trapp mellom etasjene og en separat utvendig inngang til underetasjen. Disse delene er undersøkt visuelt i tilgjengelig omfang.",
+      "sections": [
+        {
+          "heading": "Elektriske observasjoner",
+          "paragraphs": [
+            "Fronten på sikringsskapet er hel, og kursfortegnelsen er lesbar. Det er ikke åpnet deksler eller målt belastning. Synlige stikkontakter ved de omtalte kjøkkenene sitter fast ved lett håndprøve, og det er ikke sett misfarging på disse punktene. Dette er ikke en kontroll av hele det elektriske anlegget. Rapporten inneholder ingen samsvarserklæring, sikkerhetsgodkjenning eller påstand om at skjulte koblinger er undersøkt."
+          ]
+        },
+        {
+          "heading": "Dokumentasjon og avgrensning",
+          "paragraphs": [
+            "I det fiktive underlaget finnes en kvittering for utskifting av enkelte komponenter i 2018, men ikke en samlet dokumentpakke for alle arbeider. Opplysningen forteller ikke hvilke skjulte føringer som eventuelt ble endret. Dersom anleggets tilstand skal avklares utover de beskrevne synsinntrykkene, kreves en egen undersøkelse med relevant kompetanse. Fravær av synlig varmgang på de få kontrollerte punktene er ikke en slik undersøkelse."
+          ]
+        },
+        {
+          "heading": "Ildsted og pipe",
+          "paragraphs": [
+            "Ildstedets synlige overflate har ingen åpne sprekker, og døren kan lukkes. Askeskuffen er tømt. Det er ikke fyrt under gjennomgangen, og pipeløpet er ikke inspisert innvendig. En løs mappe ved ildstedet inneholder en brukerveiledning, uten at dette dokumenterer pipens tilstand. Beskrivelsen gir derfor ikke grunnlag for å trekke slutninger om trekk, tetthet eller funksjon under fyring."
+          ]
+        },
+        {
+          "heading": "Trapp og tilgjengelige innvendige flater",
+          "paragraphs": [
+            "Trappetrinnene står fast ved vanlig gange, og håndløperen kan brukes uten synlig bevegelse i de tilgjengelige festepunktene. Veggene i oppholdsrommene har bruksspor etter møblering, men ingen andre konkrete graderte forhold er lagt til grunn her. Gulvene i de møblerte rommene er bare sett i frie gangsoner. Denne avgrensningen bør huskes ved senere kontroll, uten at skjulte avvik dermed blir oppført som påviste funn."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Samlet vurdering og videre kontroll",
+      "intro": "Den samlede vurderingen viser sammenhenger og åpne kontrollpunkter. De enkelte observasjonene, deres sted og avgrensninger fremgår av beskrivelsene på de foregående fysiske PDF-sidene.",
+      "sections": [
+        {
+          "heading": "Vanninntrenging må avklares",
+          "paragraphs": [
+            "Den aktive lekkasjen ved takopplettet er det mest alvorlige beskrevne forholdet. Det finnes både pågående drypp og synlige materialspor, mens skadeutbredelsen i skjulte sjikt fortsatt er ukjent. Årsak og skadeomfang er fortsatt ikke avklart. Et tiltak som bare fanger opp vannet på loftet dokumenterer ikke at takovergangen er tett eller at tilstøtende konstruksjoner er undersøkt. Videre kontroll må derfor knyttes til både årsak, omfang og berørte materialer."
+          ]
+        },
+        {
+          "heading": "Flere vannrelaterte kontrollpunkter",
+          "paragraphs": [
+            "Utvendig terreng og veggfeltet i nordre bod bør vurderes samlet, uten at det ene automatisk forklarer det andre. På loftets vestside må luftveien undersøkes som et eget tema. På våtrommene gjelder kontrollpunktene ulike overganger og vannveier. Underskapet på utleiekjøkkenet har et konkret synlig dryppsted. Disse forholdene kan ikke slås sammen til én allerede avklart vannskade eller behandles som utbedret ved en generell bekreftelse."
+          ]
+        },
+        {
+          "heading": "Utvendige overflater og underlag",
+          "paragraphs": [
+            "Nedbrutte bordender på østfasaden og karmhjørnet på hovedsoverommet har lokale observasjoner som bør følges opp hver for seg. De tilgjengelige normalflatene andre steder er også beskrevet, men dokumenterer ikke alle skjulte sjikt. Den generelle metodegrensen på side 2 består som informasjon om undersøkelsens omfang. Den fjerner ikke behovet for konkret avklaring av lekkasjen eller av andre steder der rapporten uttrykkelig etterspør videre kontroll."
+          ]
+        },
+        {
+          "heading": "Bruk av rapporten",
+          "paragraphs": [
+            "Ved videre oppfølging bør observasjoner, eieropplysninger og uløste spørsmål holdes atskilt. Det må dokumenteres hva som er undersøkt og avklart ved hvert relevant sted. Rapporten er et grunnlag for å planlegge videre kontroll, ikke dokumentasjon av senere utført arbeid. Den inneholder ingen utbedringskostnader, finansberegning, markedsvurdering eller investeringsanbefaling. Slike beslutninger kan ikke utledes av antall avvik eller av de normale flatene som var tilgjengelige."
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,361 @@
+{
+  "caseId": "S5-B1-v1",
+  "version": "1",
+  "fixtureVersion": "1",
+  "provenance": "Separat, AI-assistert forfattet forhåndsfasit til en AI-assistert forfattet fiktiv rapport. Fastlagt før faktisk uttrekks-/leverandøranalyse; ingen adapterretur, faktisk befaring, uavhengig menneskelig validering eller menneskelig måling er brukt. Fasit er ikke inndata til PDF-generatoren. Separat forfatting er ikke det samme som menneskelig fasitgodkjenning.",
+  "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+  "pageCount": 14,
+  "pageNumbering": "Fysisk PDF-posisjon fra 1; fotlinjen viser samme nummer. Ingen alternativ trykt sidenummerering.",
+  "expectedCoverage": {
+    "TG2": 8,
+    "TG3": 1,
+    "totalDistinctFindings": 9
+  },
+  "findings": [
+    {
+      "id": "S5-B1-v1-TG2-01",
+      "grade": "TG2",
+      "description": "Terrengfall inn mot grunnmuren og oppsamling av regnvann ved nordøstre hjørne",
+      "pdfPage": 3,
+      "section": "Terreng ved nordøstre hjørne",
+      "sourcePassage": "Tilstandsgrad: TG2. Terrenget ved nordøstre hjørne faller inn mot grunnmuren over et felt på omtrent tre meter, og regnvann samles i en grunn forsenkning inntil veggen.",
+      "resolutionStatus": "not-applicable",
+      "distinctness": "Overflatevann utvendig; eget forhold fra det observerte veggfeltet inne i boden. Ingen separat gradsetting av skjult drensledning."
+    },
+    {
+      "id": "S5-B1-v1-TG2-02",
+      "grade": "TG2",
+      "description": "Saltutslag, avskalling og forhøyet fuktindikasjon i nedre nordvegg i bodrommet",
+      "pdfPage": 4,
+      "section": "Innvendig vegg i nordre bod",
+      "sourcePassage": "Tilstandsgrad: TG2. På innsiden av nordveggen i bodrommet er det saltutslag og avskalling av maling i et sammenhengende felt fra gulvet og omtrent tretti centimeter opp.",
+      "supportingPassage": "Sammenlignende fuktindikasjon er høyere i dette feltet enn på veggpartiet ved døren.",
+      "resolutionStatus": "not-applicable",
+      "distinctness": "Én samlet lokal veggobservasjon, ikke separate funn for maling, salt og måleindikasjon. Årsak og varighet er ikke fastslått."
+    },
+    {
+      "id": "S5-B1-v1-TG2-03",
+      "grade": "TG2",
+      "description": "Nedbrutte, myke bordender med sprekker og avflasset behandling på østfasadens nedre kledning",
+      "pdfPage": 5,
+      "section": "Nedre kledning mot øst",
+      "sourcePassage": "Tilstandsgrad: TG2. De nederste endene av flere kledningsbord på østfasaden har åpne sprekker, avflasset overflatebehandling og mykt tre ved forsiktig mekanisk kontroll.",
+      "resolutionStatus": "not-applicable",
+      "distinctness": "Samlet kledningsfelt under stuevinduet. Ikke påvist skade i skjult bindingsverk eller vindsperre."
+    },
+    {
+      "id": "S5-B1-v1-TG2-04",
+      "grade": "TG2",
+      "description": "Lokalt nedbrutt bunnkarm og subbende ramme i sørvinduet på hovedsoverommet",
+      "pdfPage": 6,
+      "section": "Sørvindu i hovedsoverom",
+      "sourcePassage": "Tilstandsgrad: TG2. Bunnkarmen i sørvinduet på hovedsoverommet har lokalt nedbrutt, mykt treverk ved høyre hjørne, og vindusrammen subber i den samme delen ved lukking.",
+      "resolutionStatus": "not-applicable",
+      "distinctness": "Én samlet observasjon i ett vindu; subbing og nedbrutt karm skal ikke dobbelttelles. Andre vinduer får ikke grad på grunnlag av alder."
+    },
+    {
+      "id": "S5-B1-v1-TG3-01",
+      "grade": "TG3",
+      "description": "Aktiv lekkasje ved østre takopplett med våt isolasjon og synlige vann-/materialskader; skjult skadeomfang uavklart",
+      "pdfPage": 7,
+      "section": "Overgang ved østre takopplett",
+      "sourcePassage": "Tilstandsgrad: TG3. Ved overgangen mellom hovedtaket og det østre takopplettet er det aktiv lekkasje: vann drypper fra undersiden av undertaket til en våt isolasjonssone på loftet.",
+      "supportingPassage": "Nedenfor overgangen er det mørke vannspor på treverket, og et synlig bord har oppfliset, myk overflate ved lett kontroll. Utvendig ses en åpen skjøt i sidebeslaget ved det samme området.",
+      "resolutionStatus": "unresolved",
+      "resolutionPassage": "Omfanget av skade på sperrer, tilstøtende treverk og skjulte sjikt er ikke kjent. Dette er en konkret, kritisk usikkerhet knyttet til den aktive lekkasjen.",
+      "distinctness": "Én sammenhengende lekkasjeobservasjon med lokale skadeindikasjoner og usikker utbredelse. Ikke det separate luftingsfeltet ved vestre raft."
+    },
+    {
+      "id": "S5-B1-v1-TG2-05",
+      "grade": "TG2",
+      "description": "Blokkert luftespalte av mineralull og kondensstriper ved vestre raft på kaldt loft",
+      "pdfPage": 8,
+      "section": "Luftespalte ved vestre raft",
+      "sourcePassage": "Tilstandsgrad: TG2. Langs omtrent fire meter av vestre raft er luftespalten blokkert av mineralull som ligger presset mot undertaket, og det ses kondensstriper på undertakets innside i det samme feltet.",
+      "resolutionStatus": "not-applicable",
+      "distinctness": "Eget felt på motsatt side av loftet fra taklekkasjen. Ikke en ekstra gradsetting av den samme aktive lekkasjen. Endelig fuktteknisk årsak er ikke målt."
+    },
+    {
+      "id": "S5-B1-v1-TG2-06",
+      "grade": "TG2",
+      "description": "Sprukket og løsnet fuge med åpen kant og misfarging i hovedbadets dusjhjørne",
+      "pdfPage": 9,
+      "section": "Overgang i dusjhjørnet",
+      "sourcePassage": "Tilstandsgrad: TG2. I hjørnet mellom dusjvegg og gulv er fugemassen sprukket og løsnet over en strekning på omtrent seksti centimeter, med en åpen kant inn mot hjørnet.",
+      "supportingPassage": "Det ses mørk misfarging i den åpne fugen.",
+      "resolutionStatus": "not-applicable",
+      "distinctness": "Synlig overgang i hovedbadet; ikke påvist membranbrudd eller forholdet i utleiedelens bad."
+    },
+    {
+      "id": "S5-B1-v1-TG2-07",
+      "grade": "TG2",
+      "description": "Lokalt motfall og vannansamling mot terskelen utenfor dusjnisjen på utleiebadet",
+      "pdfPage": 10,
+      "section": "Fall utenfor dusjnisjen",
+      "sourcePassage": "Tilstandsgrad: TG2. På gulvet mellom vaskemaskinplassen og døren er det lokalt motfall, slik at vann ved en enkel kontroll blir stående i en dam og siger mot terskelen i stedet for mot sluket.",
+      "resolutionStatus": "not-applicable",
+      "distinctness": "Eget bad og eget gulvfelt. Ingen påvist membranlekkasje eller vann ute i gangen."
+    },
+    {
+      "id": "S5-B1-v1-TG2-08",
+      "grade": "TG2",
+      "description": "Utett avløpsskjøt ved vannlås og lokalt fuktskadet skapbunn på utleiekjøkkenet",
+      "pdfPage": 11,
+      "section": "Avløpskobling under utleiekjøkkenets vask",
+      "sourcePassage": "Tilstandsgrad: TG2. Ved tapping fra blandebatteriet drypper det fra skjøten mellom vannlåsen og avløpsrøret i underskapet på utleiekjøkkenet, og skapbunnen har en fuktig, oppsvulmet kant rett under skjøten.",
+      "resolutionStatus": "not-applicable",
+      "distinctness": "Én lekkasje med synlig lokal følgeskade i samme underskap. Skjult følgeskade er ikke påvist; ingen tilsvarende gradering av hovedkjøkkenet."
+    }
+  ],
+  "generalInspectionLimitations": [
+    {
+      "id": "S5-B1-v1-L01",
+      "pdfPage": 2,
+      "section": "Generell inspeksjonsbegrensning",
+      "sourcePassage": "Lukkede vegger og etasjeskillere er ikke åpnet. Rapporten beskriver derfor ikke tilstanden inne i alle skjulte konstruksjoner; fravær av synlige tegn på en tilgjengelig overflate er ikke dokumentasjon på feilfrie skjulte sjikt.",
+      "meaning": "Reell generell metodegrense for skjulte konstruksjoner. Ingen automatisk eller forhåndsbestemt brukerattest om at begrensningen er ikke-kritisk; Mads må eventuelt gjøre sin egen eksplisitte vurdering ved faktisk kjøring. Avklarer ikke den konkrete taklekkasjen."
+    }
+  ],
+  "specificUncertainties": [
+    {
+      "id": "S5-B1-v1-U01",
+      "pdfPage": 4,
+      "relatedFindingId": "S5-B1-v1-TG2-02",
+      "sourcePassage": "Sporene er forenlige med gjentatt fuktbelastning i nedre veggsone, men årsak og varighet er ikke fastslått.",
+      "meaning": "Bevar ukjent årsak/varighet; ikke hevde at terrengfallet alene forklarer veggfukten."
+    },
+    {
+      "id": "S5-B1-v1-U02",
+      "pdfPage": 6,
+      "relatedFindingId": "S5-B1-v1-TG2-04",
+      "sourcePassage": "Tilstanden i veggen under karmen er ukjent fordi innvendig og utvendig omramming ikke er demontert.",
+      "meaning": "Mulig skjult utbredelse skal ikke gjøres til et ekstra påvist gradert funn."
+    },
+    {
+      "id": "S5-B1-v1-U03",
+      "pdfPage": 7,
+      "relatedFindingId": "S5-B1-v1-TG3-01",
+      "critical": true,
+      "sourcePassage": "Omfanget av skade på sperrer, tilstøtende treverk og skjulte sjikt er ikke kjent. Dette er en konkret, kritisk usikkerhet knyttet til den aktive lekkasjen.",
+      "meaning": "Reell uløst kritisk usikkerhet. Generell limitation-vurdering avklarer ikke forholdet; alvorlig funn står Uavklart."
+    },
+    {
+      "id": "S5-B1-v1-U04",
+      "pdfPage": 7,
+      "relatedFindingId": "S5-B1-v1-TG3-01",
+      "sourcePassage": "Den eksakte inntrengingsveien gjennom alle sjiktene er ikke fastslått.",
+      "meaning": "Ikke hevde dokumentert full årsak eller ferdig tiltak fra den åpne beslagsskjøten alene."
+    },
+    {
+      "id": "S5-B1-v1-U05",
+      "pdfPage": 8,
+      "relatedFindingId": "S5-B1-v1-TG2-05",
+      "sourcePassage": "Observasjonen behandles derfor som et eget forhold, uten at en endelig fuktteknisk årsak er målt.",
+      "meaning": "Bevar skillet mellom observert blokkering/striper og ikke målt endelig årsak."
+    },
+    {
+      "id": "S5-B1-v1-U06",
+      "pdfPage": 9,
+      "relatedFindingId": "S5-B1-v1-TG2-06",
+      "sourcePassage": "Rapporten fastslår ikke om membranen går ubrutt bak hele feltet. Det foreligger heller ingen detaljtegning som viser denne hjørneløsningen.",
+      "meaning": "Ikke gradere skjult membranbrudd som påvist."
+    },
+    {
+      "id": "S5-B1-v1-U07",
+      "pdfPage": 11,
+      "relatedFindingId": "S5-B1-v1-TG2-08",
+      "sourcePassage": "Bakplaten er ikke tatt av, så utbredelse bak innredningen er ikke kjent. Rapporten fremstiller ikke disse skjulte flatene som påvist skadet.",
+      "meaning": "Synlig fuktskadet skapbunn er påvist; skjult utbredelse er ikke påvist."
+    }
+  ],
+  "additionalMethodLimits": [
+    {
+      "pdfPage": 2,
+      "sourcePassage": "Tepper er løftet ved de omtalte kjellerveggene, men store skap og fast innredning er ikke demontert.",
+      "scope": "Tilgang til møblerte rom"
+    },
+    {
+      "pdfPage": 2,
+      "sourcePassage": "Det er ikke benyttet drone eller gjennomført lastprøver.",
+      "scope": "Visuell metode, ingen fjern-/lastundersøkelse"
+    },
+    {
+      "pdfPage": 2,
+      "sourcePassage": "Ingen laboratorieprøver eller undersøkelser av mikrobiologisk vekst er beskrevet.",
+      "scope": "Ingen artsbestemmelse eller skjult laboratoriebevis"
+    },
+    {
+      "pdfPage": 3,
+      "sourcePassage": "Naboens terreng og ledninger er ikke undersøkt. Beskrivelsen gir ingen beregnet kapasitet for avledning under kraftige regnbyger.",
+      "scope": "Avgrenset terreng-/vannkartlegging"
+    },
+    {
+      "pdfPage": 3,
+      "sourcePassage": "Ingen skjult fundamentering av støttemuren er kontrollert.",
+      "scope": "Synlig støttemur, ikke skjult fundament"
+    },
+    {
+      "pdfPage": 4,
+      "sourcePassage": "En synlig oppstikkende rensemulighet ved vestveggen er ikke åpnet, og ledningene er ikke kamerakontrollert.",
+      "scope": "Ingen ledningsinspeksjon; alder gir ikke påvist egen skade"
+    },
+    {
+      "pdfPage": 4,
+      "sourcePassage": "Dette er lokale øyeblikksobservasjoner, ikke en måleserie for setninger.",
+      "scope": "Riss og dørprøve dokumenterer ikke utvikling over tid"
+    },
+    {
+      "pdfPage": 5,
+      "sourcePassage": "Bakliggende vindsperre og bindingsverk er ikke åpnet eller vurdert som synlig skade i denne rapporten.",
+      "scope": "Kledningsskade uten påvist skjult følgeskade"
+    },
+    {
+      "pdfPage": 5,
+      "sourcePassage": "Kledningsflatene over taket på sidebygget er bare sett fra bakken.",
+      "scope": "Begrenset utvendig synsvinkel i høyden"
+    },
+    {
+      "pdfPage": 5,
+      "sourcePassage": "Rapporten omfatter ikke dimensjonering eller en vurdering av skjulte innfestinger.",
+      "scope": "Rekkverk og skjulte festepunkter"
+    },
+    {
+      "pdfPage": 6,
+      "sourcePassage": "Det er ikke gjennomført slagregnprøve.",
+      "scope": "Vindu med lokal karmobservasjon"
+    },
+    {
+      "pdfPage": 6,
+      "sourcePassage": "Det er ikke gjennomført måling av luftlekkasje eller en vurdering av varmeisolasjonen i hver enkelt glassrute.",
+      "scope": "Funksjonsprøve er ikke full glass-/tetthetskontroll"
+    },
+    {
+      "pdfPage": 6,
+      "sourcePassage": "Eventuelle terskelbeslag skjult bak listverk er ikke åpnet.",
+      "scope": "Ytterdører, skjulte overganger"
+    },
+    {
+      "pdfPage": 7,
+      "sourcePassage": "Den øvre tilslutningen ved takopplettet er bare delvis synlig fra utsiden.",
+      "scope": "Tak, begrenset utvendig tilkomst; konkret lekkasje består"
+    },
+    {
+      "pdfPage": 8,
+      "sourcePassage": "Det er ikke utført temperatur- eller fuktlogging over tid.",
+      "scope": "Loft, ikke logget årsak/uttørking"
+    },
+    {
+      "pdfPage": 8,
+      "sourcePassage": "Luken har en synlig pakning, men det er ikke gjennomført trykkprøving av overgangen.",
+      "scope": "Loftslukens tetthet"
+    },
+    {
+      "pdfPage": 8,
+      "sourcePassage": "I den tilgjengelige midtsonen er isolasjonen jevnt fordelt, bortsett fra området rundt gjennomføringen for lufterøret hvor synligheten er begrenset av en kasse. Denne kassen er ikke demontert.",
+      "scope": "Tildekket gjennomføring"
+    },
+    {
+      "pdfPage": 9,
+      "sourcePassage": "Det er ikke gjennomført demontering av klemring eller membran.",
+      "scope": "Hovedbad, slukets skjulte sjikt"
+    },
+    {
+      "pdfPage": 9,
+      "sourcePassage": "Dette er ingen dokumentasjon av alle limflater eller skjulte sjikt.",
+      "scope": "Hovedbad, begrenset fliskontroll"
+    },
+    {
+      "pdfPage": 9,
+      "sourcePassage": "Avtrekksventilen ved taket holder et lett papirark under prøven, men luftmengde er ikke målt.",
+      "scope": "Hovedbad, enkel avtrekksprøve"
+    },
+    {
+      "pdfPage": 10,
+      "sourcePassage": "Rapporten fastslår ikke at alle gulvflater har samme fall. Den beskriver heller ikke lekkasje gjennom membranen som påvist.",
+      "scope": "Utleiebad, lokalt motfallsfelt"
+    },
+    {
+      "pdfPage": 10,
+      "sourcePassage": "Vaskemaskinen er ikke kjørt gjennom et helt program.",
+      "scope": "Utleiebad, ingen full utstyrsprøve"
+    },
+    {
+      "pdfPage": 10,
+      "sourcePassage": "Skjulte tilkoblinger bak maskinen er ikke løsnet eller undersøkt ved demontering.",
+      "scope": "Utleiebad, begrenset tilgang"
+    },
+    {
+      "pdfPage": 10,
+      "sourcePassage": "Luftmengde og virkning ved langvarig dusjing er ikke målt.",
+      "scope": "Utleiebad, enkel vifteprøve"
+    },
+    {
+      "pdfPage": 11,
+      "sourcePassage": "Oppvaskmaskinen er ikke kjørt gjennom et helt program, og skjulte slanger bak maskinen er ikke kontrollert.",
+      "scope": "Hovedkjøkken, ingen full utstyrsprøve"
+    },
+    {
+      "pdfPage": 11,
+      "sourcePassage": "Viftene starter ved bryterprøve, men avtrekksmengde og kanaltilstand er ikke målt.",
+      "scope": "Kjøkken, avtrekksfunksjon"
+    },
+    {
+      "pdfPage": 12,
+      "sourcePassage": "Rør er ført gjennom etasjeskillet i kasser og sjakter som ikke er åpnet. Det foreligger ikke en oppdatert skisse over alle rørføringer.",
+      "scope": "Skjult røranlegg og dokumentasjonsgrense"
+    },
+    {
+      "pdfPage": 12,
+      "sourcePassage": "Sikkerhetsventilens funksjon er ikke aktivt utløst. Rapporten angir ikke restlevetid eller kapasitet ved samtidig bruk i begge boenhetene.",
+      "scope": "Bereder, ingen full funksjons-/kapasitetsprøve"
+    },
+    {
+      "pdfPage": 12,
+      "sourcePassage": "Det er ikke gjennomført måleserie for inneklima, trykkforhold eller luftutskifting.",
+      "scope": "Oppholdsrom, ventilasjonsmetode"
+    },
+    {
+      "pdfPage": 13,
+      "sourcePassage": "Det er ikke åpnet deksler eller målt belastning.",
+      "scope": "Elektro, bare synlige flater"
+    },
+    {
+      "pdfPage": 13,
+      "sourcePassage": "Dette er ikke en kontroll av hele det elektriske anlegget. Rapporten inneholder ingen samsvarserklæring, sikkerhetsgodkjenning eller påstand om at skjulte koblinger er undersøkt.",
+      "scope": "Elektro, ingen teknisk godkjenning"
+    },
+    {
+      "pdfPage": 13,
+      "sourcePassage": "Det er ikke fyrt under gjennomgangen, og pipeløpet er ikke inspisert innvendig.",
+      "scope": "Ildsted, ingen fyrings-/pipeprøve"
+    },
+    {
+      "pdfPage": 13,
+      "sourcePassage": "Gulvene i de møblerte rommene er bare sett i frie gangsoner.",
+      "scope": "Tilgang til innvendige overflater"
+    }
+  ],
+  "evaluationNotes": [
+    "Alle eksplisitte gradmerkede forhold skal trekkes ut med korrekt fysisk side. Flere beskrivelser av samme lokale forhold teller ikke som flere funn.",
+    "Sammenfatningen på side 14 har ingen nye gradmerkede forhold. Den gjentar problemtemaer og uavklart skadeomfang, ikke en ny fasitliste.",
+    "Normale overflater, alder og metodiske tilgangsgrenser er ikke nye påviste graderte skader. Ikke oppgrader eller gjett grad for slike tekster.",
+    "Generell metodebegrensning og konkrete usikkerheter skal bevares som forskjellige opplysninger. Koden eller fasiten forhåndsgodkjenner ikke en menneskelig vurdering av limitations.",
+    "Opphavsmerknaden om syntetisk rapport er dokumentproveniens, ikke en påstand om uleselig PDF eller en konkret teknisk skade.",
+    "Dette er separat S5-benchmarkgrunnlag; ingen ny S2-beståelse, live-kvalitet, faktisk tidsgevinst eller menneskelig bekreftelse påstås."
+  ],
+  "expectedMetrics": {
+    "grossYieldPercent": "8",
+    "noi": "360000",
+    "netYieldPercent": "6",
+    "cashFlowBeforeTax": "120000"
+  },
+  "expectedRecommendation": "Innhent mer informasjon",
+  "recommendationAssumptions": "Gyldig faktisk bekreftet finansgrunnlag, fullført faktisk analyse og menneskelig kontroll/bekreftelse; taklekkasjen står fortsatt Uavklart. Tall og eventuell vurdering av generell metodebegrensning opphever ikke alvorlig funn eller reell kritisk usikkerhet. Ingen slike faktiske handlinger er utført ved forfatting.",
+  "limitationEvaluation": {
+    "purpose": "Kildekatalog for semantisk kontroll av begrensninger og usikkerhet, ikke et nytt kvantitativt beståttkrav.",
+    "wording": "Ordrett reproduksjon er ikke nødvendig; trofast, kildebundet semantisk gjengivelse godtas.",
+    "grouping": "Beslektede generelle metodegrenser kan grupperes uten én outputrad per additionalMethodLimits-rad, så lenge relevant betydning og avgrensning bevares.",
+    "criticalUncertainty": "Konkret kritisk usikkerhet, særlig lekkasjens ukjente skjulte utbredelse, skal aldri nedgraderes til ufarlig generell metodegrense eller fremstilles som avklart.",
+    "reporting": "Dokumenter materielle utelatelser, fordreininger og usikkerhet separat. Gjeldende S1–S5 gjelder; kataloglengden innfører ingen ny terskel eller endring av historisk S2."
+  }
+}

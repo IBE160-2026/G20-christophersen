@@ -1,0 +1,87 @@
+{
+  "caseId": "S5-B1-v1",
+  "pdf": "/Users/madschristophersen/IBE160/G20-christophersen/tests/fixtures/s5-benchmark/S5-B1-v1/S5-B1-v1-tilstandsrapport.pdf",
+  "pdfSha256": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+  "oracleSha256": "8c7000bc06041f03e1090d7d9cfadf8dd679cdf6072931aad28c6af7cfc879a5",
+  "financialSha256": "7950e6632696c40594f9afb659d38165aa4ede40d5b43ceaac416be45737688a",
+  "pageCount": 14,
+  "bytes": 33008,
+  "pageStatuses": [
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable",
+    "readable"
+  ],
+  "physicalPageGradeMarks": [
+    {
+      "pdfPage": 3,
+      "grade": "TG2"
+    },
+    {
+      "pdfPage": 4,
+      "grade": "TG2"
+    },
+    {
+      "pdfPage": 5,
+      "grade": "TG2"
+    },
+    {
+      "pdfPage": 6,
+      "grade": "TG2"
+    },
+    {
+      "pdfPage": 7,
+      "grade": "TG3"
+    },
+    {
+      "pdfPage": 8,
+      "grade": "TG2"
+    },
+    {
+      "pdfPage": 9,
+      "grade": "TG2"
+    },
+    {
+      "pdfPage": 10,
+      "grade": "TG2"
+    },
+    {
+      "pdfPage": 11,
+      "grade": "TG2"
+    }
+  ],
+  "findings": {
+    "TG2": 8,
+    "TG3": 1
+  },
+  "passagesChecked": 54,
+  "generalLimitations": 1,
+  "specificUncertainties": 7,
+  "additionalMethodLimits": 33,
+  "financeIssues": 0,
+  "expectedMetrics": {
+    "grossYieldPercent": "8",
+    "noi": "360000",
+    "netYieldPercent": "6",
+    "cashFlowBeforeTax": "120000"
+  },
+  "ruleCheckOnly": {
+    "recommendation": "Innhent mer informasjon",
+    "unresolvedTg3Preserved": true
+  },
+  "manifestFilesVerified": 6,
+  "adaptersCalled": 0,
+  "providerCalls": 0,
+  "humanMeasurements": 0,
+  "documentModeNote": "demo er kun DocumentBasis-metadata i lokal PDF-kontroll; ingen demo- eller live-adapter kjøres"
+}

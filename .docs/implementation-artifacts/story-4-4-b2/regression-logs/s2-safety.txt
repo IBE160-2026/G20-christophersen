@@ -1,0 +1,21 @@
+✔ RT-16/18: complete 9/10 TG2 and 2/2 TG3 passes with missed TG2 recorded (0.878959ms)
+✔ RT-16: missing TG3 finding, invented finding, wrong physical page below threshold, or 8/10 fails (0.123ms)
+✔ RT-17/18: reject omitted TG3 row or omitted missed TG2 row rather than shrinking denominator (0.223ms)
+✔ Reject extra, mismatched, duplicate assessment and duplicate expected rows (0.13225ms)
+✔ Evaluation preserves expected and original assessment inputs; no corrections argument exists (0.2385ms)
+✔ replay-control F3 rejects before any fetch, dispatch, or shared-lock mutation (487.502042ms)
+✔ shared lock release requires exact fixture and attempt; mismatches preserve evidence (1.466375ms)
+✔ legacy ownerless locks cannot be reconciled or removed (0.419167ms)
+✔ reconcile F1 cannot release another case lock or write a known-cost receipt (818.39125ms)
+✔ usage and cost reject invalid counters, missing totals, inconsistent cache and reasoning (0.818292ms)
+✔ earlier ledger requires explicit known finite cost with validated matching usage (0.283416ms)
+✔ bind failure rejects listen promise instead of escaping as unhandled error (0.226208ms)
+✔ runner bind error preserves failure evidence and owned reservation without fetch/dispatch (833.70425ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2196.024167

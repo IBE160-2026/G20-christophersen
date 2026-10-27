@@ -1,0 +1,45 @@
+{
+  "capturedAt": "2026-10-27T12:55:56.692Z",
+  "capturePhase": "before F2 live execution",
+  "sourceFingerprintVerified": true,
+  "sourceFingerprint": "f48238f6b370e06f953bf946e87386b3ba12e1b4366dd2585cca01c292696de4",
+  "codeCommit": "0cc8b3cb444bb76b74befcbfcf57efa422fbb2b3",
+  "files": {
+    "tools/story-4-4/f1-b2.mjs": {
+      "archive": "tools__story-4-4__f1-b2.mjs",
+      "sha256": "9a9d5738961ddb3710a59a2e265e79bbbd3aacd8473136290fbd7c9b48d5c02e"
+    },
+    "tools/story-4-4/f1-b2-transport.mjs": {
+      "archive": "tools__story-4-4__f1-b2-transport.mjs",
+      "sha256": "7ecc4b03b06c9c80266e4cce3a06d099582c57be92c8c2f444c9dc6f3b13b5f0"
+    },
+    "tools/story-4-4/f1-b2.test.mjs": {
+      "archive": "tools__story-4-4__f1-b2.test.mjs",
+      "sha256": "a0b69e58143f3645931942c190389bfce4f4969bdb457e1ec3f6089ac447fb35"
+    },
+    "tools/story-4-4/F1-B2-README.md": {
+      "archive": "tools__story-4-4__F1-B2-README.md",
+      "sha256": "79f133dedf2dc998c6b8f58fb2ad23c44a2968f0cdb485f8ddb70e80c6d7760e"
+    },
+    "tools/story-4-4/b2-lifecycle.mjs": {
+      "archive": "tools__story-4-4__b2-lifecycle.mjs",
+      "sha256": "19867f41d9651ccea53fb91dc5eb51749d23291fedb5b9a08c97eae039cf84aa"
+    },
+    "tools/story-4-4/b2-lifecycle.test.mjs": {
+      "archive": "tools__story-4-4__b2-lifecycle.test.mjs",
+      "sha256": "ff72e03d6c0198854978cce9816c155285591f590bf08202662bdecdda961b8e"
+    },
+    "tools/story-4-4/project-ledger.mjs": {
+      "archive": "tools__story-4-4__project-ledger.mjs",
+      "sha256": "d0b892856e50a25addfcef50df86745766ad82235bc34abeb345f4fbad87cd58"
+    },
+    "tools/story-4-4/run-safety.mjs": {
+      "archive": "tools__story-4-4__run-safety.mjs",
+      "sha256": "719895320569b97ae8bc5ca4cf36bef066a37da46d3b26651be167736a6578ce"
+    },
+    "tools/story-4-5/manual.mjs": {
+      "archive": "tools__story-4-5__manual.mjs",
+      "sha256": "8aaa4627807d3ac3122bdc0c409181d46842429a4182a3897e33de14b83c4662"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "capturedAt": "2026-10-27T12:50:25.503Z",
+  "capturePhase": "after actual F1 execution and before review patches; no pre-run snapshot claimed",
+  "executedSourceFingerprintMatchesPlan": true,
+  "sourceFingerprint": "67b20aa44c39787df463eaffd33fd9830c0db0393afd3be9a6995fb418733f6c",
+  "codeCommit": "0cc8b3cb444bb76b74befcbfcf57efa422fbb2b3",
+  "files": {
+    "tools/story-4-4/f1-b2.mjs": {
+      "archive": "tools__story-4-4__f1-b2.mjs",
+      "sha256": "7df334d25ddaae4fc850408a397cf8a07bb9e796eb3662750d3187e24b42a384"
+    },
+    "tools/story-4-4/f1-b2-transport.mjs": {
+      "archive": "tools__story-4-4__f1-b2-transport.mjs",
+      "sha256": "87eb1a7c48ca6cc891100262c59474779bd462ff8538797150a8808159d6d8a5"
+    },
+    "tools/story-4-4/f1-b2.test.mjs": {
+      "archive": "tools__story-4-4__f1-b2.test.mjs",
+      "sha256": "65b47c056ae9581c12edbb71f7e68a28117a70a88a907041d9735c5ba0cdfed0"
+    },
+    "tools/story-4-4/F1-B2-README.md": {
+      "archive": "tools__story-4-4__F1-B2-README.md",
+      "sha256": "438454690864ae0ae8eeb0dcbc2fef4fc59867dc16f974ca6c9e8183b581dbcc"
+    },
+    "tools/story-4-4/run-safety.mjs": {
+      "archive": "tools__story-4-4__run-safety.mjs",
+      "sha256": "719895320569b97ae8bc5ca4cf36bef066a37da46d3b26651be167736a6578ce"
+    },
+    "tools/story-4-5/manual.mjs": {
+      "archive": "tools__story-4-5__manual.mjs",
+      "sha256": "8cb1ed1d156297564d2b76d414cd3dacb565a983177d450615c8cc2089525ce8"
+    }
+  }
+}

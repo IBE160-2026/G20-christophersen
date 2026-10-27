@@ -7,6 +7,7 @@ import { join } from 'node:path'
 import { execFileSync } from 'node:child_process'
 import { attemptId, repository, prepare, arm, createManualServer, hash, read, write, validateApproval, fingerprint, validateSourceBinding } from './manual.mjs'
 import { createObservedFetch } from './transport.mjs'
+import { projectCost } from '../story-4-4/project-ledger.mjs'
 
 const temporary = t => {
   const directory = mkdtempSync(join(tmpdir(), 'story45-offline-'))
@@ -47,6 +48,8 @@ test('prepare is unarmed, exact F1 request, exclusive writes and no overwrite', 
   assert.equal(plan.accountStatus, 'pending')
   assert.equal(plan.gateStatus, 'pending')
   assert.equal(plan.reservationUsd, 1.53)
+  assert.equal(plan.historicalCostBeforeUsd, projectCost(repository))
+  assert.ok(plan.historicalCostBeforeUsd >= 0.019558)
   const original = readFileSync(join(directory, 'plan.json'))
   assert.equal(hash(JSON.stringify(read(join(directory, 'expected-request.json')))), plan.requestSha256)
   assert.throws(() => write(directory, 'plan.json', { overwritten: true }))

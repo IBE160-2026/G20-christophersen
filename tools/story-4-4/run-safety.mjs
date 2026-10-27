@@ -47,7 +47,7 @@ export function ledgerTotal(preflight, receipts) {
   return total
 }
 function identity(owner) {
-  if (!owner || !['F1', 'F2', 'F3', 'F4'].includes(owner.fixtureId) || typeof owner.attemptId !== 'string' || !owner.attemptId) throw new Error('Missing lock owner')
+  if (!owner || !['F1', 'F2', 'F3', 'F4', 'S5-B1-v1'].includes(owner.fixtureId) || typeof owner.attemptId !== 'string' || !owner.attemptId) throw new Error('Missing lock owner')
   return owner
 }
 export function createOwnedLock(path, fixtureId) {

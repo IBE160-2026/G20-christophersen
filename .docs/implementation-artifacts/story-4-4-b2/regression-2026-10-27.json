@@ -1,0 +1,149 @@
+{
+  "productBaselineCommit": "824a074db04b3738d4d770aab04dddd5db40d721",
+  "apiKeyRemoved": true,
+  "externalNetworkOsBlocked": true,
+  "loopbackAllowed": true,
+  "checks": [
+    {
+      "check": "typecheck",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "-b"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-typecheck.log",
+      "preservedLog": "regression-logs/typecheck.txt"
+    },
+    {
+      "check": "lint",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "node_modules/oxlint/bin/oxlint",
+        "--deny-warnings",
+        "src",
+        "tests",
+        "vite.config.ts",
+        "playwright.config.ts",
+        "playwright.dev.config.ts",
+        "playwright.components.config.ts",
+        "vitest.config.ts"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-lint.log",
+      "preservedLog": "regression-logs/lint.txt"
+    },
+    {
+      "check": "build",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "node_modules/vite/bin/vite.js",
+        "build"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-build.log",
+      "preservedLog": "regression-logs/build.txt"
+    },
+    {
+      "check": "vitest",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-vitest.log",
+      "preservedLog": "regression-logs/vitest.txt"
+    },
+    {
+      "check": "s2-safety",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "--test",
+        "tools/story-4-4/evaluate-s2.test.mjs",
+        "tools/story-4-4/run-safety.test.mjs"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-s2-safety.log",
+      "preservedLog": "regression-logs/s2-safety.txt"
+    },
+    {
+      "check": "manual-helper",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "--test",
+        "tools/story-4-5/manual.test.mjs"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-manual-helper.log",
+      "preservedLog": "regression-logs/manual-helper.txt"
+    },
+    {
+      "check": "e2e",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "--workers=2"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-e2e.log",
+      "preservedLog": "regression-logs/e2e.txt"
+    },
+    {
+      "check": "dev-offline",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "--config",
+        "playwright.dev.config.ts",
+        "--workers=1"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-dev-offline.log",
+      "preservedLog": "regression-logs/dev-offline.txt"
+    },
+    {
+      "check": "components",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "--config",
+        "playwright.components.config.ts",
+        "--workers=2"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-components.log",
+      "preservedLog": "regression-logs/components.txt"
+    },
+    {
+      "check": "build-key-check",
+      "command": [
+        "/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin/node",
+        "tests/helpers/verify-analysis-build.mjs"
+      ],
+      "exitCode": 0,
+      "rawLog": "/private/tmp/story44-2026-10-27-build-key-check.log",
+      "preservedLog": "regression-logs/build-key-check.txt"
+    }
+  ],
+  "counts": {
+    "vitest": 1082,
+    "e2e": 195,
+    "devOffline": 3,
+    "components": 37,
+    "s2Safety": 13,
+    "existingManualHelper": 8,
+    "frontendFilesKeyChecked": 204,
+    "keyLeaks": 0
+  },
+  "newB2HelperTests": {
+    "passed": 7,
+    "failed": 0,
+    "note": "Historisk første 7-prøvers kontroll før reviewpatcher; gjeldende etterpatch er separat post-review-targeted-2026-10-27.json (44/44)."
+  },
+  "finalTargetedEvidence": "post-review-targeted-2026-10-27.json"
+}

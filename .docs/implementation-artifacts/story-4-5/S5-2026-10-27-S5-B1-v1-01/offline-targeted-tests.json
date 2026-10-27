@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-27T13:21:01.870897+00:00",
+  "passed": 53,
+  "failed": 0,
+  "skipped": 0,
+  "apiKeyRemoved": true,
+  "externalNetworkOsBlocked": true,
+  "log": "offline-targeted-tests.txt",
+  "sourceFingerprint": "d4b01cc5560ddad033fe5e5f1c3c10434b163fcf5d66c4b7c38d5663d984a1b0",
+  "note": "Source stable; includes9benchmark,8oldmanual,23B2/lifecycle,13S2/safety. No canonical fake measurements."
+}

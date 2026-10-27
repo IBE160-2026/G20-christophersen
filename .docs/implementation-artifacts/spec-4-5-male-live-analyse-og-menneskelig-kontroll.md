@@ -2,7 +2,7 @@
 title: 'Story 4.5 — Måle live-analyse og menneskelig kontroll'
 type: 'chore'
 created: '2026-10-24'
-status: 'draft'
+status: 'in-progress'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
@@ -104,3 +104,17 @@ Ingen faktiske S5-observasjoner, live-kall eller mennesketider er lagt til.
 Benchmarkdeloppgavens done gjelder bare forfattet og verifisert materiale.
 Eksisterende låste Story-AC og S5-definisjoner består. Før gjennomføring må
 ny casebundet preflight, bevisoppsamling og kort instruks klargjøres.
+
+## Gjeldende checkpoint 2026-10-27 — 4.4done og benchmarkmiljø
+
+4.4 er nå done etter originale nye F1/F2-sluttbevis, uavhengig review og full
+regresjon. 4.5 er in-progress bare for teknisk klargjøring; ikke done og
+ingen faktisk S5-observasjon finnes. Ny casebundet helper har uavhengig
+review og53/53 root-offlineprøver. Alle7frystebenchmarkfiler er uendret.
+R4-S5 er closed på avklartperson/miljø/metode og fersk kontoavstemming,
+ikke utførtmåling. Se [gjeldende R4](../planning-artifacts/r4-s5-benchmark-gjennomforing-2026-10-27.md),
+[kortinstruks](story-4-5-s5-b1-v1-instruks.md) og
+[internregistrering](story-4-5-s5-b1-v1-registrering.md).
+Mads må selv gjøre manuell referanse før AI, så faktisk analyse/kildekontroll.
+Faktiske tider, aktiviteter, feil/kvalitet, oppsummering og uavhengig
+Story4.5-review gjenstår. Ingenbenchmark-KI/mennesketider er opprettet.

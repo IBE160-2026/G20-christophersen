@@ -1,0 +1,12 @@
+{
+  "outcomeSha256": "5caead6a390bb9997f18a609dd8e328351629eea32114747bc4f9ba42993f121",
+  "source": "TG2 · Slitt overflate på baderomsgulv.\n\nF2-tilstandsrapport.pdf · PDF-side 2 av 4\n\nForrige PDF-side\nNeste PDF-side\nPDF-zoom\nHel side\n150 %\n200 %\n300 %\n\nF2-tilstandsrapport.pdf · PDF-side 2: Originalside tilgjengelig.\n\nF2 | FIKTIV TILSTANDSRAPPORT\n\n\nBad - registrert avvik\n\n\nTilstandsgrad: TG2\n\n\nSlitt overflate på baderomsgulv\n\n\nDette er den forhåndsdefinerte funnteksten for testcaset.\n\n\nIngen reparasjonskostnad er anslått.\n\n\nKun testdata - ingen teknisk godkjenning eller markedsverdi\n\n\nPDF-posisjon 2",
+  "originalText": "F2 | FIKTIV TILSTANDSRAPPORT\n\n\nBad - registrert avvik\n\n\nTilstandsgrad: TG2\n\n\nSlitt overflate på baderomsgulv\n\n\nDette er den forhåndsdefinerte funnteksten for testcaset.\n\n\nIngen reparasjonskostnad er anslått.\n\n\nKun testdata - ingen teknisk godkjenning eller markedsverdi\n\n\nPDF-posisjon 2",
+  "limitations": [
+    "Uttrekket bygger på den oppgitte sideteksten for fire PDF-sider, ikke direkte kontroll av original-PDF.",
+    "Rapporten er en fiktiv testfixture og beskriver ingen reell eiendom."
+  ],
+  "posts": 1,
+  "s5Measured": false,
+  "message": "Root must inspect original outcome/source/screenshots, write limitation-approval.json, then send continue on stdin."
+}

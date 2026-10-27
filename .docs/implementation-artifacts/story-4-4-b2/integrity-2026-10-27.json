@@ -1,0 +1,15 @@
+{
+  "newOriginalProviderResponseIdDistinct": true,
+  "planPdfOracleAndPreflightHashBindings": true,
+  "actualRequestCorrelationMatchesAppOutcome": true,
+  "transportNormalizedRequestBinding": true,
+  "providerModelTierReasoningAndOutputBudget": true,
+  "usageAndReceiptCostMatch": true,
+  "newCostUsd": 0.003486,
+  "cumulativeProjectUsd": 0.019558,
+  "uiControlCompleted": true,
+  "onePostOneProviderNoRetry": true,
+  "ownedLockExplicitlyReconciledAndAbsent": true,
+  "secretScanLeaks": 0,
+  "humanS5Measurements": 0
+}

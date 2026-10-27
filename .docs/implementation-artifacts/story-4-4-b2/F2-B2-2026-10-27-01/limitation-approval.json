@@ -1,0 +1,34 @@
+{
+  "attemptId": "F2-B2-2026-10-27-01",
+  "outcomeSha256": "5caead6a390bb9997f18a609dd8e328351629eea32114747bc4f9ba42993f121",
+  "reportHash": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+  "reviewedBy": "root-agent",
+  "reviewedAt": "2026-10-27T12:56:42.887127+00:00",
+  "originalPdfReviewed": true,
+  "findingAssessment": {
+    "findingId": "F2-001",
+    "description": "Slitt overflate på baderomsgulv.",
+    "source": {
+      "documentName": "F2-tilstandsrapport.pdf",
+      "reportHash": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+      "pdfPage": 2
+    },
+    "sourceSupported": true,
+    "originalUnchanged": true
+  },
+  "assessments": [
+    {
+      "index": 0,
+      "original": "Uttrekket bygger på den oppgitte sideteksten for fire PDF-sider, ikke direkte kontroll av original-PDF.",
+      "reason": "Kontrollert mot original F2-PDF, fysisk side 2, og alle fire lesbare sider i PDF.js-grunnlaget. F2 har eksplisitt TG2 og slitt overflate på baderomsgulv, som det ferske funnet gjengir uten korrigering. Tekstbasert input er R1s valgte metode; jeg har nå kontrollert originalkilden visuelt. Ingen uløst kritisk rapportmangel fremgår i denne screeningrevisjonen.",
+      "controlledNonCritical": true
+    },
+    {
+      "index": 1,
+      "original": "Rapporten er en fiktiv testfixture og beskriver ingen reell eiendom.",
+      "reason": "F2-originalens side 1 og 3 beskriver uttrykkelig fiktiv testfixture uten virkelig eiendom/person. Dette opphavet bevares synlig. Det er en kontrollert funksjonsprøve med separat finansgrunnlag, ikke en virkelig investering; den generelle opphavsbegrensningen er ikke en kritisk informasjonsmangel i dette caset.",
+      "controlledNonCritical": true
+    }
+  ],
+  "method": "Agentbasert funksjonell kildekontroll av ferskt originalt F2-live-uttrekk, ikke Mads sin menneskelige vurdering eller S5-måling."
+}

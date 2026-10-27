@@ -1,0 +1,43 @@
+{
+  "caseId": "S5-B1-v1",
+  "attemptId": "S5-2026-10-27-S5-B1-v1-01",
+  "requestSha256": "0f5c5dd4b79550595a489e164bc1e280ae9dec416e24348975182e3f406c7737",
+  "sourceFingerprint": "d4b01cc5560ddad033fe5e5f1c3c10434b163fcf5d66c4b7c38d5663d984a1b0",
+  "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+  "oracleSha256": "8c7000bc06041f03e1090d7d9cfadf8dd679cdf6072931aad28c6af7cfc879a5",
+  "financialSha256": "7950e6632696c40594f9afb659d38165aa4ede40d5b43ceaac416be45737688a",
+  "benchmarkManifestSha256": "2ca29ecc2a2a9db5ec53de64a60c3f6bb97fc46f82bc441e8a39eb503a711c65",
+  "owner": "Mads",
+  "codeCommit": "e95181b9c726c35f40bd198a2b32d44b22d3ce15",
+  "checkedAt": "2026-10-27T13:21:01.904362+00:00",
+  "gateClosed": true,
+  "humanInitiationOnly": true,
+  "measurementMethodDefined": true,
+  "rootExplicitApproval": true,
+  "regressionPassed": true,
+  "accountVerified": true,
+  "unknownChargesResolved": true,
+  "gateEvidence": {
+    "path": "/Users/madschristophersen/IBE160/G20-christophersen/.docs/planning-artifacts/r4-s5-benchmark-gjennomforing-2026-10-27.md",
+    "sha256": "777a28e6a669b4bd9709e2374fac935fadcc3109c74f43a29013f9e008927a86"
+  },
+  "methodEvidence": {
+    "path": "/Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-4-5-s5-b1-v1-instruks.md",
+    "sha256": "f582072034f2f512dd68b00ff700e053236646e339d2ea82e1b3cd0f83e6a347"
+  },
+  "accountEvidence": {
+    "path": "/Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/story-4-5-s5-b1-v1-preflight-2026-10-27.md",
+    "sha256": "f6026e0872be600d11810e424043106c89c4e9f1a309838aad53fa2165d4a57c"
+  },
+  "priceSource": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+  "inputUsdPerMillion": 2,
+  "outputUsdPerMillion": 10,
+  "cachedUsdPerMillion": 0.1,
+  "cacheWriteUsdPerMillion": 2.5,
+  "costBeforeUsd": 0.023091999999999998,
+  "reservationUsd": 1.53,
+  "accountLimitUsd": 2,
+  "availableUsd": 1.976908,
+  "versionBinding": "codeCommit is actual HEAD at approval; exact new helper/source/build bound by fingerprint and included in final handoff commit, later docs/evidence commits allowed only with unchanged executable fingerprint",
+  "armed": true
+}

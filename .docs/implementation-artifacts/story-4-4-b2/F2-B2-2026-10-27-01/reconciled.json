@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-27T12:56:45.626Z",
+  "owner": {
+    "fixtureId": "F2",
+    "attemptId": "5bff7635-4d74-4570-90a6-ed1cdd613dda"
+  },
+  "costUsd": 0.003534,
+  "cumulativeProjectUsd": 0.023091999999999998,
+  "uiControlCompleted": true,
+  "receiptSha256": "446ac7e43a282c1faa29f027fce22537e48c79946d457676de2ee183dc15c777"
+}

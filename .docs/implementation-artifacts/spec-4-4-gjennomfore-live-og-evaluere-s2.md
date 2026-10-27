@@ -2,10 +2,10 @@
 title: 'Story 4.4 — Ekte live-uttrekk og S2'
 type: 'chore'
 created: '2026-10-23'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 baseline_commit: 'd378399f8637b8b1feb7418646d745aee245c4ca'
-review_loop_iteration: 0
+review_loop_iteration: 1
 context:
   - '{project-root}/.docs/planning-artifacts/r1-live-ki-semester-v1.md'
   - '{project-root}/.docs/implementation-artifacts/epic-4-context.md'
@@ -47,7 +47,7 @@ Gjennomfør eksisterende Story 4.4 AC1–AC6 i epics.md: ekte produksjonsadapter
 ## Tasks & Acceptance
 
 - [x] `.docs/implementation-artifacts/story-4-4/`: plan, rapport-/fasithash, versjoner og reservasjoner før sekvensielle F1–F4; capture av alle originale terminalutfall, tokens, faktisk kostnad og headere.
-- [ ] Samme mappe: fullstendige reelle hovedflytbevis F1/F2/F4 samt F3 ved adaptergrensen uten å endre L. **Delvis: F2/F4 og F3 dokumentert, F1s sluttkontroll bare replay, og F1/F2 har åpne AC6-avvik.** Ingen nye produktfunksjoner. Kjøringer må ikke kunne startes av npm test; dokumenter eksplisitt engangskommando.
+- [x] Fullstendige reelle hovedflytbevis F1/F2/F4 samt F3 ved adaptergrensen uten å endre L. **Lukket 2026-10-27: nye separate originale F1/F2-sluttforsøk; historisk F1 replay/ufullstendighet og F2-feil bevares urørt.** Ingen nye produktfunksjoner. Kjøringer må ikke kunne startes av npm test; dokumenter eksplisitt engangskommando.
 - [x] `.docs/implementation-artifacts/story-4-4-verifikasjon.md`: vurder hvert originalfunn semantisk mot fasit og PDF, TG2/TG3-tellere, feil/oversette og S2. Forklar automatiserte UI-handlinger kontra menneskelig/agentkildekontroll, ingen S5.
 - [x] `.docs/process/arbeidsokter/2026-10-23-story-4-4-live.md`: bestilling, valg, kommandoer, alle forsøk og resultat.
 - [x] Kontroller RT-16–RT-18-evalueringsmetode (9/10 TG2 +2/2 TG3 består; manglende TG3, feil side under terskel, oppdiktet eller 8/10 består ikke). Ingen testenhet som later som betalt modellkvalitet.
@@ -133,10 +133,89 @@ beholdes som historikk. Se [beslutning og implementeringsplan](story-4-4-begrens
 - [x] Kontrakt/domain/state/UI: eksplisitt brukerbekreftet vurdering per generell begrensning, original/årsak/revisjonsbinding og ingen generell blocker-override.
 - [x] Målrettede tester: tom/stale begrunnelse/binding, revisjonsendringer, originalbevaring, resultatsnapshot og fortsatt typed/kritisk blokkering.
 - [x] Offline replay av originale F1/F2 for riktig kodeutfall uten nye modellkall; F4s TG3 Uavklart består.
-- [ ] Uavhengig sekvensiell review hos neste agent; B2 beholdes åpen til faktisk nytt gyldig live-hovedflytbevis.
+- [x] Uavhengig B1-review bestått; B2/AC6 lukket med nye originale F1/F2-live-bevis og ny uavhengig sluttreview 2026-10-27.
 
 Implementeringscheckpoint: build/typecheck/lint bestått, 136/136 målrettede
 unitprøver og 6/6 bygget-app-originalreplay-prøver bestått med OS-nettsperre
 og uten nøkkel. 77 originale/fasit-/modellkontraktfiler er byteidentiske mot
 HEAD. B1-produktrettingen er klar til ny uavhengig review, B2 forblir åpen.
 Ingen nye live-kall, ingen done-påstand. Se beslutningsfilens faktiske bevis.
+
+### Sluttrunde 2026-10-27 — ny original F1 og verifisert F2-rest
+
+Fersk Mads-kontoavstemming: USD2-grense, før forsøket USD0.016072 og ingen
+andre/uavklarte belastninger. Nytt faktisk F1-B2-2026-10-27-01 har fullført
+original live-hovedflyt, kildekontroll og Gå videre med korrekte nøkkeltall;
+1 kall/0 retry, USD0.003486, samlet USD0.019558, eksplisitt avstemt/fri lås.
+Se [ny sluttkontroll](story-4-4-b2-sluttkontroll-2026-10-27.md). Gamle bevis og
+benchmark er urørt. Ingen menneskelig S5 eller benchmarkanalyse er startet.
+
+Uavhengig verifikasjonsreview avdekket at F2-originalens feilutfall fortsatt
+hindrer full AC6. Offline-replay kan ikke erstatte korrekt faktisk F2-live-
+sluttbevis. Kjør derfor ett separat F2-B2-2026-10-27-01 etter samme trygge
+forhåndsplan/ny reservasjon og rootkildecheckpoint; ingen automatisk retry.
+Dette er innen eksisterende godkjente F1–F4-scope, ikke endret låst krav.
+Før neste kall skal ledger inkludere faktisk avstemt F1-B2-kostnad.
+
+- [x] Nytt originalt komplett F1-live-sluttbevis og faktisk usage-avstemming.
+- [x] Rett verifiserte helperfunn om opprydding/receipt, gjentatt run/lås,
+  gjenopptakbar avstemming, full ledger og eksakt originalresponsbevaring;
+  kjør målrettede offlineprøver og uavhengig rekontroll.
+- [x] Nytt originalt korrekt F2-live-sluttbevis, kildekontroll og avstemming.
+- [x] Endelig uavhengig samlet AC-review og korrekt done/sprintoppdatering.
+
+### Reviewtriage 2026-10-27
+
+Tre ferske reviewagenter ble kjørt sekvensielt: blind (7 funn), edge (ingen),
+verification-gap (ett forhåndsverifisert gap og én AC6-rest). Hvert funn er
+vurdert før gruppering; ingen nye betalte kall for å teste verktøyrettingene.
+
+| ID | Dom/rute | Verifisert forhold / avgjørelse |
+| --- | --- | --- |
+| N1 | medium / patch | Receipt skrives etter cleanup; browser.close-feil kan hoppe over kjent kostnad. Isoler cleanup og skriv receipt uansett. |
+| N2 | medium / patch | Ny lås kan opprettes før eksisterende started avviser gjentatt run. Varig startmarkør må sjekkes før lås. |
+| N3 | medium / patch | Reconciled wx før release kan blokkere ny avstemming ved avbrudd. Gjør samme eier/receipt-validerte avstemming gjenopptakbar. |
+| N4 | high / patch | Historisk ledger utelater ny faktisk F1-B2-kostnad og vil gi feil grunnlag for senere 4.5. Felles validert ledger må telle nye forsøk og stoppe ukjente. |
+| N5 | medium / patch | Generisk stadium alene mister hvilken UI-forventning som feilet. Bevar trygg feiltype/konkret renset forventning uten secrets/rå providerbody. |
+| N6 | medium / patch | Ingen direkte offline receipt-/cleanup-/reconcile-prøver; legg til relevante negative/gjenopptakbare scenarioer med falske avhengigheter. |
+| N7 | low / patch | Temp-rålogger er ikke varige. Bevar relevante hemmelighetsfrie regresjonslogger/oppsummeringer i repo. |
+| V1 | medium / patch | Transportprøven kunne miste hele output og fortsatt bestå statusassert. Krev særpreget faktisk output og eksakt returnert/lagret body. |
+| V2 | medium / bad_spec | Egenkontrollens AC6-vurdering godtok F2-replay som nok. Riktig faktisk F2-live mangler; planen er korrigert til separat nødvendig forsøk. Bevar alt fungerende produkt, F1-original, opprinnelig S2/fasit, benchmark, full regresjon og eksplisitt kritisk vern. Ingen produktkode re-deriveres. |
+
+2026-10-27 etter implementering: N1–N6/V1 rettet med nye offlineguards og
+26/26 grønne målrettede prøver; N7 med varige rålogger. V2 nå dekket av
+faktisk original F2-live til Forkast, uicompletedtrue, kost0.003534 og
+samlet0.023092, avstemt eid lås. Ingen ny produktkode. Begge nye originaler,
+S2 og benchmark bevares; endelig uavhengig rekontroll gjenstår.
+
+### Sekvensiell sluttreview, runde 2
+
+Blind (8), edge (2) og verifikasjon (ingen gap) er ferdig før triage.
+Verifikasjonsagenten bekreftet alle AC1–AC6 med ekte nye F1/F2-bevis; ingen
+F2-replay-rest. Gjenværende funn er avgrenset helperrobusthet/dokumentasjon.
+
+| ID | Dom/rute | Selvstendig verifikasjon / avgjørelse |
+| --- | --- | --- |
+| R2-B1 | medium / patch | Receipt-feil før cleanup-løkken kan hoppe over browser/router/server; cleanup må forsøkes uansett. |
+| R2-B2 | medium / patch | Sekvensielt await på hengende browser.close hindrer øvrig cleanup. Start uavhengige cleanupforsøk med avgrenset venting. |
+| R2-B3 | high / patch | Ugyldig cumulativeProjectUsd blir NaN i differansen og kan slippe gjennom. Krev validCost før sammenligning. Faktiske receipts er gyldige. |
+| R2-B4 | medium / patch | costBeforeUsd mangler eksplisitt finite-guard i eksportert reconcile; NaN kan omgå kontroll. Avvis manglende/ugyldig verdi. |
+| R2-B5 | low / dokumentpatch | Lagret provider.json er komplett parset JSON, ikke eksakte wirebytes. Presiser format; ingen rekonstruert historisk råbody eller nytt kall. |
+| R2-B6 | low / dokumentpatch | 26-prøvers kjørebevis er ikke lagret ennå og tidligere regresjons-JSON sier 7. Bevar ny målrettet etterpatchlogg og eget datert tillegg med faktisk antall. |
+| R2-B7 | false | Samlet final-integrity-2026-10-27.json finnes allerede med begge forsøks-IDer og riktig total0.023092; den gamle rapporten er F1-checkpoint. Ny dokumentlenke gjør forskjellen eksplisitt, originalfilen omskrives ikke. |
+| R2-B8 | medium / patch | ExcludeF1 gir kjedebrudd når F2 senere finnes; gjentatt historisk reconcile må validere hele kjeden og hente mål-forsøkets førkost, uten å utelate faktiske belastninger. |
+| R2-E1 | medium / patch, samme rot R2-B1 | Egen edge-agent bekrefter kast før cleanup. Samme receipt/uansett-cleanup-retting. |
+| R2-E2 | high / patch, samme rot R2-B3 | Egen edge-agent bekrefter manglende kumulativt felt passerer NaN-sammenligningen. Samme validCost-retting. |
+
+## Endelig akseptanse 2026-10-27
+
+**Done.** [Uavhengig sluttreview](story-4-4-b2-uavhengig-sluttreview-2026-10-27.md)
+bekrefter samtlige AC1–AC6 og alle siste verktøyrettinger. Begge reviewrunders
+verifiserte funn er lukket; ingen nye åpne 4.4-funn. Rootens fulle produkt-
+regresjon er grønn og siste avgrensede etterpatchregresjon er 44/44.
+F1/F2 viser korrekt faktisk originalt live-sluttutfall (Gå videre/Forkast),
+F4/F3 og original S2 er bevart. Ingen replay brukes som erstatningsbevis.
+Nye to kall kostet USD0.007020, samlet avstemt USD0.023092; ingen ukjent
+belastning eller aktiv paidlock. Samtlige 87 beskyttede filer er uendret.
+Epic4 forblir in-progress fordi 4.5 mangler menneskelig S5 og review.
+4.5 kan nå klargjøres, men ingen S5-B1-v1-KI eller menneskemåling er startet.

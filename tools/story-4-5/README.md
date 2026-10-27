@@ -1,4 +1,91 @@
-# Intern F1-klargjøring — ingen automatisk analyse
+# Manuell S5-klargjøring — ingen automatisk analyse
+
+## Aktivt benchmark S5-B1-v1
+
+Den nye inngangen er `benchmark.mjs`. Den gamle F1-inngangen nedenfor er
+historisk og skal ikke brukes for benchmarken. Forsøks-ID er
+`S5-2026-10-27-S5-B1-v1-01`, med separat bevismappe under
+`.docs/implementation-artifacts/story-4-5/`. Ingen kommando bekrefter
+finans/funn/liste/TG3 eller starter analyse automatisk.
+
+Root sine eksplisitte kommandoer, med Node 24.21.0 og ferdig bygget app:
+
+```sh
+node tools/story-4-5/benchmark.mjs prepare
+node tools/story-4-5/benchmark.mjs serve-unarmed
+node tools/story-4-5/benchmark.mjs arm /absolutt/benchmark-approval.json
+node tools/story-4-5/benchmark.mjs serve-armed
+```
+
+Serverne bruker samme `127.0.0.1:3000`; stopp den uarmede før den armed
+startes. Uarmet POST avvises før pipeline. Root gjennomfører datert preflight
+og godkjenning før `arm`; dette er en separat lokal fil, ingen nettleserrute.
+Bare Mads sitt senere Start analyse kan utløse ett produksjonskall.
+
+`prepare` binder manifestets SHA-256 og alle seks filbindinger i det fryste
+caset, ekte PDF.js-grunnlag, eksakt createLiveRequest, source/build og aktuell
+prosjektledger. Fasit og finansgrunnlag er bare hashbundet kontrollgrunnlag;
+de legges aldri til providerinput. Alle writes er eksklusive. Endrede
+benchmarkfiler eller kilde/build krever ny avklaring, ikke overskriving.
+
+Approval-filen bruker samme felt som den historiske formen nedenfor, med
+følgende casebundne verdier i tillegg. Kopier hashverdier fra den nye planen:
+
+```json
+{
+  "caseId": "S5-B1-v1",
+  "attemptId": "S5-2026-10-27-S5-B1-v1-01",
+  "reportHash": "fra ny plan",
+  "benchmarkManifestSha256": "fra ny plan",
+  "oracleSha256": "fra ny plan",
+  "financialSha256": "fra ny plan"
+}
+```
+
+Dette objektet er et tillegg, ikke en komplett approval-fil. Behold
+requestSha256/sourceFingerprint, owner=Mads, full codeCommit, checkedAt,
+alle sju sanne plan-/rootgodkjenningsflagg, gateEvidence/methodEvidence/
+accountEvidence med faktiske filhashreferanser, datert prisgrunnlag og
+budsjettfeltene fra den historiske formen. Ingen menneskelig utføring
+attesteres av disse flaggene. `checkedAt` kan ikke være eldre enn 24 timer
+eller mer enn ett minutt frem i tid. Kost før forsøk må være nøyaktig lik
+plan og oppdatert ledger, reservasjon USD 1.53, faktisk operativ grense USD 2.
+Ved denne implementeringen var avstemt prosjektkost USD 0.023092 og
+rest USD 1.976908; root må bruke faktisk preflight ved senere arming.
+Godkjent full kodecommit må være ancestor til HEAD, og source/build må
+fortsatt ha nøyaktig samme fingerprint. Rene bevis-/dokumentcommits tillates.
+
+Valgfritt, etter lokal oppstart, kan root kjøre
+`node tools/story-4-5/benchmark.mjs open-setup`. Dette åpner et nytt synlig
+Chrome-vindu og fyller bare finansens registreringsfelt/kilder/år/leietype
+fra fryst fil. Det trykkes aldri på bekreftelse, neste, filopplasting,
+analyse eller noen kontrollhandling. Mads bekrefter selv. Kommandofasen
+tillater bare lokale GET-forespørsler; etter forhåndsfylling fjernes dette
+oppsettsfilteret, slik at normal brukerstart senere er mulig.
+
+Kjent faktisk providerusage gir en separat `costOnly:true`-receipt før
+svaret returneres til SDK/UI. Receipt har `humanControlStatus:not-recorded`
+og `s5Measured:false`; ingen uiControlCompleted eller tidspunkter for Mads.
+Dermed kan kost ikke forsvinne om UI/kontroll senere avbrytes. Ukjent usage,
+feil og uavstemte forsøk stopper felles prosjektledger. Den globale paidlock
+beholdes også etter kjent kost frem til root eksplisitt avstemmer:
+
+```sh
+node tools/story-4-5/benchmark.mjs reconcile
+```
+
+Denne offlinekommandoen validerer receipt, prosjektets kostkjede og eksakt
+låseier før frigivelse. Den er idempotent, godkjenner ingen menneskelig
+kontroll og utløser ingen analyse. Ikke slett låsen for å forsøke på nytt.
+Den suspenderte gamle F1-planen uten dispatch/usage/receipt teller ikke kost.
+
+Målrettede tester (API-nøkkel/modus fjernet, OS-nettsperre og bare loopback):
+
+```sh
+env -u OPENAI_API_KEY -u ANALYSIS_MODE sandbox-exec -f .docs/implementation-artifacts/story-5-3-nettprofil.sb node --test tools/story-4-5/benchmark.test.mjs tools/story-4-5/manual.test.mjs tools/story-4-4/b2-lifecycle.test.mjs tools/story-4-4/run-safety.test.mjs
+```
+
+## Historisk F1-klargjøring
 
 Dette er et engangsverktøy uten apptelemetri, timer eller browserautomatisering.
 Ingen analyse startes av kommandoene prepare/server/arm; Mads må senere trykke

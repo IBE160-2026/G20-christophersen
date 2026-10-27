@@ -1,0 +1,39 @@
+{
+  "attemptId": "F1-B2-2026-10-27-01",
+  "checkedAt": "2026-10-27T12:39:21.636836+00:00",
+  "accountVerified": true,
+  "unknownChargesResolved": true,
+  "accessVerified": true,
+  "priceVerified": true,
+  "costBeforeUsd": 0.016072,
+  "accountLimitUsd": 2,
+  "availableUsd": 1.983928,
+  "reservationUsd": 1.53,
+  "maximumAfterReservationUsd": 1.546072,
+  "r1LimitUsd": 20,
+  "prices": {
+    "input": 2,
+    "cached": 0.1,
+    "cacheWrite": 2.5,
+    "output": 10
+  },
+  "priceSource": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+  "evidence": "2026-10-27: Mads bekreftet etter egen kontroll riktig API-prosjekt, USD2-grense, totalt USD0.016072 og ingen andre/uavklarte belastninger i aktiv promptlogg. Lesende GET /v1/models/gpt-6.1-sol ga HTTP200 og eksakt modell-ID; ingen rate-limit-headere. API-nøkkel finnes, adminnøkler/prosjekt-ID mangler; kontoavstemming er manuelt brukerbekreftet, ikke admin-API-verifisert. Offisiell OpenAI Docs modellside ble søkt og faktisk åpnet 2026-10-27; Standard kort-kontekst2/.1/2.5/10 bekreftet. Historisk usage/preflight+F1–F4 summerer til0.016072; ingen aktiv global paidlock. RPM5000/TPM1000000 fra tidligere originalkall er historisk, ikke målt på nytt. Ingen nytt betalt minimalkall.",
+  "analysisScope": "Kun ett nytt F1 AC6/B2-forsøk med original HTTP/UI/sluttbevis; ingen replay, ingen menneskelig S5 og ingen KI-analyse av S5-B1-v1.",
+  "modelAccessReadOnly": {
+    "endpoint": "GET /v1/models/gpt-6.1-sol",
+    "httpStatus": 200,
+    "modelIdMatches": true,
+    "rateHeaders": {},
+    "responsesCalls": 0
+  },
+  "accountBasis": "Mads sin ferske eksplisitte kontroll; ingen admininnsyn påstås",
+  "attemptPolicy": {
+    "plannedProviderRequests": 1,
+    "automaticRetry": false,
+    "timeoutMs": 120000,
+    "model": "gpt-6.1-sol",
+    "reasoning": "low",
+    "serviceTier": "default"
+  }
+}

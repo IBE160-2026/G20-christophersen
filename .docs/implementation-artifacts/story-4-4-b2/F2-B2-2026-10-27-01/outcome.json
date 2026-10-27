@@ -1,0 +1,51 @@
+{
+  "httpStatus": 200,
+  "body": {
+    "kind": "analysis",
+    "correlation": {
+      "sessionId": "cd568c7c-47bf-4788-9415-dfc700ad29e4",
+      "requestId": "f5fb403e-2fb7-426a-87b8-2a9067aea5b4",
+      "generation": 1
+    },
+    "outcome": {
+      "contractVersion": "2",
+      "extractionVersion": "1",
+      "requestId": "f5fb403e-2fb7-426a-87b8-2a9067aea5b4",
+      "reportHash": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+      "documentName": "F2-tilstandsrapport.pdf",
+      "mode": "live",
+      "pageCount": 4,
+      "status": "completed",
+      "validationScope": "structure-and-source",
+      "findings": [
+        {
+          "kind": "checkable",
+          "findingId": "F2-001",
+          "grade": "TG2",
+          "description": "Slitt overflate på baderomsgulv.",
+          "source": {
+            "documentName": "F2-tilstandsrapport.pdf",
+            "reportHash": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+            "pdfPage": 2
+          },
+          "original": {
+            "findingId": "F2-001",
+            "description": "Slitt overflate på baderomsgulv.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "F2-tilstandsrapport.pdf",
+              "reportHash": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+              "pdfPage": 2
+            },
+            "uncertainties": []
+          }
+        }
+      ],
+      "uncertainCandidates": [],
+      "limitations": [
+        "Uttrekket bygger på den oppgitte sideteksten for fire PDF-sider, ikke direkte kontroll av original-PDF.",
+        "Rapporten er en fiktiv testfixture og beskriver ingen reell eiendom."
+      ]
+    }
+  }
+}

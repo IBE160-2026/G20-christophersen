@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-27T12:43:19.257Z",
+  "usage": {
+    "input_tokens": 963,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 156,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 1119
+  },
+  "costUsd": 0.003486,
+  "cumulativeProjectUsd": 0.019558,
+  "unknownCost": false,
+  "uiControlCompleted": true,
+  "attempts": 1,
+  "retries": 0,
+  "oracleSha256After": "d485669a4764a10b8a7ac8e451d1cc75836bc7f431a610bbdd1dc93288f20fce"
+}

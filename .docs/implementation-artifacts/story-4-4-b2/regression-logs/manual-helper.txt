@@ -1,0 +1,16 @@
+✔ prepare is unarmed, exact F1 request, exclusive writes and no overwrite (696.30025ms)
+✔ unarmed local GET/config works; POST cannot start pipeline/provider or write attempt (357.436792ms)
+✔ arming requires identity, evidence hashes, gate, reservation and unchanged source (484.134875ms)
+✔ one armed POST consumes durable attempt even on malformed upload; restart cannot retry (457.740875ms)
+✔ server stop aborts a real pipeline child and waits for close without provider dispatch (410.741667ms)
+✔ observer rejects changed report/request/endpoint before any provider call or shared lock (17.443208ms)
+✔ observer forwards exact original once, records usage without headers; retains shared lock (17.215167ms)
+✔ existing global lock prevents transport; ambiguous errors retain owner/reservation and no key body (35.689125ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2788.281

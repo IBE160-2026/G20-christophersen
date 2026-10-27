@@ -10,7 +10,7 @@ import { validatePdf } from '../../src/backend/documents/validate-pdf.ts'
 import { extractPdf } from '../../src/backend/documents/extract-pdf.ts'
 import { createLiveRequest } from '../../src/backend/analysis/live-request.ts'
 import { createAnalysisRouter } from '../../src/backend/http/analysis-route.ts'
-import { ledgerTotal } from '../story-4-4/run-safety.mjs'
+import { projectCost } from '../story-4-4/project-ledger.mjs'
 
 export const attemptId = 'S5-2026-10-24-F1-01'
 export const repository = fileURLToPath(new URL('../../', import.meta.url))
@@ -42,8 +42,7 @@ export async function prepare(root = repository, directory = evidenceDirectory) 
   const serialized = JSON.stringify(request)
   if (Buffer.byteLength(serialized) > 100000) throw new Error('Reassess input reservation')
   const old = join(root, '.docs/implementation-artifacts/story-4-4')
-  const costBeforeUsd = ledgerTotal(read(join(old, 'preflight-result.json')),
-    ['F1', 'F2', 'F3', 'F4'].map(id => read(join(old, `${id}-receipt.json`))))
+  const costBeforeUsd = projectCost(root)
   const sourceFingerprint = fingerprint(root)
   const preparedCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
   mkdirSync(resolve(directory, '..'), { recursive: true })
@@ -62,8 +61,8 @@ export async function prepare(root = repository, directory = evidenceDirectory) 
   return plan
 }
 
-export function validateApproval(plan, approval) {
-  if (plan.attemptId !== attemptId || plan.armed !== false || approval.attemptId !== attemptId
+export function validateApproval(plan, approval, expectedAttemptId = attemptId) {
+  if (plan.attemptId !== expectedAttemptId || plan.armed !== false || approval.attemptId !== expectedAttemptId
     || approval.requestSha256 !== plan.requestSha256 || approval.sourceFingerprint !== plan.sourceFingerprint
     || approval.owner !== 'Mads' || !/^[a-f0-9]{40}$/.test(approval.codeCommit ?? '')
     || !Number.isFinite(Date.parse(approval.checkedAt ?? ''))) throw new Error('Approval identity missing or changed')
@@ -102,18 +101,19 @@ export function arm(approvalFile, root = repository, directory = evidenceDirecto
   write(directory, 'armed.json', { ...approval, armed: true })
 }
 
-export function createManualServer({ directory = evidenceDirectory, root = repository, armed = false, onLifecycle } = {}) {
+export function createManualServer({ directory = evidenceDirectory, root = repository, armed = false, onLifecycle, expectedAttemptId = attemptId, transportFile = new URL('./transport.mjs', import.meta.url), validateBinding } = {}) {
   const plan = read(join(directory, 'plan.json'))
-  if (plan.attemptId !== attemptId || fingerprint(root) !== plan.sourceFingerprint) throw new Error('Prepared source/build changed')
+  if (plan.attemptId !== expectedAttemptId || fingerprint(root) !== plan.sourceFingerprint) throw new Error('Prepared source/build changed')
   if (armed) {
     const approval = read(join(directory, 'armed.json'))
-    validateApproval(plan, approval)
+    validateApproval(plan, approval, expectedAttemptId)
     if (approval.armed !== true) throw new Error('Arming invalid')
     validateSourceBinding(root, plan, approval)
   }
+  validateBinding?.(armed)
   const app = express()
   let attempted = false
-  const transport = new URL('./transport.mjs', import.meta.url)
+  const transport = new URL(transportFile)
   transport.searchParams.set('directory', directory)
   const analysis = createAnalysisRouter({ mode: 'live', transportModule: transport.href, onLifecycle })
   app.disable('x-powered-by')
@@ -127,7 +127,8 @@ export function createManualServer({ directory = evidenceDirectory, root = repos
     }
     try {
       if (fingerprint(root) !== plan.sourceFingerprint) throw new Error('Changed source')
-      write(directory, 'analysis-attempt.json', { at: new Date().toISOString(), attemptId })
+      validateBinding?.(true)
+      write(directory, 'analysis-attempt.json', { at: new Date().toISOString(), attemptId: expectedAttemptId })
     } catch {
       request.resume(); response.status(409).json({ kind: 'rejected', code: 'processing-failure' }); return
     }

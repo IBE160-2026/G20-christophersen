@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-27T13:07:35.043696+00:00",
+  "command": "env -u OPENAI_API_KEY -u ANALYSIS_MODE sandbox-exec -f .docs/implementation-artifacts/story-5-3-nettprofil.sb node --test tools/story-4-4/f1-b2.test.mjs tools/story-4-4/b2-lifecycle.test.mjs tools/story-4-4/evaluate-s2.test.mjs tools/story-4-4/run-safety.test.mjs tools/story-4-5/manual.test.mjs",
+  "node": "24.21.0",
+  "exitCode": 0,
+  "passed": 44,
+  "failed": 0,
+  "skipped": 0,
+  "externalNetworkOsBlocked": true,
+  "apiKeyRemoved": true,
+  "preservedLog": "regression-logs/post-review-targeted.txt",
+  "sourceSha256": {
+    "tools/story-4-4/f1-b2.mjs": "9d7ebcacc92c05a50bd6cfd53b6e2063574ab6012a065f8adc4f3437509e177b",
+    "tools/story-4-4/f1-b2-transport.mjs": "7ecc4b03b06c9c80266e4cce3a06d099582c57be92c8c2f444c9dc6f3b13b5f0",
+    "tools/story-4-4/b2-lifecycle.mjs": "c8a593b2502f0dc7c820d8010d63794ffea94ca243262cee5d4a6d04afc79230",
+    "tools/story-4-4/project-ledger.mjs": "2d84da6f2fc50eb911c484fae9facc2cbaa5266d197575dd35db7b87b9763eba",
+    "tools/story-4-4/f1-b2.test.mjs": "a0b69e58143f3645931942c190389bfce4f4969bdb457e1ec3f6089ac447fb35",
+    "tools/story-4-4/b2-lifecycle.test.mjs": "6037d3fed5895f62f5a63da0da05f04819c2eddee75e4942d79b96e3649a51f4",
+    "tools/story-4-5/manual.mjs": "8aaa4627807d3ac3122bdc0c409181d46842429a4182a3897e33de14b83c4662"
+  }
+}

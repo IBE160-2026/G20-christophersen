@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-27T13:21:49.448491+00:00",
+  "getRootHttp": 200,
+  "getAnalysisConfigHttp": 200,
+  "config": {
+    "mode": "live"
+  },
+  "armed": true,
+  "analysisPosts": 0,
+  "providerRequests": 0,
+  "humanMeasurements": 0,
+  "globalPaidLockAbsent": true,
+  "all87ProtectedFilesByteIdentical": true,
+  "benchmarkSevenFilesUnchanged": true,
+  "accountApprovalValidityHours": 24,
+  "note": "Arming is technical preparation; Mads alone starts later. No blank human field was populated."
+}

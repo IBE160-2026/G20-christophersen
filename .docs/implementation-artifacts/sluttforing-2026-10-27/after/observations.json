@@ -1,0 +1,205 @@
+[
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "tall-tom",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "tall-feil",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "rapport-tom",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "rapport-feil",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "tg3-kontroll",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "listebekreftelse",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "resultat",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "resultat-rapport",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "resultat-sporbarhet",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "state": "resultat-utdatert",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "blockedExternalRequests": 0
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "tall-tom",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "tall-feil",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "rapport-tom",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "rapport-feil",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "tg3-kontroll",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "pdf-panel",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "listebekreftelse",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "resultat",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "resultat-rapport",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "resultat-sporbarhet",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": "resultat-utdatert",
+    "pageOverflow": false,
+    "workspaceOverflow": false
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "blockedExternalRequests": 0
+  }
+]

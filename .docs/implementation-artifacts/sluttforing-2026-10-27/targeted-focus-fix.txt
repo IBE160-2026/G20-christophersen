@@ -1,0 +1,30 @@
+
+Running 24 tests using 2 workers
+
+  ✓   2 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (415ms)
+  ✓   1 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (420ms)
+  ✓   4 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (535ms)
+  ✓   3 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (557ms)
+  ✓   6 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (524ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (545ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (526ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (524ms)
+  ✓   9 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 (873ms)
+  ✓  10 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 1440×900 (889ms)
+  ✓  12 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 (537ms)
+  ✓  11 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 (705ms)
+  ✓  13 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 (571ms)
+  ✓  14 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 1440×900 (907ms)
+  ✓  15 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 360×225 (824ms)
+  ✓  17 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1440×900 (425ms)
+  ✓  16 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 (852ms)
+  ✓  18 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1280×800 (421ms)
+  ✓  19 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 720×450 (409ms)
+  ✓  20 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 320×200 (386ms)
+Story 1.7 målt kontrast: {"action":6.701109538539959,"error":7.104296467437304,"issueText":11.601821357499892,"control":3.8101786636538826,"focus":6.701109538539959}
+  ✓  21 tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast (577ms)
+  ✓  22 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes (459ms)
+  ✓  23 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes (478ms)
+  ✓  24 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes (513ms)
+
+  24 passed (8.1s)

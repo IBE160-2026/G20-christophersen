@@ -1,0 +1,156 @@
+
+Running 24 tests using 2 workers
+
+  ✓   2 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (449ms)
+  ✓   1 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (467ms)
+  ✓   4 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (542ms)
+  ✓   3 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (595ms)
+  ✘   6 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (350ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (605ms)
+  ✘   7 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (287ms)
+  ✘   8 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (318ms)
+  ✓   9 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 1440×900 (887ms)
+  ✓  10 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 (879ms)
+  ✓  11 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 (722ms)
+  ✓  12 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 (553ms)
+  ✓  13 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 (521ms)
+  ✓  14 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 1440×900 (910ms)
+  ✓  15 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 360×225 (825ms)
+  ✘  16 tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 (543ms)
+  ✓  17 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1440×900 (425ms)
+  ✓  18 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 720×450 (388ms)
+  ✓  19 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1280×800 (495ms)
+  ✓  20 tests/e2e/financial-input.spec.ts:399:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 320×200 (387ms)
+Story 1.7 målt kontrast: {"action":6.701109538539959,"error":7.104296467437304,"issueText":11.601821357499892,"control":3.8101786636538826,"focus":6.701109538539959}
+  ✓  22 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes (458ms)
+  ✓  21 tests/e2e/financial-input.spec.ts:434:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast (625ms)
+  ✓  23 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes (441ms)
+  ✓  24 tests/e2e/financial-input.spec.ts:481:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes (545ms)
+
+
+  1) tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 129.390625
+    Received:    141.578125
+
+      225 |       if (focus.parentTop !== undefined) {
+      226 |         expect(focus.top).toBeGreaterThanOrEqual(focus.parentTop)
+    > 227 |         expect(focus.bottom).toBeLessThanOrEqual(focus.parentBottom!)
+          |                              ^
+      228 |       }
+      229 |     }
+      230 |     if (viewport.width <= 720) {
+        at /private/tmp/ibe160-sluttforing-cqoqa8pn/tests/e2e/app-shell.spec.ts:227:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-tastatur-omb-cf833-s-uten-overlapp-ved-320×200/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/app-shell-AC4-tastatur-omb-cf833-s-uten-overlapp-ved-320×200/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-tastatur-omb-cf833-s-uten-overlapp-ved-320×200/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/app-shell-AC4-tastatur-omb-cf833-s-uten-overlapp-ved-320×200/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 113.390625
+    Received:    121.984375
+
+      225 |       if (focus.parentTop !== undefined) {
+      226 |         expect(focus.top).toBeGreaterThanOrEqual(focus.parentTop)
+    > 227 |         expect(focus.bottom).toBeLessThanOrEqual(focus.parentBottom!)
+          |                              ^
+      228 |       }
+      229 |     }
+      230 |     if (viewport.width <= 720) {
+        at /private/tmp/ibe160-sluttforing-cqoqa8pn/tests/e2e/app-shell.spec.ts:227:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-tastatur-omb-751fb-s-uten-overlapp-ved-360×160/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/app-shell-AC4-tastatur-omb-751fb-s-uten-overlapp-ved-360×160/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-tastatur-omb-751fb-s-uten-overlapp-ved-360×160/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/app-shell-AC4-tastatur-omb-751fb-s-uten-overlapp-ved-360×160/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 113.390625
+    Received:    141.578125
+
+      225 |       if (focus.parentTop !== undefined) {
+      226 |         expect(focus.top).toBeGreaterThanOrEqual(focus.parentTop)
+    > 227 |         expect(focus.bottom).toBeLessThanOrEqual(focus.parentBottom!)
+          |                              ^
+      228 |       }
+      229 |     }
+      230 |     if (viewport.width <= 720) {
+        at /private/tmp/ibe160-sluttforing-cqoqa8pn/tests/e2e/app-shell.spec.ts:227:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-tastatur-omb-43264-s-uten-overlapp-ved-320×160/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/app-shell-AC4-tastatur-omb-43264-s-uten-overlapp-ved-320×160/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/app-shell-AC4-tastatur-omb-43264-s-uten-overlapp-ved-320×160/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/app-shell-AC4-tastatur-omb-43264-s-uten-overlapp-ved-320×160/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 112.890625
+    Received:    105.71875
+
+      242 |       expect(box.x - 5).toBeGreaterThanOrEqual(0)
+      243 |       expect(box.x + box.width + 5).toBeLessThanOrEqual(viewport.width)
+    > 244 |       expect(box.y - 5).toBeGreaterThanOrEqual(nav.y + nav.height - 0.5)
+          |                         ^
+      245 |       expect(box.y + box.height + 5).toBeLessThanOrEqual(viewport.height + 0.5)
+      246 |       await expect(control).toHaveAccessibleName(/.+/)
+      247 |       await page.keyboard.press('Tab')
+        at /private/tmp/ibe160-sluttforing-cqoqa8pn/tests/e2e/financial-input.spec.ts:244:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-input-1-5-UX-åpe-b2440-n-fokusklipping-ved-320×160/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-input-1-5-UX-åpe-b2440-n-fokusklipping-ved-320×160/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-input-1-5-UX-åpe-b2440-n-fokusklipping-ved-320×160/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-input-1-5-UX-åpe-b2440-n-fokusklipping-ved-320×160/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 
+    tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 
+    tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 
+    tests/e2e/financial-input.spec.ts:221:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 
+  20 passed (8.7s)

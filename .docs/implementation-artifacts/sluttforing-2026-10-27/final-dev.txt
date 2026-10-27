@@ -1,0 +1,23 @@
+[WebServer] (node:68882) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:68897) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/dev-shell.spec.ts:5:1 › AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil (502ms)
+[WebServer] The request id "/private/tmp/ibe160-sluttforing-cqoqa8pn/private/story-1-2-dev-kWKrPi/private.txt" is outside of Vite serving allow list.
+[WebServer] 
+[WebServer] - /private/tmp/ibe160-sluttforing-cqoqa8pn
+[WebServer] - /Users/madschristophersen/IBE160/G20-christophersen/node_modules/vite/dist/client
+[WebServer] 
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+[WebServer] 
+[WebServer] The request id "/private/tmp/ibe160-sluttforing-cqoqa8pn/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/private/tmp/ibe160-sluttforing-cqoqa8pn/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+  ✓  2 tests/e2e/dev-shell.spec.ts:21:1 › AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler (34ms)
+[WebServer] The request id "/private/tmp/ibe160-sluttforing-cqoqa8pn/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/private/tmp/ibe160-sluttforing-cqoqa8pn/src/backend/server.ts" is outside of Vite serving allow list.
+  ✓  3 tests/e2e/dev-shell.spec.ts:38:1 › 2.7 uavhengig review: lokal PDF-ressursrute åpner ikke prosjektets private grense (12ms)
+
+  3 passed (1.9s)

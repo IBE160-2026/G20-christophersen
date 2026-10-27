@@ -1,0 +1,44 @@
+{
+  "sourceBaseline": "2dadc800daafa8b1640ccd08bf91a302fbc9cfb0",
+  "copy": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+  "mapping": "Kun lokal adresse/lytteport 3000 \u2192 3107; ingen finansverdier eller \u00f8vrige testforventninger endret",
+  "portAdaptedFiles": [
+    {
+      "file": "src/backend/server.ts",
+      "sourceSha256": "860a87fcb1c19498922f91f1c1fc7143125beca41901967671a799e85cbf9d1f",
+      "portCopySha256": "1cb5111e6eb692d0e4abab45488b9cfa555231c16d28ed51a65ab6764061410c"
+    },
+    {
+      "file": "playwright.config.ts",
+      "sourceSha256": "ae2877a0b29e2ea7be36254411a3f83a9c1f6e32ee300f284f78f700921d3c4d",
+      "portCopySha256": "42ee903a1d18685619a2f06bbce17257f8bf7f200a0453a296b3cb260bca629b"
+    },
+    {
+      "file": "tests/integration/server-mode.test.ts",
+      "sourceSha256": "36fc6eb9cefe41e2a93476870b9887c98d4da490d7fab974a42233c3c5be55ec",
+      "portCopySha256": "51335f91f5b940c8091ec4ea8677b1a3c3344562fec5be7439d00e7e825122b7"
+    },
+    {
+      "file": "tests/e2e/dev-shell.spec.ts",
+      "sourceSha256": "fcfca9e3167470cb7f27b364986e7600262308261b9a92ccda23a06e255878c9",
+      "portCopySha256": "88404cacc3b764ba19d464f60f54fe62f92e64fc585f93e86403eb735253edbe"
+    },
+    {
+      "file": "tests/e2e/financial-input.spec.ts",
+      "sourceSha256": "d6659f38444c1dd678de331bf0915a9e41c1b413daa9ac15adf5b122f52cfbc1",
+      "portCopySha256": "53340746944febdaedeef291b0542553029c499f7ceb695bd1536e3a3ae7e293"
+    },
+    {
+      "file": "tests/e2e/app-shell.spec.ts",
+      "sourceSha256": "3573bb008ab50030ab86153f9712ab8d6982ddb9e0a26bb96ca19b5622494fad",
+      "portCopySha256": "9923d5ad385266f9d2bbfc4f077a4070760aaeb8535e11237f7b843236d22692"
+    },
+    {
+      "file": "tests/helpers/verify-analysis-build.mjs",
+      "sourceSha256": "9cb6ee9b92afe12f33400d08e5450245d1f005739d7f8eb2dcd3eeb9a2db3e67",
+      "portCopySha256": "2b679a7b2ca90991c85ed0809280ada396f0b76235913133bbafaa662c9d79bd"
+    }
+  ],
+  "dependencySource": "symlink til eksisterende node_modules; ikke ren installasjon",
+  "mappingCorrection": "R\u00e5 HTTP-test hadde \u00e9n numerisk port:3000 som ogs\u00e5 ble tilpasset til3107 etter f\u00f8rste E2E. Den opprinnelige feilloggen er bevart; kun ufarlige GET ble sendt til eksisterende server. Ingen analyse-POST eller betalt kall."
+}

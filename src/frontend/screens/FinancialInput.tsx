@@ -68,11 +68,9 @@ export function FinancialInput({ financial, sources, costItems, dispatch, sessio
         const costErrors = validation.fields[id].issues.some((entry) => entry.target === 'cost')
         return (
           <div className="financial-row" key={id} role="group" aria-labelledby={`label-${id}`}>
-            <div className="field-definition">
-              <p className="meta" id={`hint-${id}`}>{description}</p>
-            </div>
             <div className="registered-value">
               <label id={`label-${id}`} htmlFor={`value-${id}`}>{label} ({id})</label>
+              <p className="meta field-definition" id={`hint-${id}`}>{description}</p>
               <div className="value-control">
                 <input
                   id={`value-${id}`}

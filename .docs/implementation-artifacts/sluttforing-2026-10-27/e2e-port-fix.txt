@@ -1,0 +1,6 @@
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/e2e/app-shell.spec.ts:70:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (89ms)
+
+  1 passed (852ms)

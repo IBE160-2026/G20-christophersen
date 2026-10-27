@@ -1,0 +1,1134 @@
+{
+  "files": [
+    {
+      "file": "src/backend/README.md",
+      "sourceSha256": "1f9f35260d924cf32812eb7803f15f40b4ad1cc479369f180cc291f9180393ef",
+      "testedSha256": "1f9f35260d924cf32812eb7803f15f40b4ad1cc479369f180cc291f9180393ef",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/abortable-fetch.ts",
+      "sourceSha256": "27c20e7ac1f6a84afa1d6a6d0fa7063d7ee0dfac86d2c3b9e9a07aeb465c676b",
+      "testedSha256": "27c20e7ac1f6a84afa1d6a6d0fa7063d7ee0dfac86d2c3b9e9a07aeb465c676b",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/adapter.ts",
+      "sourceSha256": "60d896bebdf686589f0494f95f9602d1d233a5cad4831cda0eaaf5e792f2cd01",
+      "testedSha256": "60d896bebdf686589f0494f95f9602d1d233a5cad4831cda0eaaf5e792f2cd01",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/analyze-document.ts",
+      "sourceSha256": "87ecfd59f4942df65d307724a811b2999b2445d6fab54962cc7ff12b4c2f2d36",
+      "testedSha256": "87ecfd59f4942df65d307724a811b2999b2445d6fab54962cc7ff12b4c2f2d36",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/backend-config.ts",
+      "sourceSha256": "87d13dda3b0b104efda432ec128224310f4e6bdc1be56d10a35b5d9b38d926e3",
+      "testedSha256": "87d13dda3b0b104efda432ec128224310f4e6bdc1be56d10a35b5d9b38d926e3",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/data/458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86.json",
+      "sourceSha256": "322c5e112f9e6496180a72977aa3bee0a0d59bce2442b06e003ced19c6267520",
+      "testedSha256": "322c5e112f9e6496180a72977aa3bee0a0d59bce2442b06e003ced19c6267520",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/data/545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b.json",
+      "sourceSha256": "407ef0a31454ebbe22bdfe5594373672db976c07482b98bd9c079280cbc882c9",
+      "testedSha256": "407ef0a31454ebbe22bdfe5594373672db976c07482b98bd9c079280cbc882c9",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/data/README.md",
+      "sourceSha256": "78db1b4f9be70dce59d4259debc6297aae2ad33ff6b5653538e0c5ce9705d2ab",
+      "testedSha256": "78db1b4f9be70dce59d4259debc6297aae2ad33ff6b5653538e0c5ce9705d2ab",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/data/ae2bc258d529ff2b231e553e22281644b3281ea909afd735073eed4cdf3ceace.json",
+      "sourceSha256": "5417c58f247c1c894080c5413772d2ef252e7c7934c1f96cd0aba81b372fc4c7",
+      "testedSha256": "5417c58f247c1c894080c5413772d2ef252e7c7934c1f96cd0aba81b372fc4c7",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/data/c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb.json",
+      "sourceSha256": "18ae200bbe4ea7a5c22484dec2db32ed62a7cbf03c25f68cb00285c13a0a0e04",
+      "testedSha256": "18ae200bbe4ea7a5c22484dec2db32ed62a7cbf03c25f68cb00285c13a0a0e04",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/demo-adapter.ts",
+      "sourceSha256": "1bccb48c108775e544343b3e236ea38fed30d39a76cc106aa33cdd3647863608",
+      "testedSha256": "1bccb48c108775e544343b3e236ea38fed30d39a76cc106aa33cdd3647863608",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/live-adapter.ts",
+      "sourceSha256": "409be2abcb8d4a9b5851f4bc596b926d9dbdc3411e6945346093b6e5434fe1e1",
+      "testedSha256": "409be2abcb8d4a9b5851f4bc596b926d9dbdc3411e6945346093b6e5434fe1e1",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/live-request.ts",
+      "sourceSha256": "1c89dd24f22b9de3569f526e68520f43018d898814bcf51e2f657c266707f6ed",
+      "testedSha256": "1c89dd24f22b9de3569f526e68520f43018d898814bcf51e2f657c266707f6ed",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/analysis/live-response-worker.ts",
+      "sourceSha256": "33b85e4fad9396b9fe342b98fd3c4397455b7f8b745a3dfd66aa9ae8fb75c8d1",
+      "testedSha256": "33b85e4fad9396b9fe342b98fd3c4397455b7f8b745a3dfd66aa9ae8fb75c8d1",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/documents/count-pdf-pages.ts",
+      "sourceSha256": "520877082f16905a1a3e7c0a6d629c1fd0d9c1a831f66511779e3c6232558f5e",
+      "testedSha256": "520877082f16905a1a3e7c0a6d629c1fd0d9c1a831f66511779e3c6232558f5e",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/documents/extract-pdf.ts",
+      "sourceSha256": "5ececb0cd244f1aae3ba3b9296486555214d9489af5353921c740ce9a2271b78",
+      "testedSha256": "5ececb0cd244f1aae3ba3b9296486555214d9489af5353921c740ce9a2271b78",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/documents/pdf-extraction-core.ts",
+      "sourceSha256": "c694fe4348da6ccd36b588f7432c27ce5472fb4a1f0939e1ba0da277b0981935",
+      "testedSha256": "c694fe4348da6ccd36b588f7432c27ce5472fb4a1f0939e1ba0da277b0981935",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/documents/pdf-extraction-worker.ts",
+      "sourceSha256": "e0c9e99d5df550e8e3eb97e89bab8de2d7e801b8e3c370ebfd0e894c582b949a",
+      "testedSha256": "e0c9e99d5df550e8e3eb97e89bab8de2d7e801b8e3c370ebfd0e894c582b949a",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/documents/pdf-page-tree-worker.ts",
+      "sourceSha256": "493d13cf525b6d54072bb42c6ed8aaff715a8ce9a494613fac7cf92fe36646f4",
+      "testedSha256": "493d13cf525b6d54072bb42c6ed8aaff715a8ce9a494613fac7cf92fe36646f4",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/documents/validate-pdf.ts",
+      "sourceSha256": "904a9f17d2d1e87fe02a12f8d879cfd8a1af106f8671651ac9762205e1b5758d",
+      "testedSha256": "904a9f17d2d1e87fe02a12f8d879cfd8a1af106f8671651ac9762205e1b5758d",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/http/analysis-route.ts",
+      "sourceSha256": "3403446039c7397d56e17633d2cbbdec4f9f82e63911dd521280558ecb7c1e3b",
+      "testedSha256": "3403446039c7397d56e17633d2cbbdec4f9f82e63911dd521280558ecb7c1e3b",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/http/pipeline-child.ts",
+      "sourceSha256": "b2db655b787f37feeb2c2accf03d7da242707aef6502c98e50ef27c569094120",
+      "testedSha256": "b2db655b787f37feeb2c2accf03d7da242707aef6502c98e50ef27c569094120",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/http/receive-pdf.ts",
+      "sourceSha256": "6ef1ae53edf5de2627d73003e43428908a402f65e4f52070f5031568fde90a36",
+      "testedSha256": "6ef1ae53edf5de2627d73003e43428908a402f65e4f52070f5031568fde90a36",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/http/run-pipeline.ts",
+      "sourceSha256": "7c938819b26dc5e6af4abf5ea13d1b1c61e341b99625f0a4263b399f16f1e23f",
+      "testedSha256": "7c938819b26dc5e6af4abf5ea13d1b1c61e341b99625f0a4263b399f16f1e23f",
+      "portAdapted": false
+    },
+    {
+      "file": "src/backend/server.ts",
+      "sourceSha256": "860a87fcb1c19498922f91f1c1fc7143125beca41901967671a799e85cbf9d1f",
+      "testedSha256": "1cb5111e6eb692d0e4abab45488b9cfa555231c16d28ed51a65ab6764061410c",
+      "portAdapted": true
+    },
+    {
+      "file": "src/contracts/README.md",
+      "sourceSha256": "6518b219680bf91d0d6643524f4d9bcb4b8c12cadfa12c28caf256b1108c85da",
+      "testedSha256": "6518b219680bf91d0d6643524f4d9bcb4b8c12cadfa12c28caf256b1108c85da",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/analysis-http.ts",
+      "sourceSha256": "eadbfe2025f194c724054bf327ab14d59aa08e61314db260cccbe1aabe11a377",
+      "testedSha256": "eadbfe2025f194c724054bf327ab14d59aa08e61314db260cccbe1aabe11a377",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/analysis-validation.ts",
+      "sourceSha256": "484a98b50afa85f205e90e31cb6e36cc2095d1082fe9a4c8f241c61b7e31f5ea",
+      "testedSha256": "484a98b50afa85f205e90e31cb6e36cc2095d1082fe9a4c8f241c61b7e31f5ea",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/document-analysis.ts",
+      "sourceSha256": "f03cf9530d57badab5ca1ce0c463d19deb420a3b920146ab4ecb9fe4fe80124d",
+      "testedSha256": "f03cf9530d57badab5ca1ce0c463d19deb420a3b920146ab4ecb9fe4fe80124d",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/finance.ts",
+      "sourceSha256": "77b2f549c2ce9a902223a7a9c2f97ea3180ca3ef5263630b8717c79ca077ac69",
+      "testedSha256": "77b2f549c2ce9a902223a7a9c2f97ea3180ca3ef5263630b8717c79ca077ac69",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/financial-basis.ts",
+      "sourceSha256": "40db1626fc6a00e8f3bd10e1782c8d3de21a8ffb5e1e3fd852ae370ba0067bae",
+      "testedSha256": "40db1626fc6a00e8f3bd10e1782c8d3de21a8ffb5e1e3fd852ae370ba0067bae",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/financial-input.ts",
+      "sourceSha256": "a87fd5e6bd3a5cebf4dc1f6d5c1036e40dee4fdc2843df29f1bfcb3ba66c1896",
+      "testedSha256": "a87fd5e6bd3a5cebf4dc1f6d5c1036e40dee4fdc2843df29f1bfcb3ba66c1896",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/financial-validation.ts",
+      "sourceSha256": "0f90b72f8ce066d39c546709de696716f05669f62b2ddd447a59365af59ce673",
+      "testedSha256": "0f90b72f8ce066d39c546709de696716f05669f62b2ddd447a59365af59ce673",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/finding-control.ts",
+      "sourceSha256": "74639b4f36cae442da1a2823c173d8ec428d7dc6b633c09265a0bbb567efea14",
+      "testedSha256": "74639b4f36cae442da1a2823c173d8ec428d7dc6b633c09265a0bbb567efea14",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/presentation.ts",
+      "sourceSha256": "cd5e51261550575ec2c9504b4ff1f887be8e938b562768a4013ca4264ac9eb0f",
+      "testedSha256": "cd5e51261550575ec2c9504b4ff1f887be8e938b562768a4013ca4264ac9eb0f",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/result.ts",
+      "sourceSha256": "839429217ce313acf8b873b927b8c1fb15256010a5de4d5ec469caab101fed0e",
+      "testedSha256": "839429217ce313acf8b873b927b8c1fb15256010a5de4d5ec469caab101fed0e",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/screening.ts",
+      "sourceSha256": "1ae8276cfe9c6b576c43890a3b8ce04ea707d8045cac5a75f552844757d2c67f",
+      "testedSha256": "1ae8276cfe9c6b576c43890a3b8ce04ea707d8045cac5a75f552844757d2c67f",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/tg3-resolution.ts",
+      "sourceSha256": "46e6929ca20fb415a69c462262f3157535bdef06df627bc028685a63d8bc814c",
+      "testedSha256": "46e6929ca20fb415a69c462262f3157535bdef06df627bc028685a63d8bc814c",
+      "portAdapted": false
+    },
+    {
+      "file": "src/contracts/thresholds.ts",
+      "sourceSha256": "b7f24c078c9c456d28e068eb9288465d55a2fffcc7ef2c65e4793e04e3acc09f",
+      "testedSha256": "b7f24c078c9c456d28e068eb9288465d55a2fffcc7ef2c65e4793e04e3acc09f",
+      "portAdapted": false
+    },
+    {
+      "file": "src/domain/README.md",
+      "sourceSha256": "741dbc6bc81a816df12866c7470e8abfb4f47ec4f1930e0b723acc2b5cfe702c",
+      "testedSha256": "741dbc6bc81a816df12866c7470e8abfb4f47ec4f1930e0b723acc2b5cfe702c",
+      "portAdapted": false
+    },
+    {
+      "file": "src/domain/finance.ts",
+      "sourceSha256": "20a171bc970871e2676b27e2f18eb5cf8e5d26c1239a7a50efe45dd13a797c61",
+      "testedSha256": "20a171bc970871e2676b27e2f18eb5cf8e5d26c1239a7a50efe45dd13a797c61",
+      "portAdapted": false
+    },
+    {
+      "file": "src/domain/financial-basis.ts",
+      "sourceSha256": "8edd1652c26ee118137db092404c9de20f72ff04934b3f0408b222364a7e70cd",
+      "testedSha256": "8edd1652c26ee118137db092404c9de20f72ff04934b3f0408b222364a7e70cd",
+      "portAdapted": false
+    },
+    {
+      "file": "src/domain/finding-control.ts",
+      "sourceSha256": "a6f2cf2c1428cddd839ac5cbc2ae49d13609435065eec8228830a350c471eebe",
+      "testedSha256": "a6f2cf2c1428cddd839ac5cbc2ae49d13609435065eec8228830a350c471eebe",
+      "portAdapted": false
+    },
+    {
+      "file": "src/domain/screening.ts",
+      "sourceSha256": "239cbcd2b0c4978603b56a13dd4de6f5533ba800ef47e2bf650414bb0ad6fd5d",
+      "testedSha256": "239cbcd2b0c4978603b56a13dd4de6f5533ba800ef47e2bf650414bb0ad6fd5d",
+      "portAdapted": false
+    },
+    {
+      "file": "src/domain/tg3-resolution.ts",
+      "sourceSha256": "fb1453645caa6c51bbc9828983e71e579631aa5ae44315885569b612dea9352c",
+      "testedSha256": "fb1453645caa6c51bbc9828983e71e579631aa5ae44315885569b612dea9352c",
+      "portAdapted": false
+    },
+    {
+      "file": "src/domain/thresholds.ts",
+      "sourceSha256": "9e499f1f69b64602b7e9c066086a3d792785c3793f4881f0a8356a0fa8a7bc12",
+      "testedSha256": "9e499f1f69b64602b7e9c066086a3d792785c3793f4881f0a8356a0fa8a7bc12",
+      "portAdapted": false
+    },
+    {
+      "file": "src/domain/validation.ts",
+      "sourceSha256": "b37c6c078a9bbe96207da22f0834b3cb62e66cd1a0df1efafa7902c8b40508de",
+      "testedSha256": "b37c6c078a9bbe96207da22f0834b3cb62e66cd1a0df1efafa7902c8b40508de",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/App.tsx",
+      "sourceSha256": "52ad93b50dbfea442e6c8d31de5230d7b9fcbca3095f115dcfb4c00fb83a8cf2",
+      "testedSha256": "52ad93b50dbfea442e6c8d31de5230d7b9fcbca3095f115dcfb4c00fb83a8cf2",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/analysis/report-client.ts",
+      "sourceSha256": "442d80c4a1ea6f70ebd5b6ff2535a2433e86cf52e028a633cef1f626fd8db55f",
+      "testedSha256": "442d80c4a1ea6f70ebd5b6ff2535a2433e86cf52e028a633cef1f626fd8db55f",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/components/FinancialMetrics.tsx",
+      "sourceSha256": "17959540d1b1e0fa18dc5a73d65ef1aac87f82bfd3e8489e07fe053e5c00f323",
+      "testedSha256": "17959540d1b1e0fa18dc5a73d65ef1aac87f82bfd3e8489e07fe053e5c00f323",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/main.tsx",
+      "sourceSha256": "51045fda4f39fa9e98cceff92e2d64548d16d87a7ffe7d48ad51c55077c0092e",
+      "testedSha256": "51045fda4f39fa9e98cceff92e2d64548d16d87a7ffe7d48ad51c55077c0092e",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/pdf/PdfViewer.tsx",
+      "sourceSha256": "756af7842365f17c3a7e548b668bb550d2fb875a193f664c0d0201d141c55aed",
+      "testedSha256": "756af7842365f17c3a7e548b668bb550d2fb875a193f664c0d0201d141c55aed",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/pdf/SourceReview.tsx",
+      "sourceSha256": "60ec3c37d49aed8b84328929d8ba4c1f373fd40049d5cbe12f9c01f421cbe712",
+      "testedSha256": "60ec3c37d49aed8b84328929d8ba4c1f373fd40049d5cbe12f9c01f421cbe712",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/pdf/source-page.ts",
+      "sourceSha256": "890d430494b5323688fff900f8d718b825854912f75e62a62533046cceda9018",
+      "testedSha256": "890d430494b5323688fff900f8d718b825854912f75e62a62533046cceda9018",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/pdf/text-layer.css",
+      "sourceSha256": "ced54ac1165f1297d0dc764f111b9b94a584b0ce646a9ef4f30703876e418e57",
+      "testedSha256": "ced54ac1165f1297d0dc764f111b9b94a584b0ce646a9ef4f30703876e418e57",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/screens/FinancialBasisInput.tsx",
+      "sourceSha256": "5a2a58c167b4284d4bb6aff30ccaf4008e35684aad932ed454f1c3187aee65ac",
+      "testedSha256": "5a2a58c167b4284d4bb6aff30ccaf4008e35684aad932ed454f1c3187aee65ac",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/screens/FinancialInput.tsx",
+      "sourceSha256": "d86b57387f87b5192f74fcda0eed1c5e9afd8c5e2f45c53fec69d938fca2af05",
+      "testedSha256": "d86b57387f87b5192f74fcda0eed1c5e9afd8c5e2f45c53fec69d938fca2af05",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/screens/FindingControl.tsx",
+      "sourceSha256": "fa4ead60839f3518acefcfed02c564cf73294e856a89b2b4ddf5fe8d1006e077",
+      "testedSha256": "fa4ead60839f3518acefcfed02c564cf73294e856a89b2b4ddf5fe8d1006e077",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/screens/FindingListControl.tsx",
+      "sourceSha256": "c1f6120cd45d7635ce6bb154e77f79a3295bf08cfaa26466a11d9c6714f20be1",
+      "testedSha256": "c1f6120cd45d7635ce6bb154e77f79a3295bf08cfaa26466a11d9c6714f20be1",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/screens/LimitationReview.tsx",
+      "sourceSha256": "6e75ef70eb4550a3ae2153201ee5840be46d1e479ffc99176917eacf42a98cf7",
+      "testedSha256": "6e75ef70eb4550a3ae2153201ee5840be46d1e479ffc99176917eacf42a98cf7",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/screens/ReportAnalysis.tsx",
+      "sourceSha256": "0b4c2fb6a134c2e102a157858388b299464b5b4b98822b6db04c75a8be8800e0",
+      "testedSha256": "0b4c2fb6a134c2e102a157858388b299464b5b4b98822b6db04c75a8be8800e0",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/screens/ScreeningResult.tsx",
+      "sourceSha256": "f1c7bcb230c93b0ba41b4f37c321030acfabf9d983a279d66d547ce610d9f6c6",
+      "testedSha256": "f1c7bcb230c93b0ba41b4f37c321030acfabf9d983a279d66d547ce610d9f6c6",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/screens/Tg3Resolution.tsx",
+      "sourceSha256": "507d6c532db5da178a340657556ae834d8d2036ce29987b6d0e29d0b50848e4d",
+      "testedSha256": "507d6c532db5da178a340657556ae834d8d2036ce29987b6d0e29d0b50848e4d",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/state/report.ts",
+      "sourceSha256": "f69546d2ef937ae84a5b639e5533bb60589e2fead4003b725cc20ba7f0e13510",
+      "testedSha256": "f69546d2ef937ae84a5b639e5533bb60589e2fead4003b725cc20ba7f0e13510",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/state/result.ts",
+      "sourceSha256": "e99ff5cebaf6a59c98cc3447c351d6898dcd95d750ea249cc83b00ebfc150b50",
+      "testedSha256": "e99ff5cebaf6a59c98cc3447c351d6898dcd95d750ea249cc83b00ebfc150b50",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/state/session.ts",
+      "sourceSha256": "dc65a9b243075210ca04d811016be0992f511f4c6aafc2c5085681afacf9a55b",
+      "testedSha256": "dc65a9b243075210ca04d811016be0992f511f4c6aafc2c5085681afacf9a55b",
+      "portAdapted": false
+    },
+    {
+      "file": "src/frontend/styles.css",
+      "sourceSha256": "941a4f73c4c3647ac967820bd3387f1a634515c953e0635c853d04efeb4d6278",
+      "testedSha256": "941a4f73c4c3647ac967820bd3387f1a634515c953e0635c853d04efeb4d6278",
+      "portAdapted": false
+    },
+    {
+      "file": "src/presentation/README.md",
+      "sourceSha256": "b3782819b0112993ab17deb4274c92615aa569477715fe1fa0d006a86b7bf2e6",
+      "testedSha256": "b3782819b0112993ab17deb4274c92615aa569477715fe1fa0d006a86b7bf2e6",
+      "portAdapted": false
+    },
+    {
+      "file": "src/presentation/finance.ts",
+      "sourceSha256": "33b5930771c0d97bd54f4e71ba11b067f773c4310dd613764e6465d3c47fef45",
+      "testedSha256": "33b5930771c0d97bd54f4e71ba11b067f773c4310dd613764e6465d3c47fef45",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/components/financial-metrics.spec.ts",
+      "sourceSha256": "c42aaef0bce689698751264c9d566b559cbc5d01237d9ff0e5ee271bfc45a573",
+      "testedSha256": "c42aaef0bce689698751264c9d566b559cbc5d01237d9ff0e5ee271bfc45a573",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/components/screening-result.spec.ts",
+      "sourceSha256": "844f1ef794a5d2233aba92b1b814edab03b0a67d92ea2f28beb6df3fb1d038dd",
+      "testedSha256": "844f1ef794a5d2233aba92b1b814edab03b0a67d92ea2f28beb6df3fb1d038dd",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/e2e/app-shell.spec.ts",
+      "sourceSha256": "3573bb008ab50030ab86153f9712ab8d6982ddb9e0a26bb96ca19b5622494fad",
+      "testedSha256": "9923d5ad385266f9d2bbfc4f077a4070760aaeb8535e11237f7b843236d22692",
+      "portAdapted": true
+    },
+    {
+      "file": "tests/e2e/dev-shell.spec.ts",
+      "sourceSha256": "fcfca9e3167470cb7f27b364986e7600262308261b9a92ccda23a06e255878c9",
+      "testedSha256": "88404cacc3b764ba19d464f60f54fe62f92e64fc585f93e86403eb735253edbe",
+      "portAdapted": true
+    },
+    {
+      "file": "tests/e2e/financial-input.spec.ts",
+      "sourceSha256": "d6659f38444c1dd678de331bf0915a9e41c1b413daa9ac15adf5b122f52cfbc1",
+      "testedSha256": "53340746944febdaedeef291b0542553029c499f7ceb695bd1536e3a3ae7e293",
+      "portAdapted": true
+    },
+    {
+      "file": "tests/e2e/report-analysis.spec.ts",
+      "sourceSha256": "9e21a87e7073b25374ae64d5dcc16d82c9a5245c0cf0238f8746e6ce4e23eaa2",
+      "testedSha256": "9e21a87e7073b25374ae64d5dcc16d82c9a5245c0cf0238f8746e6ce4e23eaa2",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/e2e/screening-result.spec.ts",
+      "sourceSha256": "b8129654861cbd690147c1f969e531809818032a5f0007538a7f458f598e99e7",
+      "testedSha256": "b8129654861cbd690147c1f969e531809818032a5f0007538a7f458f598e99e7",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/README.md",
+      "sourceSha256": "5187750c48ce3a9c614c66de923a90fbd9938b223885a4367b59966e1569cf92",
+      "testedSha256": "5187750c48ce3a9c614c66de923a90fbd9938b223885a4367b59966e1569cf92",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/expected.json",
+      "sourceSha256": "54e65f2d6ba8094b7e2b0716f2fabf487e0493e3b1d428f079256f69022c8680",
+      "testedSha256": "54e65f2d6ba8094b7e2b0716f2fabf487e0493e3b1d428f079256f69022c8680",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/generate-rt12.mjs",
+      "sourceSha256": "5b9408a80b8878c2edb4685e449dd1e5fd8a4ad9a6e961fe0dd5019424e0dd57",
+      "testedSha256": "5b9408a80b8878c2edb4685e449dd1e5fd8a4ad9a6e961fe0dd5019424e0dd57",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/generate-tg3.mjs",
+      "sourceSha256": "0305636ed15c1d7ec82fde45483df01ebfa34dcaa4c4a1656137456f24352f1d",
+      "testedSha256": "0305636ed15c1d7ec82fde45483df01ebfa34dcaa4c4a1656137456f24352f1d",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/generate.mjs",
+      "sourceSha256": "645c11d0fdc3f5ef6b2c10092459bb237ae93b39d6cad2c3046d46b4437b627e",
+      "testedSha256": "645c11d0fdc3f5ef6b2c10092459bb237ae93b39d6cad2c3046d46b4437b627e",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/rt11.pdf",
+      "sourceSha256": "6bf15f688038a80248e422aed8a20885bef3197313a9835f6c6a8637490238eb",
+      "testedSha256": "6bf15f688038a80248e422aed8a20885bef3197313a9835f6c6a8637490238eb",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/rt12-expected.json",
+      "sourceSha256": "f0013fd3deb799512aca05f5d8e33a3f28a5ed5a29a8b6d4a82b1cb1f422a6f5",
+      "testedSha256": "f0013fd3deb799512aca05f5d8e33a3f28a5ed5a29a8b6d4a82b1cb1f422a6f5",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/rt12.pdf",
+      "sourceSha256": "5fc6ec52e3eed2b39d686969e73eeb706e3129c3355cc1dfde8d502a0ed9c662",
+      "testedSha256": "5fc6ec52e3eed2b39d686969e73eeb706e3129c3355cc1dfde8d502a0ed9c662",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/tg3-expected.json",
+      "sourceSha256": "73c9eb7dd32ce0a4077ac173a792ead1ea76bac7731db200fef3cb62c3ffa3fb",
+      "testedSha256": "73c9eb7dd32ce0a4077ac173a792ead1ea76bac7731db200fef3cb62c3ffa3fb",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/finding-control/tg3.pdf",
+      "sourceSha256": "f82b4707a3897f75fef606fe375f985dd8e3cca4543711ad2df15203d006da35",
+      "testedSha256": "f82b4707a3897f75fef606fe375f985dd8e3cca4543711ad2df15203d006da35",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/README.md",
+      "sourceSha256": "4955465dc5cfcf08a0c0df4b86af0ef2a905a54a381d0acec9a9f0b38ca7fef8",
+      "testedSha256": "4955465dc5cfcf08a0c0df4b86af0ef2a905a54a381d0acec9a9f0b38ca7fef8",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/annotated-uncertain.pdf",
+      "sourceSha256": "598495fdd668c3b5906fba44d3a7c33e16730b6936a996d04b9f0450655d49d8",
+      "testedSha256": "598495fdd668c3b5906fba44d3a7c33e16730b6936a996d04b9f0450655d49d8",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/annotated-xfa.pdf",
+      "sourceSha256": "fca712fac494a9e9a2fc9ae2accd9e55c2730c25b5745116697e187a3cb74750",
+      "testedSha256": "fca712fac494a9e9a2fc9ae2accd9e55c2730c25b5745116697e187a3cb74750",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/annotation-text-loss.pdf",
+      "sourceSha256": "b29003d01eea3fa65b26e73626bf4df604c454bb82070f7ff26dfb4eac71aed6",
+      "testedSha256": "b29003d01eea3fa65b26e73626bf4df604c454bb82070f7ff26dfb4eac71aed6",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/blank-variants.pdf",
+      "sourceSha256": "910058e1d955bddbc33577941c6f8d0be7cd7cf4124314fd387a5e623c82533c",
+      "testedSha256": "910058e1d955bddbc33577941c6f8d0be7cd7cf4124314fd387a5e623c82533c",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/catalog-empty-dict.pdf",
+      "sourceSha256": "cadcbd544822274e5e83c7aefd93b1a287b27ed09e4f5785d326d823ad3d2289",
+      "testedSha256": "cadcbd544822274e5e83c7aefd93b1a287b27ed09e4f5785d326d823ad3d2289",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/catalog-empty-form.pdf",
+      "sourceSha256": "cce18e737fa16cf46bfaad5ac536c240bf37e9d4e4fcb846c0cdb98a720180a4",
+      "testedSha256": "cce18e737fa16cf46bfaad5ac536c240bf37e9d4e4fcb846c0cdb98a720180a4",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/catalog-form.pdf",
+      "sourceSha256": "9e67dbd482c0dd1a279ab712ac7a3b3cb2c17ee77bccbcba7b48438b6d17d5d0",
+      "testedSha256": "9e67dbd482c0dd1a279ab712ac7a3b3cb2c17ee77bccbcba7b48438b6d17d5d0",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/catalog-xfa.pdf",
+      "sourceSha256": "ebb21f410aa098c99cdeec2f3b6b6f9f5a933ef1b3d34d4f1cc4cdbbb20c5aee",
+      "testedSha256": "ebb21f410aa098c99cdeec2f3b6b6f9f5a933ef1b3d34d4f1cc4cdbbb20c5aee",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/cmap-text.pdf",
+      "sourceSha256": "82f26ec7d6a2328ae6db00c74cb8fa7b128a9871da90c5cacd75f75187f75784",
+      "testedSha256": "82f26ec7d6a2328ae6db00c74cb8fa7b128a9871da90c5cacd75f75187f75784",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/encrypted-content.pdf",
+      "sourceSha256": "c5d4bd3c14a48a8b6d1d7c7584a72e6adf52267d8922dc5c529ff7a76e07a25d",
+      "testedSha256": "c5d4bd3c14a48a8b6d1d7c7584a72e6adf52267d8922dc5c529ff7a76e07a25d",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/expected.json",
+      "sourceSha256": "e8067ce6d001a64b9b641195facc7ce3c813e08b21388855b6917f5faa9ee86e",
+      "testedSha256": "e8067ce6d001a64b9b641195facc7ce3c813e08b21388855b6917f5faa9ee86e",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/generate.py",
+      "sourceSha256": "90d1c78966b49a354b05823c1c72158ce6b5b2b2d4296f2bffdb98c6681e9f2e",
+      "testedSha256": "90d1c78966b49a354b05823c1c72158ce6b5b2b2d4296f2bffdb98c6681e9f2e",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/layout.pdf",
+      "sourceSha256": "2ffcc8d057b5565173a3e44d6c99458ce5f5257d2731fe5d0ca099c747bafe55",
+      "testedSha256": "2ffcc8d057b5565173a3e44d6c99458ce5f5257d2731fe5d0ca099c747bafe55",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/mixed-status.pdf",
+      "sourceSha256": "cce40b8cb2f0150126dee30097c0f1f9aa9de03270d97e18aaef7fb0410a4211",
+      "testedSha256": "cce40b8cb2f0150126dee30097c0f1f9aa9de03270d97e18aaef7fb0410a4211",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/nested-count.pdf",
+      "sourceSha256": "e56ebee54eaddbd6a40a0ba825785b2c7f8e74223bf04f81450a4fb98aec914a",
+      "testedSha256": "e56ebee54eaddbd6a40a0ba825785b2c7f8e74223bf04f81450a4fb98aec914a",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/parser-diagnostics.pdf",
+      "sourceSha256": "0079abd125dc0cef3fd8fc31572514ec36f8652e1e8c95165b33dd002dd40d6e",
+      "testedSha256": "0079abd125dc0cef3fd8fc31572514ec36f8652e1e8c95165b33dd002dd40d6e",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/readable-blank.pdf",
+      "sourceSha256": "aa4badf3131810d6ca21e96e480709337a78603cdfd39ecc49ccbeac7c453dc4",
+      "testedSha256": "aa4badf3131810d6ca21e96e480709337a78603cdfd39ecc49ccbeac7c453dc4",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/review-layout.pdf",
+      "sourceSha256": "497f5ca294419e95d6fb954e3e41ec6612553bf06007d076227d750035a44c12",
+      "testedSha256": "497f5ca294419e95d6fb954e3e41ec6612553bf06007d076227d750035a44c12",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/sha256.json",
+      "sourceSha256": "cd2abef3bcb0c45fdbd6da93b3beb4a23ec958e04f0f9975e69bf9e0239ef420",
+      "testedSha256": "cd2abef3bcb0c45fdbd6da93b3beb4a23ec958e04f0f9975e69bf9e0239ef420",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/structural-content.pdf",
+      "sourceSha256": "cb624dcc41ee9b50fb2e8316171d83d23d7ef6c6d6d262136a8a5b69157ea0e9",
+      "testedSha256": "cb624dcc41ee9b50fb2e8316171d83d23d7ef6c6d6d262136a8a5b69157ea0e9",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/text-fragments.pdf",
+      "sourceSha256": "4aa11933d23d2faa409396facc05600f7532f9c6572b5c32ef38a8f319298b00",
+      "testedSha256": "4aa11933d23d2faa409396facc05600f7532f9c6572b5c32ef38a8f319298b00",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/textless-content.pdf",
+      "sourceSha256": "c8de465f1bb20890071258c97cfd069cddd625725f8a314e2882acdd82de3992",
+      "testedSha256": "c8de465f1bb20890071258c97cfd069cddd625725f8a314e2882acdd82de3992",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-readability/uncertain-content.pdf",
+      "sourceSha256": "fa4b0685fc83a4c37d83f7a79c8c77916c1004a7619e9b80cda6096154ae3390",
+      "testedSha256": "fa4b0685fc83a4c37d83f7a79c8c77916c1004a7619e9b80cda6096154ae3390",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-structure/README.md",
+      "sourceSha256": "9ef862b9576cf99d6d68d0b4892ac433bbb3bf90ac1edf625322e933bd804290",
+      "testedSha256": "9ef862b9576cf99d6d68d0b4892ac433bbb3bf90ac1edf625322e933bd804290",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-structure/sha256.json",
+      "sourceSha256": "4288dd69c0e837735c1612b52ab72b91a76f53d5601a5b638dd55bce0fe2723a",
+      "testedSha256": "4288dd69c0e837735c1612b52ab72b91a76f53d5601a5b638dd55bce0fe2723a",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-structure/text-30-pages-linearized.pdf",
+      "sourceSha256": "86d1d138cba5736e81ad54e813c730217ffac15d5f85f730f8ac4b21ae1ff6fc",
+      "testedSha256": "86d1d138cba5736e81ad54e813c730217ffac15d5f85f730f8ac4b21ae1ff6fc",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/pdf-structure/text-30-pages-object-stream.pdf",
+      "sourceSha256": "3c9343714b072bb59d1719330a9db6ac39594ffab0190189ad8cd49928a95d13",
+      "testedSha256": "3c9343714b072bb59d1719330a9db6ac39594ffab0190189ad8cd49928a95d13",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/F1-tilstandsrapport-endret.pdf",
+      "sourceSha256": "1a3754a89dbe139c926a80b54216f7a6434f1b6b0d02eb87f36bd7c03180d8d3",
+      "testedSha256": "1a3754a89dbe139c926a80b54216f7a6434f1b6b0d02eb87f36bd7c03180d8d3",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/F1-tilstandsrapport.pdf",
+      "sourceSha256": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+      "testedSha256": "c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/F2-tilstandsrapport.pdf",
+      "sourceSha256": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+      "testedSha256": "458414c5c4556e999d7c6ca045bfc25e0de7d8f39185edb85d49e812de56ce86",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/F3-tilstandsrapport.pdf",
+      "sourceSha256": "ae2bc258d529ff2b231e553e22281644b3281ea909afd735073eed4cdf3ceace",
+      "testedSha256": "ae2bc258d529ff2b231e553e22281644b3281ea909afd735073eed4cdf3ceace",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/F4-tilstandsrapport.pdf",
+      "sourceSha256": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+      "testedSha256": "545f888a4ae0c9d4b9836c0f6c6317aaa89cf38478ca27f1ed32d3c775f93c9b",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/README.md",
+      "sourceSha256": "ed625b82c08d8adc4d12c2e59717599d05aae2379fc6df821f58d9151df5524e",
+      "testedSha256": "ed625b82c08d8adc4d12c2e59717599d05aae2379fc6df821f58d9151df5524e",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/damaged-container.pdf",
+      "sourceSha256": "7d99e31202ea2667a4b158d1291454fa5feedf0dd7777390715819061c416462",
+      "testedSha256": "7d99e31202ea2667a4b158d1291454fa5feedf0dd7777390715819061c416462",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/expected.json",
+      "sourceSha256": "d485669a4764a10b8a7ac8e451d1cc75836bc7f431a610bbdd1dc93288f20fce",
+      "testedSha256": "d485669a4764a10b8a7ac8e451d1cc75836bc7f431a610bbdd1dc93288f20fce",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/generate.py",
+      "sourceSha256": "d73a3c6adfe86847258823562dac576a4fed818768e7e1fa163c6849af76cdd3",
+      "testedSha256": "d73a3c6adfe86847258823562dac576a4fed818768e7e1fa163c6849af76cdd3",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/invalid-format.pdf",
+      "sourceSha256": "b690986ab58634206a1a755cd8e25cdfff08dd455807c959f13444ff63e11cd2",
+      "testedSha256": "b690986ab58634206a1a755cd8e25cdfff08dd455807c959f13444ff63e11cd2",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/sha256.json",
+      "sourceSha256": "c48049dd9140b5d4bddb9fef1fc1ed9ce4deeb3104ac8aa1f9f511aee9918fc9",
+      "testedSha256": "c48049dd9140b5d4bddb9fef1fc1ed9ce4deeb3104ac8aa1f9f511aee9918fc9",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/text-30-pages.pdf",
+      "sourceSha256": "c345dd140dcc986f723825dfbf3f91806ada06da5fa391a80abc8c166b6f26df",
+      "testedSha256": "c345dd140dcc986f723825dfbf3f91806ada06da5fa391a80abc8c166b6f26df",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/text-31-pages.pdf",
+      "sourceSha256": "85cc12caa2e4879d71ea2dc56df0c1239e45805b01d3178418a3105507bd0fb2",
+      "testedSha256": "85cc12caa2e4879d71ea2dc56df0c1239e45805b01d3178418a3105507bd0fb2",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/property-cases/without-text-layer.pdf",
+      "sourceSha256": "31ce8108946d88eeedfb68f1cee5fa678a793b54d3d30d917477c0e10d114389",
+      "testedSha256": "31ce8108946d88eeedfb68f1cee5fa678a793b54d3d30d917477c0e10d114389",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/s5-benchmark/S5-B1-v1/README.md",
+      "sourceSha256": "43af22fd152fd64bbea8680509d0848cdaeeb11ed8394825f8e82b660f57f985",
+      "testedSha256": "43af22fd152fd64bbea8680509d0848cdaeeb11ed8394825f8e82b660f57f985",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/s5-benchmark/S5-B1-v1/S5-B1-v1-tilstandsrapport.pdf",
+      "sourceSha256": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+      "testedSha256": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/s5-benchmark/S5-B1-v1/expected.json",
+      "sourceSha256": "8c7000bc06041f03e1090d7d9cfadf8dd679cdf6072931aad28c6af7cfc879a5",
+      "testedSha256": "8c7000bc06041f03e1090d7d9cfadf8dd679cdf6072931aad28c6af7cfc879a5",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/s5-benchmark/S5-B1-v1/financial-inputs.json",
+      "sourceSha256": "7950e6632696c40594f9afb659d38165aa4ede40d5b43ceaac416be45737688a",
+      "testedSha256": "7950e6632696c40594f9afb659d38165aa4ede40d5b43ceaac416be45737688a",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/s5-benchmark/S5-B1-v1/generate.py",
+      "sourceSha256": "d48473ba6ecdcf8992fee7a11571600898423a40e0c5d642d477d921494798df",
+      "testedSha256": "d48473ba6ecdcf8992fee7a11571600898423a40e0c5d642d477d921494798df",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/s5-benchmark/S5-B1-v1/manifest.json",
+      "sourceSha256": "2ca29ecc2a2a9db5ec53de64a60c3f6bb97fc46f82bc441e8a39eb503a711c65",
+      "testedSha256": "2ca29ecc2a2a9db5ec53de64a60c3f6bb97fc46f82bc441e8a39eb503a711c65",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/fixtures/s5-benchmark/S5-B1-v1/report-source.json",
+      "sourceSha256": "b732f792621043e0ac193c82aab894ed1c97199a78abef5ea8cfcc0373f4e9b5",
+      "testedSha256": "b732f792621043e0ac193c82aab894ed1c97199a78abef5ea8cfcc0373f4e9b5",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/demo-without-network.mjs",
+      "sourceSha256": "0ee8bbb13f55dae3c83f95a55007dc3d803acbf4b6fa48bcdae40c44c4247afc",
+      "testedSha256": "0ee8bbb13f55dae3c83f95a55007dc3d803acbf4b6fa48bcdae40c44c4247afc",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/http-adapter-delay.ts",
+      "sourceSha256": "4fa9aeca7c5d7aa00e006505b8456bac8a15da6bc657f953199bf78508397408",
+      "testedSha256": "4fa9aeca7c5d7aa00e006505b8456bac8a15da6bc657f953199bf78508397408",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/http-adapter-failure.ts",
+      "sourceSha256": "4aaa6d11238d1cec3b6dca39cb83b2f558e8a51e44f238b32cca53eb438359d5",
+      "testedSha256": "4aaa6d11238d1cec3b6dca39cb83b2f558e8a51e44f238b32cca53eb438359d5",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/http-adapter-hang.ts",
+      "sourceSha256": "f963cd291727b914603f77a650baff4d567deb1c34a7e51cd51c061d07809365",
+      "testedSha256": "f963cd291727b914603f77a650baff4d567deb1c34a7e51cd51c061d07809365",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/http-adapter-invalid.ts",
+      "sourceSha256": "fc190145e9cde06c79f7c535f439da61b8ad8aa7a0ea0a94595835666dc0a41a",
+      "testedSha256": "fc190145e9cde06c79f7c535f439da61b8ad8aa7a0ea0a94595835666dc0a41a",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/http-documents-cleanup-failure.ts",
+      "sourceSha256": "16481d6d3d2b25b438e3c3f3f48e2a44b3897b9b25b9228cd96bf0bcbd4a243c",
+      "testedSha256": "16481d6d3d2b25b438e3c3f3f48e2a44b3897b9b25b9228cd96bf0bcbd4a243c",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/http-documents-delay.ts",
+      "sourceSha256": "8552dab6cdd9a1af97aa95ef41e572de35fdf4dfbc4d95497bda1ba085af943e",
+      "testedSha256": "8552dab6cdd9a1af97aa95ef41e572de35fdf4dfbc4d95497bda1ba085af943e",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/http-documents-hang.ts",
+      "sourceSha256": "74da7eb457b960605e0f5b86e3d5a823bf774914cc5713d11247b452593fbb35",
+      "testedSha256": "74da7eb457b960605e0f5b86e3d5a823bf774914cc5713d11247b452593fbb35",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/http-live-sdk-transport.ts",
+      "sourceSha256": "7b7a41bac0bba56d4159ba7f44c67fe53a3a1f710bfd4d70e8b7812179a043b5",
+      "testedSha256": "7b7a41bac0bba56d4159ba7f44c67fe53a3a1f710bfd4d70e8b7812179a043b5",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/report-case-adapter.ts",
+      "sourceSha256": "fc2685d4028f4e01b1b97f91e3e5e5ceff17db2ccaa64b7e2a1428f6df36fc1c",
+      "testedSha256": "fc2685d4028f4e01b1b97f91e3e5e5ceff17db2ccaa64b7e2a1428f6df36fc1c",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/report-ui-adapter.ts",
+      "sourceSha256": "b1f2848018819b3c0e93db94d614a864482862e0412e5b10bc261570bd7231aa",
+      "testedSha256": "b1f2848018819b3c0e93db94d614a864482862e0412e5b10bc261570bd7231aa",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/screening-state.ts",
+      "sourceSha256": "e7830aa5c9d4333757bc33a8e7c6af020fa30c99967baa869a91fe1c527eb186",
+      "testedSha256": "e7830aa5c9d4333757bc33a8e7c6af020fa30c99967baa869a91fe1c527eb186",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/helpers/verify-analysis-build.mjs",
+      "sourceSha256": "9cb6ee9b92afe12f33400d08e5450245d1f005739d7f8eb2dcd3eeb9a2db3e67",
+      "testedSha256": "2b679a7b2ca90991c85ed0809280ada396f0b76235913133bbafaa662c9d79bd",
+      "portAdapted": true
+    },
+    {
+      "file": "tests/helpers/verify-analysis-build.test.mjs",
+      "sourceSha256": "425e5c3c9ce767a1492c3c608cb132c719bab4e4b21924be7a138c709ee275a6",
+      "testedSha256": "425e5c3c9ce767a1492c3c608cb132c719bab4e4b21924be7a138c709ee275a6",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/demo-analysis.test.ts",
+      "sourceSha256": "6edc5b67ac14a76caa708c6d14d2c6592db14895474708d5c78fe34fe97dd0d5",
+      "testedSha256": "6edc5b67ac14a76caa708c6d14d2c6592db14895474708d5c78fe34fe97dd0d5",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/demo-screening.test.ts",
+      "sourceSha256": "66610dc7ef35b6dc0794aef8d82c043214a15a402d25d0c872de879bb7e64c0f",
+      "testedSha256": "66610dc7ef35b6dc0794aef8d82c043214a15a402d25d0c872de879bb7e64c0f",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/http-analysis-review.test.ts",
+      "sourceSha256": "23728d37dadf2297f76c9d27fbba804794e3423bcab3169604c006eee8845f4c",
+      "testedSha256": "23728d37dadf2297f76c9d27fbba804794e3423bcab3169604c006eee8845f4c",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/http-analysis.test.ts",
+      "sourceSha256": "e8e61055ce4efeb3955cc195b9b89acdeb9fd856ae12d0f7b9e732b0d100806a",
+      "testedSha256": "e8e61055ce4efeb3955cc195b9b89acdeb9fd856ae12d0f7b9e732b0d100806a",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/live-analysis.test.ts",
+      "sourceSha256": "8b4d5db9818ba4f089d5cdaf5df6f217b1358241c3a1a374e9c4144955da346e",
+      "testedSha256": "8b4d5db9818ba4f089d5cdaf5df6f217b1358241c3a1a374e9c4144955da346e",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/live-http.test.ts",
+      "sourceSha256": "b50741ce76a42a918a6aeeb2a2fb45ec9999d0be5893d188e353b5202357b997",
+      "testedSha256": "b50741ce76a42a918a6aeeb2a2fb45ec9999d0be5893d188e353b5202357b997",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/live-pipeline-wiring.test.ts",
+      "sourceSha256": "0ad576c48fb355f7df3548cc7ee0321a920abf5315eaa4961cdf9f0315d686b3",
+      "testedSha256": "0ad576c48fb355f7df3548cc7ee0321a920abf5315eaa4961cdf9f0315d686b3",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/pdf-extraction.test.ts",
+      "sourceSha256": "713e3c3aa567b6c130889494abce8f353611a97703ce2727266121f9d8584063",
+      "testedSha256": "713e3c3aa567b6c130889494abce8f353611a97703ce2727266121f9d8584063",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/pdf-format.test.ts",
+      "sourceSha256": "83688904eeb4b6bcab46364c481604affea341aed81220775a9b3546ce25ed0a",
+      "testedSha256": "83688904eeb4b6bcab46364c481604affea341aed81220775a9b3546ce25ed0a",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/integration/server-mode.test.ts",
+      "sourceSha256": "36fc6eb9cefe41e2a93476870b9887c98d4da490d7fab974a42233c3c5be55ec",
+      "testedSha256": "51335f91f5b940c8091ec4ea8677b1a3c3344562fec5be7439d00e7e825122b7",
+      "portAdapted": true
+    },
+    {
+      "file": "tests/unit/analysis-http.test.ts",
+      "sourceSha256": "9d38a4f3123db3640372c109ae6fa6926be92cb01c7c9101819f4de3c6b62d68",
+      "testedSha256": "9d38a4f3123db3640372c109ae6fa6926be92cb01c7c9101819f4de3c6b62d68",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/backend-config.test.ts",
+      "sourceSha256": "7daaa30f258d5d2cc240634a196a52a166086fff9da1464ebfb0e3c91c678926",
+      "testedSha256": "7daaa30f258d5d2cc240634a196a52a166086fff9da1464ebfb0e3c91c678926",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/complete-screening.test.ts",
+      "sourceSha256": "b9d8cc2eb52750b14482e9646434798f92a7310939234a906e7cda3177929881",
+      "testedSha256": "b9d8cc2eb52750b14482e9646434798f92a7310939234a906e7cda3177929881",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/demo-analysis.test.ts",
+      "sourceSha256": "c7fc1673b28845bb3d07f81a58040b36fbb119e8401b753bd9e123fae56ef3da",
+      "testedSha256": "c7fc1673b28845bb3d07f81a58040b36fbb119e8401b753bd9e123fae56ef3da",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/document-analysis.test.ts",
+      "sourceSha256": "00ec821991617739c70cd4acaaa28c85ac27b683f5d862373d1b8d1172af9fdd",
+      "testedSha256": "00ec821991617739c70cd4acaaa28c85ac27b683f5d862373d1b8d1172af9fdd",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/finance.test.ts",
+      "sourceSha256": "73e3f03dab775b2f6469151ed2daef8e5c7ab6f6bb0ef087fb3e108b52c2cebf",
+      "testedSha256": "73e3f03dab775b2f6469151ed2daef8e5c7ab6f6bb0ef087fb3e108b52c2cebf",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/financial-basis.test.ts",
+      "sourceSha256": "99c0e1c80becee291338ef89ec63b7019b74d994de8bbac13b101b60f46120f4",
+      "testedSha256": "99c0e1c80becee291338ef89ec63b7019b74d994de8bbac13b101b60f46120f4",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/financial-confirmation.test.ts",
+      "sourceSha256": "8017485d3976031a20b59e602b1f2647295576e8398d249a3d4f8b727b1d8de0",
+      "testedSha256": "8017485d3976031a20b59e602b1f2647295576e8398d249a3d4f8b727b1d8de0",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/financial-presentation.test.ts",
+      "sourceSha256": "dd7b2997237471761dc2258d04e98ddedc16a3af3dec2f52a3afe3d52fd636a9",
+      "testedSha256": "dd7b2997237471761dc2258d04e98ddedc16a3af3dec2f52a3afe3d52fd636a9",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/financial-result-renewal.test.ts",
+      "sourceSha256": "29f9ce35385f585e5d9435b6f37de1d4d92a5c94fcb568feb76e4d5ce58209f5",
+      "testedSha256": "29f9ce35385f585e5d9435b6f37de1d4d92a5c94fcb568feb76e4d5ce58209f5",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/financial-validation.test.ts",
+      "sourceSha256": "2b22bc0c1000b39f4cde180caeead96ec9202868f8304ab95372fde765b75c83",
+      "testedSha256": "2b22bc0c1000b39f4cde180caeead96ec9202868f8304ab95372fde765b75c83",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/finding-control.test.ts",
+      "sourceSha256": "5a46ae45bbc607b0414c51fe37fde088d774fbacd06be1025909cce22229a6bb",
+      "testedSha256": "5a46ae45bbc607b0414c51fe37fde088d774fbacd06be1025909cce22229a6bb",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/finding-list-control.test.ts",
+      "sourceSha256": "1b5712abc3afd90fdc8a6ec42570f0be8a254fc8ec634b16c52c44cea766333f",
+      "testedSha256": "1b5712abc3afd90fdc8a6ec42570f0be8a254fc8ec634b16c52c44cea766333f",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/http-pipeline-initialization.test.ts",
+      "sourceSha256": "7ae73193d48b8c9f486a078a73c1464a4986ee77f15213b93953c03fbcf3b150",
+      "testedSha256": "7ae73193d48b8c9f486a078a73c1464a4986ee77f15213b93953c03fbcf3b150",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/http-pipeline-races.test.ts",
+      "sourceSha256": "8d1a485ed40980598fc6ccd7625ae6bda93d5b9e0d93872fc49baedf67e74a05",
+      "testedSha256": "8d1a485ed40980598fc6ccd7625ae6bda93d5b9e0d93872fc49baedf67e74a05",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/http-receive-pdf.test.ts",
+      "sourceSha256": "02931678f5b2b143ad86e34bfd67d7aa761f622b94498fcd44f702b67c62bb0f",
+      "testedSha256": "02931678f5b2b143ad86e34bfd67d7aa761f622b94498fcd44f702b67c62bb0f",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/limitation-review.test.ts",
+      "sourceSha256": "cf93bba3d7030de46eda675c831b7fef1df8c55fb3e6bf7296331960000c831d",
+      "testedSha256": "cf93bba3d7030de46eda675c831b7fef1df8c55fb3e6bf7296331960000c831d",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/live-adapter.test.ts",
+      "sourceSha256": "bd1430a344f8b94e28809d1d38337ff9ac8f077b23283e97c2dca2e9c76d6a57",
+      "testedSha256": "bd1430a344f8b94e28809d1d38337ff9ac8f077b23283e97c2dca2e9c76d6a57",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/live-pipeline-phases.test.ts",
+      "sourceSha256": "21a66fb7548065dda8f1b000955cf02d853940c0c4b85b02e6a6364f8ffcce29",
+      "testedSha256": "21a66fb7548065dda8f1b000955cf02d853940c0c4b85b02e6a6364f8ffcce29",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/pdf-extraction.test.ts",
+      "sourceSha256": "b1fc60e532ccad04a8410c20a3b7714371d072d25890dc982812855170e73822",
+      "testedSha256": "b1fc60e532ccad04a8410c20a3b7714371d072d25890dc982812855170e73822",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/pdf-source.test.ts",
+      "sourceSha256": "2d2c60a1869755497ab5ed2a1802567a996b9995857b6ff95a8b008767dbdbff",
+      "testedSha256": "2d2c60a1869755497ab5ed2a1802567a996b9995857b6ff95a8b008767dbdbff",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/report-result-renewal.test.ts",
+      "sourceSha256": "d25711544386180233ee03415c1ab926d210d36624d26a83ad62ff5716197847",
+      "testedSha256": "d25711544386180233ee03415c1ab926d210d36624d26a83ad62ff5716197847",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/report-session.test.ts",
+      "sourceSha256": "0f13fd294bfc5335eff8869e23035eb7a73fce9dfd28f352331614c554834314",
+      "testedSha256": "0f13fd294bfc5335eff8869e23035eb7a73fce9dfd28f352331614c554834314",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/result-snapshot.test.ts",
+      "sourceSha256": "28388a6010ce0324ca2b0d81811b2d40f6558f30047b54eb05c9ae5262ca2bed",
+      "testedSha256": "28388a6010ce0324ca2b0d81811b2d40f6558f30047b54eb05c9ae5262ca2bed",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/screening-result-navigation.test.ts",
+      "sourceSha256": "bbb3e1d3573533c57ca3a229428e6da9c1e3d65fb7a1dd99c8dc34d80ddfde49",
+      "testedSha256": "bbb3e1d3573533c57ca3a229428e6da9c1e3d65fb7a1dd99c8dc34d80ddfde49",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/screening.test.ts",
+      "sourceSha256": "140f7157611365e63d8bf8352dd7485cf7210bb169110be199313f4a9c481ba4",
+      "testedSha256": "140f7157611365e63d8bf8352dd7485cf7210bb169110be199313f4a9c481ba4",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/session.test.ts",
+      "sourceSha256": "896ee6e33de7af1c2325e081f81772f16764d25302091bb3f9063110017c4e24",
+      "testedSha256": "896ee6e33de7af1c2325e081f81772f16764d25302091bb3f9063110017c4e24",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/tg3-resolution.test.ts",
+      "sourceSha256": "078ba2a11cc14b389cb52be0e55e72db4c2b762f801dcf4a7938360c0a82564a",
+      "testedSha256": "078ba2a11cc14b389cb52be0e55e72db4c2b762f801dcf4a7938360c0a82564a",
+      "portAdapted": false
+    },
+    {
+      "file": "tests/unit/thresholds.test.ts",
+      "sourceSha256": "f32fda7c7ce4738da7d1d6554e452a2b2448cbbb910f62ed3d6414f23d7eae94",
+      "testedSha256": "f32fda7c7ce4738da7d1d6554e452a2b2448cbbb910f62ed3d6414f23d7eae94",
+      "portAdapted": false
+    }
+  ],
+  "count": 188,
+  "unexpectedDifferences": 0
+}

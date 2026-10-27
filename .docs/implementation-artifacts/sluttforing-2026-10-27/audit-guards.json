@@ -1,0 +1,19 @@
+[
+  {
+    "check": "overwrite",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "seconds": 0.32
+  },
+  {
+    "check": "launch-cleanup",
+    "exitCode": 1,
+    "expectedFailureObserved": true,
+    "seconds": 0.33
+  },
+  {
+    "check": "preserved-images",
+    "fileCount": 68,
+    "byteIdentical": true
+  }
+]

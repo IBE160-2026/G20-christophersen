@@ -1,6 +1,8 @@
 # Intern S5-B1-v1-registrering — Codex fyller, ikke Mads
 
-Status: teknisk klargjøring; **ingen menneskelig gjennomføring startet**.
+Status: **ett faktisk forsøk er registrert; komplett S5 er ikke godkjent**.
+Se faktisk observasjon nederst og `story-4-5-s5-b1-v1-observasjon-2026-10-27.md`.
+Forhåndsutfylte tabeller og blanke målefelt nedenfor er klargjøringshistorikk.
 Det eldre [detaljskjemaet](story-4-5-mads-maaleskjema.md) og stoppede F1-planer
 beholdes som prosesshistorikk. Dette er den nye casebundne registreringen;
 Mads skal bare følge [kortinstruksen](story-4-5-s5-b1-v1-instruks.md).
@@ -67,3 +69,20 @@ personlig eksponering registreres fra Mads, ingen blindtest påstås. Samme-PDF-
 sekvensen innebærer også læringseffekt mellom manuell referanse og kontroll;
 bruk av eget tidligere notat dokumenteres. Ingen statistisk generalisering
 fra ett syntetisk case eller agentbasert fagvalidering som menneskelig bevis.
+
+## Faktisk observasjon etter overleveringen — 2026-10-27
+
+Forhåndstabellene og blanke felt over er bevart som klargjøringshistorikk.
+Gjeldende registrering er [faktisk observasjon](story-4-5-s5-b1-v1-observasjon-2026-10-27.md)
+og [maskinlesbart hendelsesgrunnlag](story-4-5/S5-2026-10-27-S5-B1-v1-01/human-evidence/observations.json).
+Ett faktisk live-forsøk, HTTP200; ett menneskelig opptak/notat. Mads opplyser
+at rapporten var ny og bare rapporten ble brukt til KI-kontrollen. Manuell
+del omfatter bare ni TG-funn, uten generell begrensnings-/TG3-statusvurdering.
+
+Observert manuell TG-identifisering1935,746667–1936,460000s,
+start→synligliste40,466667–41,271667s,
+synligliste→appbekreftelse317,811667–318,633333s. Dette er hendelsesintervaller,
+ikke estimert mennesketid eller godkjent komplett sammenligning. Resultatet
+viser Innhent mer informasjon, TG3Uavklart og avvikende finansgrunnlag.
+Faktisk kostUSD0,047151, samletUSD0,070243, cost-only avstemt uten å attestere
+menneskekontroll. Full S5-akseptanse og tidsgevinst er fortsatt ikke verifisert.

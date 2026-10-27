@@ -1,0 +1,258 @@
+{
+  "caseId": "S5-B1-v1",
+  "attemptId": "S5-2026-10-27-S5-B1-v1-01",
+  "evidenceStatus": "observed-not-accepted-as-complete-S5",
+  "sourceRevision": "5fa438e2047bd9f854e72688da32c7ef8b045c7d",
+  "video": {
+    "sourcePath": "/Users/madschristophersen/Downloads/Screen Recording 2026-10-27 at 18.43.17.MOV",
+    "sha256": "c00e1047a502fdfb71eb4954e70fe1ac68cbc1f8fe52c46a562da96c295fba82",
+    "bytes": 1174580962,
+    "durationSeconds": 2551.83,
+    "height": 1964,
+    "nominalFrameRate": 12.659079551696777,
+    "transform": [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "width": 3024,
+    "storedInRepository": false
+  },
+  "note": {
+    "sourcePath": "/Users/madschristophersen/Documents/AI test tilstandsrapport.pages",
+    "file": "manual-original.pages",
+    "sha256": "d402d0a409871b4d7c0bad40e481f8674b419a60d0b6a46ae9a0479433fcfa6c",
+    "bytes": 133583,
+    "previewFile": "manual-original-preview.jpg",
+    "previewSha256": "09cee38531224d14bf34d891dbba74300aca7e90c60fcfe8755654de95870d8b",
+    "inspection": "Embedded preview visually inspected; no claim of full IWA text extraction"
+  },
+  "method": "AVFoundation actual presentation times; variable frame rate. Bounds are sampled transition brackets, not exact click timestamps. No frame index/fps calculation. Crops only; no image content edits.",
+  "eventBoundsSeconds": {
+    "manualStart": [
+      2.0283333333333333,
+      2.4916666666666667
+    ],
+    "manualStop": [
+      1938.2383333333332,
+      1938.4883333333332
+    ],
+    "analysisStart": [
+      2123.6466666666665,
+      2124.1383333333333
+    ],
+    "listVisible": [
+      2164.605,
+      2164.9183333333335
+    ],
+    "listConfirmed": [
+      2482.73,
+      2483.2383333333332
+    ]
+  },
+  "observedDurationBoundsSeconds": {
+    "manualTgIdentification": [
+      1935.7466666666667,
+      1936.4599999999998
+    ],
+    "analysisToVisibleList": [
+      40.4666666666667,
+      41.27166666666699
+    ],
+    "visibleListToAppConfirmation": [
+      317.8116666666665,
+      318.6333333333332
+    ]
+  },
+  "humanStatements": {
+    "participant": "Mads",
+    "previousReportReading": false,
+    "previousOracleReading": "not explicitly answered",
+    "controlSourceReported": "Kun tilstandsrapporten; notatet ikke oppgitt brukt som kontrollhjelp",
+    "manualScope": "Identifiserte og noterte ni TG2/TG3; ingen separat generell begrensningsvurdering eller uttrykkelig TG3-status",
+    "originalNoteMustStayUnchanged": true,
+    "source": "Current active Codex session prompt log; direct replies 2026-10-27"
+  },
+  "qualification": {
+    "manualReferenceComplete": false,
+    "controlAppConfirmationVisible": true,
+    "originalSourceControlFullyVideoVerified": false,
+    "financialInputsMatchFrozenV1": false,
+    "eligibleCompletedComparisonCount": 0,
+    "s5Passed": false,
+    "story45Done": false
+  },
+  "frames": [
+    {
+      "event": "manual-start",
+      "requestedSeconds": 2.5,
+      "actualPresentationSeconds": 2.4916666666666667,
+      "cropPixels": [
+        60,
+        180,
+        2900,
+        1850
+      ],
+      "sourceFrameSha256": "5ab66031999f2584da5454798377d7a7672ee5b303e922be5f2e1b92f8af3686",
+      "file": "manual-start.png",
+      "sha256": "0727180f4609426228370d291c8a1953a93ce8a15d37f2e83491115b868a19df"
+    },
+    {
+      "event": "manual-stop-before",
+      "requestedSeconds": 1938.25,
+      "actualPresentationSeconds": 1938.2383333333332,
+      "cropPixels": [
+        550,
+        330,
+        1900,
+        900
+      ],
+      "sourceFrameSha256": "132cae00120aa99ffdc7d34f2820204c74a70f56f49f5f59bb979f71e86504a0",
+      "file": "manual-stop-before.png",
+      "sha256": "d626a67c518df1d6a5e2f46bf7c7c1be06f74c0d4ab23ae339a09abbbd6cf5c6"
+    },
+    {
+      "event": "manual-stop-after",
+      "requestedSeconds": 1938.5,
+      "actualPresentationSeconds": 1938.4883333333332,
+      "cropPixels": [
+        550,
+        330,
+        1900,
+        900
+      ],
+      "sourceFrameSha256": "5d852a6dea1a9a34b7733c6372901f50385d64c6b2293f6d76bef0b0be58818b",
+      "file": "manual-stop-after.png",
+      "sha256": "8e3de9084f4d2274f5b4b8f42cea002972004cfbf2cd70b26750afc609fad53d"
+    },
+    {
+      "event": "analysis-start-before",
+      "requestedSeconds": 2123.75,
+      "actualPresentationSeconds": 2123.6466666666665,
+      "cropPixels": [
+        100,
+        300,
+        2850,
+        1850
+      ],
+      "sourceFrameSha256": "3aa3cdc2736815f5e069c13bc75a413560a751e6fc5279cd39130682d3034fa9",
+      "file": "analysis-start-before.png",
+      "sha256": "d27450b490b4c18bcf3fd298d1349450beb17b5a4fc8c23cc4d9f970bdc068a5"
+    },
+    {
+      "event": "analysis-start-after",
+      "requestedSeconds": 2124.25,
+      "actualPresentationSeconds": 2124.1383333333333,
+      "cropPixels": [
+        100,
+        300,
+        2850,
+        1850
+      ],
+      "sourceFrameSha256": "b4b4881d6935c02f8abd1d303af9f74ed867af20a34b0d70afc4dc19608706ea",
+      "file": "analysis-start-after.png",
+      "sha256": "93e1e3e1e532fa842624b1a128d18e251d30d4d7893a3341a48e0c791212e76a"
+    },
+    {
+      "event": "list-before",
+      "requestedSeconds": 2164.75,
+      "actualPresentationSeconds": 2164.605,
+      "cropPixels": [
+        100,
+        300,
+        2850,
+        1810
+      ],
+      "sourceFrameSha256": "d89d73e74f99e5e9c5e2fcabeac32d4ee18b215b745db6ce57177fd7e49ab94e",
+      "file": "list-before.png",
+      "sha256": "49f0bfd91c6448c2e2e3a63b68baadf3789b73bb8bdeffc89f689be920d37c88"
+    },
+    {
+      "event": "list-after",
+      "requestedSeconds": 2165,
+      "actualPresentationSeconds": 2164.9183333333335,
+      "cropPixels": [
+        100,
+        300,
+        2850,
+        1810
+      ],
+      "sourceFrameSha256": "865281200dec35549f6b9742e7c448a3b3820d188b5aedad4fa4aeca87e77e94",
+      "file": "list-after.png",
+      "sha256": "3943d705ba4c65e0bdeec49ac66b794f31e5baf831d3d2701294ea567439fc9e"
+    },
+    {
+      "event": "confirmation-before",
+      "requestedSeconds": 2482.75,
+      "actualPresentationSeconds": 2482.73,
+      "cropPixels": [
+        100,
+        500,
+        2850,
+        1850
+      ],
+      "sourceFrameSha256": "fb7b983dd943818fb0b257fd18cff954752de2823baae5a60cae7c63375747bd",
+      "file": "confirmation-before.png",
+      "sha256": "4971ef96871d4855dd85ebbb7506aa035b78e93afd6e3c5bf3d065d2066c8863"
+    },
+    {
+      "event": "confirmation-after",
+      "requestedSeconds": 2483.25,
+      "actualPresentationSeconds": 2483.2383333333332,
+      "cropPixels": [
+        100,
+        500,
+        2850,
+        1850
+      ],
+      "sourceFrameSha256": "3bef9234dc197164cf5ef00809838c397219bcd82c3a018b016df7de289300f0",
+      "file": "confirmation-after.png",
+      "sha256": "4ec75ccd35618d672e52037a62ee37e19f41d12672969d0936ccf32d40c04251"
+    },
+    {
+      "event": "finance-L-D",
+      "requestedSeconds": 2035,
+      "actualPresentationSeconds": 2034.9216666666666,
+      "cropPixels": [
+        100,
+        300,
+        2850,
+        1800
+      ],
+      "sourceFrameSha256": "e4784a7f3ab1c94afa8131f0d6ac19fc9692643b947a50d2099c682b359d17b9",
+      "file": "finance-L-D.png",
+      "sha256": "b2f780a664b1ab8270a749c647cedc9407ff09e915e47332f9531b124a5250bd"
+    },
+    {
+      "event": "finance-J-Ymin",
+      "requestedSeconds": 2080,
+      "actualPresentationSeconds": 2079.935,
+      "cropPixels": [
+        100,
+        300,
+        2850,
+        1800
+      ],
+      "sourceFrameSha256": "5d869be1ef787a8b7dc03de48d930a7b0b4462d675085a04a9e03e34487c9003",
+      "file": "finance-J-Ymin.png",
+      "sha256": "65f65309e5a3d52f2cd4d93d55c2d4f4639e247cf8fdd0187971a5d61c509f36"
+    },
+    {
+      "event": "result-metrics",
+      "requestedSeconds": 2515,
+      "actualPresentationSeconds": 2514.9966666666664,
+      "cropPixels": [
+        100,
+        300,
+        2850,
+        1800
+      ],
+      "sourceFrameSha256": "f531d180b970970e68a01f73237bb56c1f6ca2102ad8a7117ffc3e20d76230ca",
+      "file": "result-metrics.png",
+      "sha256": "fc8b9395c528e38525cd8d07a2d256ae5fc73c80abe17090b58cfbd90d1d352b"
+    }
+  ]
+}

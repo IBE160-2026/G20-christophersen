@@ -1,0 +1,257 @@
+{
+  "at": "2026-10-27T18:19:31.481Z",
+  "httpStatus": 200,
+  "body": {
+    "kind": "analysis",
+    "correlation": {
+      "sessionId": "74f77836-73c6-4e24-8172-2fa0bd8b97f2",
+      "requestId": "af48b4bc-3024-4fa9-b0c1-b6dca567b845",
+      "generation": 1
+    },
+    "outcome": {
+      "contractVersion": "2",
+      "extractionVersion": "1",
+      "requestId": "af48b4bc-3024-4fa9-b0c1-b6dca567b845",
+      "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+      "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+      "mode": "live",
+      "pageCount": 14,
+      "status": "completed",
+      "validationScope": "structure-and-source",
+      "findings": [],
+      "uncertainCandidates": [
+        {
+          "kind": "uncertain",
+          "findingId": "F001",
+          "original": {
+            "findingId": "F001",
+            "description": "Terreng ved nordøstre hjørne faller inn mot grunnmuren over omtrent tre meter. Regnvann samles i en forsenkning inntil veggen, med sammenhengende vannstripe mellom plen og sokkel og uten synlig avskjærende renne.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 3
+            },
+            "uncertainties": [
+              "Drensledningene er ikke undersøkt gjennom denne observasjonen.",
+              "Sammenhengen med innvendige fuktspor er ikke fastslått; terrengfallet er ikke dokumentert som eneste årsak.",
+              "Naboens terreng og ledninger er ikke undersøkt."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        },
+        {
+          "kind": "uncertain",
+          "findingId": "F002",
+          "original": {
+            "findingId": "F002",
+            "description": "Innvendig nordvegg i bodrommet har saltutslag og avskallet maling fra gulvet og omtrent tretti centimeter opp, tydeligst nær terrengforsenkningen. Fuktindikasjonen er høyere enn ved døren. Det er ikke registrert fritt vann på gulvet.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 4
+            },
+            "uncertainties": [
+              "Sporene er forenlige med gjentatt fuktbelastning, men årsak og varighet er ikke fastslått.",
+              "Dreneringens trase og dybde er ikke dokumentert, og ledningene er ikke kamerakontrollert.",
+              "Malingsflakene dokumenterer ikke bæresvikt."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        },
+        {
+          "kind": "uncertain",
+          "findingId": "F003",
+          "original": {
+            "findingId": "F003",
+            "description": "Nedre ender av flere kledningsbord på østfasaden under stuevinduet har åpne sprekker, avflasset overflatebehandling og mykt tre ved forsiktig mekanisk kontroll.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 5
+            },
+            "uncertainties": [
+              "Bakliggende vindsperre og bindingsverk er ikke åpnet; skjulte følgeskader er ikke påvist.",
+              "Skadeomfang mot friskt tre og sammenhengende luftespalte bak kledningen er ikke avklart."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        },
+        {
+          "kind": "uncertain",
+          "findingId": "F004",
+          "original": {
+            "findingId": "F004",
+            "description": "Sørvinduet i hovedsoverommet har lokalt nedbrutt, mykt treverk i bunnkarmens høyre hjørne. Rammen subber samme sted ved lukking, og overflatebehandlingen har en åpen sprekk ved skjøten mellom bunnkarm og sidekarm.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 6
+            },
+            "uncertainties": [
+              "Skadens utbredelse, tetthet i hjørneovergangen og årsaken til subbingen er ikke avklart.",
+              "Slagregnprøve er ikke gjennomført.",
+              "Tilstanden i veggen under karmen er ukjent fordi omrammingen ikke er demontert."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        },
+        {
+          "kind": "uncertain",
+          "findingId": "F005",
+          "original": {
+            "findingId": "F005",
+            "description": "Aktiv lekkasje ved overgangen mellom hovedtak og østre takopplett: vann drypper fra undertaket til våt isolasjon på loftet. Treverket har mørke vannspor, og et synlig bord har oppfliset, myk overflate. Utvendig ses en åpen skjøt i sidebeslaget samme sted.",
+            "grade": "TG3",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 7
+            },
+            "uncertainties": [
+              "Eksakt inntrengingsvei gjennom sjiktene og årsaken er ikke fastslått.",
+              "Skadeomfang på sperrer, tilstøtende treverk og skjulte sjikt er ukjent; dette omtales som en konkret, kritisk usikkerhet.",
+              "Øvre tilslutning ved takopplettet er bare delvis synlig utenfra.",
+              "Beholderen under dryppstedet er ikke en utbedring eller teknisk kontroll."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        },
+        {
+          "kind": "uncertain",
+          "findingId": "F006",
+          "original": {
+            "findingId": "F006",
+            "description": "Langs omtrent fire meter av vestre raft er luftespalten blokkert av mineralull presset mot undertaket. Det ses kondensstriper på undertakets innside i samme felt. Forholdet omtales separat fra den aktive taklekkasjen.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 8
+            },
+            "uncertainties": [
+              "Endelig fuktteknisk årsak er ikke målt.",
+              "Det er ikke observert drypp eller sammenhengende vannspor fra taklekkasjen til dette feltet.",
+              "Temperatur- og fuktlogging over tid er ikke utført; stripene påviser ikke en bestemt type vekst."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        },
+        {
+          "kind": "uncertain",
+          "findingId": "F007",
+          "original": {
+            "findingId": "F007",
+            "description": "I hovedbadets dusjhjørne er fugemassen mellom vegg og gulv sprukket og løsnet over omtrent seksti centimeter, med åpen kant og mørk misfarging i fugen.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 9
+            },
+            "uncertainties": [
+              "Observasjonen dokumenterer ikke membranbrudd bak flisene.",
+              "Membranens kontinuitet og eventuell bakenforliggende skade er ikke avklart.",
+              "Detaljtegning av hjørneløsningen foreligger ikke; klemring og membran er ikke demontert."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        },
+        {
+          "kind": "uncertain",
+          "findingId": "F008",
+          "original": {
+            "findingId": "F008",
+            "description": "Badet i utleiedelen har lokalt motfall mellom vaskemaskinplassen og døren. Ved enkel kontroll blir vann stående i en dam og siger mot terskelen i stedet for mot sluket. Det ble ikke registrert vann ute i gangen under prøven.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 10
+            },
+            "uncertainties": [
+              "Kontrollen gjelder bare det tilgjengelige gulvpartiet utenfor dusjnisjen, ikke alle gulvflater.",
+              "Lekkasje gjennom membranen er ikke påvist.",
+              "Dokumentasjonen inneholder ingen innmåling av gulvet."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        },
+        {
+          "kind": "uncertain",
+          "findingId": "F009",
+          "original": {
+            "findingId": "F009",
+            "description": "Under utleiekjøkkenets vask drypper det fra skjøten mellom vannlås og avløpsrør ved tapping. Skapbunnen har en fuktig, oppsvulmet kant rett under skjøten. Funnet omfatter den utette skjøten og den synlige lokale følgeskaden.",
+            "grade": "TG2",
+            "source": {
+              "documentName": "S5-B1-v1-tilstandsrapport.pdf",
+              "reportHash": "5548434c32b3cdb3bd9ac5d91f25a1fa055eb3b0928279134124c46403bc3ca1",
+              "pdfPage": 11
+            },
+            "uncertainties": [
+              "Bakplaten er ikke tatt av; fuktutbredelse og eventuell skade bak innredningen er ukjent.",
+              "Eieropplysningen om tidligere montering av vannlåssettet er udokumentert og fastslår ikke alene årsaken."
+            ]
+          },
+          "issues": [
+            {
+              "code": "reported-uncertainty",
+              "reason": "Adapteren oppga usikkerhet; se det originale uttrekket."
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Rapporten er et fiktivt, AI-assistert øvingsgrunnlag uten faktisk befaring eller sertifisert undersøkelse.",
+        "Alle 14 oppgitte PDF-sider er lest som rapportdata. Uttrekket omfatter ni eksplisitt graderte forhold: åtte TG2 og ett TG3.",
+        "Undersøkelsen er beskrevet som visuell med enkle funksjonsprøver og indikative målinger. Lukkede konstruksjoner er ikke åpnet, og fast innredning er ikke demontert.",
+        "Fuktindikasjoner alene fastslår ikke årsak eller varighet. Ingen laboratorieprøver eller undersøkelser av mikrobiologisk vekst er beskrevet.",
+        "Ugraderte observasjoner og gjentakelser i samlet vurdering er ikke ført som separate graderte funn."
+      ]
+    }
+  }
+}

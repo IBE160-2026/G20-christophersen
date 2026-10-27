@@ -1,0 +1,9 @@
+PASS: seven frozen files; original live request/output/usage/owner; 8TG2+1TG3 physical pages; cost USD0.047151/total0.070243; cost-only reconciliation/no paid lock; 12 cropped frame hashes/note; interval arithmetic; no complete S5 claim.
+Limits: grades/pages integrity checks do not independently certify source semantics, human completeness or final financial values. Visual/protocol assessment remains in the observation report.
+Additional root checks 2026-10-27:
+- Rehashed external original MOV: c00e1047a502fdfb71eb4954e70fe1ac68cbc1f8fe52c46a562da96c295fba82
+- Rehashed external original Pages: d402d0a409871b4d7c0bad40e481f8674b419a60d0b6a46ae9a0479433fcfa6c
+- projectLedger totalUsd=0.070243; prior chain=0.016072 ->0.019558 ->0.023092 ->0.070243
+- git diff --check: exit0
+- git diff --exit-code HEAD -- tests/fixtures src tools package.json package-lock.json .docs/implementation-artifacts/story-4-4 .docs/implementation-artifacts/story-4-4-b2: exit0
+- No product/helper code changed; no repeat full application regression, provider call, retry or human test.

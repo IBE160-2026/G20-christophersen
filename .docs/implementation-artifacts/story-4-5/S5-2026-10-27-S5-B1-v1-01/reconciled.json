@@ -1,0 +1,10 @@
+{
+  "owner": {
+    "fixtureId": "S5-B1-v1",
+    "attemptId": "7d73801f-8e8e-466e-bcec-a2ec279ebd90"
+  },
+  "receiptSha256": "1460b84712ddb48ac886234ec7510a4b09d68714fc25a4d1fa70cbb847e26dc9",
+  "costUsd": 0.047151,
+  "cumulativeProjectUsd": 0.070243,
+  "costOnly": true
+}

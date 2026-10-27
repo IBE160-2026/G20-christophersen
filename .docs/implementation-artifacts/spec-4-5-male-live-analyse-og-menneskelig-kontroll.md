@@ -118,3 +118,19 @@ ikke utførtmåling. Se [gjeldende R4](../planning-artifacts/r4-s5-benchmark-gje
 Mads må selv gjøre manuell referanse før AI, så faktisk analyse/kildekontroll.
 Faktiske tider, aktiviteter, feil/kvalitet, oppsummering og uavhengig
 Story4.5-review gjenstår. Ingenbenchmark-KI/mennesketider er opprettet.
+
+## Gjeldende checkpoint 2026-10-27 — faktisk opptak, ufullstendig referanse
+
+Ett faktisk S5-B1-v1-live-forsøk er gjennomført av Mads og kostnadsavstemt:
+USD0,047151, samletUSD0,070243. Originalvideo/notat og observerte intervaller
+inngår i [ny beviskontroll](story-4-5-s5-b1-v1-observasjon-2026-10-27.md).
+Dette erstatter tidligere påstander om null benchmarkkall/observasjoner,
+uten å omskrive opprinnelige preflight-/handoff-/frysebevis.
+
+Mads bekrefter manglende manuell begrensnings-/TG3-statusvurdering. Den
+manuelle tiden gjelder bare TG-identifisering/notering. Finans/nettleser
+avviker fra planen; full kildekontroll står til kvalifisering. Ingen komplett
+sammenligningsreferanse eller bestått S5 påstås. 4.5 og Epic4 forblir
+in-progress, 4.4done består. [Sentral åpen oppfølging](deferred-work.md)
+er oppdatert. Ingen ny analyse/måling eller endring av fryst benchmark,
+F1–F4, historisk S2, 5.4/S6 eller5.5 er utført i denne beviskontrollen.

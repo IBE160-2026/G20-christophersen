@@ -14,7 +14,8 @@ er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 | Story 1.3 B8 — ren installasjon | Lukket 2026-10-19 | Bestått isolert installasjon og kontroller; beviscommit `13d111237f3b7609786e054455fd5516ef9218d2`. Se historisk lukking nedenfor. |
 | Story 4.3 B3/C2 — første feilårsak ved ny Start | Åpen | Review utsetter uttrykkelig forbedringen; ingen dokumentert godkjent retting funnet. Se status under originalpunktet. |
 | Story 4.4 B1 — generelle rapportbegrensninger | Lukket 2026-10-24, avgrenset produktretting | Commit `43c0a693d7517c59835078205bfe72611697dc05`, bestått uavhengig B1-review og full offline-regresjon. Separat B2/live-akseptanse lukkes ikke av dette. |
-| Story 4.4 B2 — live-sluttbevis | Åpen | Eget review-/akseptansegap; offline B1-bevis er utilstrekkelig. Se eget punkt nedenfor. |
+| Story 4.4 B2 — live-sluttbevis | Lukket 2026-10-27 | Nye originale F1/F2-sluttbevis, godkjent uavhengig sluttreview og regresjon i `5fa438e2047bd9f854e72688da32c7ef8b045c7d`. Historikken nedenfor beholdes. |
+| Story 4.5 — ufullstendig manuell S5-referanse og forsøksavvik | Åpen | Faktisk S5-B1-v1-forsøk er bevart; manuell begrensnings-/TG3-vurdering mangler, finans/nettleser avviker fra plan. Ingen komplett tidsgevinst godkjent. Se nytt punkt nedenfor. |
 
 ## Deferred from: code review of spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt (2026-10-17)
 
@@ -95,3 +96,27 @@ men angir fortsatt at endelig uavhengig rekontroll gjenstår. Den er ikke
 grunnlag for lukking i denne oppryddingen og tas ikke med i denne commiten.
 Lukking krever godkjent relevant sluttreview og verifikasjon med sporbar
 commit for det nye beviset. Historiske receipts og offline replay beholdes.
+
+### B2 lukket 2026-10-27 — etter oppryddingscheckpointet
+
+Den tidligere åpne statusen ovenfor beskrev tidspunktet før sluttreview.
+Commit `5fa438e2047bd9f854e72688da32c7ef8b045c7d` bevarer nye originale
+F1/F2-kall, korrekt faktisk Gå videre/Forkast, kostnadsavstemming og
+[godkjent uavhengig sluttreview](story-4-4-b2-uavhengig-sluttreview-2026-10-27.md).
+[Sluttkontrollen](story-4-4-b2-sluttkontroll-2026-10-27.md) dokumenterer full
+regresjon og etterfølgende målrettede prøver. Historiske S2-originaler og
+replay er bevart; replay brukes ikke til å lukke B2. Oversikten korrigeres
+nå mot dette konkrete lukkebeviset. Dette godkjenner ikke Story4.5/S5.
+
+## Story 4.5 — åpen etter første S5-B1-v1-opptak, 2026-10-27
+
+Mads gjennomførte ett faktisk live-forsøk og leverte originalvideo/notat.
+Han bekrefter at den manuelle delen bare identifiserte ni TG-funn, uten
+generell begrensningsvurdering eller uttrykkelig TG3-status. Finans og
+nettleser avviker fra fryst forsøksoppsett; full originalkontroll er ikke
+uavhengig videoverifisert. Ingen komplett sammenligningsreferanse eller
+bestått S5/tidsgevinst kan utledes. Manglende aktiviteter kompletteres ikke
+i ettertid i den opprinnelige tiden. Se [faktisk observasjon og neste
+checkpoint](story-4-5-s5-b1-v1-observasjon-2026-10-27.md). Bevar første forsøk;
+avklar korrekt videre måleplan/læringseffekt før eventuell ny gjennomføring.
+Ingen automatisk retry, endret fasit eller ny KI-analyse bestilles her.

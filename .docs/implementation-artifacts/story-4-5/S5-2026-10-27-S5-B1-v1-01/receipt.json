@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-27T18:19:31.372Z",
+  "usage": {
+    "input_tokens": 9437,
+    "input_tokens_details": {
+      "cache_write_tokens": 9434,
+      "cached_tokens": 0
+    },
+    "output_tokens": 2356,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 11793
+  },
+  "costUsd": 0.047151,
+  "cumulativeProjectUsd": 0.070243,
+  "unknownCost": false,
+  "costOnly": true,
+  "s5Measured": false,
+  "humanControlStatus": "not-recorded",
+  "attempts": 1,
+  "retries": 0,
+  "owner": {
+    "fixtureId": "S5-B1-v1",
+    "attemptId": "7d73801f-8e8e-466e-bcec-a2ec279ebd90"
+  }
+}

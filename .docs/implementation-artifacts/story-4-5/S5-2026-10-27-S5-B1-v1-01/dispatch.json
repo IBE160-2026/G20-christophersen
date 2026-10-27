@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-27T18:19:07.613Z",
+  "owner": {
+    "fixtureId": "S5-B1-v1",
+    "attemptId": "7d73801f-8e8e-466e-bcec-a2ec279ebd90"
+  },
+  "requestSha256": "4685c75fe1bfdaa4658d9420297f5342982e6e9185fe23ad2839b3734503babf",
+  "normalizedRequestSha256": "0f5c5dd4b79550595a489e164bc1e280ae9dec416e24348975182e3f406c7737",
+  "reservationUsd": 1.53,
+  "costBeforeUsd": 0.023091999999999998,
+  "unknownCost": true
+}

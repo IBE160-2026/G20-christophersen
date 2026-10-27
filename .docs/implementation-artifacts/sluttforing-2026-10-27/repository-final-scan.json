@@ -10,7 +10,7 @@
   "files": [
     {
       "file": ".docs/implementation-artifacts/deferred-work.md",
-      "sha256": "a6dc2ac86dd07c7bc9a32087d9091bda9d42a6987b0fb4bd4d396e7264619070"
+      "sha256": "ee86f1633dbceeb921688014e803536aa00c633f21af6bb9a181364a862563a2"
     },
     {
       "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-build.txt",
@@ -158,7 +158,7 @@
     },
     {
       "file": ".docs/implementation-artifacts/spec-kontrollert-sluttforing-2026-10-27.md",
-      "sha256": "f025dff31a7833ffacacabc690bd059b80767154d3cf77967bc3d518f3c27a37"
+      "sha256": "d3ab131b57c1385bd35e6782702c07423c42c2d41ca5e4d42d6fada313b76359"
     },
     {
       "file": ".docs/implementation-artifacts/sprint-status.yaml",
@@ -174,11 +174,11 @@
     },
     {
       "file": ".docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md",
-      "sha256": "81f3f5222498dfb107fc3d6c6e9e49424c375f22e293e9c5adac64449c6db73e"
+      "sha256": "4b8abc872ab67fb715a2428c228c2247c363212c1798e18054123be6dae1acc1"
     },
     {
       "file": ".docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md",
-      "sha256": "7251c90eab7cbf73816a90b2a644a1365b349ff972111865dc4fb93f47c21e7d"
+      "sha256": "f27d57bc84f172062d06d828965a6fa9233f45feec5644a090d0bd4b76ef8f13"
     },
     {
       "file": ".env.example",

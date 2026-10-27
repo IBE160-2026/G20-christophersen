@@ -16,7 +16,7 @@ er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 | Story 4.4 B1 — generelle rapportbegrensninger | Lukket 2026-10-24, avgrenset produktretting | Commit `43c0a693d7517c59835078205bfe72611697dc05`, bestått uavhengig B1-review og full offline-regresjon. Separat B2/live-akseptanse lukkes ikke av dette. |
 | Story 4.4 B2 — live-sluttbevis | Lukket 2026-10-27 | Nye originale F1/F2-sluttbevis, godkjent uavhengig sluttreview og regresjon i `5fa438e2047bd9f854e72688da32c7ef8b045c7d`. Historikken nedenfor beholdes. |
 | Story 4.5 — ufullstendig manuell S5-referanse og forsøksavvik | Akseptert avvik S5-W1, ikke rettet | Mads har avsluttet S5-testing 2026-10-27. Formell AC-akseptanse er ufullstendig; ingen videre målinger autorisert. Se [waiver](story-4-5-s5-waiver-2026-10-27.md) og beslutningstillegg nedenfor. |
-| Story 5.5 D1 — transitiv body-parser | Åpen ved registrering 2026-10-27 | Målrettet retting er under verifikasjon. Se [originalregistrering](#story-55-d1--transitiv-body-parser-registrert-åpen-2026-10-27); lukking krever relevant commit og godkjent review/test. |
+| Story 5.5 D1 — transitiv body-parser | Lukket 2026-10-27 | Rettet i `8a091ea3fd175706ea147b05e8d6bce90724e54f`, fersk audit og full regresjon/review godkjent. Se [originalregistrering og lukking](#story-55-d1--transitiv-body-parser-registrert-åpen-2026-10-27). |
 
 ## Deferred from: code review of spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt (2026-10-17)
 
@@ -145,3 +145,21 @@ Beslutningsrecord og aktiv promptlogg versjoneres i samme lokale commit.
 Status ved registrering: **Åpen**. Eier: sluttføringsrunden. Ingen
 avhengighetspakke eller tidligere testbevis omskrives som om dette var rettet
 før denne datoen. Lukking registreres separat med relevant commit.
+
+### D1 lukket 2026-10-27
+
+Relevant rettings-/beviscommit: `8a091ea3fd175706ea147b05e8d6bce90724e54f`. Bare
+body-parser-lockposten er oppdatert fra 2.3.0 til 2.4.0 innen eksisterende
+Express-range; direkte pins og produktkontrakter er uendret.
+[Fersk npm-audit](sluttforing-2026-10-27/dependency-audit-after.json)
+rapporterer 0 kjente varsler. [Ren avhengighetsinstallasjon](sluttforing-2026-10-27/clean-install-patched.json)
+binder riktig låsfil til faktisk npm ci.
+
+[Uavhengig leveringsreview og siste rekontroll](sluttforing-leveringsreview-2026-10-27.md#siste-uavhengige-rekontroll)
+bekrefter avgrensningen og ingen gjenværende verifiserte feil.
+[Full post-patch-regresjon](sluttforing-2026-10-27/post-patch-regression.json)
+har alle ni exit 0: 1082 unit/integrasjon, 195 bygget E2E, 3 dev/offline,
+37 komponenter, 6 build-helper, typecheck/lint/build og bygg-/nøkkelgrense
+med 204 filer/0 lekkasjer. Kilde-/låsfilmanifest matcher rettingscommiten.
+Dette er teknisk lukking av D1, ikke ekstern S6 eller full Story 5.5-akseptanse.
+Opprinnelig åpen registrering ovenfor beholdes som historikk.

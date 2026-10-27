@@ -19,7 +19,7 @@ menneskelig rapportkontroll er bevart.
 
 Utgangspunkt: `2dadc800daafa8b1640ccd08bf91a302fbc9cfb0`.
 UI-/reviewcheckpoint: `8497fe584387636d7bd715c009682c6e72899a99`.
-Senere leveringscheckpoint identifiseres i [arbeidsøkten](../process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md).
+Leverings-/sikkerhetscheckpoint: `8a091ea3fd175706ea147b05e8d6bce90724e54f`. Sluttlukkingen identifiseres i [arbeidsøkten](../process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md).
 [Kildemanifestet](sluttforing-2026-10-27/tested-source-manifest.json)
 knytter 188 kilde-/testfiler til prøvd innhold. Den første testkopien brukte
 eksisterende node_modules og bare lokal porttilpasning 3000→3107, fordi en

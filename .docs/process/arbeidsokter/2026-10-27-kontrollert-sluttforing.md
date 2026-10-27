@@ -158,3 +158,14 @@ stier/ankre. Ruby/Psych parser sprint-YAML og bekrefter 4.5 in-progress,
 5.4 backlog, 5.5 in-progress og bevart S5-W1. Sluttskannen omfatter nye
 leveringsfiler med 0 nøkkelmønstertreff. Rå terminalutdata bevarer eventuell
 original whitespace; whitespacekontroll av forfattede filer består.
+
+- `8a091ea3fd175706ea147b05e8d6bce90724e54f`: leveringsforberedelse, målrettet transitiv
+  sikkerhetsretting, oppdatert README/konfigurasjon, S6-pakke, korrekt
+  sprintstatus og full grønn regresjon med uavhengig review.
+
+D1 ble lukket først etter at denne faktiske rettings-/beviscommiten var
+opprettet og kontrollert. En siste lokal dokumentasjonscommit registrerer
+lukkingen; ingen ny produktkode eller testforventning er endret etter
+full grønn regresjon. Aktiv promptlogg inngår i UI-checkpointet og er ikke
+endret, flyttet eller omskrevet. Den eksisterende port3000-serveren er
+fortsatt ikke stoppet av denne økten.

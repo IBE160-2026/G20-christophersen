@@ -2,7 +2,7 @@
 title: 'Kontrollert sluttføring — UX og leveringsberedskap'
 type: 'chore'
 created: '2026-10-27'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 baseline_commit: '2dadc800daafa8b1640ccd08bf91a302fbc9cfb0'
 review_loop_iteration: 0
@@ -103,3 +103,9 @@ post-patch-kontroller exit0. Ingen produktvalg eller AC er endret.
 6 build-helper består i full endelig runde, samt type/lint/build og
 204-filers bygg-/nøkkelgrense. 5.4 og samlet 5.5 er ikke gjort done; den
 bestilte forberedelsen er fullført med korrekt åpen ekstern port.
+
+Sluttført bestilt arbeidsomfang 2026-10-27. UI-checkpoint og
+leveringscheckpoint `8a091ea3fd175706ea147b05e8d6bce90724e54f` har faktiske test-/
+reviewbevis. D1 lukkes med denne rettingscommiten som bevis, etter faktisk
+commitkontroll. Spec-done gjelder den bestilte sluttføringsrunden og dens
+forberedelsesgrense; Story 5.4/5.5 og S5-W1s formelle status endres ikke til done.

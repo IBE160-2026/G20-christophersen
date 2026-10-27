@@ -16,6 +16,7 @@ er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 | Story 4.4 B1 — generelle rapportbegrensninger | Lukket 2026-10-24, avgrenset produktretting | Commit `43c0a693d7517c59835078205bfe72611697dc05`, bestått uavhengig B1-review og full offline-regresjon. Separat B2/live-akseptanse lukkes ikke av dette. |
 | Story 4.4 B2 — live-sluttbevis | Lukket 2026-10-27 | Nye originale F1/F2-sluttbevis, godkjent uavhengig sluttreview og regresjon i `5fa438e2047bd9f854e72688da32c7ef8b045c7d`. Historikken nedenfor beholdes. |
 | Story 4.5 — ufullstendig manuell S5-referanse og forsøksavvik | Akseptert avvik S5-W1, ikke rettet | Mads har avsluttet S5-testing 2026-10-27. Formell AC-akseptanse er ufullstendig; ingen videre målinger autorisert. Se [waiver](story-4-5-s5-waiver-2026-10-27.md) og beslutningstillegg nedenfor. |
+| Story 5.5 D1 — transitiv body-parser | Åpen ved registrering 2026-10-27 | Målrettet retting er under verifikasjon. Se [originalregistrering](#story-55-d1--transitiv-body-parser-registrert-åpen-2026-10-27); lukking krever relevant commit og godkjent review/test. |
 
 ## Deferred from: code review of spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt (2026-10-17)
 
@@ -134,3 +135,13 @@ ikke rettede feil eller bestått S5. Formell4.5/Epic4-status er fortsatt
 in-progress med separat avslutningsmetadata. Ingen videre S5-målearbeid er
 bestilt; ingen ny test/reviewgodkjenning fabrikeres for å lukke avviket.
 Beslutningsrecord og aktiv promptlogg versjoneres i samme lokale commit.
+
+## Story 5.5 D1 — transitiv body-parser, registrert åpen 2026-10-27
+
+- source_spec: `spec-kontrollert-sluttforing-2026-10-27.md`
+  summary: Oppdatere låsfilens body-parser 2.3.0 til sikkerhetsrettet 2.4.0 uten endring av direkte versjonspins eller produktkontrakt.
+  evidence: Fersk npm-audit fant ett high-varsel, [GHSA-27r3-jxmh-p828](https://github.com/advisories/GHSA-27r3-jxmh-p828). Se [original audit](sluttforing-2026-10-27/dependency-audit.json). Express 5.3.0 tillater ^2.3.0; målrettet isolert låsfiloppløsning endrer bare body-parser. Appen bruker egen multipart-leser, ikke express.json/urlencoded; ingen utnyttbar produktvei er påvist. Relevant ren installasjon, regresjon og uavhengig review kreves før lukking.
+
+Status ved registrering: **Åpen**. Eier: sluttføringsrunden. Ingen
+avhengighetspakke eller tidligere testbevis omskrives som om dette var rettet
+før denne datoen. Lukking registreres separat med relevant commit.

@@ -1,0 +1,205 @@
+{
+  "basis": "8497fe584387636d7bd715c009682c6e72899a99 + leveringsendringer",
+  "fileCount": 48,
+  "patterns": [
+    "openai-key",
+    "aws-key",
+    "private-key"
+  ],
+  "matchesWithoutValues": [],
+  "files": [
+    {
+      "file": ".docs/implementation-artifacts/deferred-work.md",
+      "sha256": "a6dc2ac86dd07c7bc9a32087d9091bda9d42a6987b0fb4bd4d396e7264619070"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-build.txt",
+      "sha256": "ee2dcf54e4817a00adf069b9f59104e9caa7739da24fd37d83439c1a6f9ac52a"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-demo-observations.json",
+      "sha256": "a2c67318d09ddfb29a29088263c457e3b92bd792f67c80377226a1875f9569d9"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-demo.txt",
+      "sha256": "c20dcd38778bcf657b0221b456329dbdf177fc610065cc657ba30a597fdbc158"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-install-patched.json",
+      "sha256": "9648a290153de79c75732f86c3c76ff01c9cff9a90a4e91e864862e3c42f6d03"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-install-patched.txt",
+      "sha256": "f136a442cf89ecea7f57143d03571425d8f7dedae5435fa7cb86bf4e7e74f483"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-install.json",
+      "sha256": "324f3c5ba5c15615b8eb1cfd92fe05576148b1c97800b596c50b1a64f5c3a20d"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/clean-install.txt",
+      "sha256": "f136a442cf89ecea7f57143d03571425d8f7dedae5435fa7cb86bf4e7e74f483"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/delivery-review-findings.json",
+      "sha256": "d3a1e360e1ae098827f49cc3caccf22fcd032d7ff565a2a7cd9207e70034511b"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/dependency-audit-after-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/dependency-audit-after.json",
+      "sha256": "ef763833de54dafb4dce9d655a7f8dc2c82a20de90451769698d677c31b1d795"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/dependency-audit-stderr.txt",
+      "sha256": "0c5e2568b4c79c13debcc497cf347b98e7a01e636ae2bed42cf3faa742048c94"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/dependency-audit.json",
+      "sha256": "0b21bccff0d1ded1d05934f1f04b3f8401aa73758fbf9cf72cae067f60e02724"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/dependency-resolution.txt",
+      "sha256": "d61559013a34e5b3c62a2874fddf26abc4c8f6f7b688b6401fb548582a511152"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/dependency-tree-after.json",
+      "sha256": "03a572ad76048313dcc0e641cce0a2c9ecaa7e1575af836d8d0dc58a8e4ecd96"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/dependency-tree.json",
+      "sha256": "722bafee843cb5e037cdc38354f52e1a28fa6fddf4d914f3e2293401972d8d56"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/executed-final-scan.py",
+      "sha256": "23e1f7a3d4e0c10902da3abd362b2866e32d2605c428280e4100276dcd0ab293"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/executed-post-patch-regression.py",
+      "sha256": "c7f0a544afb9cd6a53a00295224cd02cf875c7bfb305140d78e93c8d37c9e646"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/local-links.json",
+      "sha256": "96fe7c9a0924a26f3b82cd3729959dcf845811ef9097edce7282a334df606e91"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/patched-install.txt",
+      "sha256": "ad5079cfa7ccd5be5c4c13b619bcacff5e17e019fbab3b0654b52f77f04d3997"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-build-helper.txt",
+      "sha256": "1643b9309a4169d20eb1b2c2c138efd27ebd640b5d190a30efa9879021d5f4c4"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-build-key.txt",
+      "sha256": "954771479c69d17901dec844d404281f149f5d9b1fcc1b4ee6965c620b6052ef"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-build.txt",
+      "sha256": "35f8c6cc725554e5657a37882f90a7c30673a6a823085bed8ed1c3ea727b5466"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-components.txt",
+      "sha256": "e584ad42087516b4de6ea9a90df43abaa2838992f6f1196b8cce575f75832366"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-dev.txt",
+      "sha256": "a8f70c69dd4126c004252d331e23ebb97279e30fc17a1cf4a689f458351ea2a3"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-e2e.txt",
+      "sha256": "9f5e5c99bec632adced79c94c1254ba3532509850cef228dcacce21653762246"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-lint.txt",
+      "sha256": "0a888294426fb01d4d75953d0161deb46da87e485c1f3829d450a28ff06efae9"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-regression.json",
+      "sha256": "e31bf663c6e702a87c36949ef8b670f0a96c58ae7a5d0ab26449d1ded74739a4"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-source-manifest.json",
+      "sha256": "1bc0d3323c3c42730f2b295b1b68658fdb1d26b938195b4a7821f23ed759fa13"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-typecheck.txt",
+      "sha256": "15c4f76391f77b05479efe29961ceda832ba2a1448165debbaee7e88c0784775"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/post-patch-vitest.txt",
+      "sha256": "3a8e964b7d151c5b05992588c248e68af9e2ddb7f1cdb7343a5a734a1e065de6"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/preserved-evidence-final.json",
+      "sha256": "b929fdaf2f85a3299ac9612ae28e1c72a688842b8fb81224d87605a7b25c0e86"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/preserved-evidence.json",
+      "sha256": "d75efd75988c02eb40700e876bb3bcfb3845fdffbe6ce317c9105211e67c56d3"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/readme-env-precedence.json",
+      "sha256": "fea30274165130bda318c2cf8e6a2466cbc1ea06ab36736ef93fd38b8d0b796a"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/readme-live-config.json",
+      "sha256": "6e2a11ae7f6e661d3bd2f62d858bb3d5ded48e8468da389938c37ee3b959f42a"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-2026-10-27/repository-hygiene.json",
+      "sha256": "8ad8c8570e823e4b6a7e0e6a8c537813ef0e18527b3dea6b47352f009d497e09"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sluttforing-leveringsreview-2026-10-27.md",
+      "sha256": "9ee6e75ee8aeb6ce492717ffd010af88b2a91a269646e707eaebb727f302f493"
+    },
+    {
+      "file": ".docs/implementation-artifacts/spec-kontrollert-sluttforing-2026-10-27.md",
+      "sha256": "f025dff31a7833ffacacabc690bd059b80767154d3cf77967bc3d518f3c27a37"
+    },
+    {
+      "file": ".docs/implementation-artifacts/sprint-status.yaml",
+      "sha256": "53b5f0611cbb749b18b90c5c6fd5d61f1481b2d57fe2da790a44c7e3de951608"
+    },
+    {
+      "file": ".docs/implementation-artifacts/story-5-4-ekstern-instruks.md",
+      "sha256": "62042452193e40cdbf5fbf05ba6611dc41d3cb3f4a37de47d647643f9c97a51c"
+    },
+    {
+      "file": ".docs/implementation-artifacts/story-5-4-forberedelse-2026-10-27.md",
+      "sha256": "fbabe422411e193b2245b6e7666ca8650d9753f93714b2bd97c315d860954210"
+    },
+    {
+      "file": ".docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md",
+      "sha256": "81f3f5222498dfb107fc3d6c6e9e49424c375f22e293e9c5adac64449c6db73e"
+    },
+    {
+      "file": ".docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md",
+      "sha256": "7251c90eab7cbf73816a90b2a644a1365b349ff972111865dc4fb93f47c21e7d"
+    },
+    {
+      "file": ".env.example",
+      "sha256": "6d212989fe4fce53329be358a57b009e210f6c7bdb17e345a5f0afbc1ecf2487"
+    },
+    {
+      "file": "README.md",
+      "sha256": "36465e3ab4f65abff2a63d96a8e85e57a47b1bec712b86b933b14d152275fbed"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "6af85cdc417022fcf3e6e51fc4cd22e710081bb126d8cf3b34f0a40035b21450"
+    },
+    {
+      "file": "src/backend/README.md",
+      "sha256": "94a2273f8579ada7cb2c216832ea6ff94d7af0f23c206a53393e606617c37fe9"
+    },
+    {
+      "file": "src/contracts/README.md",
+      "sha256": "ccd45b53d9e347c516550c2d21ab0d0df38c1780f8ba6b2d7d6c27dcfd461b36"
+    }
+  ],
+  "limitation": "M\u00f8nstergjenkjenning; historikkskann separat; egen rapportfil utelatt for \u00e5 unng\u00e5 selvrefererende hash."
+}

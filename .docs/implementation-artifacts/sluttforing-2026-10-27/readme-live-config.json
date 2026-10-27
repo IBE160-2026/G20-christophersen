@@ -1,0 +1,11 @@
+{
+  "command": "node --env-file=.env.example src/backend/server.ts",
+  "portAdapted": 3107,
+  "mode": "live",
+  "httpStatus": 200,
+  "outcomeStatus": "failed",
+  "errorCode": "adapter-failure",
+  "emptyExampleKey": true,
+  "paidProviderCalls": 0,
+  "externalNetwork": "OS-sperret"
+}

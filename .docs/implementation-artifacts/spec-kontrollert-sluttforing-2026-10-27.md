@@ -2,7 +2,7 @@
 title: 'Kontrollert sluttføring — UX og leveringsberedskap'
 type: 'chore'
 created: '2026-10-27'
-status: 'in-progress'
+status: 'in-review'
 route: 'dispatch'
 baseline_commit: '2dadc800daafa8b1640ccd08bf91a302fbc9cfb0'
 review_loop_iteration: 0
@@ -43,10 +43,10 @@ context: []
 - [x] `src/frontend/styles.css` og berørte frontend-komponenter — forbedre gruppering/spacing, felthierarki, smal stepper, kontrollfeltsett og resultatets lesbarhet uten ny oppførsel.
 - [x] `tools/finalization/visual-audit.mjs` og `sluttforing-2026-10-27/` — bevar faktiske før/etterbilder av tom/feil, TG3, PDF-panel, resultat og utdatert resultat; kontroller overløp og eksterne forespørsler.
 - [x] `sluttforing-2026-10-27-review.md` — uavhengig BMAD-review, triage, verifiserte rettinger og relevante UI-/E2E-/komponenttester.
-- [ ] `story-5-4-forberedelse-2026-10-27.md` — kort ekstern instruks og tydelig AC1–AC5-bevismal uten utfylte observasjoner; bevar R4-S6.
-- [ ] `story-5-5-leveringskontroll-2026-10-27.md` — konkret krav/kode/test/bevisspor, arkitektur-/repo-/dependency-/hemmelighetskontroll med grenser og gjenstående eier.
-- [ ] `README.md` — synkroniser levert live-status, oppstart/konfigurasjon og bevisstatus; bevar selvstendig offline-demo.
-- [ ] `sprint-status.yaml` og `.docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md` — ærlig status, testbevis og lokale checkpoints. Oppdater sentral deferred-work kun ved faktiske åpne funn.
+- [x] `story-5-4-forberedelse-2026-10-27.md` — kort ekstern instruks og tydelig AC1–AC5-bevismal uten utfylte observasjoner; bevar R4-S6.
+- [x] `story-5-5-leveringskontroll-2026-10-27.md` — konkret krav/kode/test/bevisspor, arkitektur-/repo-/dependency-/hemmelighetskontroll med grenser og gjenstående eier.
+- [x] `README.md` — synkroniser levert live-status, oppstart/konfigurasjon og bevisstatus; bevar selvstendig offline-demo.
+- [x] `sprint-status.yaml` og `.docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md` — ærlig status, testbevis og lokale checkpoints. Oppdater sentral deferred-work kun ved faktiske åpne funn.
 
 **Acceptance Criteria:**
 - Gitt eksisterende flyt, når desktop og smal visning prøves, så er felter, status, kontroll og resultat lesbare uten innholdstap; tastatur og PDF-panel virker fortsatt.
@@ -57,6 +57,8 @@ context: []
 ## Implementation Notes
 
 Planlagt fra brukerens uttrykkelige bestilling av alle fem sekvensielle faser. Brukerens regel om å spørre ved vesentlige produktbeslutninger styrer gjennomføringen; ingen uavklart produktbeslutning er funnet. Ingen irreversibel handling planlagt. Førbilder ble tatt i egen demo-router, ikke den eksisterende live-serveren på port 3000; ingen analyse ble sendt til live-serveren.
+
+Sikkerhetskontroll fant én transitiv body-parser 2.3.0 med high-varsel. Målrettet oppløsning endrer bare denne lockfilposten til 2.4.0 innen Express sin eksisterende range; package.json/direkte pins og produktkontrakter er uendret. Fersk audit er grønn. Ny full regresjon er nødvendig og pågår før sluttcheckpoint.
 
 ## Spec Change Log
 
@@ -75,7 +77,7 @@ Full triage og konkrete bevis: [reviewrapport](sluttforing-2026-10-27-review.md)
 | B7 | low | Desktop-input fluktet ikke med periode; patch til delte rader. |
 | B8 | medium | Browser-launch før cleanup; patch til ytre ressursgrense, negativ launchprøve består. |
 | E1 | medium | Uavhengig samme overskrivingsfeil som B1; rettet og rekontrollert. |
-| V | false | Ingen verifikasjonshull meldt; ikke et feilfunn. |
+| V | ingen funn | Verification-gap returnerte ingen feilfunn. |
 | R1 | medium | Fire eksisterende fokusprøver røde; avgrenset kortflate-CSS gir 24/24 grønt uten endrede forventninger. |
 
 ## Verification
@@ -85,3 +87,19 @@ Full triage og konkrete bevis: [reviewrapport](sluttforing-2026-10-27-review.md)
 - Visuell gjennomgang av faktiske Chromium-bilder, fokus-/ombrytingstester og byggets nøkkel-/importgrense.
 - Isolert installasjon fra uendret lockfil der cache/nett tillater det; egen installasjon er ikke ekstern S6.
 - Lokale lenker, faktisk filinventar, ignorering og hemmelighetsmønstre kontrolleres uten sensitive verdier i utdata.
+
+### Leveringsreview og sluttkontroll
+
+[Uavhengig bmad-review](sluttforing-leveringsreview-2026-10-27.md) dokumenterer
+A1–A10/E1 med vurdering, konkret retting og bevis. A1/E1 og A2 er medium
+(miljøpresedens og feil modus), A5–A7 er medium (versjonsbinding/bevisdekning),
+A3/A4/A8/A9/A10 er low (presisering, oversikt, lenker/bevisutsnitt). Alle er
+rettet; A10s mottakerpåstand var delvis avkreftet av eksisterende «Mads».
+Ingen verifikasjonshull meldt. Ny kanttilfelle-rekontroll bekrefter korrekt
+env-u/demo-retur og avgrenset body-parser-lockpost; audit0 og alle ni
+post-patch-kontroller exit0. Ingen produktvalg eller AC er endret.
+
+1082 unit/integrasjon, 195 bygget E2E, 3 dev/offline, 37 komponenter og
+6 build-helper består i full endelig runde, samt type/lint/build og
+204-filers bygg-/nøkkelgrense. 5.4 og samlet 5.5 er ikke gjort done; den
+bestilte forberedelsen er fullført med korrekt åpen ekstern port.

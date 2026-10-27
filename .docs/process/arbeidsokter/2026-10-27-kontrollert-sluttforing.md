@@ -75,3 +75,86 @@ eller ekstern S6.
 Faktisk kjørte kommandoer, exitstatus og rålogger samles i
 [regresjonsindeksen](../../implementation-artifacts/sluttforing-2026-10-27/final-regression.json).
 Ingen ny S5-måling eller endring av opprinnelige observasjoner inngår.
+
+## Fase 3 — S6-forberedelse
+
+[Én kort instruks](../../implementation-artifacts/story-5-4-ekstern-instruks.md)
+og [tom bevismal/AC-gate](../../implementation-artifacts/story-5-4-forberedelse-2026-10-27.md)
+er klargjort. README er eneste kjøreoppskrift. Ingen ekstern person/miljø
+er oppdiktet, ingen S6-observasjon er fylt inn. 5.4 står backlog/R4-S6 open.
+Ren intern installasjon fra eksisterende cache, build og F4-kontroll/PDF/
+resultat uten nett bestod før sikkerhetsrettingen; dette er uttrykkelig
+versjonsavgrenset og ikke ekstern S6.
+
+## Fase 4 — leveringsforberedelse
+
+[5.5-kontrollen](../../implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md)
+sporer FR/NFR/CAP/AD/UX-DR og S1–S6/K1–K3 til konkrete kode-/test-/bevisgrenser.
+README er oppdatert med faktisk live-/S2-status, S5-W1, åpen S6, valgfri
+konfigurasjon og hemmelighetsfri .env.example. Node env-file-presedens ble
+funnet i uavhengig review og rettet med env-u; faktisk sentinelprøve består.
+Produksjonsentry er prøvd på testport med tom nøkkel, live-metadata og trygg
+feil, uten leverandørkall. Ingen reell nøkkel er lest til dette arbeidet.
+
+Fersk npm-audit fant ett high-varsel i transitiv body-parser 2.3.0. Kilde
+og Express-range er kontrollert. Målrettet oppløsning endrer bare lockposten
+til 2.4.0, ingen direkte versjonspins eller produktkontrakter. Ren npm-ci av
+oppdatert låsfil og fersk ny audit består (0 kjente varsler). Den nye
+registreringen D1 ligger i eneste sentrale deferred-work-oversikt; lukking
+føres med relevant commit etter godkjente bevis.
+
+1941 historiske blobs ble skannet for tre nøkkelmønstre. Tre treff er
+uttrykkelige fiktive redigeringstester, ingen faktisk hemmelighet påvist
+innen disse mønstrene. Nye leveringsfiler har separat sluttskann. Kontroll
+av .gitignore og faktisk filinventar består. 209 originale 4.4-/B2-/S5-filer
+er byteidentiske mot startrevisjonen. Kurskildenes eventuelle offentlige
+delingsrett er ikke gitt av denne tekniske kontrollen.
+
+5.5 er in-progress for uttrykkelig bestilt delvis forberedelse, ikke done.
+S5-W1/4.5/Epic4 er bevart. Ingen nye S5-målinger/testforsøk eller betalte
+kall, ingen push/pull.
+
+## Fase 5 — endelig regresjon og review
+
+Etter lockfilrettingen ble en full ny nøkkelfri/OS-nettsperret runde kjørt
+med Node 24.21.0/npm 11.19.0 på isolert port 3107. Alle exit 0:
+
+| Kontroll | Resultat |
+| --- | --- |
+| Typecheck/lint/build | Bestått |
+| Unit/integrasjon | 1082/1082, 39 filer |
+| Bygget E2E | 195/195 i én full grønn kjøring |
+| Dev/offline | 3/3 |
+| Komponenter | 37/37 |
+| Bygg-/nøkkelgrense | 204 frontendfiler, 0 lekkasjer |
+| Build-helper | 6/6 |
+
+[Post-patch-rålogger og kommandoindeks](../../implementation-artifacts/sluttforing-2026-10-27/post-patch-regression.json)
+og [kilde-/låsfilmanifest](../../implementation-artifacts/sluttforing-2026-10-27/post-patch-source-manifest.json)
+identifiserer faktisk prøvd innhold. Den tidligere rå HTTP-portfeilen var
+testkopiens glemte numeriske 3000-referanse; ufarlige GET gikk til eksisterende
+server, aldri analyse-POST. Feilen er ikke skjult, og ingen gammel GET-
+respons brukes som bestått bevis. Siste fullrunde bruker bare riktig testport.
+
+`bmad-review` ble brukt på leveringsdiffen med eksplisitte adversarial-,
+edge-case- og verification-gap-linser i separate kontekstfrie agenter.
+[Alle funn og triage](../../implementation-artifacts/sluttforing-leveringsreview-2026-10-27.md)
+er bevart. Ingen verifiserte feil er utsatt fra denne runden. Eksisterende
+4.3 B3/C2 er fortsatt åpen i sentral oversikt og er ikke nyoppdaget her.
+
+## Lokale checkpoints
+
+- `8497fe584387636d7bd715c009682c6e72899a99`: UI, før/etter, uavhengig review,
+  rød/grønn fokusregresjon, prosessbevis og aktiv promptlogg.
+- Leverings-/sikkerhetscheckpoint og lukking identifiseres etter faktisk
+  commit nedenfor. Ingen commit-ID konstrueres på forhånd.
+
+Mads må organisere ekte S6 på den endelige versjonen, registrere eventuelle
+avvik og rekontroll, og deretter ta samlet leveringsakseptanse. Ingen videre
+S5-runde inngår. Frist/innlevering og eventuell publisering håndteres av Mads.
+
+Siste dokumentkontroll: 182 lokale lenker i 10 dokumenter uten manglende
+stier/ankre. Ruby/Psych parser sprint-YAML og bekrefter 4.5 in-progress,
+5.4 backlog, 5.5 in-progress og bevart S5-W1. Sluttskannen omfatter nye
+leveringsfiler med 0 nøkkelmønstertreff. Rå terminalutdata bevarer eventuell
+original whitespace; whitespacekontroll av forfattede filer består.

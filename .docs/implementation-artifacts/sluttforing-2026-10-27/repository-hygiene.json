@@ -1,0 +1,42 @@
+{
+  "revision": "8497fe584387636d7bd715c009682c6e72899a99",
+  "historyBlobCount": 1941,
+  "patterns": [
+    "openai-key",
+    "aws-key",
+    "private-key"
+  ],
+  "matchesWithoutValues": [
+    {
+      "object": "a5244f42eb371607a6c95b138491e7f817b767b2",
+      "path": ".codex/hooks/test_log_user_prompt.py",
+      "pattern": "private-key",
+      "classification": "false-positive: uttrykkelig fiktiv redigerings-/diagnostikktest"
+    },
+    {
+      "object": "15dd4fc8e22945c84b570d5a6bfde0fc883e443c",
+      "path": ".docs/implementation-artifacts/story-4-4-b2/F2-B2-2026-10-27-01/executed-helper-source/tools__story-4-4__b2-lifecycle.test.mjs",
+      "pattern": "openai-key",
+      "classification": "false-positive: uttrykkelig fiktiv redigerings-/diagnostikktest"
+    },
+    {
+      "object": "d75f0e3826803e8c7ff4ba147bb8709071b07190",
+      "path": "tools/story-4-4/b2-lifecycle.test.mjs",
+      "pattern": "openai-key",
+      "classification": "false-positive: uttrykkelig fiktiv redigerings-/diagnostikktest"
+    }
+  ],
+  "forbiddenTrackedPaths": [],
+  "ignoreProbes": {
+    "node_modules/probe": true,
+    "dist/probe": true,
+    "private/probe": true,
+    ".env": true,
+    ".env.local": true,
+    "test-results/probe": true,
+    "playwright-report/probe": true
+  },
+  "limitation": "M\u00f8nstergjenkjenning; ikke garanti mot alle hemmelighetstyper eller vurdering av dokumentrettigheter",
+  "actualSecretsFoundInCheckedPatterns": 0,
+  "workingTreeScope": "Versjonert historikk til UI-checkpoint; nye leveringsfiler kontrolleres f\u00f8r siste commit"
+}

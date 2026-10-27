@@ -1,0 +1,114 @@
+[
+  {
+    "check": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 3.95,
+    "log": "post-patch-typecheck.txt"
+  },
+  {
+    "check": "lint",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 0.75,
+    "log": "post-patch-lint.txt"
+  },
+  {
+    "check": "build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 5.52,
+    "log": "post-patch-build.txt"
+  },
+  {
+    "check": "vitest",
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "--maxWorkers=1"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 127.07,
+    "log": "post-patch-vitest.txt"
+  },
+  {
+    "check": "e2e",
+    "command": [
+      "node",
+      "node_modules/@playwright/test/cli.js",
+      "test",
+      "--workers=2"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 143.01,
+    "log": "post-patch-e2e.txt"
+  },
+  {
+    "check": "dev",
+    "command": [
+      "node",
+      "node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "playwright.dev.config.ts",
+      "--workers=1"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 2.18,
+    "log": "post-patch-dev.txt"
+  },
+  {
+    "check": "components",
+    "command": [
+      "npm",
+      "run",
+      "test:components"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 4.48,
+    "log": "post-patch-components.txt"
+  },
+  {
+    "check": "build-key",
+    "command": [
+      "node",
+      "tests/helpers/verify-analysis-build.mjs"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 4.76,
+    "log": "post-patch-build-key.txt"
+  },
+  {
+    "check": "build-helper",
+    "command": [
+      "node",
+      "--test",
+      "tests/helpers/verify-analysis-build.test.mjs"
+    ],
+    "cwd": "/private/tmp/ibe160-sluttforing-cqoqa8pn",
+    "exitCode": 0,
+    "seconds": 0.99,
+    "log": "post-patch-build-helper.txt"
+  }
+]

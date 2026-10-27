@@ -1,0 +1,12 @@
+{
+  "directory": "/private/tmp/ibe160-sluttforing-install-xelnv77m",
+  "node": "24.21.0",
+  "npm": "11.19.0",
+  "command": "npm ci --offline --cache /Users/madschristophersen/.npm",
+  "freshNodeModules": true,
+  "externalS6": false,
+  "packageSha256": "c016f54c96f84abf35961f10db15327124cf517913e0fad2e8d773ab95a687d6",
+  "lockSha256": "fa25017c253450eb0ae8f6b34d01cd69cba345e0dab175250e40ecd6aa4bbefd",
+  "network": "eksisterende cache; ingen fersk r\u00e5dgivningsdatabase p\u00e5st\u00e5s",
+  "observation": "Ren installasjon/build og F4-kontroll/PDF/resultat ved to viewports bestod f\u00f8r transitive sikkerhetsrettingen. Ikke ekstern S6 og ikke hele README-renkj\u00f8ring p\u00e5 standardport."
+}

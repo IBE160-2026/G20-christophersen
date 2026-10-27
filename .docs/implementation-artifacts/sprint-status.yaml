@@ -90,7 +90,8 @@ development_status:
   5-2-etterprøve-hele-den-felles-brukerflyten-og-grunnleggende-til: done
   5-3-dokumentere-en-komplett-oppskrift-for-lokal-demo-og-tester: done
   5-4-la-en-annen-person-gjennomføre-readme-basert-ren-kjøring: backlog
-  5-5-samle-etterprøvbare-leveransebevis-og-kontrollere-repoet: backlog
+  5-5-samle-etterprøvbare-leveransebevis-og-kontrollere-repoet: in-progress
+  # Kun bestilt leveringsforberedelse; full akseptanse venter på ekte S6.
   epic-5-retrospective: optional
 
 # Planmetadata fra Sprint Planning 2026-10-16; Story 1.1 startet 2026-10-16.
@@ -155,3 +156,14 @@ clarification_gates:
     also_before: S5-målepunkter i 4.4 dersom de samles for gjenbruk i 4.5
     subject: Faktisk person/miljø for kontroll, måling og samme-case manuell referanse
     decision_record: .docs/planning-artifacts/r4-s5-benchmark-gjennomforing-2026-10-27.md
+
+# Bestilt sluttføringsrunde 2026-10-27; ingen formell S5/S6-godkjenning.
+delivery_preparation:
+  checked_on: 2026-10-27
+  ui_checkpoint: 8497fe584387636d7bd715c009682c6e72899a99
+  story_5_4_prepared: true
+  external_s6_executed: false
+  story_5_4_record: .docs/implementation-artifacts/story-5-4-forberedelse-2026-10-27.md
+  story_5_5_scope: partial-preparation-only
+  story_5_5_record: .docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md
+  s5_waiver_preserved: S5-W1

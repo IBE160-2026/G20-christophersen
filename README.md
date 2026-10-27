@@ -2,7 +2,9 @@
 
 Lokal førstevurdering av **ett boligutleieobjekt**, laget for investorens tidlige sortering. Brukeren registrerer og kontrollerer økonomiske forutsetninger, leser tilstandsrapportens original, kontrollerer TG2/TG3-funn og får en kodebestemt anbefaling: **Gå videre**, **Forkast** eller **Innhent mer informasjon**. Beregningene er bruttoyield, NOI, nettoyield og kontantstrøm før skatt. Investoren tar beslutningen; dette er ingen teknisk godkjenning eller komplett investeringsanalyse.
 
-Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rapporter, menneskelig kontroll/korrigering, separat TG3-avklaring og revisjonsbundet resultat. Uttrekkene er kontrollerte fiktive demodata, skrevet for demoen; de stammer ikke fra en faktisk KI-/live-kjøring. Demo er standard og krever **ingen API-nøkkel, miljøfil, konto eller betalt tjeneste**. Live-adapteren er koblet til samme kontroll- og resultatflyt i Story 4.3; [backenddokumentasjonen](src/backend/README.md) beskriver lokal moduskonfigurasjon. Faktiske live-kjøringer og separat kvalitets-/tidsevaluering gjenstår i Story 4.4/4.5. Demo beviser ingen live-kvalitet eller live-tid. Automatisk søk, markedsdata, rangering og lagring mellom økter er utenfor denne smale v1.
+Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rapporter, menneskelig kontroll/korrigering, separat TG3-avklaring og revisjonsbundet resultat. Uttrekkene er kontrollerte fiktive demodata, skrevet for demoen; de stammer ikke fra en faktisk KI-/live-kjøring. Demo er standard og krever **ingen API-nøkkel, miljøfil, konto eller betalt tjeneste**. Live-integrasjonen bruker samme kontroll- og resultatflyt.
+
+**Bevisstatus 27. oktober 2026:** Story 4.4 har [godkjente originale live-/S2-bevis](.docs/implementation-artifacts/story-4-4-b2-uavhengig-sluttreview-2026-10-27.md). Story 4.5/S5 er avsluttet med [aksepterte avvik S5-W1](.docs/implementation-artifacts/story-4-5-s5-waiver-2026-10-27.md), med ufullstendig formell AC-akseptanse og uten validert tidsbesparelse. Ingen nye S5-målinger er planlagt. Annen-person-S6/5.4 er **ikke gjennomført**; 5.5 er delvis klargjort. [Leveringskontrollen](.docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md) skiller faktiske bevis fra åpne porter. Demo beviser ingen live-kvalitet eller live-tid. Automatisk søk, markedsdata, rangering og lagring mellom økter er utenfor denne smale v1.
 
 ## Installer og start demo
 
@@ -13,7 +15,7 @@ node --version
 npm --version
 npm ci
 npm run build
-npm run demo
+ANALYSIS_MODE=demo npm run demo
 ```
 
 De to første kommandoene skal vise `v24.21.0` og `11.19.0`. `npm ci` installerer nøyaktig fra låsfilen og erstatter eksisterende `node_modules`. Installasjon kan kreve nett til npm-registeret. Åpne **http://127.0.0.1:3000** i en moderne nettleser. Du skal se Tallgrunnlag og **Demo · lagret KI-uttrekk**. Én Express-prosess serverer bygget `dist/`, API og PDF-/worker-/fontressurser lokalt. Etter installasjon kan build og hele demoen kjøres med eksternt nett sperret; behold tilgang til lokal loopback.
@@ -23,6 +25,8 @@ Stopp med **Ctrl+C** i serverterminalen. Port 3000 må være ledig; serveren vel
 Oppskriften er egenprøvd på macOS 26.6.2 arm64; andre plattformer er ikke egenprøvd. npm kan varsle om det valgfrie installasjonsscriptet til `fsevents@2.3.3` på macOS. Vite kan varsle om stor chunk; faktisk exitstatus og testresultat må fortsatt kontrolleres.
 
 ## Prøv F1–F4 fra start til resultat
+
+For en enkel offline-prøve etter installasjon: installer også Chromium først hvis testene skal kjøres, slå deretter av Wi-Fi/koble fra Ethernet og behold localhost tilgjengelig. Registrer hvordan nett ble sperret i et faktisk S6-forsøk. Installasjonens nettbehov er ikke en del av offline-demoen.
 
 Bruk de innsjekkede PDF-ene i [tests/fixtures/property-cases](tests/fixtures/property-cases/README.md) og den forhåndsdefinerte [expected.json](tests/fixtures/property-cases/expected.json). Finansdata ligger separat fra rapportene. Bruk bare disse fiktive dataene i oppskriften. Bare **uendrede F1–F4-originalbytes** har lagrede demosvar; ny filidentitet gir ingen live-fallback.
 
@@ -95,7 +99,36 @@ Testene kontrollerer også sentral finans-/terskellogikk og blank/null/feiltilst
 
 Ved Playwright-feil ligger beholdte spor og skjermbilder i `test-results/`. Åpne en faktisk generert `trace.zip` med `npx playwright show-trace <sti-til-trace.zip>`; erstatt plassholderen med filens sti. Disse genererte feilartefaktene er Git-ignorert.
 
+## Valgfri live-kjøring
+
+Demooppskriften ovenfor er komplett alene. Live krever egen OpenAI API-tilgang og kan koste penger. Valgt modell er **gpt-6.1-sol**, Responses API og reasoning `low`. Ett leverandørkall sendes per godkjent analyseforsøk, uten automatisk retry; et nytt forsøk i en ny økt kan koste på nytt selv for samme rapport. Kontroller modelltilgang og godkjent restbudsjett før du starter analyse; [R1](.docs/planning-artifacts/r1-live-ki-semester-v1.md) og [de faktiske forsøkene](.docs/implementation-artifacts/story-4-4-b2-sluttkontroll-2026-10-27.md) dokumenterer datert kostnadsgrunnlag, ikke et løfte om dagens pris eller kontosaldo.
+
+Stopp demo/dev/testserveren. Kopier den hemmelighetsfrie eksempelfilen:
+
+```sh
+cp .env.example .env
+```
+
+Rediger `.env` lokalt: behold `ANALYSIS_MODE=live` og sett din egen `OPENAI_API_KEY`. Filen er Git-ignorert. Nøkkelen skal bare ligge i backendmiljøet, aldri i frontend/Vite-variabler, skjermbilder eller delte logger. Start deretter:
+
+```sh
+npm run build
+env -u OPENAI_API_KEY -u ANALYSIS_MODE node --env-file=.env src/backend/server.ts
+```
+
+Åpne samme lokale adresse og kontroller **Live analyse** før du velger en rapport og eksplisitt **Start analyse**. Dokumentfasen har egen 60 s-frist; etter godkjent dokumentgrunnlag har live-fasen 120 s. Avbrudd beviser ikke at leverandørens behandling/belastning stoppet. Feil vises lokalt; ingen demo-fallback eller automatisk nytt kall brukes. Manglende nøkkel gir trygg analysefeil. Det finnes ingen nett-/nøkkelkonfigurasjon i appen.
+
+Serveren leser ikke `.env` automatisk: `--env-file` gjør det i kommandoen over. Allerede eksporterte variabler har forrang over miljøfilen; `env -u` fjerner derfor arvet nøkkel/modus fra denne oppstarten, slik at valgt `.env` gjelder. Kommandoen er for den dokumenterte macOS-/POSIX-terminalen. For å gå tilbake til demo, stopp live-serveren og kjør:
+
+```sh
+ANALYSIS_MODE=demo npm run demo
+```
+
+Bare eksplisitt Start analyse kan utløse det betalte uttrekket; tallberegning og ny screening fra uendret rapport er lokale. Se [backendgrensen](src/backend/README.md) for kontrakter og feil-/timeoutdetaljer.
+
 ## Struktur og sporbarhet
+
+Se også [UI før/etter og review](.docs/implementation-artifacts/sluttforing-2026-10-27-review.md), [S6-forberedelse](.docs/implementation-artifacts/story-5-4-forberedelse-2026-10-27.md), [kort ekstern instruks](.docs/implementation-artifacts/story-5-4-ekstern-instruks.md), [leveringskontroll](.docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md) og [arbeidsøkt](.docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md).
 
 | Plassering | Ansvar |
 |---|---|

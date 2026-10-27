@@ -1,0 +1,79 @@
+[
+  {
+    "lens": "adversarial",
+    "location": "README.md \u2014 Valgfri live-kj\u00f8ring",
+    "trigger_condition": "Eksporterte verdier overstyrer .env.",
+    "guard_snippet": "Fjern arvet OPENAI_API_KEY/ANALYSIS_MODE for oppstarten.",
+    "potential_consequence": "Feil konto eller modus."
+  },
+  {
+    "lens": "adversarial",
+    "location": "README.md \u2014 retur til demo",
+    "trigger_condition": "Ingen konkret kommando for arvet live-modus.",
+    "guard_snippet": "Vis eksplisitt ANALYSIS_MODE=demo.",
+    "potential_consequence": "Demo kan fortsette i live-modus."
+  },
+  {
+    "lens": "adversarial",
+    "location": "README.md \u2014 ett kall per rapport",
+    "trigger_condition": "Ny \u00f8kt kan sende et nytt betalt fors\u00f8k for samme bytes.",
+    "guard_snippet": "Presiser ett kall per godkjent fors\u00f8k og ny kostnad ved ny \u00f8kt.",
+    "potential_consequence": "Misforst\u00e5tt kostnadsgrense."
+  },
+  {
+    "lens": "adversarial",
+    "location": "deferred-work.md \u2014 oversikt",
+    "trigger_condition": "D1 mangler i oversiktstabellen.",
+    "guard_snippet": "Legg til status/lenke i sentral oversikt.",
+    "potential_consequence": "Sikkerhetsoppgaven overses."
+  },
+  {
+    "lens": "adversarial",
+    "location": "story-5-5-leveringskontroll \u2014 installasjon",
+    "trigger_condition": "F\u00f8r-patch-installasjon kan leses som sluttbevis.",
+    "guard_snippet": "Merk f\u00f8r/etter eksplisitt.",
+    "potential_consequence": "Feil versjonsrelevans."
+  },
+  {
+    "lens": "adversarial",
+    "location": "clean-install-patched.txt",
+    "trigger_condition": "R\u00e5logg mangler kommando/milj\u00f8/hash.",
+    "guard_snippet": "Tilf\u00f8y separat metadata.",
+    "potential_consequence": "Kan ikke knyttes til n\u00f8yaktig l\u00e5sfil."
+  },
+  {
+    "lens": "adversarial",
+    "location": "repository-hygiene.json",
+    "trigger_condition": "Skann dekker bare UI-checkpointet.",
+    "guard_snippet": "Kontroller nye leveringsfiler f\u00f8r siste checkpoint.",
+    "potential_consequence": "Ny konfigurasjon/bevis faller utenfor."
+  },
+  {
+    "lens": "adversarial",
+    "location": "preserved-evidence.json",
+    "trigger_condition": "Godkjente B2-originaler mangler i det avgrensede manifestet.",
+    "guard_snippet": "Suppler med B2 og review/evaluering.",
+    "potential_consequence": "Ulik bevaringsdekning for fremhevet akseptanse."
+  },
+  {
+    "lens": "adversarial",
+    "location": "story-5-5-leveringskontroll \u2014 funksjonsspor",
+    "trigger_condition": "Forkortede teststammer krever nytt s\u00f8k.",
+    "guard_snippet": "Direkte fil-/testlenker.",
+    "potential_consequence": "Vanskeligere etterpr\u00f8vbarhet."
+  },
+  {
+    "lens": "adversarial",
+    "location": "story-5-4-ekstern-instruks.md",
+    "trigger_condition": "Ingen lenke til registreringsmal; mottaker/levering hevdet uklar.",
+    "guard_snippet": "Lenke malen som loggskjema, behold README som oppskrift.",
+    "potential_consequence": "Ufullstendig ekstern logg."
+  },
+  {
+    "lens": "edge-case-hunter",
+    "location": "README.md:112-116",
+    "trigger_condition": "Allerede eksportert OPENAI_API_KEY eller ANALYSIS_MODE.",
+    "guard_snippet": "env -u OPENAI_API_KEY -u ANALYSIS_MODE node --env-file=.env src/backend/server.ts",
+    "potential_consequence": "Arvet n\u00f8kkel/modus overstyrer valgt fil."
+  }
+]

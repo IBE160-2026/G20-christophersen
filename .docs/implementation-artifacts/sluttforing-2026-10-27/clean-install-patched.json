@@ -1,0 +1,14 @@
+{
+  "command": "npm ci --offline --cache /Users/madschristophersen/.npm",
+  "cwd": "/private/tmp/ibe160-sluttforing-install-xelnv77m",
+  "node": "24.21.0",
+  "npm": "11.19.0",
+  "exitCode": 0,
+  "logWrittenAt": "2026-10-27T21:38:49.979350+01:00",
+  "lockSha256": "6af85cdc417022fcf3e6e51fc4cd22e710081bb126d8cf3b34f0a40035b21450",
+  "matchesWorkingTreeLock": true,
+  "nodeModulesReplacedByNpmCi": true,
+  "workingCopyPreexisting": true,
+  "externalS6": false,
+  "bodyParser": "2.4.0"
+}

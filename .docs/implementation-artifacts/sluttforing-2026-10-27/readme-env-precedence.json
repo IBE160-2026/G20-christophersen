@@ -1,0 +1,9 @@
+{
+  "command": "env -u OPENAI_API_KEY -u ANALYSIS_MODE node --env-file=.env.example --input-type=module -e <assert live and empty key>",
+  "inheritedSentinelRemoved": true,
+  "fileModeObserved": "live",
+  "emptyFileKeyObserved": true,
+  "exitCode": 0,
+  "serverStarted": false,
+  "providerCalls": 0
+}

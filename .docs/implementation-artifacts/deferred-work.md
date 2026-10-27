@@ -12,15 +12,15 @@ er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 | Punkt | Status | Grunnlag |
 | --- | --- | --- |
 | Story 1.3 B8 — ren installasjon | Lukket 2026-10-19 | Bestått isolert installasjon og kontroller; beviscommit `13d111237f3b7609786e054455fd5516ef9218d2`. Se historisk lukking nedenfor. |
-| Story 4.3 B3/C2 — første feilårsak ved ny Start | Åpen | Review utsetter uttrykkelig forbedringen; ingen dokumentert godkjent retting funnet. Se status under originalpunktet. |
+| Story 4.3 B3/C2 — første feilårsak ved ny Start | Lukket 2026-10-27 | Første feil/mål/delresultat bevares ved duplikat; retting og godkjente tester/review i `f105216703033a34163ce9eb94df9f060fd4a0ce`. Se datert lukking nedenfor. |
 | Story 4.4 B1 — generelle rapportbegrensninger | Lukket 2026-10-24, avgrenset produktretting | Commit `43c0a693d7517c59835078205bfe72611697dc05`, bestått uavhengig B1-review og full offline-regresjon. Separat B2/live-akseptanse lukkes ikke av dette. |
 | Story 4.4 B2 — live-sluttbevis | Lukket 2026-10-27 | Nye originale F1/F2-sluttbevis, godkjent uavhengig sluttreview og regresjon i `5fa438e2047bd9f854e72688da32c7ef8b045c7d`. Historikken nedenfor beholdes. |
 | Story 4.5 — ufullstendig manuell S5-referanse og forsøksavvik | Akseptert avvik S5-W1, ikke rettet | Mads har avsluttet S5-testing 2026-10-27. Formell AC-akseptanse er ufullstendig; ingen videre målinger autorisert. Se [waiver](story-4-5-s5-waiver-2026-10-27.md) og beslutningstillegg nedenfor. |
 | Story 5.5 D1 — transitiv body-parser | Lukket 2026-10-27 | Rettet i `8a091ea3fd175706ea147b05e8d6bce90724e54f`, fersk audit og full regresjon/review godkjent. Se [originalregistrering og lukking](#story-55-d1--transitiv-body-parser-registrert-åpen-2026-10-27). |
-| Pre-submission PG1 — arvet live-modus i testservere | Åpen | Uavhengig kontroll fant usikret Playwright-miljø og modusavhengig build-helper. Se originalregistrering nedenfor. |
-| Pre-submission PG2 — misvisende TG3-eksempel | Åpen | Generisk hjelpetekst viser elektriker også for taklekkasje. Se originalregistrering nedenfor. |
-| Pre-submission PG3 — unntak i arbeidstreskann | Åpen | Slutt-review fant at kjente fiktive treff ble godtatt ut fra filsti alene. Se originalregistrering nedenfor. |
-| Pre-submission PG4 — fullstendig S6-eksport | Åpen | Slutt-review fant at eksportens ferskhetskontroll overså untracked filer og enkelte konfigurasjonsfiler. Se originalregistrering nedenfor. |
+| Pre-submission PG1 — arvet live-modus i testservere | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
+| Pre-submission PG2 — misvisende TG3-eksempel | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
+| Pre-submission PG3 — unntak i arbeidstreskann | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
+| Pre-submission PG4 — fullstendig S6-eksport | Lukket 2026-10-27 | Rettet i `f105216703033a34163ce9eb94df9f060fd4a0ce`, relevant kontroll og uavhengig rekontroll godkjent. Se datert lukking nedenfor. |
 
 ## Deferred from: code review of spec-1-3-registrere-og-bevare-finansverdier-for-ett-objekt (2026-10-17)
 
@@ -206,3 +206,59 @@ S6-eksportverktøyet bare sammenlignet et utvalg tracked filer. Untracked
 kode/tester og endret tsconfig kunne utelates fra den eksporterte commiten.
 Krav: CAP-8, 5.4 AC1 og 5.5 AC6. Krev komplett tracked samsvar og avvis
 untracked leveransefiler før eksport. Ingen feil eksport er overlevert.
+
+## Verifiserte lukkinger fra pre-submission 2026-10-27
+
+Faktisk rettings-/beviscommit: `f105216703033a34163ce9eb94df9f060fd4a0ce`.
+Alle opprinnelige registreringer over bevares som historikk. Godkjent
+[uavhengig slutt-review og rekontroll](pre-submission-review-2026-10-27.md)
+og [faktisk regresjon med avgrensninger](pre-submission-quality-gate-2026-10-27.md#faktisk-verifikasjon-etter-retting)
+er grunnlag; ingen story-status alene brukes som lukkebevis.
+
+### Story 4.3 B3/C2 — lukket 2026-10-27
+
+Intern, generasjons-/rapportbundet feilbevaring gjenoppretter opprinnelig
+årsak, kode, mål og delresultat ved duplicate-analysis, med synlig og
+kunngjort forklaring. Manuell startregel og backend-duplikatvern beholdes.
+[35 report-session](pre-submission-2026-10-27/gate-distinct-retry-request-unit-followup.txt)
+inkluderer ulike requestId/sent originalt svar; [6 E2E](pre-submission-2026-10-27/recovery-targeted-e2e.txt)
+inkluderer gjentatt duplikat med/uten outcome i demo/kontrollert live.
+Fullrundens øvrige utfall og kildegrense er ærlig dokumentert i gaten.
+Dette lukker det utsatte B3/C2-punktet, ikke S5 eller ekstern S6.
+
+### PG1 — lukket 2026-10-27
+
+Playwrights bygget/dev-server tvinger demo/tom nøkkel; buildhelper tvinger
+demo med egen fiktiv sentinel. README-devstart er eksplisitt demo.
+[Miljø-/unit-rekontroll](pre-submission-2026-10-27/recovery-targeted-unit.txt),
+[E2E med arvet fiktiv live](pre-submission-2026-10-27/e2e.txt),
+[dev](pre-submission-2026-10-27/dev.txt) og
+[build-/nøkkelkontroll](pre-submission-2026-10-27/build-key.txt) prøver
+rettingen. E2E-rundens to F4-tekstfeil er korrigert og målrettet rekontrollert,
+ikke skjult som en ny helt grønn fullrunde. Ingen betalt prøve utført.
+
+### PG2 — lukket 2026-10-27
+
+Generisk TG3-tekst bruker relevant fagkyndig med dato/referanse; validering,
+finans-/screeningfasit og låste elektriske eksempler er bevart.
+[Unit-rekontroll](pre-submission-2026-10-27/recovery-targeted-unit.txt),
+[begge F4-E2E-varianter](pre-submission-2026-10-27/recovery-targeted-e2e.txt)
+og [faktiske desktop-/smalbilder](pre-submission-2026-10-27/visual/)
+bekrefter rettingen.
+
+### PG3 — lukket 2026-10-27
+
+Arbeidstreskannen bruker eksakt Git-blobhash og mønster, lik historikkskannen.
+[Negativ klassifiseringsprøve](pre-submission-2026-10-27/gate-audit-classifier-guard-followup.txt)
+bekrefter at syntetisk nytt treff på samme sti ikke godtas som kjent fiktivt.
+[Oppdatert audit](pre-submission-2026-10-27/repository-audit.json) og uavhengig
+kanttilfelle-rekontroll består. Ingen faktisk lekkasje var påvist.
+
+### PG4 — lukket 2026-10-27
+
+Eksportverktøyet krever alle tracked filer identiske med valgt commit og
+avviser ikke-ignorerte usporede leveransefiler. Faktiske
+[negative eksportprøver](pre-submission-2026-10-27/export-guards.json)
+avviser både ny kildefil og endret tsconfig før arkivoppretting. Uavhengig
+rekontroll fant ingen restfunn. Lukking gjelder feil i eksportkontrollen;
+faktisk S6-eksport og ekstern gjennomføring har separate bevisgrenser.

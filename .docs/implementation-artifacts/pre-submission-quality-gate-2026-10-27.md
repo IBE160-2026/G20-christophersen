@@ -126,3 +126,9 @@ skanner de oppgitte nøkkelmønstrene uten å gjengi verdier. Kjente fiktive
 redigeringstester klassifiseres eksplisitt. Alle 209 originalbevis fra det
 forrige bevaringsmanifestet er byteidentiske. Ingen rettighets- eller
 universell hemmelighetsgaranti utledes av mønstersøket.
+
+
+Faktisk kode-/bevischeckpoint: `f105216703033a34163ce9eb94df9f060fd4a0ce`. Etterfølgende
+lukkedokumentasjon og eksportkvittering endrer ingen produktkode eller
+testforventning. [Endelig kilderelevans](pre-submission-2026-10-27/final-source-relevance.json)
+bekrefter at siste reviewtillegg bare er én ny requestId-test, prøvd 35/35.

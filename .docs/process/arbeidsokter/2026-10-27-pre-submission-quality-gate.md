@@ -53,3 +53,21 @@ bevarer hvilke filer som var prøvd i hver runde. Alle server-/browser-
 kontroller var OS-nettsperret med loopback. E2E/dev/buildhelper fikk fiktiv
 arvet live-konfigurasjon. Ingen ekte nøkkel, betalt kall eller S5-kjøring.
 16 nye bilder av resultat/feil ble faktisk åpnet og inspisert av hovedagenten.
+
+
+## Kodecheckpoint og lukking
+
+`f105216703033a34163ce9eb94df9f060fd4a0ce` inneholder produkt-/testrettingene,
+råbevis, uavhengig review og siste aktive promptlogg. Arbeidstreet var rent
+rett etter commit. Deretter registreres daterte lukkinger av B3/C2 og
+PG1–PG4 mot denne faktiske commiten. Ingen S5-/S6-port lukkes.
+Slutt-review fant to reelle svakheter i de nye hjelpeverktøyene; begge
+ble rettet, negativt prøvd og uavhengig rekontrollert uten restfunn.
+Historiske kjørte scripts og rødlogger er bevart, ikke omskrevet til
+fiktive grønnkjøringer.
+
+267 lokale lenker i 15 dokumenter bestod før kodecheckpointet. YAML-
+kontrollen bekrefter 4.4 done, 4.5/epic4 in-progress, 5.4 backlog,
+5.5/epic5 in-progress, R4-S6 open og uendret S5-W1. Første generiske
+YAML-probe matchet også epic-retrospective-nøkler og ble presisert til
+akkurat epic-nøkkelen; ingen statusfil ble endret for å få kontrollen grønn.

@@ -1,0 +1,86 @@
+[
+  {
+    "lens": "adversarial",
+    "location": "Kontrolltabell / historisk grense",
+    "trigger_condition": "Prepaid-kilden manglet",
+    "guard_snippet": "Lenk direkte til 2026-10-23-prosessbeviset",
+    "potential_consequence": "Historisk påstand vanskelig å etterprøve"
+  },
+  {
+    "lens": "adversarial",
+    "location": "Kontrolltabell / ledger",
+    "trigger_condition": "Ny ledgerkjøring manglet bevart resultat",
+    "guard_snippet": "Bevar kommando, baseline, tidspunkt og sum",
+    "potential_consequence": "Uklart om beløpet faktisk er beregnet nå"
+  },
+  {
+    "lens": "adversarial",
+    "location": "Kontrolltabell / miljø",
+    "trigger_condition": "Undersøkt miljø var uklart avgrenset",
+    "guard_snippet": "Angi kilder og boolsk tilstedeværelse",
+    "potential_consequence": "Fravær kunne generaliseres til fremtidig backendmiljø"
+  },
+  {
+    "lens": "adversarial",
+    "location": "Kontrolltabell / gate",
+    "trigger_condition": "Gatestatus manglet maskinlesbart bevis",
+    "guard_snippet": "Bevar boolsk gateobservasjon",
+    "potential_consequence": "Aktiveringsstatus vanskelig å etterprøve"
+  },
+  {
+    "lens": "adversarial",
+    "location": "Kontrolltabell / Chrome",
+    "trigger_condition": "Timeout manglet bevart observasjon",
+    "guard_snippet": "Bevar feiltype og avgrens råeksport vs manuelt notat",
+    "potential_consequence": "Uklart om kontokontroll faktisk ble forsøkt"
+  },
+  {
+    "lens": "adversarial",
+    "location": "Autorisasjon og avklaringsspørsmål",
+    "trigger_condition": "Promptloggreferanse manglet",
+    "guard_snippet": "Lenk aktiv logg med meldingsdato og bevar spørsmål",
+    "potential_consequence": "Rammen og avklaringer vanskelig å rekonstruere"
+  },
+  {
+    "lens": "adversarial",
+    "location": "Kostnadsinnstillinger",
+    "trigger_condition": "Direkte kodehenvisninger manglet",
+    "guard_snippet": "Lenk request, gate, SDK og adapter på baseline",
+    "potential_consequence": "Uklart om vurderingen gjelder faktisk kode"
+  },
+  {
+    "lens": "adversarial",
+    "location": "FINN-tilgang",
+    "trigger_condition": "Søkeavgrensning manglet",
+    "guard_snippet": "Bevar undersøkte artefakter og søkeomfang",
+    "potential_consequence": "Negativ konklusjon fikk uklart grunnlag"
+  },
+  {
+    "lens": "adversarial",
+    "location": "Gjenstående vilkår",
+    "trigger_condition": "Bevis som oppfyller hver port var uklart",
+    "guard_snippet": "Angi konkrete etterprøvbare vilkår",
+    "potential_consequence": "Neste kontroll kunne godta utilstrekkelige bevis"
+  },
+  {
+    "lens": "adversarial",
+    "location": "Offisielle kilder",
+    "trigger_condition": "Tidsbundet kildeobservasjon manglet",
+    "guard_snippet": "Bevar dato/tid og parafrasert pris-/autentiseringsobservasjon",
+    "potential_consequence": "Senere kildeendringer vanskeliggjør etterprøving"
+  },
+  {
+    "lens": "structure",
+    "location": "Innledning",
+    "trigger_condition": "Aktiveringsvilkårene kom etter stor kontrolltabell",
+    "guard_snippet": "Flytt vilkår foran detaljbevis",
+    "potential_consequence": "Eier må lete etter neste nødvendige avklaring"
+  },
+  {
+    "lens": "structure",
+    "location": "Avslutning",
+    "trigger_condition": "FINN-1-lenke lå under offisielle kilder",
+    "guard_snippet": "Flytt til avklaringsvilkårene",
+    "potential_consequence": "Sporbarheten var vanskelig å finne"
+  }
+]

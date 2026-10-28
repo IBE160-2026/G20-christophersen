@@ -327,3 +327,11 @@ oppføring eller historisk akseptanse lukkes med denne kodeleveransen.
 består med merket testkonvertering, manuelle antakelser for mangler, separat
 fiktiv PDF og eksisterende screening. Uendret gammelt råopptak avvises fortsatt
 trygt; dette er ikke live-kvalitetsbevis. FINN-1 er fortsatt **Åpen**.
+
+
+**Ny live-preflight 2026-10-28:** [Kontroll og stoppgrunnlag](finn-live-preflight-2026-10-28/resultat.md).
+Lesende nøkkelkontroll gir HTTP 200 for låst modell. Brukeren har bekreftet
+prosjektet og kjente belastninger; beregnet forbruk USD 0,137787 og rest mot
+oppgitt USD 2-grense USD 1,862213. Dette er ikke administrativ saldoavlesning.
+FINN-1 forblir **Åpen**: dokumentert FINN-tilgang og underbygget makspris
+USD 0,15 per forsøk mangler. Ingen betalt import eller gateåpning er utført.

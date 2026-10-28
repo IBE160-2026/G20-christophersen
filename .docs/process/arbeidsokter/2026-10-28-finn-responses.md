@@ -90,3 +90,19 @@ skiller uendret råopptaksavvisning fra uttrykkelig testkonvertert UI-replay.
 og lint. Fire uavhengige reviewfunn om testdekning ble rettet og etterkontrollert.
 Ingen produktfeil påvist, ingen produksjonskode endret, ingen betalte API-kall,
 gateåpning eller push. Aktiv promptlogg og forrige stoppnotat følger lokal commit.
+
+
+## Ny live-bestilling og faktisk nøkkelkontroll
+
+Brukeren ba om én live-import innen USD 0,15 og avstemming av kontogrunnlaget.
+Én lesende GET til offisielt modellendepunkt returnerte HTTP 200 for låst
+modell; ingen Responses-generering eller FINN-import ble sendt. Ledger og
+to nyere FINN-kvitteringer ble avstemt uten å endre originalene. Brukeren
+bekreftet senere prosjekt, sist bekreftede grense og ingen andre kjente eller
+uavklarte belastninger. Bekreftelsen dokumenteres som manuell kontoavstemming.
+[Preflightbevis, åpne porter og review](../../implementation-artifacts/finn-live-preflight-2026-10-28/resultat.md)
+viser hvorfor live-gaten fortsatt er stengt: tilgangsreferanse og maksimal
+USD 0,15-kostnad mangler. Uavhengig BMAD-review av kontrollnotatet omfattet
+adversarial og structure; alle 12 funn er individuelt behandlet i bevismappen.
+Ingen produkt-/testkode endret. Bare konto-/dokumentkontroller utført på nytt;
+tidligere offline-regresjoner hevdes ikke som nye live-tester. Ingen push.

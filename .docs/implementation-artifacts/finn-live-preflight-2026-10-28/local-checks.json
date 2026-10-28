@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-10-28T20:35:56.128Z",
+  "baseline": "ca9de2ce89c1130aae533b28e6f63594f7d6bdbb",
+  "ledger": {
+    "command": "projectCost(process.cwd()) imported from tools/story-4-4/project-ledger.mjs",
+    "legacyUsd": 0.070243,
+    "additionalReports": [
+      {
+        "path": ".docs/process/arbeidsokter/finn-web-search-2026-10-28/report.json",
+        "calculatedUsd": 0.043535,
+        "accountBilledUsd": null
+      },
+      {
+        "path": ".docs/process/arbeidsokter/finn-open-page-2026-10-28/report.json",
+        "calculatedUsd": 0.024009,
+        "accountBilledUsd": null
+      }
+    ],
+    "calculatedTotalUsd": 0.137787,
+    "historicalLimitUsd": 2,
+    "historicalLimitDifferenceUsd": 1.862213,
+    "currentAccountAvailableUsd": null
+  },
+  "environment": {
+    "scope": "Kun arvet miljø i denne kontrollprosess og filnavn .env* i prosjektroten; andre shellprofiler, OS-tjenester eller fremtidige servermiljø er ikke undersøkt.",
+    "keyPresent": true,
+    "adminKeyPresent": false,
+    "orgIdPresent": false,
+    "projectIdPresent": false,
+    "enabled": false,
+    "accessReferencePresent": false,
+    "costReferencePresent": false,
+    "rootEnvFileNames": [
+      ".env.example"
+    ]
+  },
+  "toolObservation": {
+    "kind": "manuelt bevart observasjon av verktøyresultat i aktiv chat; ikke råeksport",
+    "api": "cua.getApp(com.google.Chrome)",
+    "result": "Computer Use server error -10005: timeoutReached",
+    "pageAccessed": false
+  },
+  "accessSearch": {
+    "scope": "rg over .docs/implementation-artifacts/finn* og .docs/process/arbeidsokter/finn* Markdown samt README.md; tillatelsesord og FINN_IMPORT_ACCESS_REFERENCE",
+    "checked": [
+      ".docs/implementation-artifacts/finn-import-checkpoint-2026-10-28.md",
+      ".docs/implementation-artifacts/finn-responses-2026-10-28/sluttverifikasjon.md",
+      ".docs/implementation-artifacts/finn-responses-2026-10-28/live-forberedelse.md",
+      ".docs/implementation-artifacts/deferred-work.md"
+    ],
+    "newReferenceFound": false
+  },
+  "clarification": {
+    "kind": "Spørsmål sendt i aktiv chat; brukeren svarte senere med kontoopplysninger, ikke FINN-tilgang. Se user-budget-confirmation.json.",
+    "question": "For å avklare live-blokkeringen trenger jeg referansen til dokumentert FINN-tilgang for denne integrasjonen, samt en fersk kontobekreftelse på riktig OpenAI-prosjekt, prosjektgrense og tilgjengelig budsjett. Hvor finnes dette? Ikke del API-nøkler."
+  },
+  "docsObservations": {
+    "kind": "Parafraserte observasjoner fra faktisk åpnede offisielle nettsider i denne økten; ikke originaleksport. Tidspunktet er bevaringstidspunkt, ikke eksakt lesetidspunkt.",
+    "sources": [
+      {
+        "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+        "observation": "Standard kort-kontekst output USD10/M; input USD2/M, cache-write USD2.50/M. Ingen ny pris beregnet for generering siden intet kall er sendt."
+      },
+      {
+        "url": "https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage/methods/costs",
+        "observation": "GET /organization/costs, dokumentert eksempel bruker OPENAI_ADMIN_KEY og prosjektgruppering."
+      }
+    ]
+  }
+}

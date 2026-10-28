@@ -1,0 +1,17 @@
+{
+  "recordedAt": "2026-10-28T20:37:05.454302+00:00",
+  "source": "Brukerens svar på request_user_input_async i aktiv økt",
+  "verification": "manual-user-confirmation, not admin API or invoice",
+  "promptTimestamp": "2026-10-28T20:36:26.518367+00:00",
+  "projectName": "IBE160 Property Acquisition Agent",
+  "lastConfirmedMonthlyLimitUsd": 2,
+  "hardLimitActiveUserReported": true,
+  "originalPrepaidUsd": 5,
+  "documentedCalculatedCostUsd": 0.137787,
+  "calculatedRemainingProjectBudgetUsd": 1.862213,
+  "noOtherKnownCallsOrUnresolvedChargesUserReported": true,
+  "currentPrepaidBalanceUsd": null,
+  "accessReferenceSupplied": false,
+  "newImportAttemptLimit": 1,
+  "newImportCostLimitUsd": 0.15
+}

@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-28T20:32:23.078256+00:00",
+  "endpoint": "GET https://api.openai.com/v1/models/gpt-6.1-sol",
+  "keyPresent": true,
+  "keySyntaxValid": true,
+  "modelRequests": 0,
+  "importAttempts": 0,
+  "retries": 0,
+  "httpStatus": 200,
+  "modelMatches": true
+}

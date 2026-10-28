@@ -1,0 +1,116 @@
+{
+  "listing_url": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649",
+  "access_status": "unavailable",
+  "limitations": "Ett kontrollert søk med FINN-kode 476576649 og eksakt annonse-URL ga ingen indeksert annonse med samsvarende URL og FINN-kode. Søket ble stoppet. Ingen opplysninger fra andre annonser er brukt, og originalannonsen er ikke åpnet eller uavhengig verifisert.",
+  "fields": {
+    "adresse": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "eiendomstype": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "prisantydning": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "totalpris": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "dokumentavgift": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "ovrige_kjopsomkostninger": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "fellesgjeld": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "felleskostnader": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "eiendomsskatt": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "leieinntekter": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    }
+  },
+  "comparison": {
+    "status": "not_possible",
+    "documented_listing_values": null,
+    "matched_fields": 0,
+    "reason": "Ingen samsvarende annonse i søkeresultatet og ingen lokal fasit for FINN-kode 476576649. Originalannonsen er ikke hentet; sammenligning kan ikke bekreftes."
+  },
+  "execution": {
+    "api_attempts": 1,
+    "transport_dispatches": 1,
+    "model": "gpt-6.1-sol",
+    "elapsed_ms": 8646,
+    "search_tool_calls": 1,
+    "provider_search_requests": 1,
+    "search_query_strings": 2,
+    "usage": {
+      "input_tokens": 13216,
+      "input_tokens_details": {
+        "cache_write_tokens": 5166,
+        "cached_tokens": 0
+      },
+      "output_tokens": 452,
+      "output_tokens_details": {
+        "reasoning_tokens": 65
+      },
+      "total_tokens": 13668
+    },
+    "mode": "web_search; external_web_access=false; FINN index/cache only"
+  },
+  "cost": {
+    "currency": "USD",
+    "ordinary_input_tokens": 8050,
+    "cache_write_tokens": 5166,
+    "cached_read_tokens": 0,
+    "ordinary_input_usd": 0.0161,
+    "cache_write_usd": 0.012915,
+    "output_usd": 0.00452,
+    "search_usd": 0.01,
+    "total_calculated_usd": 0.043535,
+    "account_billed_cost_usd": null,
+    "assumption": "Cache writes priced using documented default 30m rate, $2.50/M. No explicit TTL requested; response lacks TTL write split and contains legacy prompt_cache_retention=24h. Invoice not independently verified.",
+    "pricing_sources": [
+      "https://developers.openai.com/api/docs/pricing",
+      "https://developers.openai.com/api/docs/guides/prompt-caching"
+    ],
+    "correction": "receipt.json initial calculation omitted cache-write premium; use this report for final pricing.",
+    "prior_project_ledger_usd": 0.070243,
+    "project_total_including_this_calculated_usd": 0.113778,
+    "scope": "This API attempt only; Codex documentation searches excluded."
+  }
+}

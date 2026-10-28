@@ -1,0 +1,9 @@
+{
+  "attempts": 1,
+  "maxRetries": 0,
+  "timeoutMs": 120000,
+  "costBeforeUsd": 0.070243,
+  "startedAt": "2026-10-27T23:28:43.249Z",
+  "model": "gpt-6.1-sol",
+  "searchMode": "cache/index only; external_web_access=false"
+}

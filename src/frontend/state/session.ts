@@ -1,3 +1,9 @@
+import { ListingResponseSchema } from '../../contracts/listing.ts'
+import type { ListingCorrelation, ListingCorrection } from '../../contracts/listing.ts'
+import { createListingDraft, listingSuggestions, validateListingImport, validateListingUrl } from '../../domain/listing.ts'
+import { financingSuggestion } from '../../domain/financing.ts'
+import { createListingState } from './listing.ts'
+import type { ListingState } from './listing.ts'
 import { createReportState, findingListAssessment, reportReducer } from './report.ts'
 import type { ReportAction, ReportState } from './report.ts'
 import type {
@@ -11,6 +17,7 @@ import type { ResultChange, ResultSnapshot } from '../../contracts/result.ts'
 import { calculateResultSnapshot, describeResultChange, resultBinding, sameResultBinding } from './result.ts'
 
 export interface SessionState {
+  listing: ListingState
   financial: RegisteredFinancialInput
   sources: FinancialSources
   costItems: CostItem[]
@@ -26,6 +33,14 @@ export interface SessionState {
 }
 
 export type SessionAction = ReportAction
+  | { type: 'listing-url'; url: string }
+  | { type: 'listing-start'; correlation: ListingCorrelation }
+  | { type: 'listing-response'; correlation: ListingCorrelation; body: unknown; ok: boolean }
+  | { type: 'listing-error'; correlation: ListingCorrelation }
+  | { type: 'listing-correction'; id: string; correction: ListingCorrection }
+  | { type: 'listing-complete-costs'; complete: boolean }
+  | { type: 'listing-financing'; field: keyof ListingState['financing']; value: string }
+  | { type: 'listing-apply' }
   | { type: 'calculate-result' }
   | { type: 'register-value'; field: FinancialField; rawValue: string }
   | { type: 'register-period'; field: RecurringField; period: RegisteredPeriod }
@@ -42,6 +57,7 @@ export type SessionAction = ReportAction
 export function createInitialSession(mode: 'demo' | 'live' = 'demo'): SessionState {
   const source = (): FinancialSource => ({ kind: '', description: '', conflict: null })
   return {
+    listing: createListingState(),
     financial: {
       P: { rawValue: '', confirmed: false },
       L: { rawValue: '', confirmed: false, period: '', year: '' },
@@ -95,6 +111,76 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
 }
 
 function reduceSession(state: SessionState, action: SessionAction): SessionState {
+  if (action.type === 'listing-url') {
+    if (state.listing.url === action.url) return state
+    const identity = validateListingUrl(action.url)
+    const listing = { ...state.listing, url: action.url, active: null, status: state.listing.draft ? 'ready' as const : 'idle' as const, generation: state.listing.generation + 1, error: null }
+    if (!identity || identity.listingCode === state.listing.objectCode) return { ...state, listing }
+    const clean = createInitialSession(state.report.mode)
+    return invalidate(state, { financial: clean.financial, sources: clean.sources, costItems: [],
+      report: { ...clean.report, generation: state.report.generation + 1 },
+      listing: { ...createListingState(), url: action.url, objectCode: identity.listingCode, generation: state.listing.generation + 1 }, currentStep: 'tallgrunnlag',
+    }, [...FinancialFieldSchema.options])
+  }
+  if (action.type === 'listing-start') {
+    if (action.correlation.generation !== state.listing.generation || !validateListingUrl(state.listing.url) || state.listing.status === 'loading') return state
+    return { ...state, listing: { ...state.listing, status: 'loading', active: action.correlation, error: null } }
+  }
+  if (action.type === 'listing-response' || action.type === 'listing-error') {
+    const active = state.listing.active
+    if (!active || state.listing.status !== 'loading' || active.generation !== action.correlation.generation || active.requestId !== action.correlation.requestId) return state
+    const fail = () => ({ ...state, listing: { ...state.listing, status: 'failed' as const, active: null, error: 'FINN-import er utilgjengelig. Registrer tall og velg PDF manuelt.' } })
+    if (action.type === 'listing-error' || !action.ok) return fail()
+    const parsed = ListingResponseSchema.safeParse(action.body)
+    if (!parsed.success || parsed.data.kind !== 'listing' || parsed.data.correlation.generation !== active.generation || parsed.data.correlation.requestId !== active.requestId) return fail()
+    try {
+      const original = validateListingImport(parsed.data.listing)
+      if (original.listingCode !== validateListingUrl(state.listing.url)?.listingCode) return fail()
+      return { ...state, listing: { ...state.listing, status: 'ready', active: null, error: null, draft: createListingDraft(original) } }
+    } catch { return fail() }
+  }
+  if (action.type === 'listing-correction') {
+    if (!state.listing.draft?.original.fields.some(field => field.id === action.id)) return state
+    return { ...state, listing: { ...state.listing, draft: { ...state.listing.draft,
+      corrections: { ...state.listing.draft.corrections, [action.id]: action.correction } } } }
+  }
+  if (action.type === 'listing-complete-costs') return state.listing.draft ? { ...state, listing: { ...state.listing,
+    draft: { ...state.listing.draft, completeOperatingCosts: action.complete } } } : state
+  if (action.type === 'listing-financing') return { ...state, listing: { ...state.listing,
+    financing: { ...state.listing.financing, [action.field]: action.value } } }
+  if (action.type === 'listing-apply') {
+    if (!state.listing.draft) return state
+    const suggested = listingSuggestions(state.listing.draft)
+    if (suggested.P === null) return state
+    const financing = financingSuggestion({ ...state.listing.financing, cashRequired: suggested.cashRequired, sharedAnnualPayment: suggested.sharedAnnualPayment })
+    const year = state.listing.financing.year
+    // Året for fellesgjeldsbetalingen og alle driftskostnader må samsvare med forutsetningen.
+    const debtField = state.listing.draft.original.fields.find(field => field.id === 'sharedDebtPayment')
+    const debtYear = state.listing.draft.corrections.sharedDebtPayment?.year ?? debtField?.year
+    const J = /^\d{4}$/.test(year) && (suggested.sharedAnnualPayment === '0' || debtYear === year) ? financing.J : null
+    const correctionNotes = Object.entries(state.listing.draft.corrections).filter(([, correction]) => correction.note.trim()).map(([id, correction]) => `${id}: ${correction.note.trim()}`).join('; ')
+    const source = { kind: 'source' as const, description: `Kontrollert FINN ${state.listing.draft.original.url}, hentet ${state.listing.draft.original.fetchedAt}. ${correctionNotes ? `Brukerrettinger: ${correctionNotes}. ` : ''}Original og rettinger er bevart i brukt importgrunnlag.`, conflict: null }
+    const applied = state.listing.applied
+    const ownsD = applied?.D != null && applied.D === state.financial.D.rawValue && applied.sourceD === JSON.stringify(state.sources.D)
+    const ownsJ = applied?.J != null && applied.J === state.financial.J.rawValue && applied.sourceJ === JSON.stringify(state.sources.J)
+    const useD = suggested.D !== null && (state.financial.D.rawValue.trim() === '' || ownsD)
+    const useJ = J !== null && (state.financial.J.rawValue.trim() === '' || ownsJ)
+    const clearD = ownsD && suggested.D === null
+    const clearJ = ownsJ && J === null
+    const fields: FinancialField[] = ['P', ...(useD || clearD ? ['D' as const] : []), ...(useJ || clearJ ? ['J' as const] : [])]
+    const next = invalidate(state, { financial: { ...state.financial,
+      P: { rawValue: suggested.P, confirmed: false },
+      ...(clearD ? { D: { rawValue: '', period: '', year: '', confirmed: false } } : {}),
+      ...(clearJ ? { J: { rawValue: '', period: '', year: '', confirmed: false } } : {}),
+      ...(useD ? { D: { rawValue: suggested.D!, period: 'year', year: suggested.year!, confirmed: false } } : {}),
+      ...(useJ ? { J: { rawValue: J!, period: 'year', year, confirmed: false } } : {}),
+    }, sources: { ...state.sources, P: source,
+      ...(useD ? { D: source } : {}),
+      ...(useJ ? { J: { kind: 'assumption' as const, description: `${source.description} Egenkapital ${state.listing.financing.equity}, rente ${state.listing.financing.annualInterest} %, ${state.listing.financing.months} måneder; øreavrundet månedsbetaling.`, conflict: null } } : {}),
+    } }, fields)
+    return { ...next, listing: { ...next.listing, applied: { draft: state.listing.draft, financing: { ...state.listing.financing },
+      D: useD ? suggested.D : clearD ? null : applied?.D ?? null, J: useJ ? J : clearJ ? null : applied?.J ?? null, sourceD: useD ? JSON.stringify(next.sources.D) : applied?.sourceD ?? '', sourceJ: useJ ? JSON.stringify(next.sources.J) : applied?.sourceJ ?? '' } } }
+  }
   if (action.type === 'report-start' && (!isFinancialConfirmed(state) || state.currentStep === 'tallgrunnlag')) return state
   if (action.type.startsWith('report-')) return { ...state, report: reportReducer(state.report, action as ReportAction) }
   if (action.type === 'navigate') {

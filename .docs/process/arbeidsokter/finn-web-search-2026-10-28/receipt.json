@@ -1,0 +1,93 @@
+{
+  "status": "completed",
+  "requestId": "req_3ef24269589c448896df53f20c85a48d",
+  "responseId": "resp_035e8a4e799c4cc5016ae133ac4ee887d2b734d9f75d1b1fec",
+  "model": "gpt-6.1-sol",
+  "serviceTier": "default",
+  "elapsedMs": 8646,
+  "transportDispatches": 1,
+  "usage": {
+    "input_tokens": 13216,
+    "input_tokens_details": {
+      "cache_write_tokens": 5166,
+      "cached_tokens": 0
+    },
+    "output_tokens": 452,
+    "output_tokens_details": {
+      "reasoning_tokens": 65
+    },
+    "total_tokens": 13668
+  },
+  "webSearchToolCalls": 1,
+  "searchActions": 1,
+  "actions": [
+    {
+      "type": "search",
+      "queries": [
+        "site:finn.no \"476576649\"",
+        "\"https://www.finn.no/realestate/homes/ad.html?finnkode=476576649\""
+      ],
+      "query": "site:finn.no \"476576649\"",
+      "sources": [
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/homes/ad.html?finnkode=478167310"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/bap/artikler/aktuelt/de-mest-populaere-annonsene-pa-finn-i-2019"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/homes/ad.html?finnkode=468784206"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/bap/artikler/aktuelt/de-mest-populaere-annonsene-pa-finn-i-2018"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/businesssale/ad.html?finnkode=458002866"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/lettings/ad.html?finnkode=478059729"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/reise/feriehus-hytteutleie/ad.html?finnkode=466245714"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/leisuresale/ad.html?finnkode=466445480"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/lettings/ad.html?finnkode=467779119"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/lettings/ad.html?finnkode=162164107"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/homes/ad.html?finnkode=425439597"
+        },
+        {
+          "type": "url",
+          "url": "https://www.finn.no/realestate/plots/ad.html?finnkode=349304739"
+        }
+      ]
+    }
+  ],
+  "cost": {
+    "currency": "USD",
+    "tokenCostUsd": 0.030952,
+    "searchCostUsd": 0.01,
+    "totalCalculatedUsd": 0.040952,
+    "cumulativeProjectCalculatedUsd": 0.111195,
+    "billingInvoiceVerified": false,
+    "pricingSource": "https://developers.openai.com/api/docs/pricing",
+    "note": "Calculated from reported usage and public Standard rates, not independently verified account billing. Documentation lookup in Codex excluded."
+  }
+}

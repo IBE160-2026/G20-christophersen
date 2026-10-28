@@ -1,0 +1,66 @@
+{
+  "access_status": "unavailable",
+  "limitations": "Ett kontrollert søk med FINN-kode 476576649 og eksakt annonse-URL ga ingen indeksert annonse med samsvarende URL og FINN-kode. Søket ble stoppet. Ingen opplysninger fra andre annonser er brukt, og originalannonsen er ikke åpnet eller uavhengig verifisert.",
+  "fields": {
+    "adresse": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "eiendomstype": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "prisantydning": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "totalpris": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "dokumentavgift": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "ovrige_kjopsomkostninger": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "fellesgjeld": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "felleskostnader": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "eiendomsskatt": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    },
+    "leieinntekter": {
+      "value": null,
+      "source": null,
+      "evidence": null,
+      "period": null
+    }
+  }
+}

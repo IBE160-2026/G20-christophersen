@@ -1,0 +1,13 @@
+[WebServer] (node:42966) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 2 workers
+
+(node:42967) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:42968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/listing-import.spec.ts:4:1 › FI-1: deaktivert FINN viser manuell reserveflyt og beholder fire trinn (407ms)
+  ✓  2 tests/e2e/listing-import.spec.ts:16:1 › FI-2–FI-6: kildeutkast, retting, kontroll, finansiering og nytt objekt (768ms)
+
+  2 passed (1.8s)

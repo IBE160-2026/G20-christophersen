@@ -1,4 +1,5 @@
 import express, { type ErrorRequestHandler } from 'express'
+import { createListingRouter } from './http/listing-route.ts'
 import { createAnalysisRouter } from './http/analysis-route.ts'
 import { access, readFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
@@ -34,6 +35,7 @@ async function start() {
   if (mode !== 'demo' && mode !== 'live') throw new Error('Ugyldig lokal analysemodus')
   const analysis = createAnalysisRouter({ mode })
   app.use('/api', analysis)
+  app.use('/api', createListingRouter())
 
   // Andre API-er er ikke tilgjengelige i semester-v1.
   app.use('/api', (_request, response) => {

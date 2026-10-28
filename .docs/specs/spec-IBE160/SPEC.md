@@ -24,6 +24,18 @@ sources:
 
 Denne SPEC-en og alle filene i `companions:` utgjør den samlede kontrakten som neste BMAD-fase skal lese. SPEC er destillert fra beslutningsloggen med siterte kilder; de adopterte dokumentene beholder eierskapet til krav, UX og arkitektur. Final ARCHITECTURE-SPINE er en obligatorisk kompanjong med stabile AD-1–AD-10; R2-kompanjongen konkretiserer den utsatte lesbarhetsregelen 2026-10-20.
 
+## Prioritert tillegg 2026-10-28
+
+Brukerbestilt FINN-retning og avgrenset unntak fra tidligere non-goals er registrert i
+[FINN-1 med tilgangsport, design og FI-AC1–FI-AC6](../../implementation-artifacts/finn-import-checkpoint-2026-10-28.md).
+Dette er betinget videreutvikling, ikke levert import eller endret historisk akseptanse.
+Eksisterende finansformler, S5-W1 og frosset S6-kandidat beholdes.
+
+Brukeren godkjente samme dag [FINN-1-implementeringsspecen](../../implementation-artifacts/spec-finn-import.md):
+separat importgrunnlag/adapter, brukerkontroll og egenkapital/låneforslag med
+deaktivert produksjonsrute. Offline implementering er autorisert; live-aktivering
+og nye betalte forsøk krever fortsatt eget grunnlag. Ingen historisk storyakseptanse endres.
+
 ## Why
 
 En privat eiendomsinvestor i Norge trenger å førstevurdere ett allerede funnet boligutleieobjekt og forstå om neste handling er å forkaste, innhente informasjon eller undersøke videre. Kontrollerbare TG2/TG3-funn, bekreftede tall og faste regler skal redusere sammenstillingsarbeid og gjøre usikkerhet synlig. Tidsgevinst er et evalueringsmål; investoren tar selv investeringsbeslutningen.

@@ -285,3 +285,18 @@ filer er fortsatt prefix-/blob-/moduskontrollert.
 og [faktisk produktarkiv](pre-submission-2026-10-27/s6-export.json)
 består. 1578 filer er verifisert mot eksakt commit. Første feil/script
 beholdes; ingen ekstern S6-godkjenning utledes av lukkingen.
+
+## FINN-1 — tilgangsblokkert 2026-10-28
+
+**Status: Åpen.** Prioritert brukerbestilt lenkeimport. Ingen verifisert tillatt
+kanal for tredjepartsannonser; ingen importkode levert. Se
+[tilgangsbevis, avgrensning, design og FI-AC1–FI-AC6](finn-import-checkpoint-2026-10-28.md).
+Lukking krever dokumentert tilgang og godkjent relevant implementering/verifikasjon.
+Leie-/drifts-/reparasjonsestimat, automatisk PDF og scouting er utenfor dette arbeidet.
+S5-W1 og S6-status endres ikke.
+
+**Oppfølging 2026-10-28:** Brukeren har godkjent
+[implementeringsspec for deaktivert FINN-import](spec-finn-import.md).
+Importmotor, kontrollert feltmapping og UI bygges/testes uten betalte kall.
+Det tidligere `open_page`-forsøket er teknisk bevis; aktiveringsporten står åpen.
+Dette supplerer opprinnelig NO-GO for automatisk henting, og lukker ikke FINN-1.

@@ -1,0 +1,10 @@
+{
+  "startedAt": "2026-10-27T23:33:18.191Z",
+  "maxCostUsd": 0.15,
+  "maxRetries": 0,
+  "maxToolCalls": 1,
+  "maxOutputTokens": 1600,
+  "searchContextSize": "low",
+  "timeoutMs": 120000,
+  "note": "No API dollar-denominated per-request cap exists; output/tool limits and low search context bound expected spend, not an exact maximum input token count. Stop after this single dispatch regardless of result."
+}

@@ -1,0 +1,110 @@
+{
+  "url": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649",
+  "model": "gpt-6.1-sol",
+  "status": "completed",
+  "requestId": "req_f9c2d2fbd0714482884b961cc493564f",
+  "responseId": "resp_0e72b801b76869c9016ae134bef83887d2bd6cc408ab1b78b6",
+  "elapsedMs": 8272,
+  "transportDispatches": 1,
+  "apiAttempts": 1,
+  "actions": [
+    {
+      "status": "completed",
+      "action": {
+        "type": "open_page",
+        "url": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649"
+      }
+    }
+  ],
+  "providerToolUsage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  },
+  "usage": {
+    "input_tokens": 8148,
+    "input_tokens_details": {
+      "cache_write_tokens": 4926,
+      "cached_tokens": 0
+    },
+    "output_tokens": 525,
+    "output_tokens_details": {
+      "reasoning_tokens": 68
+    },
+    "total_tokens": 8673
+  },
+  "extracted": {
+    "access_status": "available",
+    "reason": "Siden ble åpnet. Beløp er i NOK. Øvrige kjøpsomkostninger uten dokumentavgift er ikke oppgitt som egen sum og er ikke beregnet. Leieinntekter er ikke oppgitt.",
+    "fields": {
+      "prisantydning": {
+        "value": 22900000,
+        "source": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649",
+        "period": null
+      },
+      "totalpris": {
+        "value": 23478641,
+        "source": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649",
+        "period": null
+      },
+      "dokumentavgift": {
+        "value": 572600,
+        "source": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649",
+        "period": null
+      },
+      "ovrige_kjopsomkostninger": {
+        "value": null,
+        "source": null,
+        "period": null
+      },
+      "fellesgjeld": {
+        "value": 4951,
+        "source": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649",
+        "period": null
+      },
+      "felleskostnader": {
+        "value": 7226,
+        "source": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649",
+        "period": "per måned"
+      },
+      "eiendomsskatt": {
+        "value": 5125,
+        "source": "https://www.finn.no/realestate/homes/ad.html?finnkode=476576649",
+        "period": "per år"
+      },
+      "leieinntekter": {
+        "value": null,
+        "source": null,
+        "period": null
+      }
+    }
+  },
+  "cost": {
+    "currency": "USD",
+    "tokensCalculatedUsd": 0.024009,
+    "billedSearchRequests": 0,
+    "searchCalculatedUsd": 0,
+    "totalCalculatedUsd": 0.024009,
+    "limitUsd": 0.15,
+    "withinLimit": true,
+    "accountBilledCostUsd": null,
+    "cacheWriteAssumption": "Default 30m unless explicit 12h counts reported; raw response preserved.",
+    "sources": [
+      "https://developers.openai.com/api/docs/pricing",
+      "https://developers.openai.com/api/docs/guides/prompt-caching"
+    ]
+  }
+}

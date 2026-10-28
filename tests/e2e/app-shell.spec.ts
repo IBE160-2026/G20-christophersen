@@ -231,13 +231,15 @@ for (const viewport of [
       const workspace = page.getByRole('main')
       const before = await page.getByRole('navigation').boundingBox()
       await workspace.focus()
-      await Promise.all([
-        workspace.evaluate((element) => new Promise<void>((resolve) => {
-          element.addEventListener('scrollend', () => resolve(), { once: true })
-        })),
-        page.keyboard.press('PageDown'),
-      ])
-      await expect.poll(() => workspace.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
+      const initialScroll = await workspace.evaluate((element) => {
+        element.dataset.testScrollEnded = 'false'
+        element.addEventListener('scrollend', () => { element.dataset.testScrollEnded = 'true' }, { once: true })
+        return element.scrollTop
+      })
+      // Lyttingen må være registrert før tastetrykket kan starte rulling.
+      await page.keyboard.press('PageDown')
+      await expect.poll(() => workspace.evaluate((element) => element.scrollTop)).toBeGreaterThan(initialScroll)
+      await expect.poll(() => workspace.evaluate((element) => element.dataset.testScrollEnded)).toBe('true')
       expect(await page.getByRole('navigation').boundingBox()).toEqual(before)
       await heading.focus()
       const title = await heading.boundingBox()

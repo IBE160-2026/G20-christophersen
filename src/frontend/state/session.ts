@@ -103,7 +103,21 @@ function invalidate(state: SessionState, update: Partial<SessionState>, fields: 
 
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {
   if (action.type === 'calculate-result') return { ...state, resultSnapshot: calculateResultSnapshot(state), resultChanges: [] }
-  const next = reduceSession(state, action)
+  let next = reduceSession(state, action)
+  // Manual values, periods and source edits remain owned by the user, even if blank.
+  if (next !== state && (action.type.startsWith('register-') || action.type === 'check-zero' || action.type === 'add-cost' || action.type === 'change-cost' || action.type === 'remove-cost')) {
+    const fields = 'field' in action && ['P', 'D', 'J'].includes(action.field) ? [action.field as 'P' | 'D' | 'J']
+      : action.type === 'add-cost' || action.type === 'change-cost' || action.type === 'remove-cost' ? ['D', 'J'] as const : []
+    next = { ...next, listing: { ...next.listing, manualFields: [...new Set([...next.listing.manualFields, ...fields])] } }
+  }
+  if (next !== state && action.type === 'register-value' && action.field === 'P' && next.listing.draft && !next.listing.manualFields.includes('J')) {
+    const applied = next.listing.applied
+    const ownsJ = applied?.J != null && applied.J === next.financial.J.rawValue && applied.sourceJ === JSON.stringify(next.sources.J)
+      && applied.periodJ === next.financial.J.period && applied.yearJ === next.financial.J.year
+    if (ownsJ && listingFinancingSuggestion(applied!.draft, applied!.financing, next.financial.P.rawValue).priceIssue) {
+      next = invalidate(next, { financial: { ...next.financial, J: { rawValue: '', period: '', year: '', confirmed: false } } }, ['J'])
+    }
+  }
   if (!state.resultSnapshot || sameResultBinding(resultBinding(state), resultBinding(next))) return next
   const change = describeResultChange(action, state)
   return { ...next, resultChanges: [...state.resultChanges.filter(item => item.kind !== change.kind || item.target !== change.target || item.message !== change.message), change] }
@@ -111,7 +125,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
 
 function reduceSession(state: SessionState, action: SessionAction): SessionState {
   if (action.type === 'listing-url') {
-    if (state.listing.url === action.url) return state
+    if (state.listing.status === 'loading' || state.listing.url === action.url) return state
     const identity = validateListingUrl(action.url)
     const listing = { ...state.listing, url: action.url, active: null, status: state.listing.status === 'ready' ? 'ready' as const : state.listing.status === 'failed' ? 'failed' as const : 'idle' as const, generation: state.listing.generation + 1, error: null }
     if (!identity || identity.listingCode === state.listing.objectCode) return { ...state, listing }
@@ -122,20 +136,32 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
     }, [...FinancialFieldSchema.options])
   }
   if (action.type === 'listing-start') {
-    if (action.correlation.generation !== state.listing.generation || !validateListingUrl(state.listing.url) || state.listing.status === 'loading') return state
+    if (action.correlation.generation !== state.listing.generation || !validateListingUrl(state.listing.url) || state.listing.status === 'loading' || state.listing.status === 'ready') return state
     return { ...state, listing: { ...state.listing, status: 'loading', active: action.correlation, error: null } }
   }
   if (action.type === 'listing-response' || action.type === 'listing-error') {
     const active = state.listing.active
     if (!active || state.listing.status !== 'loading' || active.generation !== action.correlation.generation || active.requestId !== action.correlation.requestId) return state
-    const fail = () => ({ ...state, listing: { ...state.listing, status: 'failed' as const, active: null, error: 'FINN-import er utilgjengelig. Registrer tall og velg PDF manuelt.' } })
-    if (action.type === 'listing-error' || !action.ok) return fail()
+    const fail = (code = 'unavailable') => ({ ...state, listing: { ...state.listing, status: 'failed' as const, active: null, error: ({
+      disabled: 'FINN-import er deaktivert av operatøren. Registrer tall og velg PDF manuelt.',
+      configuration: 'FINN-import mangler godkjent backendoppsett. Registrer tall og velg PDF manuelt.',
+      busy: 'Et FINN-oppslag pågår. Vent til det er avsluttet før du henter en annen annonse.',
+      'already-attempted': 'Denne FINN-annonsen er allerede forsøkt. Nytt forsøk krever serveromstart. Registrer tall og velg PDF manuelt.',
+    } as Record<string, string>)[code] ?? 'FINN-import er utilgjengelig. Registrer tall og velg PDF manuelt.' } })
+    if (action.type === 'listing-error') return fail()
     const parsed = ListingResponseSchema.safeParse(action.body)
+    if (parsed.success && parsed.data.kind === 'rejected') return fail(parsed.data.code)
+    if (!action.ok) return fail()
     if (!parsed.success || parsed.data.kind !== 'listing' || parsed.data.correlation.generation !== active.generation || parsed.data.correlation.requestId !== active.requestId) return fail()
     try {
       const original = validateListingImport(parsed.data.listing)
       if (original.listingCode !== validateListingUrl(state.listing.url)?.listingCode) return fail()
-      return { ...state, listing: { ...state.listing, status: 'ready', active: null, error: null, draft: state.listing.draft ? { ...createListingDraft(original), corrections: Object.fromEntries(Object.entries(state.listing.draft.corrections).map(([id, correction]) => [id, { ...correction, reviewed: false }])) } : createListingDraft(original) } }
+      const draft = state.listing.draft ? { ...createListingDraft(original), corrections: Object.fromEntries(Object.entries(state.listing.draft.corrections).map(([id, correction]) => [id, { ...correction, reviewed: false }])) } : createListingDraft(original)
+      const ready: SessionState = { ...state, listing: { ...state.listing, status: 'ready', active: null, error: null, draft } }
+      const P = listingSuggestions(draft, { requireReview: false }).P
+      if (P === null || state.listing.manualFields.includes('P')) return ready
+      const source = { kind: 'source' as const, description: `Ubekreftet FINN ${original.url}, hentet ${original.fetchedAt}. Original og kilder er bevart i importutkastet.`, conflict: null }
+      return invalidate(ready, { financial: { ...ready.financial, P: { rawValue: P, confirmed: false } }, sources: { ...ready.sources, P: source } }, ['P'])
     } catch { return fail() }
   }
   if (action.type === 'listing-correction') {
@@ -151,7 +177,7 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
     if (!state.listing.draft || state.listing.status !== 'ready') return state
     const suggested = listingSuggestions(state.listing.draft)
     if (suggested.P === null) return state
-    const financing = listingFinancingSuggestion(state.listing.draft, state.listing.financing)
+    const financing = listingFinancingSuggestion(state.listing.draft, state.listing.financing, state.listing.manualFields.includes('P') ? state.financial.P.rawValue : undefined)
     const year = state.listing.financing.year
     const J = financing.J
     const correctionNotes = Object.entries(state.listing.draft.corrections).filter(([, correction]) => correction.note.trim()).map(([id, correction]) => `${id}: ${correction.note.trim()}`).join('; ')
@@ -159,18 +185,19 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
     const applied = state.listing.applied
     const ownsD = applied?.D != null && applied.D === state.financial.D.rawValue && applied.sourceD === JSON.stringify(state.sources.D) && applied.periodD === state.financial.D.period && applied.yearD === state.financial.D.year
     const ownsJ = applied?.J != null && applied.J === state.financial.J.rawValue && applied.sourceJ === JSON.stringify(state.sources.J) && applied.periodJ === state.financial.J.period && applied.yearJ === state.financial.J.year
-    const useD = suggested.D !== null && (state.financial.D.rawValue.trim() === '' || ownsD)
-    const useJ = J !== null && (state.financial.J.rawValue.trim() === '' || ownsJ)
-    const clearD = ownsD && suggested.D === null
-    const clearJ = ownsJ && J === null
-    const fields: FinancialField[] = ['P', ...(useD || clearD ? ['D' as const] : []), ...(useJ || clearJ ? ['J' as const] : [])]
+    const useD = suggested.D !== null && !state.listing.manualFields.includes('D') && (state.financial.D.rawValue.trim() === '' || ownsD)
+    const useJ = J !== null && !state.listing.manualFields.includes('J') && (state.financial.J.rawValue.trim() === '' || ownsJ)
+    const clearD = ownsD && !state.listing.manualFields.includes('D') && suggested.D === null
+    const clearJ = ownsJ && !state.listing.manualFields.includes('J') && J === null
+    const useP = !state.listing.manualFields.includes('P')
+    const fields: FinancialField[] = [...(useP ? ['P' as const] : []), ...(useD || clearD ? ['D' as const] : []), ...(useJ || clearJ ? ['J' as const] : [])]
     const next = invalidate(state, { financial: { ...state.financial,
-      P: { rawValue: suggested.P, confirmed: false },
+      ...(useP ? { P: { rawValue: suggested.P, confirmed: false } } : {}),
       ...(clearD ? { D: { rawValue: '', period: '', year: '', confirmed: false } } : {}),
       ...(clearJ ? { J: { rawValue: '', period: '', year: '', confirmed: false } } : {}),
       ...(useD ? { D: { rawValue: suggested.D!, period: 'year', year: suggested.year!, confirmed: false } } : {}),
       ...(useJ ? { J: { rawValue: J!, period: 'year', year, confirmed: false } } : {}),
-    }, sources: { ...state.sources, P: source,
+    }, sources: { ...state.sources, ...(useP ? { P: source } : {}),
       ...(useD ? { D: source } : {}),
       ...(useJ ? { J: { kind: 'assumption' as const, description: `${source.description} Egenkapital ${state.listing.financing.equity}, rente ${state.listing.financing.annualInterest} %, ${state.listing.financing.months} måneder; øreavrundet månedsbetaling.`, conflict: null } } : {}),
     } }, fields)

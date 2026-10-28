@@ -1,0 +1,11 @@
+FINN-2 implementation verification — 2026-10-28
+Runtime: Node 24.21.0
+
+npm run build: PASS (typecheck + Vite; existing bundle-size warning).
+npm run lint: PASS.
+npm test -- tests/unit/listing.test.ts tests/unit/listing-session.test.ts tests/unit/listing-backend.test.ts tests/integration/listing-http.test.ts: PASS, 4 files / 92 tests. Loopback escalation required after sandbox EPERM.
+Focused Playwright listing-import.spec.ts: PASS, 7 tests. Existing port 3000 was occupied; a temporary verbatim server copy with port 3011 and temporary Playwright config were used and then removed. The network assertion now honors baseURL. Initial isolated run had 6 pass / 1 failure solely from the old hardcoded port-3000 assertion; rerun passed all 7.
+
+Official OpenAI SDK uses exclusively injected fetch stubs in backend tests. Gate tests use synthetic environment objects, including getter spies proving no key read on closed/incomplete gates. Original historical response.json was read unchanged and rejected via stubbed SDK under current schema. No real keys checked, no production gates opened, no external or paid calls.
+
+Root session owns full regression, independent review, documentation and commit.

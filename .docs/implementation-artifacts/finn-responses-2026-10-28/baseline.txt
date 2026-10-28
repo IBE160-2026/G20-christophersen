@@ -1,0 +1,13 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/listing.test.ts tests/unit/listing-session.test.ts tests/unit/financing.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  3 passed (3)
+      Tests  83 passed (83)
+   Start at  12:22:07
+   Duration  253ms (import 63%, tests 18%, transform 17%, worker 2%)
+

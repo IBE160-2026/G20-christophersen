@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createListingDraft, listingSuggestions, validateListingImport, validateListingUrl } from '../../src/domain/listing.ts'
+import { createListingDraft, listingFinancingSuggestion, listingSuggestions, validateListingImport, validateListingUrl } from '../../src/domain/listing.ts'
 import { createListingAdapter } from '../../src/backend/listing/adapter.ts'
 import { listingRequest } from '../../src/backend/listing/request.ts'
 import { parseListingResponse } from '../../src/backend/listing/response.ts'
@@ -130,4 +130,19 @@ describe('FINN-1 Responses-kildekontroll', () => {
     expect(() => parseListingResponse({ ...responseFixture(), huge: 'x'.repeat(120001) }, listingUrl, listingFixture().fetchedAt)).toThrow()
     expect(() => validateListingImport({ ...listingFixture(), extra: true })).toThrow()
   })
+})
+
+
+it.each(['available', 'missing', 'unavailable'] as const)('FINN-2 rejects %s with contradictory alternatives', status => {
+  const listing = listingFixture()
+  listing.fields[0]!.status = status
+  if (status !== 'available') listing.fields[0]!.amount = null
+  listing.fields[0]!.alternatives = [{ amount: '4000000', url: listingUrl, quote: 'Motstridende pris' }]
+  expect(() => validateListingImport(listing)).toThrow('Alternativer krever konfliktstatus')
+})
+
+it('FINN-2 financing preview and application share canonical purchase-price reconciliation', () => {
+  const financing = { equity: '1075000', annualInterest: '0', months: '240', year: '2026' }
+  expect(listingFinancingSuggestion(completeDraft(), financing, '4 000 000,00')).toMatchObject({ J: null, priceIssue: expect.stringContaining('avstemt') })
+  expect(listingFinancingSuggestion(completeDraft(), financing, '3 200 000,00')).toMatchObject({ J: '111999.96', priceIssue: null })
 })

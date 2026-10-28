@@ -39,10 +39,10 @@ export function effectiveListingFields(draft: ListingDraft): ListingField[] {
       debtPart: parseFinancialDecimal(correction.rawDebtPart), status: reviewed ? 'available' : 'conflict' }
   })
 }
-export function listingSuggestions(draft: ListingDraft) {
+export function listingSuggestions(draft: ListingDraft, options: { requireReview?: boolean } = {}) {
   const fields = effectiveListingFields(draft)
   const get = (id: string) => fields.find(field => field.id === id)
-  const checked = (id: string) => draft.corrections[id]?.reviewed === true
+  const checked = (id: string) => draft.corrections[id]?.reviewed === true || (options.requireReview === false && !draft.corrections[id] && get(id)?.status === 'available' && get(id)?.source !== null)
   const amount = (id: string) => {
     const field = get(id)
     return field?.status === 'available' && checked(id) && field.amount !== null && new Decimal(field.amount).gte('0') ? field.amount : null
@@ -120,13 +120,16 @@ export function listingSuggestions(draft: ListingDraft) {
 }
 
 /** Samme årsvilkår styrer både forhåndsvisning og atomisk bruk. */
-export function listingFinancingSuggestion(draft: ListingDraft, financing: { equity: string; annualInterest: string; months: string; year: string }) {
+export function listingFinancingSuggestion(draft: ListingDraft, financing: { equity: string; annualInterest: string; months: string; year: string }, manualP?: string) {
   const suggested = listingSuggestions(draft)
   const result = financingSuggestion({ ...financing, cashRequired: suggested.cashRequired, sharedAnnualPayment: suggested.sharedAnnualPayment })
   const debt = effectiveListingFields(draft).find(field => field.id === 'sharedDebtPayment')
   const yearValid = /^\d{4}$/.test(financing.year) && (suggested.sharedAnnualPayment === '0' || debt?.year === financing.year)
     && (suggested.year === null || suggested.year === financing.year)
-  return { ...result, J: yearValid ? result.J : null,
+  const canonicalP = manualP === undefined ? suggested.P : parseFinancialDecimal(manualP)
+  const priceValid = suggested.P !== null && canonicalP !== null && new Decimal(canonicalP).eq(suggested.P)
+  return { ...result, J: yearValid && priceValid ? result.J : null,
+    priceIssue: priceValid ? null : 'Importert J kan ikke brukes før manuell P og kontrollert FINN-P er avstemt. Rett P eller annonsegrunnlaget, eller registrer J manuelt.',
     yearIssue: yearValid ? null : 'Oppgi et år for gjeldsbetjening som samsvarer med kontrollerte kostnader og fellesgjeldsbetaling.' }
 }
 
@@ -141,6 +144,7 @@ export function validateListingImport(input: unknown): ListingImport {
     if (field.category !== category) throw new Error('Feil feltkategori')
     if ((field.status === 'missing' || field.status === 'unavailable') && field.amount !== null) throw new Error('Ukjent felt har beløp')
     if (field.status === 'available' && (!field.source || field.amount === null)) throw new Error('Felt mangler kilde')
+    if (field.status !== 'conflict' && field.alternatives.length > 0) throw new Error('Alternativer krever konfliktstatus')
     if (field.status === 'conflict' && field.alternatives.length === 0) throw new Error('Konflikt mangler alternativer')
     if (field.source && validateListingUrl(field.source.url)?.listingCode !== listing.listingCode) throw new Error('Feil feltkilde')
     if (field.alternatives.some(source => validateListingUrl(source.url)?.listingCode !== listing.listingCode)) throw new Error('Feil konfliktkilde')

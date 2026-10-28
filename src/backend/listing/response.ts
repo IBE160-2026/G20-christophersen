@@ -17,7 +17,7 @@ export function parseListingResponse(raw: unknown, url: string, fetchedAt: strin
       if (opened) throw new Error('Flere kildehandlinger')
       if (item.status !== 'completed') throw new Error('Ufullført kildehandling')
       if (item.action?.type === 'open_page') {
-        if (!item.action.url || validateListingUrl(item.action.url)?.listingCode !== identity.listingCode) throw new Error('Feil åpnet kilde')
+        if (item.action.url !== url) throw new Error('Feil åpnet kilde')
         opened = true
       } else throw new Error('Ukjent kildehandling')
     }

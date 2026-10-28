@@ -45,3 +45,39 @@ it('feil side og ufullført handling blir trygg avvisning uten intern feildetalj
   const response = await post(url, body)
   expect(response.status).toBe(502); expect(await response.json()).toEqual({ kind: 'rejected', code: 'unavailable' })
 })
+
+it('FINN-2: gate-approved production backend uses stubbed SDK and returns retained-attempt status', async () => {
+  const { createListingBackend } = await import('../../src/backend/listing/backend.ts')
+  const transport = vi.fn(async () => new Response(JSON.stringify(responseFixture()), { headers: { 'Content-Type': 'application/json' } }))
+  const backend = createListingBackend({ environment: { FINN_IMPORT_ENABLED: 'true', FINN_IMPORT_ACCESS_REFERENCE: 'test-access', FINN_IMPORT_COST_REFERENCE: 'test-cost', OPENAI_API_KEY: 'synthetic-only' }, fetch: transport })
+  const url = await start(backend)
+  expect((await post(url, body)).status).toBe(200)
+  const repeated = await post(url, { ...body, url: 'https://finn.no/realestate/homes/ad.html?finnkode=476576649' })
+  expect(repeated.status).toBe(409)
+  expect(await repeated.json()).toEqual({ kind: 'rejected', code: 'already-attempted' })
+  expect(transport).toHaveBeenCalledTimes(1)
+})
+
+it('FINN-2: incomplete operator approvals return safe configuration status without key access', async () => {
+  const { createListingBackend } = await import('../../src/backend/listing/backend.ts')
+  const key = vi.fn(() => { throw new Error('must not read key') })
+  const environment = Object.defineProperty({ FINN_IMPORT_ENABLED: 'true', FINN_IMPORT_ACCESS_REFERENCE: 'approved' }, 'OPENAI_API_KEY', { get: key })
+  const url = await start(createListingBackend({ environment }))
+  const response = await post(url, body)
+  expect(response.status).toBe(503)
+  expect(await response.json()).toEqual({ kind: 'rejected', code: 'configuration' })
+  expect(key).not.toHaveBeenCalled()
+})
+
+it('FINN-2: concurrent request returns busy without consuming the other code', async () => {
+  let release!: () => void
+  const transport = vi.fn(async () => { await new Promise<void>(resolve => { release = resolve }); return responseFixture() })
+  const url = await start({ enabled: true, adapter: createListingAdapter(transport) })
+  const first = post(url, body)
+  await vi.waitFor(() => expect(transport).toHaveBeenCalledTimes(1))
+  const busy = await post(url, { ...body, url: listingUrl.replace('476576649', '123') })
+  expect(busy.status).toBe(409); expect(await busy.json()).toEqual({ kind: 'rejected', code: 'busy' })
+  release()
+  expect((await first).status).toBe(200)
+  expect(transport).toHaveBeenCalledTimes(1)
+})

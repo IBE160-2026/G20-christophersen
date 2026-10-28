@@ -24,7 +24,7 @@ export const ListingCorrelationSchema = z.strictObject({
 export const ListingRequestSchema = z.strictObject({ url: z.string().max(2048), correlation: ListingCorrelationSchema })
 export const ListingResponseSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('listing'), correlation: ListingCorrelationSchema, listing: ListingImportSchema }),
-  z.strictObject({ kind: z.literal('rejected'), code: z.enum(['disabled', 'invalid-request', 'unavailable']) }),
+  z.strictObject({ kind: z.literal('rejected'), code: z.enum(['disabled', 'configuration', 'busy', 'already-attempted', 'invalid-request', 'unavailable']) }),
 ])
 export type ListingField = z.infer<typeof ListingFieldSchema>
 export type ListingImport = z.infer<typeof ListingImportSchema>

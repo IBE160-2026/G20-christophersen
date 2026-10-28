@@ -13,20 +13,21 @@ export function ListingImport({ session, dispatch }: { session: SessionState; di
   useEffect(() => () => client.abort(), [client])
   const draft = state.draft
   const suggested = draft ? listingSuggestions(draft) : null
-  const financing = draft ? listingFinancingSuggestion(draft, state.financing) : null
+  const financing = draft ? listingFinancingSuggestion(draft, state.financing, state.manualFields.includes('P') ? session.financial.P.rawValue : undefined) : null
   const canonicalEquity = financing?.loan != null ? parseFinancialDecimal(state.financing.equity) : null
   const rangeEquity = canonicalEquity !== null && /^\d+(?:\.\d{1,2})?$/.test(canonicalEquity) ? canonicalEquity : null
   const statuses = { available: 'Tilgjengelig', missing: 'Mangler', unavailable: 'Utilgjengelig', conflict: 'Motstrid' }
   const periods = { once: 'Engang', month: 'Måned', year: 'År', unknown: 'Ukjent periode' }
   return <section className="listing-import" aria-labelledby="listing-title">
     <h2 id="listing-title">Importer fra FINN</h2>
-    <p>Live-import fra FINN er deaktivert. Tilgjengelige importutkast må kontrolleres før bruk. Du kan alltid registrere tall og velge tilstandsrapport som PDF manuelt.</p>
+    <p>FINN-import krever operatørens tilgangs- og kostnadsgodkjenning i backend. Entydige kildeverdier fylles inn som ubekreftet grunnlag. Du kan alltid registrere tall og velge tilstandsrapport som PDF manuelt.</p>
     <label htmlFor="listing-url">FINN-boliglenke</label>
-    <input id="listing-url" type="url" autoComplete="off" value={state.url} onChange={event => dispatch({ type: 'listing-url', url: event.target.value })} aria-describedby="listing-object-note" />
+    <input id="listing-url" type="url" autoComplete="off" disabled={state.status === 'loading'} value={state.url} onChange={event => dispatch({ type: 'listing-url', url: event.target.value })} aria-describedby="listing-object-note" />
     <p id="listing-object-note" className="meta">En gyldig lenke til en annen annonse starter et nytt objekt og tømmer tidligere tall og valgt rapport. Import bekrefter ingen tall.</p>
     {state.url && !validateListingUrl(state.url) && <p>Oppgi en HTTPS-lenke til én boligannonse på finn.no uten port eller brukerinformasjon.</p>}
-    <button id="listing-fetch" className="secondary-action" type="button" disabled={!validateListingUrl(state.url) || state.status === 'loading'} onClick={() => { void client.import(state) }}>{state.status === 'loading' ? 'Henter annonse …' : 'Hent FINN-grunnlag'}</button>
-    <p role="status">{state.error ?? (state.status === 'ready' ? 'Importutkast klart. Kontroller kilden og hvert felt før bruk.' : '')}</p>
+    <button id="listing-fetch" className="secondary-action" type="button" disabled={!validateListingUrl(state.url) || state.status === 'loading' || state.status === 'ready'} onClick={() => { void client.import(state) }}>{state.status === 'loading' ? 'Henter annonse …' : 'Hent FINN-grunnlag'}</button>
+    <p className="meta">Et vellykket utkast hentes ikke på nytt. Etter en bevisst serveromstart må du laste siden på nytt for å starte et nytt oppslag.</p>
+    <p role="status">{state.error ?? (state.status === 'ready' ? 'Importutkast klart. Kontroller kilden og hvert felt før bruk. Manuelle registreringer er bevart.' : '')}</p>
     {draft && <>
       {state.status !== 'ready' && <p role="status">Tidligere importutkast vises som bevis og kan ikke brukes før en ny henting er fullført.</p>}
       <p><a href={draft.original.url} target="_blank" rel="noreferrer">Åpne FINN-annonsen {draft.original.listingCode}</a> · Hentet {draft.original.fetchedAt}</p>
@@ -78,8 +79,9 @@ export function ListingImport({ session, dispatch }: { session: SessionState; di
       <p>Forslag P: {suggested?.P ?? 'Ukjent'} · D: {suggested?.D ?? 'Ukjent'} · J: {financing?.J ?? 'Ukjent'} NOK/år</p>
       {suggested?.issues.map(issue => <p key={issue}>{issue}</p>)}
       {financing?.error && <p>{financing.error}</p>}
+      {financing?.priceIssue && <p>{financing.priceIssue}</p>}
       {financing?.yearIssue && <p>{financing.yearIssue}</p>}
-      <p>Rettede eller manglende verdier krever begrunnelse. P erstattes med forslaget. D/J fylles bare når feltet er blankt og forslaget er komplett; manuelle registreringer bevares. L og Ymin oppgis manuelt.</p>
+      <p>Rettede eller manglende verdier krever begrunnelse. Manuelle verdier i P, D og J bevares. D/J fylles bare når feltet er blankt og forslaget er komplett; manuelle registreringer bevares. L og Ymin oppgis manuelt.</p>
       <button className="primary-action" type="button" disabled={state.status !== 'ready' || suggested?.P === null} onClick={() => dispatch({ type: 'listing-apply' })}>Bruk kontrollert grunnlag</button>
     </>}
   </section>

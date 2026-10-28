@@ -57,8 +57,8 @@ export function selectResult(state: SessionState): ResultSelection {
 
 /** Kalles bare etter en faktisk endring av bindingen. Bekreftelsesregler eies fortsatt av Epic 1/2. */
 export function describeResultChange(action: SessionAction, before: SessionState): ResultChange {
-  if (action.type === 'listing-url' || action.type === 'listing-apply') return { kind: 'financial', target: 'listing',
-    message: action.type === 'listing-url' ? 'Objektlenken er endret; tidligere tall og rapport tilhører ikke det nye objektet.' : 'Kontrollert FINN-grunnlag og finansieringsforutsetninger er brukt.',
+  if (action.type === 'listing-url' || action.type === 'listing-apply' || action.type === 'listing-response') return { kind: 'financial', target: 'listing',
+    message: action.type === 'listing-url' ? 'Objektlenken er endret; tidligere tall og rapport tilhører ikke det nye objektet.' : action.type === 'listing-response' ? 'Kildestøttet FINN-grunnlag er fylt inn som ubekreftet.' : 'Kontrollert FINN-grunnlag og finansieringsforutsetninger er brukt.',
     nextAction: 'Kontroller og bekreft gjeldende tall og rapportgrunnlag før ny vurdering.' }
   if ('field' in action && !action.type.startsWith('report-')) {
     const detail = { 'register-value': 'verdi', 'register-period': 'periode', 'register-year': 'år',

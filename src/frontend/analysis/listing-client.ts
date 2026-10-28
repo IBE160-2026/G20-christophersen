@@ -9,7 +9,7 @@ export class ListingClient {
   constructor(dispatch: Dispatch<SessionAction>, transport: typeof fetch = fetch) { this.dispatch = dispatch; this.transport = transport }
   abort() { this.controller?.abort(); this.controller = null }
   async import(state: ListingState) {
-    this.abort()
+    if (this.controller || state.status === 'loading' || state.status === 'ready') return
     const controller = new AbortController()
     this.controller = controller
     const correlation = { generation: state.generation, requestId: crypto.randomUUID() }

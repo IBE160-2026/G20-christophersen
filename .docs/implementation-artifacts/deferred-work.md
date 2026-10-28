@@ -307,3 +307,17 @@ Første implementering med aktiv promptlogg er bevart i commit
 `6df0ec23481b662208e28968d736fa657b4d0849`; reviewrettinger følger separat.
 **Status er fortsatt Åpen:** faktisk live-aktivering/kildekvalitet og nytt
 relevant leveringsgrunnlag gjenstår. Ingen historisk oppføring lukkes her.
+
+**Videreføring FINN-2, 2026-10-28:** Brukeren har godkjent
+[SDK-kobling bak tilgangsgate](spec-finn-responses-kobling.md), eksakt
+innlimt URL, ett forsøk per FINN-kode per serverstart og automatisk ubekreftet
+skjemautfylling. Arbeidet tester offisielt SDK med stubbet transport og gamle
+opptak; det autoriserer ikke et betalt/faktisk annonseoppslag nå. FINN-1
+forblir den sentrale åpne oppføringen; gamle bevis og statushistorikk bevares.
+
+**FINN-2-leveranse 2026-10-28:** SDK-kobling, eksakt URL, forsøks-/samtidighetsvern
+og automatisk ubekreftet skjemautfylling er implementert og offline-verifisert.
+[Sluttbevis, review og første UI-prøves porter](finn-responses-2026-10-28/sluttverifikasjon.md).
+**Status for FINN-1 er fortsatt Åpen:** tilgang/kostnadsautorisasjon, eksplisitt
+gateåpning og faktisk kildeprøve er ikke gjennomført her. Ingen tidligere
+oppføring eller historisk akseptanse lukkes med denne kodeleveransen.

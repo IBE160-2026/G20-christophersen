@@ -1,15 +1,15 @@
 import express, { Router } from 'express'
-import type { ListingAdapter } from '../listing/adapter.ts'
+import { ListingAdapterError, type ListingAdapter } from '../listing/adapter.ts'
 import { ListingRequestSchema, ListingResponseSchema } from '../../contracts/listing.ts'
 import { validateListingImport, validateListingUrl } from '../../domain/listing.ts'
-/** En adapter alene aktiverer ikke ruten. Produksjonsserveren gir ingen adapter. */
-export function createListingRouter(options: { enabled?: boolean; adapter?: ListingAdapter } = {}) {
+/** A gate-approved backend or explicitly enabled test adapter owns this route. */
+export function createListingRouter(options: { enabled?: boolean; adapter?: ListingAdapter; code?: 'disabled' | 'configuration' } = {}) {
   const router = Router()
   router.post('/listing', express.json({ limit: '4kb', strict: true }), async (request, response) => {
     response.setHeader('Cache-Control', 'no-store')
     const parsed = ListingRequestSchema.safeParse(request.body)
     if (!parsed.success || !validateListingUrl(parsed.data.url)) { response.status(400).json({ kind: 'rejected', code: 'invalid-request' }); return }
-    if (!options.enabled || !options.adapter) { response.status(503).json({ kind: 'rejected', code: 'disabled' }); return }
+    if (!options.enabled || !options.adapter) { response.status(503).json({ kind: 'rejected', code: options.code ?? 'disabled' }); return }
     const controller = new AbortController()
     const close = () => { if (!response.writableEnded) controller.abort() }
     response.once('close', close)
@@ -17,8 +17,9 @@ export function createListingRouter(options: { enabled?: boolean; adapter?: List
       const listing = validateListingImport(await options.adapter.import(parsed.data.url, controller.signal))
       if (listing.listingCode !== validateListingUrl(parsed.data.url)!.listingCode) throw new Error('Feil annonse')
       if (!controller.signal.aborted) response.json(ListingResponseSchema.parse({ kind: 'listing', correlation: parsed.data.correlation, listing }))
-    } catch {
-      if (!controller.signal.aborted) response.status(502).json({ kind: 'rejected', code: 'unavailable' })
+    } catch (error) {
+      const code = error instanceof ListingAdapterError ? error.code : 'unavailable'
+      if (!controller.signal.aborted) response.status(code === 'busy' || code === 'already-attempted' ? 409 : 502).json({ kind: 'rejected', code })
     } finally { response.off('close', close) }
   })
   router.use((error: unknown, _request: express.Request, response: express.Response, _next: express.NextFunction) => {

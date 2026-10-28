@@ -40,6 +40,15 @@ Den godkjente deaktiverte leveransen er nå implementert og kontrollert med
 [uavhengig review, AC-spor og offline regresjon](../../implementation-artifacts/finn-import-2026-10-28/sluttverifikasjon.md).
 Dette dokumenterer implementeringen, uten å lukke live-aktiveringsporten.
 
+Videre bestilling og godkjent [FINN-2-spec](../../implementation-artifacts/spec-finn-responses-kobling.md)
+kobler offisielt SDK bak egen backendgate, bevarer den eksakte brukerlenken og
+innfører automatisk ubekreftet utfylling av entydige verdier. Offline testing
+og lokal commit er autorisert; første reelle UI-oppslag krever fortsatt
+dokumentert tilgang, kostnadsautorisasjon og eksplisitt gateåpning.
+
+FINN-2 er nå [offline-verifisert med uavhengig review og nødvendige regresjoner](../../implementation-artifacts/finn-responses-2026-10-28/sluttverifikasjon.md).
+Dette er implementeringsbevis, ikke gjennomført live-prøve eller ny S6-akseptanse.
+
 ## Why
 
 En privat eiendomsinvestor i Norge trenger å førstevurdere ett allerede funnet boligutleieobjekt og forstå om neste handling er å forkaste, innhente informasjon eller undersøke videre. Kontrollerbare TG2/TG3-funn, bekreftede tall og faste regler skal redusere sammenstillingsarbeid og gjøre usikkerhet synlig. Tidsgevinst er et evalueringsmål; investoren tar selv investeringsbeslutningen.

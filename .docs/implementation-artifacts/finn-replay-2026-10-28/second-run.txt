@@ -1,0 +1,46 @@
+[WebServer] (node:84097) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:84099) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/listing-import.spec.ts:188:1 › opptak 476576649: gammel råkontrakt avvises uten oppdiktet utfylling (313ms)
+  ✘  2 tests/e2e/listing-import.spec.ts:203:1 › opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF og resultat (30.1s)
+
+
+  1) tests/e2e/listing-import.spec.ts:203:1 › opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF og resultat 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Åpne PDF for valgt funn', exact: true })
+
+
+      308 |   for (const finding of await page.locator('.finding-list > li').all()) {
+      309 |     await finding.locator('.finding-select').click()
+    > 310 |     await page.getByRole('button', { name: 'Åpne PDF for valgt funn', exact: true }).click()
+          |                                                                                      ^
+      311 |     await expect(page.locator('#pdf-status')).toContainText('Originalside tilgjengelig')
+      312 |     await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
+      313 |     await finding.getByRole('button', { name: 'Bekreft', exact: true }).click()
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/listing-import.spec.ts:310:86
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/listing-import-opptak-4765-84044-ing-separat-PDF-og-resultat/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/listing-import-opptak-4765-84044-ing-separat-PDF-og-resultat/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/listing-import-opptak-4765-84044-ing-separat-PDF-og-resultat/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/listing-import-opptak-4765-84044-ing-separat-PDF-og-resultat/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/listing-import.spec.ts:203:1 › opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF og resultat 
+  1 passed (31.5s)

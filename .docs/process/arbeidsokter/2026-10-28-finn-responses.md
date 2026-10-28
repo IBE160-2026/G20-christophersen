@@ -76,3 +76,17 @@ Bygget frontend ble kontrollert uten backendens nøkkel-/gatereferansenavn
 eller OpenAI-endepunkt. [Samlet sluttbevis](../../implementation-artifacts/finn-responses-2026-10-28/sluttverifikasjon.md)
 skiller offline leveranse fra gjenstående første faktiske UI-prøve.
 Ingen gate er åpnet, ingen reell/betalt transport er kjørt, og ingen push.
+
+
+## Brukerbestilt offline UI-prøve etter live-stopp
+
+Brukeren bestilte videreføring med lagret open_page-resultat, ingen live-kall
+eller betaling og stengt gate. Kjent eget `live-forberedelse.md` og aktiv
+promptlogg ble bevart. BMAD-build oneshot ble brukt for avgrenset testarbeid.
+[Arbeidskontrakt og reviewtriage](../../implementation-artifacts/spec-finn-opptak-ui-test.md)
+og [resultat, testutskrifter og skjermbilder](../../implementation-artifacts/finn-replay-2026-10-28/sluttverifikasjon.md)
+skiller uendret råopptaksavvisning fra uttrykkelig testkonvertert UI-replay.
+10 FINN-tester og 83 økonomi-/screeningregresjoner bestod, samt bygg/typekontroll
+og lint. Fire uavhengige reviewfunn om testdekning ble rettet og etterkontrollert.
+Ingen produktfeil påvist, ingen produksjonskode endret, ingen betalte API-kall,
+gateåpning eller push. Aktiv promptlogg og forrige stoppnotat følger lokal commit.

@@ -1,0 +1,19 @@
+[WebServer] (node:84540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+(node:84547) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/e2e/listing-import.spec.ts:9:1 › FI-1: deaktivert FINN viser manuell reserveflyt og beholder fire trinn (323ms)
+  ✓   2 tests/e2e/listing-import.spec.ts:21:1 › FI-2–FI-6: kildeutkast, retting, kontroll, finansiering og nytt objekt (720ms)
+  ✓   3 tests/e2e/listing-import.spec.ts:80:1 › review: årsvilkår, entydige felt-ID-er og sperret oppfrisking (894ms)
+  ✓   4 tests/e2e/listing-import.spec.ts:132:1 › FINN-2: asynchronous import and controlled apply preserve manual P/D/J (526ms)
+  ✓   5 tests/e2e/listing-import.spec.ts:162:3 › FINN-2: configuration has a safe gate message and manual fallback (292ms)
+  ✓   6 tests/e2e/listing-import.spec.ts:162:3 › FINN-2: busy has a safe gate message and manual fallback (308ms)
+  ✓   7 tests/e2e/listing-import.spec.ts:162:3 › FINN-2: already-attempted has a safe gate message and manual fallback (324ms)
+  ✓   8 tests/e2e/listing-import.spec.ts:173:1 › FINN-2: an unknown-price draft uses neutral ready wording (362ms)
+  ✓   9 tests/e2e/listing-import.spec.ts:188:1 › opptak 476576649: gammel råkontrakt avvises uten oppdiktet utfylling (307ms)
+  ✓  10 tests/e2e/listing-import.spec.ts:203:1 › opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF og resultat (2.4s)
+
+  10 passed (7.5s)

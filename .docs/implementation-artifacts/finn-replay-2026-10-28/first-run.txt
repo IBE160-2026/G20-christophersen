@@ -1,0 +1,92 @@
+[WebServer] (node:83482) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:83549) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/e2e/listing-import.spec.ts:188:1 › opptak 476576649: gammel råkontrakt avvises uten oppdiktet utfylling (5.6s)
+(node:83691) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 tests/e2e/listing-import.spec.ts:203:1 › opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF og resultat (7.4s)
+
+
+  1) tests/e2e/listing-import.spec.ts:188:1 › opptak 476576649: gammel råkontrakt avvises uten oppdiktet utfylling 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('status').filter({ hasText: 'FINN-import kunne ikke fullføres' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('status').filter({ hasText: 'FINN-import kunne ikke fullføres' }) with timeout 5000ms
+      - waiting for getByRole('status').filter({ hasText: 'FINN-import kunne ikke fullføres' })
+
+
+      196 |   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(recordedUrl)
+      197 |   await page.getByRole('button', { name: 'Hent FINN-grunnlag', exact: true }).click()
+    > 198 |   await expect(page.getByRole('status').filter({ hasText: 'FINN-import kunne ikke fullføres' })).toBeVisible()
+          |                                                                                                  ^
+      199 |   for (const id of ['P', 'D', 'J']) await expect(page.locator(`#value-${id}`)).toHaveValue('')
+      200 |   expect(transports).toBe(1)
+      201 | })
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/listing-import.spec.ts:198:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/listing-import-opptak-4765-98a71-es-uten-oppdiktet-utfylling/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/listing-import-opptak-4765-98a71-es-uten-oppdiktet-utfylling/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/listing-import-opptak-4765-98a71-es-uten-oppdiktet-utfylling/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/listing-import-opptak-4765-98a71-es-uten-oppdiktet-utfylling/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/listing-import.spec.ts:203:1 › opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF og resultat 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.result-report')
+    Expected substring: "700 000"
+    Received string:    "Rapportfunn og kontrollgrunnlagF1-tilstandsrapport.pdf · Analyse fullført · Funnliste bekreftetÅpne originalrapport i rapportkontrollTG2 · Slitt overflate på baderomsgulvF1-tilstandsrapport.pdf · PDF-side 2 · F1-TG2-1Opprinnelig KI-uttrekk · Kontrollert og bekreftetOpphav og kontrolldetaljer — F1-TG2-1Opprinnelig KI-uttrekkTG2 · Slitt overflate på baderomsgulvF1-tilstandsrapport.pdf · PDF-side 2Oppgitt rapporthash: c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb · Funn-ID: F1-TG2-1Kontrollert og bekreftet av deg mot originalrapporten.Se originalside — F1-TG2-1Analyseopphav og rapportidentitetDemo · lagret KI-uttrekk. Finans, regler og anbefaling er kodebestemt fra det samme grunnlaget.Rapporthash: c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cbUttrekksversjon: 1 · Kontraktversjon: 2 · Forespørsel: 54018f18-b2cf-4492-b01e-71921ea23ff2"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('.result-report') with timeout 5000ms
+      - waiting for locator('.result-report')
+        14 × locator resolved to <section class="result-report" aria-labelledby="result-report-title">…</section>
+           - unexpected value "Rapportfunn og kontrollgrunnlagF1-tilstandsrapport.pdf · Analyse fullført · Funnliste bekreftetÅpne originalrapport i rapportkontrollTG2 · Slitt overflate på baderomsgulvF1-tilstandsrapport.pdf · PDF-side 2 · F1-TG2-1Opprinnelig KI-uttrekk · Kontrollert og bekreftetOpphav og kontrolldetaljer — F1-TG2-1Opprinnelig KI-uttrekkTG2 · Slitt overflate på baderomsgulvF1-tilstandsrapport.pdf · PDF-side 2Oppgitt rapporthash: c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cb · Funn-ID: F1-TG2-1Kontrollert og bekreftet av deg mot originalrapporten.Se originalside — F1-TG2-1Analyseopphav og rapportidentitetDemo · lagret KI-uttrekk. Finans, regler og anbefaling er kodebestemt fra det samme grunnlaget.Rapporthash: c3a92dc24004601803928b5ad479165d042cf199f099e190d40b732a58a388cbUttrekksversjon: 1 · Kontraktversjon: 2 · Forespørsel: 54018f18-b2cf-4492-b01e-71921ea23ff2"
+
+
+      314 |   await page.getByRole('button', { name: 'Beregn og vis resultat', exact: true }).click()
+      315 |   await expect(page.locator('#recommendation-title')).toBeVisible()
+    > 316 |   await expect(page.locator('.result-report')).toContainText('700 000')
+          |                                                ^
+      317 |   await page.screenshot({ path: testInfo.outputPath('02-resultat.png'), fullPage: true })
+      318 |   expect(imports).toBe(1); expect(analyses).toBe(1); expect(external).toEqual([])
+      319 |   expect(createHash('sha256').update(readFileSync(new URL('../../.docs/process/arbeidsokter/finn-open-page-2026-10-28/response.json', import.meta.url))).digest('hex')).toBe(originalHash)
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/listing-import.spec.ts:316:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/listing-import-opptak-4765-84044-ing-separat-PDF-og-resultat/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/listing-import-opptak-4765-84044-ing-separat-PDF-og-resultat/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/listing-import-opptak-4765-84044-ing-separat-PDF-og-resultat/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/listing-import-opptak-4765-84044-ing-separat-PDF-og-resultat/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests/e2e/listing-import.spec.ts:188:1 › opptak 476576649: gammel råkontrakt avvises uten oppdiktet utfylling 
+    tests/e2e/listing-import.spec.ts:203:1 › opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF og resultat 

@@ -321,3 +321,9 @@ og automatisk ubekreftet skjemautfylling er implementert og offline-verifisert.
 **Status for FINN-1 er fortsatt Åpen:** tilgang/kostnadsautorisasjon, eksplisitt
 gateåpning og faktisk kildeprøve er ikke gjennomført her. Ingen tidligere
 oppføring eller historisk akseptanse lukkes med denne kodeleveransen.
+
+
+**Offline UI-oppfølging 2026-10-28:** [Sammenhengende opptaksprøve](finn-replay-2026-10-28/sluttverifikasjon.md)
+består med merket testkonvertering, manuelle antakelser for mangler, separat
+fiktiv PDF og eksisterende screening. Uendret gammelt råopptak avvises fortsatt
+trygt; dette er ikke live-kvalitetsbevis. FINN-1 er fortsatt **Åpen**.

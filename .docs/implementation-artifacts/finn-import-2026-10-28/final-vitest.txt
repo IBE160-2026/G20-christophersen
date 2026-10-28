@@ -1,0 +1,47 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/integration/live-http.test.ts (7 tests | 1 failed) 18511ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline invalid.pdf, durable duplicate and safe mode metadata 5071ms
+ ❯ tests/integration/http-analysis.test.ts (22 tests | 1 failed) 102504ms
+   ❯ Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp (22)
+     × F3 følger faktisk PDF og uavhengig fasit med ett adapterkall 5024ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F3 følger faktisk PDF og uavhengig fasit med ett adapterkall
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/http-analysis.test.ts:67:36
+     65|
+     66| describe('Story 2.5 HTTP – original, terminalkontrakt og prosesslivslø…
+     67|   it.each(['F1', 'F2', 'F3', 'F4'])('%s følger faktisk PDF og uavhengi…
+       |                                    ^
+     68|     const events: LifecycleEvent[] = []
+     69|     const url = await serve({ onLifecycle: event => events.push(event)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline invalid.pdf, durable duplicate and safe mode metadata
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/live-http.test.ts:46:191
+     44|   return { url, events, post, startedFile }
+     45| }
+     46| it.each([['empty.pdf', 'completed', null], ['transport.pdf', 'failed',…
+       |                                                                                                                                                                                               ^
+     47|   '4.3 AC1/3: real HTTP/process/SDK offline %s, durable duplicate and …
+     48|     const { url, post, events } = await serve()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 42 passed (44)
+      Tests  2 failed | 1166 passed (1168)
+   Start at  11:52:27
+   Duration  102.81s (tests 97%, import 2%)
+

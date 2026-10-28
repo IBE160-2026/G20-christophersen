@@ -2,6 +2,7 @@ import Big from 'big.js'
 import { ListingImportSchema, ListingKeySchema } from '../contracts/listing.ts'
 import type { ListingDraft, ListingField, ListingImport } from '../contracts/listing.ts'
 import { parseFinancialDecimal } from './validation.ts'
+import { financingSuggestion } from './financing.ts'
 import { validateFinancialBasis } from './financial-basis.ts'
 const Decimal = Big()
 Decimal.strict = true
@@ -59,10 +60,15 @@ export function listingSuggestions(draft: ListingDraft) {
   }
   // Engangskostnader må ha eksplisitt inkludering. Kontrollert omkostningstotal er roten.
   let oneOff: string | null = costs
-  const oneOffFields = fields.filter(field => field.category === 'one-off' && field.amount !== null)
+  // Kjente/konfliktfylte originalposter beholdes også når en retting blir blank/ugyldig.
+  const active = (field: ListingField) => {
+    const original = draft.original.fields.find(item => item.id === field.id)!
+    return original.amount !== null || original.status === 'conflict' || original.status === 'available' || Boolean(draft.corrections[field.id]?.rawAmount.trim())
+  }
+  const oneOffFields = fields.filter(field => field.category === 'one-off' && active(field))
   const seen = new Set<string>()
   for (const field of oneOffFields) {
-    if (new Decimal(field.amount!).lt('0') || seen.has(field.id) || !checked(field.id) || field.status !== 'available' || field.includedIn === null) { oneOff = null; break }
+    if (field.amount === null || new Decimal(field.amount).lt('0') || seen.has(field.id) || !checked(field.id) || field.status !== 'available' || field.includedIn === null) { oneOff = null; break }
     seen.add(field.id)
     if (field.id === 'purchaseCosts') {
       if (field.includedIn !== '') oneOff = null
@@ -70,12 +76,12 @@ export function listingSuggestions(draft: ListingDraft) {
     else if (field.includedIn !== 'purchaseCosts' || costs === null || new Decimal(field.amount!).gt(costs)) oneOff = null
   }
   if (costs !== null) {
-    const includedSum = oneOffFields.filter(field => field.includedIn === 'purchaseCosts').reduce((sum, field) => sum.plus(field.amount!), new Decimal('0'))
+    const includedSum = oneOffFields.filter(field => field.amount !== null && field.includedIn === 'purchaseCosts').reduce((sum, field) => sum.plus(field.amount!), new Decimal('0'))
     if (includedSum.gt(costs)) oneOff = null
   }
   if (oneOff === null) issues.push('Engangskostnadenes inkludering må avklares før kontantbehov beregnes.')
   const cashRequired = price !== null && oneOff !== null ? new Decimal(price).plus(oneOff).toFixed() : null
-  const recurring = fields.filter(field => field.category === 'recurring' && field.amount !== null)
+  const recurring = fields.filter(field => field.category === 'recurring' && active(field))
   let D: string | null = null, sharedAnnualPayment: string | null = null, year: string | null = null
   const debtPayment = get('sharedDebtPayment')
   const knownDebtPayment = amount('sharedDebtPayment')
@@ -84,10 +90,10 @@ export function listingSuggestions(draft: ListingDraft) {
     sharedAnnualPayment = new Decimal(knownDebtPayment).times(debtPayment.period === 'month' ? '12' : '1').toFixed()
   }
   const knownOperating = ['commonCosts', 'propertyTax', 'municipalFees'].every(id => amount(id) !== null)
-  const unsplit = recurring.some(field => field.status !== 'available' || !checked(field.id) || field.debtPart === null || field.includedIn === null)
-  if (unsplit) sharedAnnualPayment = null
-  if (draft.completeOperatingCosts && knownOperating && recurring.length > 0 && recurring.every(field => checked(field.id) && field.status === 'available'
-    && field.amount !== null && new Decimal(field.amount).gte('0') && field.debtPart !== null && new Decimal(field.debtPart).gte('0') && field.includedIn !== null && field.year && ['month', 'year'].includes(field.period))) {
+  if (sharedDebt === '0' && knownDebtPayment !== null && new Decimal(knownDebtPayment).gt('0')) sharedAnnualPayment = null
+  let validBreakdown = recurring.length === 0
+  if (recurring.length > 0 && recurring.every(field => checked(field.id) && field.status === 'available'
+    && field.amount !== null && new Decimal(field.amount).gte('0') && field.debtPart !== null && new Decimal(field.debtPart).gte('0') && field.includedIn !== null && field.year !== null && /^\d{4}$/.test(field.year) && ['month', 'year'].includes(field.period))) {
     const years = new Set(recurring.map(field => field.year))
     if (years.size === 1) {
       year = recurring[0]!.year
@@ -100,15 +106,28 @@ export function listingSuggestions(draft: ListingDraft) {
         rawAmount: new Decimal(field.amount!).times(field.period === 'month' ? '12' : '1').toFixed(),
         rawDebt: new Decimal(field.debtPart!).times(field.period === 'month' ? '12' : '1').toFixed(), includedIn: field.includedIn || null })),
       })
-      D = basis.costBreakdown.annualD
+      validBreakdown = basis.costBreakdown.annualD !== null && basis.costBreakdown.annualJ !== null
+      if (draft.completeOperatingCosts && knownOperating && validBreakdown) D = basis.costBreakdown.annualD
       // Egen gjeldspost må avstemmes mot rentedelene, uten ny summering.
-      if (sharedAnnualPayment !== null && basis.costBreakdown.annualJ !== null
-        && !new Decimal(sharedAnnualPayment).eq(basis.costBreakdown.annualJ)) sharedAnnualPayment = null
+      if (sharedAnnualPayment !== null && (basis.costBreakdown.annualJ === null
+        || !new Decimal(sharedAnnualPayment).eq(basis.costBreakdown.annualJ))) sharedAnnualPayment = null
     }
   }
+  if (!validBreakdown) sharedAnnualPayment = null
   if (D === null) issues.push('Full D krever komplett, kontrollert kostnadsinnhold med kjent fordeling, inkludering, periode og år.')
   if (sharedAnnualPayment === null) issues.push('Full J krever kjent betaling av fellesgjeld.')
   return { P, D, year, cashRequired, sharedAnnualPayment, issues }
+}
+
+/** Samme årsvilkår styrer både forhåndsvisning og atomisk bruk. */
+export function listingFinancingSuggestion(draft: ListingDraft, financing: { equity: string; annualInterest: string; months: string; year: string }) {
+  const suggested = listingSuggestions(draft)
+  const result = financingSuggestion({ ...financing, cashRequired: suggested.cashRequired, sharedAnnualPayment: suggested.sharedAnnualPayment })
+  const debt = effectiveListingFields(draft).find(field => field.id === 'sharedDebtPayment')
+  const yearValid = /^\d{4}$/.test(financing.year) && (suggested.sharedAnnualPayment === '0' || debt?.year === financing.year)
+    && (suggested.year === null || suggested.year === financing.year)
+  return { ...result, J: yearValid ? result.J : null,
+    yearIssue: yearValid ? null : 'Oppgi et år for gjeldsbetjening som samsvarer med kontrollerte kostnader og fellesgjeldsbetaling.' }
 }
 
 /** Fast felttilstedeværelse og unik identitet kontrolleres etter runtimekontrakten. */

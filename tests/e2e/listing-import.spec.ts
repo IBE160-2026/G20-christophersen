@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { listingFixture, listingUrl } from '../fixtures/listing/finn.ts'
+import { completeDraft, listingFixture, listingUrl } from '../fixtures/listing/finn.ts'
 
 test('FI-1: deaktivert FINN viser manuell reserveflyt og beholder fire trinn', async ({ page }) => {
   const external: string[] = []
@@ -28,8 +28,21 @@ test('FI-2–FI-6: kildeutkast, retting, kontroll, finansiering og nytt objekt',
     await page.getByRole('checkbox', { name: `Jeg har kontrollert ${id}, inkludert eventuell 0 og motstrid.`, exact: true }).check()
   }
   await expect(page.getByText('Kontantbehov: 3075000 NOK.', { exact: false })).toBeVisible()
-  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('1075000')
+  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('1 075 000,00')
   await expect(page.getByLabel('Egenkapital med slider (NOK)')).toHaveValue('1075000')
+  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('1075000,50')
+  await expect(page.getByLabel('Egenkapital med slider (NOK)')).toHaveValue('1075000.5')
+  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('1075000.555')
+  await expect(page.getByLabel('Egenkapital med slider (NOK)')).toHaveCount(0)
+  await expect(page.getByLabel('Egenkapital (NOK)', { exact: true })).toHaveValue('1075000.555')
+  await expect(page.getByText('Tallfeltet beholder din nøyaktige verdi.', { exact: false })).toBeVisible()
+  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('abc')
+  await expect(page.getByLabel('Egenkapital med slider (NOK)')).toHaveCount(0)
+  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('99999999')
+  await expect(page.getByLabel('Egenkapital med slider (NOK)')).toHaveCount(0)
+  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('')
+  await expect(page.getByLabel('Egenkapital med slider (NOK)')).toHaveCount(0)
+  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('1075000')
   await page.getByLabel('Årsrente (%)', { exact: true }).fill('0')
   await page.getByLabel('Løpetid (måneder)', { exact: true }).fill('240')
   await expect(page.getByText('Månedlig betaling: 8333.33 NOK', { exact: false })).toBeVisible()
@@ -42,7 +55,7 @@ test('FI-2–FI-6: kildeutkast, retting, kontroll, finansiering og nytt objekt',
   await expect(page.locator('#status-P')).toHaveText('Registrert · Ubekreftet')
   await expect(page.locator('#value-D')).toHaveValue('')
   await expect(page.locator('#value-J')).toHaveValue('')
-  await page.locator('#listing-price').fill('2900000')
+  await page.getByLabel('Kontrollert beløp for price (NOK)', { exact: true }).fill('2900000')
   await expect(page.getByText('Original: 3000000 NOK', { exact: false })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Bruk kontrollert grunnlag' })).toBeDisabled()
   // Ubrukt retting rører ikke allerede brukt verdi.
@@ -52,4 +65,48 @@ test('FI-2–FI-6: kildeutkast, retting, kontroll, finansiering og nytt objekt',
   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(listingUrl.replace('476576649', '123'))
   await expect(page.locator('#value-P')).toHaveValue('')
   await expect(page.getByText('Original: 3000000 NOK', { exact: false })).toHaveCount(0)
+})
+
+
+test('review: årsvilkår, entydige felt-ID-er og sperret oppfrisking', async ({ page }) => {
+  const listing = completeDraft().original
+  listing.fields.push({ ...listing.fields[0]!, id: 'note-price', label: 'Ekstra notepris', category: 'informational' })
+  let calls = 0
+  let release!: () => void
+  await page.route('**/api/listing', async route => {
+    const { correlation } = route.request().postDataJSON() as { correlation: unknown }
+    if (++calls === 1) await route.fulfill({ json: { kind: 'listing', correlation, listing } })
+    else { await new Promise<void>(resolve => { release = resolve }); await route.fulfill({ status: 502, json: { kind: 'rejected', code: 'unavailable' } }) }
+  })
+  await page.goto('/')
+  await expect(page.getByText('Live-import fra FINN er deaktivert.', { exact: false })).toBeVisible()
+  await page.getByLabel('FINN-boliglenke', { exact: true }).fill(listingUrl)
+  await page.getByRole('button', { name: 'Hent FINN-grunnlag' }).click()
+  await expect(page.getByText('Original: 5000 NOK', { exact: false })).toBeVisible()
+  await expect(page.getByLabel('Kontrollert beløp for Ekstra notepris (NOK)', { exact: true })).toHaveValue('3000000')
+  await expect(page.getByLabel('Begrunnelse/kilde for retting av price', { exact: true })).toHaveValue('')
+  expect(await page.locator('.listing-import [id]').evaluateAll(elements => new Set(elements.map(element => element.id)).size === elements.length)).toBe(true)
+  for (const control of await page.locator('.listing-field input[type="checkbox"]').all()) await control.check()
+  await page.getByRole('checkbox', { name: 'Jeg har kontrollert at alle eierbetalte driftskostnader er med', exact: false }).check()
+  await page.getByLabel('Egenkapital (NOK)', { exact: true }).fill('1075000')
+  await page.getByLabel('Årsrente (%)', { exact: true }).fill('0')
+  await page.getByLabel('Løpetid (måneder)', { exact: true }).fill('240')
+  const preview = page.getByText('Forslag P:', { exact: false })
+  await expect(preview).toContainText('J: Ukjent')
+  await expect(page.getByText('Oppgi et år for gjeldsbetjening', { exact: false })).toBeVisible()
+  await page.getByLabel('År for gjeldsbetjening', { exact: true }).fill('2025')
+  await expect(preview).toContainText('J: Ukjent')
+  await page.getByLabel('År for gjeldsbetjening', { exact: true }).fill('2026')
+  await expect(preview).toContainText('J: 111999.96')
+  await page.getByRole('button', { name: 'Bruk kontrollert grunnlag' }).click()
+  await expect(page.locator('#value-J')).toHaveValue('111999.96')
+  await page.locator('#value-D').fill('123')
+  await page.getByRole('button', { name: 'Hent FINN-grunnlag' }).click()
+  await expect(page.getByRole('button', { name: 'Bruk kontrollert grunnlag' })).toBeDisabled()
+  await expect(page.getByText('Tidligere importutkast vises som bevis', { exact: false })).toBeVisible()
+  release()
+  await expect(page.getByRole('status').filter({ hasText: 'FINN-import er utilgjengelig' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Bruk kontrollert grunnlag' })).toBeDisabled()
+  await expect(page.locator('#value-D')).toHaveValue('123')
+  await expect(page.locator('#value-P')).toHaveValue('3200000')
 })

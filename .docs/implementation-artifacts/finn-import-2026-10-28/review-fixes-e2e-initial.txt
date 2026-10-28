@@ -1,0 +1,198 @@
+[WebServer] (node:47554) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 47 tests using 4 workers
+
+(node:47562) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47561) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47563) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 tests/e2e/app-shell.spec.ts:70:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (90ms)
+Målt kontrast i bygget app: {"primary":12.809393273675838,"secondary":5.954388456810813,"status":5.206106498145173,"current":6.701109538539959,"border":3.8101786636538826}
+  ✓   4 tests/e2e/app-shell.spec.ts:122:1 › AC4: faktisk typografi, palett, geometri og kontrast følger DESIGN (579ms)
+  ✓   2 tests/e2e/app-shell.spec.ts:47:1 › AC1: eksterne nettforespørsler er sperret mens alle appressurser lastes lokalt (586ms)
+  ✓   1 tests/e2e/app-shell.spec.ts:8:1 › AC1/AC3: bygget skall starter med riktig status og sperret videregang (987ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1440×900 (997ms)
+  ✓   6 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 1280×800 (585ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 720×450 (786ms)
+  ✓   9 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×225 (694ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 640×400 (704ms)
+  ✓  10 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×200 (621ms)
+  ✓  11 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 360×160 (590ms)
+  ✓  14 tests/e2e/app-shell.spec.ts:271:1 › 4.3 startup: invalid or secret-bearing metadata blocks boot without a mode fallback (221ms)
+  ✓  15 tests/e2e/app-shell.spec.ts:280:1 › 4.3 startup: stalled metadata shows status and a bounded safe error (216ms)
+  ✓  12 tests/e2e/app-shell.spec.ts:180:3 › AC4: tastatur, ombryting og fokus uten overlapp ved 320×160 (626ms)
+  ✓  16 tests/e2e/financial-input.spec.ts:5:1 › 1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplisitt periode/år (347ms)
+  ✓  13 tests/e2e/app-shell.spec.ts:255:1 › Story 2.5: faktisk demoserver analyserer én multipart-PDF med backendhash og korrelasjon (1.0s)
+  ✘  19 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 (311ms)
+  ✘  20 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 (276ms)
+(node:47617) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  17 tests/e2e/financial-input.spec.ts:24:1 › 1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjengelig retur (1.0s)
+(node:47620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  22 tests/e2e/financial-input.spec.ts:121:1 › 1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflikt uten automatisk valg (718ms)
+  ✘  21 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 (392ms)
+  ✘  23 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 (330ms)
+  ✓  18 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 1440×900 (1.9s)
+  ✓  24 tests/e2e/financial-input.spec.ts:164:1 › 1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholder brukeropphav etter retting (376ms)
+(node:47642) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47643) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  27 tests/e2e/financial-input.spec.ts:187:1 › 1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og bevarte D/J-totaler (824ms)
+  ✓  25 tests/e2e/financial-input.spec.ts:225:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 360×225 (1.6s)
+  ✓  29 tests/e2e/financial-input.spec.ts:264:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 1440×900 (489ms)
+  ✓  26 tests/e2e/financial-input.spec.ts:225:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 (1.7s)
+  ✓  30 tests/e2e/financial-input.spec.ts:264:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 320×160 (468ms)
+  ✓  28 tests/e2e/financial-input.spec.ts:225:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 1440×900 (2.1s)
+  ✓  32 tests/e2e/financial-input.spec.ts:333:3 › 1.7 AC2/AC6: F3 manglende L viser lokale feil, første berørte felt og krever retting (760ms)
+  ✓  31 tests/e2e/financial-input.spec.ts:294:1 › 1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret retur, retting og øktslutt (1.0s)
+  ✓  33 tests/e2e/financial-input.spec.ts:333:3 › 1.7 AC2/AC6: ugyldig P viser lokale feil, første berørte felt og krever retting (659ms)
+  ✓  34 tests/e2e/financial-input.spec.ts:333:3 › 1.7 AC2/AC6: ulike år viser lokale feil, første berørte felt og krever retting (762ms)
+  ✓  37 tests/e2e/financial-input.spec.ts:403:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1440×900 (747ms)
+  ✓  35 tests/e2e/financial-input.spec.ts:351:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes (1.0s)
+  ✓  36 tests/e2e/financial-input.spec.ts:384:1 › 1.7 AC2: L-konflikt består gjennom forsøk; opphav og ny kontroll må rettes eksplisitt (872ms)
+  ✓  38 tests/e2e/financial-input.spec.ts:403:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1280×800 (814ms)
+  ✓  39 tests/e2e/financial-input.spec.ts:403:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 720×450 (738ms)
+Story 1.7 målt kontrast: {"action":6.701109538539959,"error":7.104296467437304,"issueText":11.601821357499892,"control":3.8101786636538826,"focus":6.701109538539959}
+  ✓  40 tests/e2e/financial-input.spec.ts:403:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 320×200 (678ms)
+  ✓  41 tests/e2e/financial-input.spec.ts:438:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast (849ms)
+  ✓  42 tests/e2e/financial-input.spec.ts:485:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes (719ms)
+  ✓  43 tests/e2e/financial-input.spec.ts:485:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes (730ms)
+  ✓  45 tests/e2e/listing-import.spec.ts:4:1 › FI-1: deaktivert FINN viser manuell reserveflyt og beholder fire trinn (402ms)
+  ✓  44 tests/e2e/financial-input.spec.ts:485:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes (800ms)
+  ✓  46 tests/e2e/listing-import.spec.ts:16:1 › FI-2–FI-6: kildeutkast, retting, kontroll, finansiering og nytt objekt (810ms)
+  ✓  47 tests/e2e/listing-import.spec.ts:67:1 › review: årsvilkår, entydige felt-ID-er og sperret oppfrisking (951ms)
+
+
+  1) tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 450.5
+    Received:    458.453125
+
+       99 |       // Chromium avrunder rulleposisjoner til delpiksler ved svært korte flater.
+      100 |       expect(box!.y - 5).toBeGreaterThanOrEqual(navBox!.y + navBox!.height - 0.5)
+    > 101 |       expect(box!.y + box!.height + 5).toBeLessThanOrEqual(viewport.height + 0.5)
+          |                                        ^
+      102 |       const focus = await control.evaluate((element) => {
+      103 |         const style = getComputedStyle(element)
+      104 |         return { visible: element.matches(':focus-visible'), color: style.outlineColor,
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/financial-input.spec.ts:101:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-input-1-3-UX-fel-b58d2-us-og-ombryting-ved-720×450/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-input-1-3-UX-fel-b58d2-us-og-ombryting-ved-720×450/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-input-1-3-UX-fel-b58d2-us-og-ombryting-ved-720×450/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-input-1-3-UX-fel-b58d2-us-og-ombryting-ved-720×450/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 225.5
+    Received:    233.453125
+
+       99 |       // Chromium avrunder rulleposisjoner til delpiksler ved svært korte flater.
+      100 |       expect(box!.y - 5).toBeGreaterThanOrEqual(navBox!.y + navBox!.height - 0.5)
+    > 101 |       expect(box!.y + box!.height + 5).toBeLessThanOrEqual(viewport.height + 0.5)
+          |                                        ^
+      102 |       const focus = await control.evaluate((element) => {
+      103 |         const style = getComputedStyle(element)
+      104 |         return { visible: element.matches(':focus-visible'), color: style.outlineColor,
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/financial-input.spec.ts:101:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-input-1-3-UX-fel-efd5a-us-og-ombryting-ved-360×225/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-input-1-3-UX-fel-efd5a-us-og-ombryting-ved-360×225/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-input-1-3-UX-fel-efd5a-us-og-ombryting-ved-360×225/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-input-1-3-UX-fel-efd5a-us-og-ombryting-ved-360×225/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 160.5
+    Received:    168.453125
+
+       99 |       // Chromium avrunder rulleposisjoner til delpiksler ved svært korte flater.
+      100 |       expect(box!.y - 5).toBeGreaterThanOrEqual(navBox!.y + navBox!.height - 0.5)
+    > 101 |       expect(box!.y + box!.height + 5).toBeLessThanOrEqual(viewport.height + 0.5)
+          |                                        ^
+      102 |       const focus = await control.evaluate((element) => {
+      103 |         const style = getComputedStyle(element)
+      104 |         return { visible: element.matches(':focus-visible'), color: style.outlineColor,
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/financial-input.spec.ts:101:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-input-1-3-UX-fel-a1410-us-og-ombryting-ved-360×160/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-input-1-3-UX-fel-a1410-us-og-ombryting-ved-360×160/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-input-1-3-UX-fel-a1410-us-og-ombryting-ved-360×160/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-input-1-3-UX-fel-a1410-us-og-ombryting-ved-360×160/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 160.5
+    Received:    168.453125
+
+       99 |       // Chromium avrunder rulleposisjoner til delpiksler ved svært korte flater.
+      100 |       expect(box!.y - 5).toBeGreaterThanOrEqual(navBox!.y + navBox!.height - 0.5)
+    > 101 |       expect(box!.y + box!.height + 5).toBeLessThanOrEqual(viewport.height + 0.5)
+          |                                        ^
+      102 |       const focus = await control.evaluate((element) => {
+      103 |         const style = getComputedStyle(element)
+      104 |         return { visible: element.matches(':focus-visible'), color: style.outlineColor,
+        at /Users/madschristophersen/IBE160/G20-christophersen/tests/e2e/financial-input.spec.ts:101:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/financial-input-1-3-UX-fel-35add-us-og-ombryting-ved-320×160/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/financial-input-1-3-UX-fel-35add-us-og-ombryting-ved-320×160/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/financial-input-1-3-UX-fel-35add-us-og-ombryting-ved-320×160/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/financial-input-1-3-UX-fel-35add-us-og-ombryting-ved-320×160/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 
+    tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 
+    tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 
+    tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 
+  43 passed (11.6s)

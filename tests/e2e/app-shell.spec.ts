@@ -38,7 +38,7 @@ test('AC1/AC3: bygget skall starter med riktig status og sperret videregang', as
   await expect(page.getByRole('heading', { name: 'Registrer finansverdier' })).toBeVisible()
   await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()
   await expect(navigation.getByText('Fullført', { exact: true })).toHaveCount(0)
-  await expect(page.locator('input')).toHaveCount(13)
+  await expect(page.locator('.financial-input input:not(.listing-import input)')).toHaveCount(13)
   await expect(page.locator('select')).toHaveCount(9)
   await expect(page.locator('textarea, form')).toHaveCount(0)
   expect(errors).toEqual([])

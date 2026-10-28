@@ -1,0 +1,9 @@
+Utskrift fra verktøykjøring 2026-10-28:
+Kommando: PATH=/private/tmp/ibe160-story-1-1-runtime/node-v24.21.0-darwin-arm64/bin:$PATH npm exec vitest run tests/unit/listing.test.ts tests/unit/listing-session.test.ts
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ Test Files  2 passed (2)
+      Tests  58 passed (58)
+   Start at  11:47:20
+   Duration  227ms (import 41%, transform 39%, tests 18%, worker 2%)

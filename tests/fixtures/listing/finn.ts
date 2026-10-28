@@ -27,3 +27,17 @@ export function responseFixture(listing = listingFixture()): { status: string; o
     { type: 'message', status: 'completed', content: [{ type: 'output_text', text: JSON.stringify(extraction) }] },
   ] }
 }
+
+export function completeDraft() {
+  const draft = checkedDraft()
+  draft.completeOperatingCosts = true
+  for (const id of ['commonCosts', 'propertyTax', 'municipalFees', 'sharedDebtPayment']) {
+    const field = draft.original.fields.find(item => item.id === id)!
+    field.status = 'available'; field.amount = id === 'commonCosts' ? '5000' : id === 'sharedDebtPayment' ? '1000' : '200'
+    field.source = { url: listingUrl, quote: 'Syntetisk kontrollgrunnlag' }
+    field.debtPart = id === 'commonCosts' || id === 'sharedDebtPayment' ? '1000' : '0'
+    field.includedIn = id === 'commonCosts' ? '' : 'commonCosts'
+    draft.corrections[id] = { rawAmount: field.amount, period: 'month', year: '2026', rawDebtPart: field.debtPart, includedIn: field.includedIn, note: '', reviewed: true }
+  }
+  return draft
+}

@@ -3,9 +3,14 @@ import { createListingDraft, listingSuggestions, validateListingImport, validate
 import { createListingAdapter } from '../../src/backend/listing/adapter.ts'
 import { listingRequest } from '../../src/backend/listing/request.ts'
 import { parseListingResponse } from '../../src/backend/listing/response.ts'
-import { checkedDraft, listingFixture, listingUrl, responseFixture } from '../fixtures/listing/finn.ts'
+import { checkedDraft, completeDraft, listingFixture, listingUrl, responseFixture } from '../fixtures/listing/finn.ts'
 
 describe('FINN-1 URL og kontrollert mapping', () => {
+  it.each(['constructor', 'prototype', 'toString', 'valueOf', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString'])('avviser reservert ekstrafelt-ID %s før utkast/rendering', id => {
+    const listing = listingFixture()
+    listing.fields.push({ ...listing.fields[0]!, id, category: 'informational' })
+    expect(() => validateListingImport(listing)).toThrow()
+  })
   it.each([listingUrl, 'https://finn.no/realestate/homes/ad.html?finnkode=476576649'])('godtar én eksakt annonseidentitet %s', url => expect(validateListingUrl(url)?.listingCode).toBe('476576649'))
   it.each(['http://www.finn.no/realestate/homes/ad/1', 'https://finn.no.evil.test/realestate/homes/ad/1', 'https://user@finn.no/realestate/homes/ad/1', 'https://finn.no:443/realestate/homes/ad/1', 'https://finn.no:8080/realestate/homes/ad/1', 'https://finn.no/car/used/ad/1', 'https://finn.no/realestate/homes/ad/1?finnkode=2', 'https://finn.no/realestate/homes/ad.html?finnkode=1&finnkode=2', 'https://finn.no/realestate/homes/ad/1#2'])('avviser URL før adapter %s', url => expect(validateListingUrl(url)).toBeNull())
   it('fasit P og kontantbehov; dokumentavgift telles én gang; ukjent fordeling blokkerer D/J', () => {
@@ -58,6 +63,36 @@ describe('FINN-1 Responses-kildekontroll', () => {
     expect(request.input).toContain('Første og eneste verktøyhandling skal være open_page')
     expect(request.input).toContain('Ved blokkert eller utilgjengelig side: stopp')
   })
+  it('beholder ugyldige rettinger og null-konflikter som blokkerende kostnader', () => {
+    const draft = completeDraft()
+    draft.original.fields.push({ ...draft.original.fields.find(field => field.id === 'commonCosts')!, id: 'extraCost', amount: '100', includedIn: '' })
+    draft.corrections.extraCost = { rawAmount: 'abc', period: 'month', year: '2026', rawDebtPart: '0', includedIn: '', note: 'Kontrollert', reviewed: true }
+    expect(listingSuggestions(draft)).toMatchObject({ D: null, sharedAnnualPayment: null })
+    const oneOff = checkedDraft()
+    oneOff.original.fields.push({ ...oneOff.original.fields.find(field => field.id === 'documentTax')!, id: 'extraCost', amount: null, status: 'conflict', alternatives: [{ amount: '100', url: listingUrl, quote: 'Motstrid' }] })
+    expect(listingSuggestions(oneOff).cashRequired).toBeNull()
+    expect(listingSuggestions(checkedDraft()).cashRequired).toBe('3075000')
+  })
+  for (const complete of [true, false]) {
+    it.each(['parent', 'cycle', 'split', 'period', 'year', 'different-year'])('ugyldig kostnadsinnhold %s blokkerer J, komplett=' + complete, problem => {
+      const draft = completeDraft(); draft.completeOperatingCosts = complete
+      const correction = draft.corrections.propertyTax!
+      if (problem === 'parent') correction.includedIn = 'does-not-exist'
+      if (problem === 'cycle') draft.corrections.commonCosts!.includedIn = 'propertyTax'
+      if (problem === 'split') correction.rawDebtPart = '999'
+      if (problem === 'period') correction.period = 'unknown'
+      if (problem === 'year') correction.year = ''
+      if (problem === 'different-year') correction.year = '2025'
+      correction.note = 'Kontrollert retting'; draft.corrections.commonCosts!.note = 'Kontrollert retting'
+      expect(listingSuggestions(draft).sharedAnnualPayment).toBeNull()
+    })
+    it('null gjeld med positiv betaling blokkerer J, komplett=' + complete, () => {
+      const draft = completeDraft(); draft.completeOperatingCosts = complete
+      draft.corrections.sharedDebt = { ...draft.corrections.sharedDebt!, rawAmount: '0', note: 'Bekreftet null' }
+      draft.corrections.totalPrice = { ...draft.corrections.totalPrice!, rawAmount: '3075000', note: 'Avstemt total' }
+      expect(listingSuggestions(draft)).toMatchObject({ P: '3000000', sharedAnnualPayment: null })
+    })
+  }
   it('én forespørsel med strict schema, ingen retry; tidsstempler lokal mottakstid', async () => {
     const transport = vi.fn(async () => responseFixture())
     const adapter = createListingAdapter(transport, { now: () => new Date('2026-10-28T12:00:00Z') })

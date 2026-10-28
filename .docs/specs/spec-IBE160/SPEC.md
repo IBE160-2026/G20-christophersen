@@ -36,6 +36,10 @@ separat importgrunnlag/adapter, brukerkontroll og egenkapital/låneforslag med
 deaktivert produksjonsrute. Offline implementering er autorisert; live-aktivering
 og nye betalte forsøk krever fortsatt eget grunnlag. Ingen historisk storyakseptanse endres.
 
+Den godkjente deaktiverte leveransen er nå implementert og kontrollert med
+[uavhengig review, AC-spor og offline regresjon](../../implementation-artifacts/finn-import-2026-10-28/sluttverifikasjon.md).
+Dette dokumenterer implementeringen, uten å lukke live-aktiveringsporten.
+
 ## Why
 
 En privat eiendomsinvestor i Norge trenger å førstevurdere ett allerede funnet boligutleieobjekt og forstå om neste handling er å forkaste, innhente informasjon eller undersøke videre. Kontrollerbare TG2/TG3-funn, bekreftede tall og faste regler skal redusere sammenstillingsarbeid og gjøre usikkerhet synlig. Tidsgevinst er et evalueringsmål; investoren tar selv investeringsbeslutningen.

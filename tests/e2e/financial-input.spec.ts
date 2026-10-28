@@ -75,17 +75,22 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 720, height: 450 
     await page.goto('/')
     const navigation = page.getByRole('navigation')
     const navBox = await navigation.boundingBox()
-    const expectedOrder = [
+    const legacyOrder = [
       'value-P', 'source-kind-P', 'source-P', 'conflict-add-P',
       'value-L', 'period-L', 'year-L', 'source-kind-L', 'source-L', 'rent-nature-L', 'conflict-add-L',
       'value-D', 'period-D', 'year-D', 'source-kind-D', 'source-D', 'conflict-add-D',
       'value-J', 'period-J', 'year-J', 'source-kind-J', 'source-J', 'conflict-add-J',
       'value-Ymin', 'source-kind-Ymin', 'source-Ymin', 'conflict-add-Ymin', 'cost-add', 'confirm-financial',
     ]
-    const controls = page.locator('.financial-input input, .financial-input select, .financial-input button')
-    expect(await controls.count()).toBe(expectedOrder.length)
+    const controls = page.locator('.financial-input :is(input, select, button):not(.listing-import *)')
+    expect(await controls.count()).toBe(legacyOrder.length)
+    await expect(page.locator('.listing-import :is(input, button)')).toHaveCount(2)
+    await expect(page.getByText('Live-import fra FINN er deaktivert.', { exact: false })).toBeVisible()
+    await page.locator('#listing-url').fill('https://www.finn.no/realestate/homes/ad/476576649')
+    const expectedOrder = ['listing-url', 'listing-fetch', ...legacyOrder]
     const ids: string[] = []
     await page.locator('#value-P').focus()
+    await page.locator('#listing-url').focus()
     for (let index = 0; index < expectedOrder.length; index++) {
       const control = page.locator(':focus')
       ids.push(await control.getAttribute('id') ?? '')

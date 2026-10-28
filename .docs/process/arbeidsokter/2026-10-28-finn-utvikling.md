@@ -38,4 +38,41 @@ generell kvalitetsakseptanse eller tilgangstillatelse. Eksisterende S5-W1 og
 S6-kandidat `7e55652c8a172a129ca879596ed7fd1bc2f3b4f8` bevares.
 Ingen push eller betalte API-kall utføres.
 
-Implementering, sluttkontroll og commit dokumenteres her når de foreligger.
+Første implementering: 56 målrettede tester og to nye E2E bestod.
+Implementeringsbevis ligger i
+[FINN-verifikasjonsmappen](../../implementation-artifacts/finn-import-2026-10-28/implementering-og-verifikasjon.md).
+Første browserprøve med riktig Chromium fant en faktisk fetch-bindingfeil;
+rettingen og første feilen er dokumentert der. Manglende standardbrowser og
+sandboxens EPERM ved loopback er skilt fra produktfeil.
+
+Hovedøkten kjørte deretter full Vitest (44 filer / 1145 tester bestod), alle
+37 komponenttester (bestod) og bred E2E (193 bestod, seks feilet på gamle
+kontrollantall etter nytt FINN-felt/knapp; dev-delen startet derfor ikke).
+Første feilede løp bevares i verifikasjonsmappen. Tester for tidligere
+finansfelters fokus/ombryting beholdes og avgrenses presist, mens FINN får
+egen fokusprøve.
+
+Tre uavhengige, kontekstfrie BMAD-reviewere leste samme diff. Alle svar ble
+mottatt før hovedagenten graderte hvert enkelt funn. Ett funn ble avkreftet
+ved egen reproduksjon; øvrige funn er konkrete rettinger i godkjent omfang.
+[Reviewsporet](../../implementation-artifacts/finn-import-2026-10-28/review.md)
+og specens individuelle triage bevarer også feil/duplikater fra reviewet.
+Rettelsene gjelder manglende/ugyldige kostnader, gjeldskonflikt, manuelle
+periode-/årsendringer, refresh, slider, årsvakt, DOM-identitet og testgap.
+
+Sluttkontroll bestod: 44 filer / 1176 Vitest, 37 komponenter, 200 bygde E2E
+og tre dev-prøver. Siste felt-ID-vakt fikk full ny Vitest, bygg/typekontroll,
+lint og tre berørte FINN-E2E. To 5000 ms HTTP-tidsavbrudd under samtidig
+browserkjøring er bevart; uendrede grenser bestod alene. Ingen timingkrav
+ble økt. Reservert ID toString ble konkret reprodusert som krasj og fikk
+kontraktvakt + åtte testvarianter. Godkjent frozen-scope er kontrollert uendret.
+
+[Sluttverifikasjonen](../../implementation-artifacts/finn-import-2026-10-28/sluttverifikasjon.md)
+samler AC, bevis, review og før-live-porter. Ni beskyttede filer er byteidentiske
+med baseline, og opprinnelig deferred-work er bevart som prefix. Ingen historisk
+story, S5-waiver, S6-overlevering eller eldre promptlogg er omskrevet.
+
+Første lokale kode-/beviscommit med aktiv promptlogg:
+`6df0ec23481b662208e28968d736fa657b4d0849`. Reviewrettinger og endelige bevis
+lagres i en egen påfølgende lokal commit; commitidentiteten fremgår av Git
+og sluttrapporten. Ingen push eller betalte prosjekt-API-kall i denne økten.

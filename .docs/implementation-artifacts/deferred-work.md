@@ -300,3 +300,10 @@ S5-W1 og S6-status endres ikke.
 Importmotor, kontrollert feltmapping og UI bygges/testes uten betalte kall.
 Det tidligere `open_page`-forsøket er teknisk bevis; aktiveringsporten står åpen.
 Dette supplerer opprinnelig NO-GO for automatisk henting, og lukker ikke FINN-1.
+
+**Leveranse 2026-10-28:** Godkjent deaktivert import er implementert, uavhengig
+reviewet og offline-verifisert. Se [AC-spor, testutskrifter og gjenværende porter](finn-import-2026-10-28/sluttverifikasjon.md).
+Første implementering med aktiv promptlogg er bevart i commit
+`6df0ec23481b662208e28968d736fa657b4d0849`; reviewrettinger følger separat.
+**Status er fortsatt Åpen:** faktisk live-aktivering/kildekvalitet og nytt
+relevant leveringsgrunnlag gjenstår. Ingen historisk oppføring lukkes her.

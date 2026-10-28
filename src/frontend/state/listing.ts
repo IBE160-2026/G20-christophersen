@@ -2,7 +2,7 @@ import type { ListingCorrelation, ListingDraft } from '../../contracts/listing.t
 export interface ListingState {
   url: string; objectCode: string | null; generation: number; status: 'idle' | 'loading' | 'ready' | 'failed'
   active: ListingCorrelation | null; draft: ListingDraft | null; error: string | null
-  applied: { draft: ListingDraft; financing: ListingState['financing']; D: string | null; J: string | null; sourceD: string; sourceJ: string } | null
+  applied: { draft: ListingDraft; financing: ListingState['financing']; D: string | null; J: string | null; periodD: string; yearD: string; periodJ: string; yearJ: string; sourceD: string; sourceJ: string } | null
   financing: { equity: string; annualInterest: string; months: string; year: string }
 }
 export function createListingState(): ListingState {

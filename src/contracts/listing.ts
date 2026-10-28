@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const ListingDecimalSchema = z.string().max(80).regex(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)
 export const ListingKeySchema = z.enum(['price', 'totalPrice', 'purchaseCosts', 'documentTax', 'sharedDebt', 'commonCosts', 'propertyTax', 'municipalFees', 'sharedDebtPayment'])
 export const ListingFieldSchema = z.strictObject({
-  id: z.string().min(1).max(80).regex(/^(?!constructor$|prototype$)[a-z][a-zA-Z0-9-]*$/), label: z.string().min(1).max(200),
+  id: z.string().min(1).max(80).regex(/^(?!(?:constructor|prototype|toString|valueOf|hasOwnProperty|isPrototypeOf|propertyIsEnumerable|toLocaleString)$)[a-z][a-zA-Z0-9-]*$/), label: z.string().min(1).max(200),
   category: z.enum(['price', 'one-off', 'recurring', 'informational']),
   status: z.enum(['available', 'missing', 'unavailable', 'conflict']),
   amount: ListingDecimalSchema.nullable(), currency: z.literal('NOK'),

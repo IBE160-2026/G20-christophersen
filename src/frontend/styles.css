@@ -451,8 +451,12 @@ h1 {
 /* FINN-utkastet er en del av første trinn, med samme kontrollrytme som manuell registrering. */
 .listing-import { padding: 1.25rem; margin-block: 1.5rem; border: 1px solid var(--border, #c7ccd1); border-radius: .5rem; }
 .listing-import > input, .listing-import > label, .listing-field > input, .listing-field > label, .listing-field > select { display: block; max-width: 100%; margin-block: .5rem; }
-.listing-import input:not([type="checkbox"]), .listing-import select { width: min(100%, 34rem); padding: .6rem; }
+.listing-import input:not([type="checkbox"]), .listing-import select { width: min(100%, 34rem); min-height: var(--control-height); padding: var(--space-1) var(--space-2); border: 1px solid var(--border-control); border-radius: var(--radius-md); background: var(--surface-main); }
 .listing-import input[type="checkbox"] { margin-inline-end: .5rem; }
 .listing-field { min-width: 0; margin-block: 1rem; padding: 1rem; border: 1px solid #b8c3cb; }
 .listing-field p, .listing-import a { overflow-wrap: anywhere; }
 .listing-import button { margin-block: .7rem; }
+.listing-import input, .listing-import select { scroll-margin-block: 40px var(--space-2); }
+@media (max-height: 200px) {
+  .listing-import input, .listing-import select { scroll-margin-block: var(--space-2); }
+}

@@ -1,7 +1,6 @@
 import { ListingResponseSchema } from '../../contracts/listing.ts'
 import type { ListingCorrelation, ListingCorrection } from '../../contracts/listing.ts'
-import { createListingDraft, listingSuggestions, validateListingImport, validateListingUrl } from '../../domain/listing.ts'
-import { financingSuggestion } from '../../domain/financing.ts'
+import { createListingDraft, listingFinancingSuggestion, listingSuggestions, validateListingImport, validateListingUrl } from '../../domain/listing.ts'
 import { createListingState } from './listing.ts'
 import type { ListingState } from './listing.ts'
 import { createReportState, findingListAssessment, reportReducer } from './report.ts'
@@ -114,7 +113,7 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
   if (action.type === 'listing-url') {
     if (state.listing.url === action.url) return state
     const identity = validateListingUrl(action.url)
-    const listing = { ...state.listing, url: action.url, active: null, status: state.listing.draft ? 'ready' as const : 'idle' as const, generation: state.listing.generation + 1, error: null }
+    const listing = { ...state.listing, url: action.url, active: null, status: state.listing.status === 'ready' ? 'ready' as const : state.listing.status === 'failed' ? 'failed' as const : 'idle' as const, generation: state.listing.generation + 1, error: null }
     if (!identity || identity.listingCode === state.listing.objectCode) return { ...state, listing }
     const clean = createInitialSession(state.report.mode)
     return invalidate(state, { financial: clean.financial, sources: clean.sources, costItems: [],
@@ -136,7 +135,7 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
     try {
       const original = validateListingImport(parsed.data.listing)
       if (original.listingCode !== validateListingUrl(state.listing.url)?.listingCode) return fail()
-      return { ...state, listing: { ...state.listing, status: 'ready', active: null, error: null, draft: createListingDraft(original) } }
+      return { ...state, listing: { ...state.listing, status: 'ready', active: null, error: null, draft: state.listing.draft ? { ...createListingDraft(original), corrections: Object.fromEntries(Object.entries(state.listing.draft.corrections).map(([id, correction]) => [id, { ...correction, reviewed: false }])) } : createListingDraft(original) } }
     } catch { return fail() }
   }
   if (action.type === 'listing-correction') {
@@ -149,20 +148,17 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
   if (action.type === 'listing-financing') return { ...state, listing: { ...state.listing,
     financing: { ...state.listing.financing, [action.field]: action.value } } }
   if (action.type === 'listing-apply') {
-    if (!state.listing.draft) return state
+    if (!state.listing.draft || state.listing.status !== 'ready') return state
     const suggested = listingSuggestions(state.listing.draft)
     if (suggested.P === null) return state
-    const financing = financingSuggestion({ ...state.listing.financing, cashRequired: suggested.cashRequired, sharedAnnualPayment: suggested.sharedAnnualPayment })
+    const financing = listingFinancingSuggestion(state.listing.draft, state.listing.financing)
     const year = state.listing.financing.year
-    // Året for fellesgjeldsbetalingen og alle driftskostnader må samsvare med forutsetningen.
-    const debtField = state.listing.draft.original.fields.find(field => field.id === 'sharedDebtPayment')
-    const debtYear = state.listing.draft.corrections.sharedDebtPayment?.year ?? debtField?.year
-    const J = /^\d{4}$/.test(year) && (suggested.sharedAnnualPayment === '0' || debtYear === year) ? financing.J : null
+    const J = financing.J
     const correctionNotes = Object.entries(state.listing.draft.corrections).filter(([, correction]) => correction.note.trim()).map(([id, correction]) => `${id}: ${correction.note.trim()}`).join('; ')
     const source = { kind: 'source' as const, description: `Kontrollert FINN ${state.listing.draft.original.url}, hentet ${state.listing.draft.original.fetchedAt}. ${correctionNotes ? `Brukerrettinger: ${correctionNotes}. ` : ''}Original og rettinger er bevart i brukt importgrunnlag.`, conflict: null }
     const applied = state.listing.applied
-    const ownsD = applied?.D != null && applied.D === state.financial.D.rawValue && applied.sourceD === JSON.stringify(state.sources.D)
-    const ownsJ = applied?.J != null && applied.J === state.financial.J.rawValue && applied.sourceJ === JSON.stringify(state.sources.J)
+    const ownsD = applied?.D != null && applied.D === state.financial.D.rawValue && applied.sourceD === JSON.stringify(state.sources.D) && applied.periodD === state.financial.D.period && applied.yearD === state.financial.D.year
+    const ownsJ = applied?.J != null && applied.J === state.financial.J.rawValue && applied.sourceJ === JSON.stringify(state.sources.J) && applied.periodJ === state.financial.J.period && applied.yearJ === state.financial.J.year
     const useD = suggested.D !== null && (state.financial.D.rawValue.trim() === '' || ownsD)
     const useJ = J !== null && (state.financial.J.rawValue.trim() === '' || ownsJ)
     const clearD = ownsD && suggested.D === null
@@ -179,6 +175,7 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
       ...(useJ ? { J: { kind: 'assumption' as const, description: `${source.description} Egenkapital ${state.listing.financing.equity}, rente ${state.listing.financing.annualInterest} %, ${state.listing.financing.months} måneder; øreavrundet månedsbetaling.`, conflict: null } } : {}),
     } }, fields)
     return { ...next, listing: { ...next.listing, applied: { draft: state.listing.draft, financing: { ...state.listing.financing },
+      periodD: useD ? next.financial.D.period : applied?.periodD ?? '', yearD: useD ? next.financial.D.year : applied?.yearD ?? '', periodJ: useJ ? next.financial.J.period : applied?.periodJ ?? '', yearJ: useJ ? next.financial.J.year : applied?.yearJ ?? '',
       D: useD ? suggested.D : clearD ? null : applied?.D ?? null, J: useJ ? J : clearJ ? null : applied?.J ?? null, sourceD: useD ? JSON.stringify(next.sources.D) : applied?.sourceD ?? '', sourceJ: useJ ? JSON.stringify(next.sources.J) : applied?.sourceJ ?? '' } } }
   }
   if (action.type === 'report-start' && (!isFinancialConfirmed(state) || state.currentStep === 'tallgrunnlag')) return state

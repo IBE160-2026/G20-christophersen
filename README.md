@@ -1,5 +1,10 @@
 # Property Acquisition Agent — IBE160, G20
 
+> **Produktretning 2026-10-28:** Salgsoppgave er besluttet som ny hovedinngang.
+> Funksjonen er under [Correct Course-avklaring](.docs/planning-artifacts/sprint-change-proposal-2026-10-28.md) og er ikke implementert ennå.
+> FINN videreutvikles eller live-aktiveres ikke nå. Kjøreoppskriften nedenfor
+> gjelder den eksisterende leveransen.
+
 Lokal førstevurdering av **ett boligutleieobjekt**, laget for investorens tidlige sortering. Brukeren registrerer og kontrollerer økonomiske forutsetninger, leser tilstandsrapportens original, kontrollerer TG2/TG3-funn og får en kodebestemt anbefaling: **Gå videre**, **Forkast** eller **Innhent mer informasjon**. Beregningene er bruttoyield, NOI, nettoyield og kontantstrøm før skatt. Investoren tar beslutningen; dette er ingen teknisk godkjenning eller komplett investeringsanalyse.
 
 Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rapporter, menneskelig kontroll/korrigering, separat TG3-avklaring og revisjonsbundet resultat. Uttrekkene er kontrollerte fiktive demodata, skrevet for demoen; de stammer ikke fra en faktisk KI-/live-kjøring. Demo er standard og krever **ingen API-nøkkel, miljøfil, konto eller betalt tjeneste**. Live-integrasjonen bruker samme kontroll- og resultatflyt.

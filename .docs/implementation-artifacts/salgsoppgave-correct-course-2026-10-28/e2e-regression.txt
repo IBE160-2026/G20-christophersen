@@ -1,0 +1,28 @@
+[WebServer] (node:99356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 13 tests using 4 workers
+
+(node:99414) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:99411) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:99412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:99413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 tests/e2e/listing-import.spec.ts:162:3 › FINN-2: configuration has a safe gate message and manual fallback (913ms)
+  ✓   2 tests/e2e/listing-import.spec.ts:9:1 › FI-1: deaktivert FINN viser manuell reserveflyt og beholder fire trinn (918ms)
+  ✓   6 tests/e2e/listing-import.spec.ts:162:3 › FINN-2: already-attempted has a safe gate message and manual fallback (416ms)
+  ✓   5 tests/e2e/listing-import.spec.ts:162:3 › FINN-2: busy has a safe gate message and manual fallback (428ms)
+  ✓   4 tests/e2e/listing-import.spec.ts:132:1 › FINN-2: asynchronous import and controlled apply preserve manual P/D/J (1.4s)
+  ✓   1 tests/e2e/listing-import.spec.ts:21:1 › FI-2–FI-6: kildeutkast, retting, kontroll, finansiering og nytt objekt (1.7s)
+  ✓   7 tests/e2e/listing-import.spec.ts:173:1 › FINN-2: an unknown-price draft uses neutral ready wording (414ms)
+  ✓   8 tests/e2e/listing-import.spec.ts:188:1 › opptak 476576649: gammel råkontrakt avvises uten oppdiktet utfylling (408ms)
+  ✓  11 tests/e2e/report-analysis.spec.ts:372:1 › Story 4.3 demo — felles kontrollflyt › 2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/zoom og beholdt fokus (2.6s)
+  ✓   9 tests/e2e/listing-import.spec.ts:203:1 › opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF og resultat (3.4s)
+  ✓  10 tests/e2e/report-analysis.spec.ts:83:1 › Story 4.3 demo — felles kontrollflyt › 2.6 AC1/4/5/6: faktisk HTTP/adapter, ett kall, originalhash, synlighetsgrense og finansgjenbruk (3.0s)
+  ✓  12 tests/e2e/report-analysis.spec.ts:83:1 › Story 4.3 live — felles kontrollflyt › 2.6 AC1/4/5/6: faktisk HTTP/adapter, ett kall, originalhash, synlighetsgrense og finansgjenbruk (3.0s)
+  ✓  13 tests/e2e/report-analysis.spec.ts:372:1 › Story 4.3 live — felles kontrollflyt › 2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/zoom og beholdt fokus (1.9s)
+
+  13 passed (8.3s)

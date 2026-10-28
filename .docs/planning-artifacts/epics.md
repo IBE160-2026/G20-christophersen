@@ -37,6 +37,13 @@ inputDocuments:
 
 # Property Acquisition Agent — Epic Breakdown
 
+> **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
+> FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
+> Se [Correct Course, endringsforslag og implementeringsspec](sprint-change-proposal-2026-10-28.md).
+> Retningen er besluttet; PDF-/OCR-/AI-valgene D1–D3 avventer avklaring før
+> produktimplementering. Teksten nedenfor bevarer tidligere versjonsgrunnlag;
+> finans-/screeningregler og historiske S5/S6-bevis endres ikke.
+
 ## Overview
 
 Kravuttaket og den reviderte fem-epic-strukturen er bekreftet av Mads med C. Strukturen er låst med de godkjente forbedringene og presiseringen av faktisk live KI-analyse i v1. Mads har godkjent alle 37 stories: 1.1–1.7, 2.1–2.11, 3.1–3.9, 4.1–4.5 og 5.1–5.5. Alle er innarbeidet nedenfor med 188 akseptansekriterier. Avsluttende deknings-/strukturvalidering er bestått; implementation readiness er CONCERNS med dokumenterte gjennomføringsporter før berørte stories. [Kontrollrapporten](implementation-readiness.md) viser kravdekning, avhengigheter og åpne avklaringer. BMAD-workflowen er avsluttet etter Mads’ terminale C-godkjenning 2026-10-16; readiness-forbeholdene og gjennomføringsportene gjelder fortsatt. Ingen produktimplementering er startet.

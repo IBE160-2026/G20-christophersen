@@ -1,0 +1,9 @@
+{
+  "baseline": "b259207",
+  "tracked_guard_files": 85,
+  "all_byte_identical": true,
+  "deferred_work_original_prefix_unchanged": true,
+  "guards": "All src plus package/lock, sprint-status, S5 waiver, S6 handoff",
+  "all_existing_tests_unchanged": true,
+  "all_existing_implementation_evidence_except_ledger_unchanged": true
+}

@@ -196,6 +196,13 @@ components:
 
 # Property Acquisition Agent — Design
 
+> **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
+> FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
+> Se [Correct Course, endringsforslag og implementeringsspec](../../sprint-change-proposal-2026-10-28.md).
+> Retningen er besluttet; PDF-/OCR-/AI-valgene D1–D3 avventer avklaring før
+> produktimplementering. Teksten nedenfor bevarer tidligere versjonsgrunnlag;
+> finans-/screeningregler og historiske S5/S6-bevis endres ikke.
+
 ## Brand & Style
 
 Et rolig, institusjonelt arbeidsverktøy for førstevurdering av eiendom. Presisjon, kontroll og lesbarhet bærer uttrykket: lys flate, grafitt som struktur, luft mellom informasjonsgrupper og kompakte data der det hjelper arbeidet. KI presenteres som én delprosess. Resultat skal oppleves som et kort investeringsnotat med anbefaling først, uten å overta brukerens investeringsbeslutning.

@@ -7,6 +7,13 @@ updated: 2026-10-08
 
 # Product Brief: Property Acquisition Agent
 
+> **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
+> FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
+> Se [Correct Course, endringsforslag og implementeringsspec](../../sprint-change-proposal-2026-10-28.md).
+> Retningen er besluttet; PDF-/OCR-/AI-valgene D1–D3 avventer avklaring før
+> produktimplementering. Teksten nedenfor bevarer tidligere versjonsgrunnlag;
+> finans-/screeningregler og historiske S5/S6-bevis endres ikke.
+
 ## Sammendrag og visjon
 
 Property Acquisition Agent skal hjelpe en eiendomsinvestor i Norge å prioritere hvilke utleieobjekter som fortjener videre undersøkelse. Den langsiktige visjonen er å sammenstille dokumenter, økonomi, marked og risiko til et sporbart beslutningsgrunnlag for investeringer med løpende avkastning og forbedringspotensial.

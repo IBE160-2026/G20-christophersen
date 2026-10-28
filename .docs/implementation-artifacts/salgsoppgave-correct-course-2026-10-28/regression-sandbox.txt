@@ -1,0 +1,147 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/integration/live-http.test.ts (7 tests | 7 failed) 26ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline empty.pdf, durable duplicate and safe mode metadata 11ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline transport.pdf, durable duplicate and safe mode metadata 6ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline invalid.pdf, durable duplicate and safe mode metadata 3ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline incomplete.pdf, durable duplicate and safe mode metadata 1ms
+   × 4.3 AC3: production missing key is safe live failure after document gate, never fallback 1ms
+   × 4.3 AC5: abort terminates actual live child before lock release and marker survives 4ms
+   × 4.3 AC2: production HTTP/SDK preserves nonempty findings and source uncertainty 1ms
+ ❯ tests/integration/server-mode.test.ts (3 tests | 2 failed) 2996ms
+   × 4.3: actual server entry with ANALYSIS_MODE=(unset) 1307ms
+   × 4.3: actual server entry with ANALYSIS_MODE=live 1350ms
+ ❯ tests/integration/http-analysis.test.ts (22 tests | 21 failed) 4512ms
+   ❯ Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp (22)
+     × F1 følger faktisk PDF og uavhengig fasit med ett adapterkall 10ms
+     × F2 følger faktisk PDF og uavhengig fasit med ett adapterkall 2ms
+     × F3 følger faktisk PDF og uavhengig fasit med ett adapterkall 0ms
+     × F4 følger faktisk PDF og uavhengig fasit med ett adapterkall 0ms
+     × navn og MIME er bare metadata, feil signatur/container er dokumentfeil 0ms
+     × avviser ugyldig korrelasjon, ingen/flere filer og skjulte metadata 0ms
+     × metadata 1 MiB er innen grensen, én byte over 413; base64 og ekstra JSON-felt behandles aldri 0ms
+     × PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked 0ms
+     × vilkårlige chunks og falsk boundary bevarer originalbytehash 0ms
+     × aktiv lås gjelder under upload med andre requestId/generasjon og slipper etter abort 0ms
+     × http-adapter-failure.ts gir trygg feil uten retry og beholder markør 0ms
+     × http-adapter-invalid.ts gir trygg feil uten retry og beholder markør 0ms
+     × aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon 0ms
+     × without-text-layer.pdf blir dokumentfeil uten adaptertillatelse eller varig markør 0ms
+     × text-31-pages.pdf blir dokumentfeil uten adaptertillatelse eller varig markør 0ms
+     × cleanup-feil i parser eier fortsatt workertråder som termineres med prosessen 0ms
+     × klientabort under parser stopper synkront heng og lar samme session starte igjen 0ms
+     × én reell 60 s-frist stopper parserheng, adapterheng og sen retur etter flere steg 7ms
+     × serverstopp venter på faktisk cleanup av en request med hengende adapter 1ms
+     × 413 når fram mens chunked-klienten fremdeles forsøker å skrive overgrense 0ms
+     × klientabort under adapter terminerer prosessen og beholder duplikatsperre 1ms
+ ❯ tests/integration/listing-http.test.ts (7 tests | 7 failed) 18ms
+   × FI-1: deaktivert kanal gjør ingen ekstern transport selv med injisert adapter 10ms
+   × kontrollert adapter returnerer validert grunnlag og korrelasjon 4ms
+   × avviser ugyldig URL, credentials, port og overstor kropp før adapter 1ms
+   × feil side og ufullført handling blir trygg avvisning uten intern feildetalj 1ms
+   × FINN-2: gate-approved production backend uses stubbed SDK and returns retained-attempt status 2ms
+   × FINN-2: incomplete operator approvals return safe configuration status without key access 0ms
+   × FINN-2: concurrent request returns busy without consuming the other code 0ms
+ ❯ tests/integration/http-analysis-review.test.ts (2 tests | 1 failed) 5674ms
+   ❯ Story 2.5 – uavhengige HTTP-/ressursprøver i review (2)
+     × tolv samtidige starter under delvis upload avvises, og serverstopp drenerer upload uten parserstart 5004ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 38 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/http-analysis-review.test.ts > Story 2.5 – uavhengige HTTP-/ressursprøver i review > tolv samtidige starter under delvis upload avvises, og serverstopp drenerer upload uten parserstart
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/http-analysis-review.test.ts:12:3
+     10|
+     11| describe('Story 2.5 – uavhengige HTTP-/ressursprøver i review', () => {
+     12|   it('tolv samtidige starter under delvis upload avvises, og serversto…
+       |   ^
+     13|     const events: LifecycleEvent[] = []
+     14|     const router = createAnalysisRouter({ onLifecycle: event => events…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/38]⎯
+
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F1 følger faktisk PDF og uavhengig fasit med ett adapterkall
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F2 følger faktisk PDF og uavhengig fasit med ett adapterkall
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F3 følger faktisk PDF og uavhengig fasit med ett adapterkall
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F4 følger faktisk PDF og uavhengig fasit med ett adapterkall
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > navn og MIME er bare metadata, feil signatur/container er dokumentfeil
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > avviser ugyldig korrelasjon, ingen/flere filer og skjulte metadata
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > metadata 1 MiB er innen grensen, én byte over 413; base64 og ekstra JSON-felt behandles aldri
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > vilkårlige chunks og falsk boundary bevarer originalbytehash
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > aktiv lås gjelder under upload med andre requestId/generasjon og slipper etter abort
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > http-adapter-failure.ts gir trygg feil uten retry og beholder markør
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > http-adapter-invalid.ts gir trygg feil uten retry og beholder markør
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > without-text-layer.pdf blir dokumentfeil uten adaptertillatelse eller varig markør
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > text-31-pages.pdf blir dokumentfeil uten adaptertillatelse eller varig markør
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > cleanup-feil i parser eier fortsatt workertråder som termineres med prosessen
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > klientabort under parser stopper synkront heng og lar samme session starte igjen
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > én reell 60 s-frist stopper parserheng, adapterheng og sen retur etter flere steg
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > serverstopp venter på faktisk cleanup av en request med hengende adapter
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > 413 når fram mens chunked-klienten fremdeles forsøker å skrive overgrense
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > klientabort under adapter terminerer prosessen og beholder duplikatsperre
+ FAIL  tests/integration/listing-http.test.ts > FI-1: deaktivert kanal gjør ingen ekstern transport selv med injisert adapter
+ FAIL  tests/integration/listing-http.test.ts > kontrollert adapter returnerer validert grunnlag og korrelasjon
+ FAIL  tests/integration/listing-http.test.ts > avviser ugyldig URL, credentials, port og overstor kropp før adapter
+ FAIL  tests/integration/listing-http.test.ts > feil side og ufullført handling blir trygg avvisning uten intern feildetalj
+ FAIL  tests/integration/listing-http.test.ts > FINN-2: gate-approved production backend uses stubbed SDK and returns retained-attempt status
+ FAIL  tests/integration/listing-http.test.ts > FINN-2: incomplete operator approvals return safe configuration status without key access
+ FAIL  tests/integration/listing-http.test.ts > FINN-2: concurrent request returns busy without consuming the other code
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline empty.pdf, durable duplicate and safe mode metadata
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline transport.pdf, durable duplicate and safe mode metadata
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline invalid.pdf, durable duplicate and safe mode metadata
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline incomplete.pdf, durable duplicate and safe mode metadata
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC3: production missing key is safe live failure after document gate, never fallback
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC5: abort terminates actual live child before lock release and marker survives
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC2: production HTTP/SDK preserves nonempty findings and source uncertainty
+Error: listen EPERM: operation not permitted 127.0.0.1
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/38]⎯
+
+ FAIL  tests/integration/server-mode.test.ts > 4.3: actual server entry with ANALYSIS_MODE=(unset)
+ FAIL  tests/integration/server-mode.test.ts > 4.3: actual server entry with ANALYSIS_MODE=live
+Error: Server stopped before startup
+ ❯ tests/integration/server-mode.test.ts:28:62
+     26|         return
+     27|       }
+     28|       await Promise.race([started, closed.then(() => { throw new Error…
+       |                                                              ^
+     29|         new Promise<never>((_resolve, reject) => { timer = setTimeout(…
+     30|       clearTimeout(timer)
+ ❯ tests/integration/server-mode.test.ts:28:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/38]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:2306:21
+ ❯ listenInCluster node:net:2437:12
+ ❯ node:net:2666:7
+ ❯ process.processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/integration/http-analysis-review.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "tolv samtidige starter under delvis upload avvises, og serverstopp drenerer upload uten parserstart". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  5 failed | 40 passed (45)
+      Tests  38 failed | 1186 passed (1224)
+     Errors  1 error
+   Start at  21:54:11
+   Duration  15.60s (tests 91%, import 7%, transform 1%)
+

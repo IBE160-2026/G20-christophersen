@@ -1,0 +1,15 @@
+{
+  "frontmatter_unchanged": [
+    ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+    ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+    ".docs/planning-artifacts/epics.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+    ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md",
+    ".docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md",
+    ".docs/specs/spec-IBE160/SPEC.md"
+  ],
+  "passed": true,
+  "markdown_files_checked": 15,
+  "missing_local_links": [],
+  "git_diff_check": "documentation and test source passed; raw command outputs preserve original whitespace; PDFs are binary"
+}

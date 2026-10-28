@@ -24,6 +24,13 @@ companions: [.memlog.md]
 
 # Architecture Spine — Property Acquisition Agent
 
+> **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
+> FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
+> Se [Correct Course, endringsforslag og implementeringsspec](../../sprint-change-proposal-2026-10-28.md).
+> Retningen er besluttet; PDF-/OCR-/AI-valgene D1–D3 avventer avklaring før
+> produktimplementering. Teksten nedenfor bevarer tidligere versjonsgrunnlag;
+> finans-/screeningregler og historiske S5/S6-bevis endres ikke.
+
 ## Design Paradigm
 
 **Functional core / imperative shell:** rene TypeScript-moduler eier validering, årsnormalisering, finans og screening; React eier aktiv økt og UX; en liten Express-backend eier PDF- og KI-I/O. Hele v1 leveres som én lokal webapp med sekvensiell pipeline.

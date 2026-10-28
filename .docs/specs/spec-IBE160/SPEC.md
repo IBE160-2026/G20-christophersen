@@ -22,6 +22,13 @@ sources:
 
 # Property Acquisition Agent — spesifikasjon for v1
 
+> **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
+> FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
+> Se [Correct Course, endringsforslag og implementeringsspec](../../planning-artifacts/sprint-change-proposal-2026-10-28.md).
+> Retningen er besluttet; PDF-/OCR-/AI-valgene D1–D3 avventer avklaring før
+> produktimplementering. Teksten nedenfor bevarer tidligere versjonsgrunnlag;
+> finans-/screeningregler og historiske S5/S6-bevis endres ikke.
+
 Denne SPEC-en og alle filene i `companions:` utgjør den samlede kontrakten som neste BMAD-fase skal lese. SPEC er destillert fra beslutningsloggen med siterte kilder; de adopterte dokumentene beholder eierskapet til krav, UX og arkitektur. Final ARCHITECTURE-SPINE er en obligatorisk kompanjong med stabile AD-1–AD-10; R2-kompanjongen konkretiserer den utsatte lesbarhetsregelen 2026-10-20.
 
 ## Prioritert tillegg 2026-10-28

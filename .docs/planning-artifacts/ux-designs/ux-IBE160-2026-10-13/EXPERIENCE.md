@@ -17,6 +17,13 @@ sources:
 
 # Property Acquisition Agent — Experience
 
+> **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
+> FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
+> Se [Correct Course, endringsforslag og implementeringsspec](../../sprint-change-proposal-2026-10-28.md).
+> Retningen er besluttet; PDF-/OCR-/AI-valgene D1–D3 avventer avklaring før
+> produktimplementering. Teksten nedenfor bevarer tidligere versjonsgrunnlag;
+> finans-/screeningregler og historiske S5/S6-bevis endres ikke.
+
 ## Foundation
 
 Desktop-web for én aktuell førstevurdering om gangen. [DESIGN.md](DESIGN.md) er referansen for visuell identitet; dette dokumentet eier atferd, kontroll, gyldighet og tilstander. UI-system og teknologistakk er ikke valgt. Kilder arves gjennom `sources`; den ferdigstilte PRD-en beholder finansregler, anbefalingsprioritet og v1-scope. Krav kopieres ikke til en ny produktspesifikasjon her.

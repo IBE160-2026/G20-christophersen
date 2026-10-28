@@ -335,3 +335,28 @@ prosjektet og kjente belastninger; beregnet forbruk USD 0,137787 og rest mot
 oppgitt USD 2-grense USD 1,862213. Dette er ikke administrativ saldoavlesning.
 FINN-1 forblir **Åpen**: dokumentert FINN-tilgang og underbygget makspris
 USD 0,15 per forsøk mangler. Ingen betalt import eller gateåpning er utført.
+
+**Produktprioritering 2026-10-28:** Mads har besluttet salgsoppgave som ny
+hovedinngang. FINN-1 forblir **Åpen, utsatt som fremtidig alternativ**;
+ingen videre FINN-utvikling eller live-aktivering nå. Levert kode og alle
+tidligere bevis beholdes. Se PAA-SO1 nedenfor. Dette er ingen lukking eller
+ny tilgangs-/kostnadsautorisasjon.
+
+## PAA-SO1 — salgsoppgave som hovedinngang, registrert 2026-10-28
+
+**Status: Åpen — produktretning vedtatt, tekniske beslutninger avventes.**
+Mads' bestilling erstatter FINN som neste produktprioritet. Gjeldende
+30-siderskontrakt, dokumentomfattende R2-lesbarhet og rent TG-schema gjør
+PDF-/OCR-/AI-valg vesentlige; stopp før produktimplementering er påkrevd.
+
+[Correct Course med før/etter, D1–D3 og overlevering](../planning-artifacts/sprint-change-proposal-2026-10-28.md),
+[implementeringsspec og SO-AC1–15](spec-salgsoppgave-input.md),
+[karakterisering, review og faktisk regresjon](salgsoppgave-correct-course-2026-10-28/verifikasjon.md).
+13 syntetiske PDF-er/fasit er laget; produktfunksjon og ny full brukerflyt
+er ikke implementert eller testet. Ingen reelle kundedokumenter, betalte
+kall, push eller endring av S5/S6-bevis inngår.
+
+Neste eier er Mads for D1–D3; deretter PM/arkitekt og utvikler for
+specens 6.1–6.5. Lukking krever dokumentert gjennomføring, godkjent relevant
+uavhengig review og tester, dato, faktisk løsningscommit og verifikasjonslenker.
+Planlegging eller bestått eksisterende regresjon lukker ikke produktarbeidet.

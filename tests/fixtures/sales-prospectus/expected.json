@@ -1,0 +1,26 @@
+{
+  "purpose": "Independent synthetic oracle, fixed before parser probes; no model output",
+  "textPageCounts": [30, 31, 50, 100, 150, 200, 201],
+  "economy": {
+    "price": "3000000", "sharedDebt": "200000", "purchaseCosts": "75000",
+    "documentTax": "75000", "totalPrice": "3275000", "P": "3200000",
+    "cashRequired": "3075000", "commonCostsMonthly": "5000",
+    "debtPaymentIncludedMonthly": "1000", "propertyTaxYearly": "6000",
+    "municipalFeesYearly": "6000", "year": "2026",
+    "knownAnnualOperatingSubtotal": "60000", "completeD": null,
+    "L": null, "Ymin": null, "ownership": "eierseksjon"
+  },
+  "report": {
+    "integratedStart": 5, "TG2": {"pdfPage": 6, "printedPage": 2, "text": "Slitt gulv i bad"},
+    "TG3": {"pdfPage": 10, "printedPage": 6, "text": "Alvorlig lekkasje i tak"},
+    "duplicateTG3Summary": 2, "distinctSameDescriptionTG2": {"pdfPage": 7, "text": "Slitt gulv i bad", "component": "bad 2"}
+  },
+  "variants": {
+    "mixed-12.pdf": {"pageCount": 12, "unreadable": [3], "legacyDocumentError": "unreadable-text", "reportTG3TextVisible": true},
+    "scanned-report-12.pdf": {"pageCount": 12, "unreadable": [3, 10], "legacyDocumentError": "unreadable-text", "reportTG3TextVisible": false},
+    "missing-report-6.pdf": {"pageCount": 6, "noReport": true},
+    "attached-report-6.pdf": {"pageCount": 6, "attachmentPages": 4, "attachmentTG3Page": 3},
+    "separate-report-4.pdf": {"pageCount": 4, "TG3Page": 3, "printedPage": 1},
+    "conflict-12.pdf": {"pageCount": 12, "priceCandidates": ["3000000", "3100000"], "ownership": "borettslag", "documentTax": null}
+  }
+}

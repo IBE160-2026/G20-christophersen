@@ -7,6 +7,13 @@ updated: 2026-10-10
 
 # PRD: Property Acquisition Agent
 
+> **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
+> FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
+> Se [Correct Course, endringsforslag og implementeringsspec](../../sprint-change-proposal-2026-10-28.md).
+> Retningen er besluttet; PDF-/OCR-/AI-valgene D1–D3 avventer avklaring før
+> produktimplementering. Teksten nedenfor bevarer tidligere versjonsgrunnlag;
+> finans-/screeningregler og historiske S5/S6-bevis endres ikke.
+
 ## Formål og arbeidsstatus
 
 PRD-en er kravgrunnlaget for videre UX, arkitektur, epics, stories, kode og tester i IBE160. Den konkretiserer godkjent v1 fra Product Brief og Mads' bekreftede brukerreise. Funksjoner er gruppert med stabile FR-ID-er; kvalitetskrav har NFR-ID-er og evalueringsmålene beholder S1–S6. Akseptansekriterier står her; detaljerte testeksempler og S5-måleprotokoll står i [addendum](addendum.md). Kode, testfixtures og produktresultater er ikke levert gjennom denne PRD-en.

@@ -3,3 +3,4 @@
 /tests/fixtures/pdf-structure/*.pdf binary
 /tests/fixtures/pdf-readability/*.pdf binary
 /tests/fixtures/finding-control/*.pdf binary
+/tests/fixtures/sales-prospectus/*.pdf binary

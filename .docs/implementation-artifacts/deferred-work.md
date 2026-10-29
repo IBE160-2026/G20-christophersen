@@ -495,3 +495,13 @@ godkjent for kvalitets-/AI-prøve. Neste steg er menneskelig avklaring av
 originalens relevans, lesbarhet og komplette tilstandsrapport. Ingen API-count,
 betalt AI-kjøring, støtte-/finansregelendring eller push. Count-prisport og
 tidligere kvalitets-/live-porter forblir åpne.
+
+**PAA-SO2, lokal sidediagnose 2026-10-30 — Status: fortsatt Åpen.**
+[Anonymisert diagnose-/verifikasjonscheckpoint](../process/arbeidsokter/2026-10-30-salgsoppgave-local-diagnosis.md)
+skiller nå strengt avvist PDF-metadata, faktisk manglende tekstlag/raster,
+fontdiagnostikk og dekodingsgrense. Lokal OCR og målrettet agentkontroll har
+gitt privat sideoversikt og konkrete kontrollpunkter. Dette erstatter ikke
+uavhengig fasit eller dokumenterer komplett TG-dekning. Produksjonskode,
+finans-/screeningregler, fasit- og kostnadsporter er uendret. Neste arbeid er
+avklaring av konkret rapportgrunnlag/prøveformål og korrekt lesbarhetskontrakt,
+samt tidligere count-pris-/live-porter. Ingen betalte kall eller push.

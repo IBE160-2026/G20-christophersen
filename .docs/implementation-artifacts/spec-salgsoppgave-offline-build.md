@@ -6,6 +6,7 @@ status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: '9f49aa083b3fdd65cf0765119c33b6aa34a115bc'
+implementation_commit: 'c516b8682ae0bac9d38a10a064dcedc9984e5167'
 context:
   - '{project-root}/.docs/implementation-artifacts/spec-salgsoppgave-input.md'
   - '{project-root}/.docs/planning-artifacts/sprint-change-proposal-2026-10-28.md'

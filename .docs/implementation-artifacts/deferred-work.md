@@ -373,3 +373,30 @@ løsningscommit gjenstår før eventuell eksplisitt lukking.** Ny live er stengt
 reell live-kvalitet/tokenizer/kostnadsautorisasjon er en senere bestilling,
 ikke bevisført av denne offline-leveransen. Original oppføring/historikk og
 S5/S6-status er bevart.
+
+
+**PAA-SO1, eksplisitt lukking 2026-10-29 — Status: Lukket for godkjent offline-scope.**
+Mads godkjente D1–D3 og alle SO-AC1–15 den 2026-10-28. Offline-løsningen er
+implementert i commit `c516b8682ae0bac9d38a10a064dcedc9984e5167` med aktiv promptlogg.
+[Endelig AC-akseptanse og rå tester](salgsoppgave-implementation-2026-10-28/verifikasjon.md#endelig-akseptanse-2026-10-29),
+[uavhengig review/triage](salgsoppgave-implementation-2026-10-28/review.md) og
+[tre nykontroller uten restfunn](salgsoppgave-implementation-2026-10-28/review-recheck.json)
+er godkjent i hovedagentens sluttkontroll. 1314 unit/integrasjon består; alle
+217 nettlesertilfeller er verifisert som 215 fullrunde + 2 RT-12-reruns etter
+UI-testtilpasning, med 3 dev- og 13 komponenttester. Endelig build/lint består.
+Lukkingen gjelder ikke reell modellkvalitet, live-aktivering, historisk S5/S6
+eller produksjonsstøtte for vilkårlige kundedokumenter. Opprinnelig oppføring
+og historikk over er bevart; videre live-arbeid spores i PAA-SO2.
+
+## PAA-SO2 — reell salgsoppgave-live og kvalitet, registrert 2026-10-29
+
+**Status: Åpen — utsatt; ny bestilling og kostnadsautorisasjon kreves.**
+Offline-leveransen har kombinert strict request og testbar token-preflight, men
+ingen installert/verifisert modelltilpasset lokal teller og ingen aktivert ny
+live-transport. Ukjent original har ikke et lagret demosvar. Senere arbeid må
+fullføre/verifisere live-adapterens struktur-/kildebinding, lokal modelltilpasset
+telling, pris/kapasitet, databehandling og faktisk kvalitet mot uavhengig fasit
+før aktivering. Ingen automatisk aktivering eller betalte prøver er autorisert.
+[Krav og port](spec-salgsoppgave-input.md),
+[faktisk støtte og avgrensning](salgsoppgave-implementation-2026-10-28/verifikasjon.md).
+Ingen S5/S6-akseptanse overføres. Eier: Mads ved eventuell senere bestilling.

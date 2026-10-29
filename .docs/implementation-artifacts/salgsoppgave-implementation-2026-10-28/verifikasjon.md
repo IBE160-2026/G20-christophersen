@@ -176,3 +176,10 @@ utilgjengelig demo. Ingen nye vesentlige produktvalg gjenstår i denne leveranse
 
 De endelige UI-bildene ovenfor er tatt fra siste fulle nettleserrunde og visuelt
 kontrollert. Lokal commit og sentral lukking føres etter siste stagingkontroll.
+
+## Lokal løsningscommit og sentral status
+
+Implementeringen, aktiv promptlogg og verifikasjonen er committet lokalt i
+`c516b8682ae0bac9d38a10a064dcedc9984e5167`. PAA-SO1 er eksplisitt lukket for offline-scope
+i [sentral oversikt](../deferred-work.md); fremtidig live/kvalitet er åpen PAA-SO2.
+Ingen push eller betalt API-kall er utført.

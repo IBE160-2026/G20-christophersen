@@ -65,3 +65,7 @@ RT-12 åpner nå hashens detaljfelt og beholder alle opprinnelige kontroller;
 215 fullrunde + 2 beståtte reruns dokumenteres som separate kjøringer.
 Aktiv promptlogg, kurskilder, historisk S5/S6, deterministisk finans og FINN
 er bevart; commit skjer lokalt, uten betalt kall eller push.
+
+Lokal løsningscommit: `c516b8682ae0bac9d38a10a064dcedc9984e5167` med aktiv promptlogg.
+PAA-SO1 lukkes eksplisitt for offline-scope; PAA-SO2 beholder senere live/kvalitet
+som åpent, utsatt arbeid. Ingen push eller betalt kall.

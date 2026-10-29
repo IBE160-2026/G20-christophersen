@@ -36,3 +36,5 @@ se [nykontroll](review-recheck.json) og [kanonisk triage med løsning](review.js
 Hovedagentens uavhengige kontroll bekrefter gyldig fontreferanse, lesbar digital
 footer, inline-raster uten XObject og korrekt visuelt sidegrunnlag.
 Ingen funn krevde endring av godkjent produktretning eller finansregler.
+
+Verifisert produktkode er lokalt committet som `c516b8682ae0bac9d38a10a064dcedc9984e5167`.

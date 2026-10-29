@@ -42,3 +42,14 @@ kontroller ligger kun i ignorert private/. Versjonert bevis er anonymisert.
 Ingen privat fil er sporet/staget, ingen nøkkel er lest og ingen betalt count,
 modellgenerering eller push er utført. Fullt test-/reviewbevis og fortsatt åpne
 porter står i [sluttverifikasjon](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/verifikasjon.md).
+
+## Oppfølging etter fasitgodkjenning
+
+Brukeren godkjente deretter det viste fasitforslaget med alle avvik og
+forbehold, og opprettholdt kravet om særskilt betalt godkjenning. Godkjenningen
+er registrert privat med eksakt fasitdigest etter lokal original-/kilde-/wire-
+kontroll. Ingen omfattende testrunde, kodeendring eller betalt kall er utført.
+Oppdatert offentlig dokumentsøk etablerte fortsatt ikke count-endepunktets
+pris. [Prisavklaring og usendt konkret henvendelse](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/prisavklaring.md)
+beskriver dette og hva som må foreligge før sperren kan åpnes. Historiske
+beskrivelser av null godkjenning ovenfor gjelder forrige checkpoint.

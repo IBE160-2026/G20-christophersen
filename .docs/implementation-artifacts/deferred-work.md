@@ -400,3 +400,13 @@ før aktivering. Ingen automatisk aktivering eller betalte prøver er autorisert
 [Krav og port](spec-salgsoppgave-input.md),
 [faktisk støtte og avgrensning](salgsoppgave-implementation-2026-10-28/verifikasjon.md).
 Ingen S5/S6-akseptanse overføres. Eier: Mads ved eventuell senere bestilling.
+
+**PAA-SO2, ny bestilling og designcheckpoint 2026-10-29 — Status: Åpen.**
+Mads har bestilt code-first analyse, lokal lesing av opptil 200 sider,
+fullstendig dekningskontroll, semantisk AI bare ved behov og kostnad før kall.
+[Design med kostnadseksempler og dekningsinvarianter](../planning-artifacts/salgsoppgave-code-first-design-2026-10-29.md)
+og [arbeidsplan](spec-salgsoppgave-code-first.md) er skrevet, men avventer
+godkjenning av design og foreslått USD 0,20-tak. Dagens syntetiske adapter
+er ikke generell dokumentanalyse; modelltilpasset lokal requestteller mangler.
+Ingen produktkode, betalt kall, live-aktivering eller push er utført.
+Ny bestilling autoriserer ikke første live-test. Tidligere bevis/status beholdes.

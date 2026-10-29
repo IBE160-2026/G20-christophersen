@@ -173,8 +173,10 @@ budsjett. Verktøy er deaktivert; uventet verktøybruk sperrer resultatet.
 [Prosedyre for uavhengig fasit og kildekontroll](.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/representative-document-procedure.md)
 beskriver utfylling, frysing og grensen mot faktisk test. `.gitignore` hindrer
 vanlig staging, men kan overstyres med `git add -f`; ikke gjør det for private
-originaler, tekst, fasit eller resultater. Første ekte dokument er ennå ikke
-mottatt. [Nytt test-/reviewbevis og faktiske porter](.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/verifikasjon.md).
+originaler, tekst, fasit eller resultater. Første ekte dokument er mottatt
+privat 30. oktober; ukjent/ufullstendig tekstdekning og manglende menneskelig
+fasit sperrer kvalitetsprøven. [Mottakscheckpoint](.docs/process/arbeidsokter/2026-10-30-salgsoppgave-document-intake.md).
+[Kode-/reviewbevis og øvrige porter](.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/verifikasjon.md).
 
 ## Prøv F1–F4 fra start til resultat
 

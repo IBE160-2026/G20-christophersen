@@ -1,0 +1,13 @@
+{
+  "baseline": "2b1afd2f875373fcff933a021684a0793c83ceb4",
+  "date": "2026-10-29",
+  "scope": "Tre uavhengige kontekstfrie BMAD-lag, deretter samme revieweres avgrensede nykontroll; ingen API-kall",
+  "firstRecheck": {
+    "blind": {"verifiedResolved": ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10"], "remainingFindings": ["B11"]},
+    "edgeCase": {"verifiedResolved": ["E1", "E2"], "remainingFindings": [], "evidence": "Sikkert maskinelt rapportområde må være identisk med menneskets før request bygges. Rapport-raster sperres, normal privat freeze/load/preparation og fysisk kildebasert matching er dekket."},
+    "verificationGap": {"verifiedResolved": ["V1"], "remainingFindings": []}
+  },
+  "B11": {"finding": "Ny transkripsjonsvakt avviste korrekt punktumgruppert/desimal kildebeløp", "resolution": "Entydige formater støttes med uendrede sitater; feil/delvise treff og tvetydige former sperres. Representative-tester 18/18 besto."},
+  "finalBlindRecheck": {"remainingFindings": [], "scope": "B11 tallformater og regressjoner; B1–B10 var allerede løst"},
+  "finalRemainingFindings": []
+}

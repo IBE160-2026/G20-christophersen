@@ -80,7 +80,8 @@ export const ImportManifestSchema = z.strictObject({
 })
 export const ImportCostSchema = z.strictObject({
   analysisId: z.string().min(1), requestDigest: ReportHashSchema, model: z.literal(CODE_FIRST_MODEL),
-  tokenizer: z.enum(['unavailable', 'test-only', 'verified-local-model-and-request-framing']), priceVersion: z.string().nullable(),
+  tokenizer: z.enum(['unavailable', 'test-only', 'verified-local-model-and-request-framing', 'verified-server-input-tokens', 'offline-sdk-stub']), priceVersion: z.string().nullable(),
+  usageCostBasis: z.enum(['provider-usage-upper-bound', 'provider-usage-exact']).optional(),
   inputTokens: z.number().int().nonnegative().nullable(), outputTokens: z.number().int().positive(),
   estimatedUsd: z.string().nullable(), reservedUsd: z.string(), remainingUsd: z.string(), actualUsd: z.string().nullable(),
   status: z.enum(['blocked', 'reserved', 'completed', 'uncertain']), reason: z.string().nullable(),

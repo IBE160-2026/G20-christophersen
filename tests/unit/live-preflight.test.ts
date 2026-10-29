@@ -12,6 +12,7 @@ import { createSemanticRequest } from '../../src/backend/import/semantic-request
 import { REFERENCE_PRICE, GLOBAL_STANDARD_PRICE } from '../../src/backend/import/budget.ts'
 import { createCodeFirstImport } from '../../src/backend/import/semantic-adapter.ts'
 import { codeFirstBasis, sdkStub } from '../helpers/code-first.ts'
+import { countSemanticInput, createOfflineTokenCountTransport } from '../../src/backend/import/token-count.ts'
 
 const hash = 'a'.repeat(64), digest = 'b'.repeat(64), reportHash = 'c'.repeat(64)
 const directories: string[] = [], stores: AnalysisBudgetStore[] = []
@@ -133,27 +134,20 @@ describe('real SDK whole-request binding and closed readiness',()=>{
     expect(verifySemanticWire(request,{...wire,body:wire.body.replace('semantic_spans_1','semantic_spans_X')})).toBe(false)
     expect(verifySemanticWire(request,{...wire,url:'https://other.example/responses'})).toBe(false)
     const result=assessLivePreflight(request,hash,wire)
-    expect(result.ready).toBe(false);expect(result.blockers).toEqual(['local-tokenizer-unavailable','unknown-price','budget-history-unavailable'])
+    expect(result.ready).toBe(false);expect(result.blockers).toEqual(['server-token-count-required','token-count-price-unverified','unknown-price','budget-history-unavailable'])
   })
-  it('test-only counting and unknown price never reserve; verified test dependencies reserve once durably',async()=>{
+  it('test-only/local labels and genuine SDK stub receipts never authorize production reservation',async()=>{
     const path=directory();AnalysisBudgetStore.initialize(path,hash)
     const ledger=opened(path),request=createSemanticRequest(createLocalPlan(rootBasis())),wire=await captureSemanticWire(request)
-    const tokenizer={model:'gpt-6.1-sol' as const,verification:'test-only' as const,countRequest:()=>40000}
+    const tokenizer={model:'gpt-6.1-sol' as const,verification:'verified-local-model-and-request-framing' as const,countRequest:()=>40000}
     expect(assessLivePreflight(request,hash,wire,{ledger,tokenizer,price:REFERENCE_PRICE}).ready).toBe(false)
+    const tokenCount=await countSemanticInput(request,{transport:createOfflineTokenCountTransport(async()=>new Response(JSON.stringify({object:'response.input_tokens',input_tokens:40000}),{headers:{'content-type':'application/json'}}))})
+    const result=assessLivePreflight(request,hash,wire,{ledger,tokenCount,price:GLOBAL_STANDARD_PRICE})
+    expect(result.blockers).toEqual(['token-count-stub-only','token-count-price-unverified'])
+    expect(result.cost).toBeNull();expect(ledger.snapshot()).toEqual([])
+    const forged={...tokenCount,provenance:'responses-input-tokens' as const}
+    expect(assessLivePreflight(request,hash,wire,{ledger,tokenCount:forged,price:GLOBAL_STANDARD_PRICE}).blockers).toContain('token-count-evidence-mismatch')
     expect(ledger.snapshot()).toEqual([])
-    // This explicit test double is never passed by the preparation command or claimed as production evidence.
-    const verifiedTestDouble={...tokenizer,verification:'verified-local-model-and-request-framing' as const}
-    expect(assessLivePreflight(request,hash,wire,{ledger,tokenizer:verifiedTestDouble,price:REFERENCE_PRICE}).blockers).toContain('unknown-price')
-    const ready=assessLivePreflight(request,hash,wire,{ledger,tokenizer:verifiedTestDouble,price:GLOBAL_STANDARD_PRICE})
-    expect(ready.ready).toBe(true);expect(ready.cost!.reservedUsd).toBe('0.18000000')
-    ledger.close();const restored=opened(path)
-    expect(assessLivePreflight(request,reportHash,wire,{ledger:restored,tokenizer:verifiedTestDouble,price:GLOBAL_STANDARD_PRICE}).ready).toBe(false)
-  })
-  it('request mutation by a counter blocks before durable reservation',async()=>{
-    const path=directory();AnalysisBudgetStore.initialize(path,hash)
-    const ledger=opened(path),request=createSemanticRequest(createLocalPlan(rootBasis())),wire=await captureSemanticWire(request)
-    const result=assessLivePreflight(request,hash,wire,{ledger,price:GLOBAL_STANDARD_PRICE,tokenizer:{model:'gpt-6.1-sol',verification:'verified-local-model-and-request-framing',countRequest(value){(value as {instructions:string}).instructions+='mutation';return 1}}})
-    expect(result.ready).toBe(false);expect(result.blockers).toContain('request-digest-changed');expect(ledger.snapshot()).toEqual([])
   })
   it.each([
     {service_tier:'priority'}, {reasoning:{effort:'high'}}, {prompt_cache_retention:'12h'}, {tools:[{type:'web_search'}]},
@@ -181,7 +175,7 @@ describe('real SDK whole-request binding and closed readiness',()=>{
     const reportRequest=createSemanticRequest(createLocalPlan({...rootBasis(),hash:reportHash,role:'report',parentHash:hash})),reportWire=await captureSemanticWire(reportRequest)
     expect(assessLivePreflight(reportRequest,reportHash,reportWire,{...options,ledger:unrelated}).blockers).toContain('analysis-root-mismatch')
     expect(unrelated.snapshot()).toEqual([]);expect(ledger.snapshot()).toEqual([])
-    expect(assessLivePreflight(reportRequest,reportHash,reportWire,{...options,ledger}).ready).toBe(true)
+    expect(assessLivePreflight(reportRequest,reportHash,reportWire,{...options,ledger}).blockers).toContain('server-token-count-required')
     const orphan=createSemanticRequest(createLocalPlan({...rootBasis(),hash:'d'.repeat(64),role:'report',parentHash:null}))
     expect(assessLivePreflight(orphan,'d'.repeat(64),await captureSemanticWire(orphan),{...options,ledger}).blockers).toContain('request-document-mismatch')
   })

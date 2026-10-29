@@ -3,6 +3,8 @@ import { CODE_FIRST_MODEL } from '../../contracts/document-import.ts'
 import type { ImportCost } from '../../contracts/document-import.ts'
 import { SEMANTIC_LIMITS, semanticDigest, SEMANTIC_PROMPT, semanticTextConfiguration, canonicalJson } from './semantic-request.ts'
 import type { SemanticRequest } from './semantic-request.ts'
+import { verifySemanticTokenCount } from './token-count.ts'
+import type { SemanticTokenCount } from './token-count.ts'
 
 export type SemanticTokenizer = { model: typeof CODE_FIRST_MODEL; verification: ImportCost['tokenizer']; countRequest(request: SemanticRequest): number }
 export type SemanticPrice = { version: string; model: typeof CODE_FIRST_MODEL; verified: boolean; inputPerMillion: string; outputPerMillion: string; maximumInputPerMillion: string; maximumOutputPerMillion: string; surchargeMultiplier: string }
@@ -32,7 +34,7 @@ export function compatibleStandardRequest(request: SemanticRequest) {
     && request.input[0].content?.length === 1 && request.input[0].content[0]?.type === 'input_text' && typeof request.input[0].content[0].text === 'string'
     && Object.keys(request.input[0].content[0]).length === 2
 }
-export type BudgetEntry = { documentHash: string; requestDigest: string; reservedUsd: string; actualUsd: string | null; state: 'reserved' | 'completed' | 'uncertain' }
+export type BudgetEntry = { documentHash: string; requestDigest: string; reservedUsd: string; actualUsd: string | null; state: 'reserved' | 'completed' | 'uncertain'; usageCostBasis?: ImportCost['usageCostBasis'] }
 /** Owned by the logical analysis, shared with a separate report. A missing restored history never authorizes live transport. */
 export class AnalysisBudget {
   readonly analysisId: string
@@ -41,7 +43,7 @@ export class AnalysisBudget {
   constructor(analysisId: string, options: { historyRestored?: boolean; entries?: BudgetEntry[] } = {}) {
     this.analysisId = analysisId; this.historyRestored = options.historyRestored ?? false
     this.reservations = structuredClone(options.entries ?? [])
-    if (!analysisId || this.reservations.some(entry => !/^[a-f0-9]{64}$/.test(entry.documentHash) || !/^[a-f0-9]{64}$/.test(entry.requestDigest) || !validMoney(entry.reservedUsd) || entry.actualUsd !== null && !validMoney(entry.actualUsd) || !['reserved', 'completed', 'uncertain'].includes(entry.state)) || new Set(this.reservations.map(entry => entry.documentHash)).size !== this.reservations.length) throw new Error('invalid-budget-history')
+    if (!analysisId || this.reservations.some(entry => !/^[a-f0-9]{64}$/.test(entry.documentHash) || !/^[a-f0-9]{64}$/.test(entry.requestDigest) || !validMoney(entry.reservedUsd) || entry.actualUsd !== null && !validMoney(entry.actualUsd) || !['reserved', 'completed', 'uncertain'].includes(entry.state) || !validCostBasis(entry.usageCostBasis)) || new Set(this.reservations.map(entry => entry.documentHash)).size !== this.reservations.length) throw new Error('invalid-budget-history')
   }
   snapshot() { return structuredClone(this.reservations) }
   remaining() { return Big(SEMANTIC_LIMITS.usd).minus(this.reservations.reduce((sum, item) => sum.plus(item.reservedUsd), Big(0))).toFixed(8) }
@@ -51,29 +53,42 @@ export class AnalysisBudget {
     if (!validMoney(amount) || Big(amount).gt(this.remaining())) throw new Error('analysis-budget-exceeded')
     this.reservations.push({ documentHash, requestDigest, reservedUsd: amount, actualUsd: null, state: 'reserved' })
   }
-  settle(requestDigest: string, actualUsd: string | null) {
+  settle(requestDigest: string, actualUsd: string | null, usageCostBasis?: BudgetEntry['usageCostBasis']) {
     if (actualUsd !== null && !validMoney(actualUsd)) throw new Error('invalid-actual-cost')
+    if (!validCostBasis(usageCostBasis)) throw new Error('invalid-cost-provenance')
     const entry = this.reservations.find(item => item.requestDigest === requestDigest)
     if (!entry) throw new Error('missing-reservation')
     // Keep the conservative reservation even after usage is known; no automatic new quota.
     entry.actualUsd = actualUsd; if (actualUsd !== null && Big(actualUsd).gt(entry.reservedUsd)) entry.reservedUsd = actualUsd
     entry.state = actualUsd === null ? 'uncertain' : 'completed'
+    // Missing provenance in older histories remains unknown; never infer exact billing.
+    if (usageCostBasis === undefined) delete entry.usageCostBasis
+    else entry.usageCostBasis = usageCostBasis
   }
 }
 function validMoney(value: string) { return /^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value) }
+function validCostBasis(value: unknown) { return value === undefined || value === 'provider-usage-upper-bound' || value === 'provider-usage-exact' }
 export function costOf(input: number, output: number, price: SemanticPrice, maximum = false) {
   return Big(input).times(maximum ? price.maximumInputPerMillion : price.inputPerMillion).plus(Big(output).times(maximum ? price.maximumOutputPerMillion : price.outputPerMillion)).div(1_000_000).times(maximum ? price.surchargeMultiplier : '1').toFixed(8)
 }
-export function preflightSemantic(request: SemanticRequest, documentHash: string, ledger: AnalysisBudget, options: { tokenizer?: SemanticTokenizer; price?: SemanticPrice; offlineTest?: boolean } = {}): ImportCost {
+export function preflightSemantic(request: SemanticRequest, documentHash: string, ledger: AnalysisBudget, options: { tokenizer?: SemanticTokenizer; tokenCount?: SemanticTokenCount; price?: SemanticPrice; offlineTest?: boolean } = {}): ImportCost {
   const digest = semanticDigest(request), tokenizer = options.tokenizer, price = options.price
-  const cost: ImportCost = { analysisId: ledger.analysisId, requestDigest: digest, model: CODE_FIRST_MODEL, tokenizer: tokenizer?.verification ?? 'unavailable', priceVersion: price?.version ?? null,
+  const cost: ImportCost = { analysisId: ledger.analysisId, requestDigest: digest, model: CODE_FIRST_MODEL, tokenizer: options.offlineTest && tokenizer ? 'test-only' : 'unavailable', priceVersion: price?.version ?? null,
     inputTokens: null, outputTokens: request.max_output_tokens, estimatedUsd: null, reservedUsd: '0.00000000', remainingUsd: ledger.remaining(), actualUsd: null, status: 'blocked', reason: null }
   const fail = (reason: string) => ({ ...cost, reason })
   if (request.model !== CODE_FIRST_MODEL) return fail('unknown-model')
   if (!compatibleStandardRequest(request)) return fail('incompatible-standard-request')
-  if (!tokenizer || tokenizer.model !== request.model || !(tokenizer.verification === 'verified-local-model-and-request-framing' || options.offlineTest && tokenizer.verification === 'test-only')) return fail('local-tokenizer-unavailable')
   let tokens: number
-  try { tokens = tokenizer.countRequest(request) } catch { return fail('local-tokenizer-unavailable') }
+  if (options.tokenCount) {
+    if (!verifySemanticTokenCount(request, options.tokenCount, { allowOfflineStub: options.offlineTest })) return fail('token-count-evidence-mismatch')
+    tokens = options.tokenCount.inputTokens
+    cost.tokenizer = options.tokenCount.provenance === 'responses-input-tokens' ? 'verified-server-input-tokens' : 'offline-sdk-stub'
+  } else {
+    // Legacy counters remain confined to the explicit offline harness. No local model
+    // mapping/full framing has been established for Sol.
+    if (!options.offlineTest || !tokenizer || tokenizer.model !== request.model || !['test-only', 'verified-local-model-and-request-framing'].includes(tokenizer.verification)) return fail('local-tokenizer-unavailable')
+    try { tokens = tokenizer.countRequest(request) } catch { return fail('local-tokenizer-unavailable') }
+  }
   if (!Number.isSafeInteger(tokens) || tokens < 0) return fail('invalid-token-count')
   cost.inputTokens = tokens
   if (tokens > SEMANTIC_LIMITS.inputTokens) return fail('input-token-limit')

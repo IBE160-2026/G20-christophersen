@@ -4,11 +4,12 @@ import { resolve } from 'node:path'
 import { z } from 'zod'
 import Big from 'big.js'
 import { AnalysisBudget } from './budget.ts'
+import type { BudgetEntry } from './budget.ts'
 
 const money = z.string().regex(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)
 const historySchema = z.strictObject({
   version: z.literal(1), analysisId: z.string().regex(/^[a-f0-9]{64}$/),
-  entries: z.array(z.strictObject({ documentHash: z.string().regex(/^[a-f0-9]{64}$/), requestDigest: z.string().regex(/^[a-f0-9]{64}$/), reservedUsd: money, actualUsd: money.nullable(), state: z.enum(['reserved', 'completed', 'uncertain']) })),
+  entries: z.array(z.strictObject({ documentHash: z.string().regex(/^[a-f0-9]{64}$/), requestDigest: z.string().regex(/^[a-f0-9]{64}$/), reservedUsd: money, actualUsd: money.nullable(), state: z.enum(['reserved', 'completed', 'uncertain']), usageCostBasis: z.enum(['provider-usage-upper-bound', 'provider-usage-exact']).optional() })),
 })
 const safeDirectory = (directory: string) => { if (!lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink()) throw new Error('budget-history-unavailable') }
 function hasPendingEvidence(path: string) {
@@ -79,8 +80,8 @@ export class AnalysisBudgetStore extends AnalysisBudget {
   override reserve(documentHash: string, requestDigest: string, amount: string) {
     this.assertWritable(); super.reserve(documentHash, requestDigest, amount); this.persist()
   }
-  override settle(requestDigest: string, actualUsd: string | null) {
-    this.assertWritable(); super.settle(requestDigest, actualUsd); this.persist()
+  override settle(requestDigest: string, actualUsd: string | null, usageCostBasis?: BudgetEntry['usageCostBasis']) {
+    this.assertWritable(); super.settle(requestDigest, actualUsd, usageCostBasis); this.persist()
   }
   close() {
     if (this.closed) return

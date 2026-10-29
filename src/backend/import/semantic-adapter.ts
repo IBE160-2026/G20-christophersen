@@ -8,10 +8,11 @@ import type { SemanticPrice, SemanticTokenizer } from './budget.ts'
 import { createSemanticRequest, semanticDigest, SemanticOutputSchema, SEMANTIC_LIMITS, semanticContextBlocks } from './semantic-request.ts'
 import { z } from 'zod'
 import type { SemanticRequest } from './semantic-request.ts'
+import type { SemanticTokenCount } from './token-count.ts'
 
 /** Only an explicitly labelled offline SDK stub can be injected. No production SDK/client is created here. */
 export type OfflineSemanticTransport = { purpose: 'offline-stub'; responses: { create(request: SemanticRequest, options: { signal: AbortSignal; timeout: number; maxRetries: 0 }): Promise<unknown> } }
-export type SemanticDependencies = { ledger?: AnalysisBudget; tokenizer?: SemanticTokenizer; price?: SemanticPrice; transport?: OfflineSemanticTransport; signal?: AbortSignal; deadlineMs?: number }
+export type SemanticDependencies = { ledger?: AnalysisBudget; tokenizer?: SemanticTokenizer; tokenCount?: SemanticTokenCount; price?: SemanticPrice; transport?: OfflineSemanticTransport; signal?: AbortSignal; deadlineMs?: number }
 class SemanticFailure extends Error {
   readonly code: string
   constructor(code: string) { super(code); this.code = code }
@@ -122,7 +123,7 @@ export async function createCodeFirstImport(basis: ImportBasis, dependencies: Se
     if (!dependencies.transport || dependencies.transport.purpose !== 'offline-stub') cost = { ...cost, inputTokens: null, estimatedUsd: null, actualUsd: null, status: 'blocked', reason: 'live-disabled; local-tokenizer-unavailable' }
     else if (dependencies.signal?.aborted) cost = { ...cost, status: 'blocked', reason: 'interrupted' }
     else {
-      cost = preflightSemantic(request, basis.hash, ledger, { tokenizer: dependencies.tokenizer, price: dependencies.price, offlineTest: true })
+      cost = preflightSemantic(request, basis.hash, ledger, { tokenizer: dependencies.tokenizer, tokenCount: dependencies.tokenCount, price: dependencies.price, offlineTest: true })
       if (cost.status === 'reserved') {
         const controller = new AbortController(), abort = () => controller.abort()
         dependencies.signal?.addEventListener('abort', abort, { once: true })
@@ -138,13 +139,19 @@ export async function createCodeFirstImport(basis: ImportBasis, dependencies: Se
           if (semanticDigest(request) !== cost.requestDigest) throw new SemanticFailure('request-digest-changed')
           if (Buffer.byteLength(JSON.stringify(raw)) > IMPORT_MAX_RESPONSE_BYTES) throw new SemanticFailure('response-limit')
           if (!raw || typeof raw !== 'object' || !('status' in raw) || typeof raw.status !== 'string' || !('output_text' in raw) || typeof raw.output_text !== 'string') throw new SemanticFailure('invalid-response')
+          // Tools are absent from the approved request and have no budget. Unexpected
+          // tool output/usage must retain the reservation with unknown charge.
+          if ('tool_usage' in raw && raw.tool_usage != null || 'output' in raw && (!Array.isArray(raw.output) || raw.output.some(item => !item || typeof item !== 'object' || !['message', 'reasoning'].includes(String(item.type))))) throw new SemanticFailure('unexpected-tool-usage')
           // Record valid provider usage even when its semantic output later fails validation.
           const usage = 'usage' in raw ? raw.usage as { input_tokens?: unknown; output_tokens?: unknown } | null : null
           const input = usage?.input_tokens, output = usage?.output_tokens
           if (!Number.isSafeInteger(input) || !Number.isSafeInteger(output) || (input as number) < 0 || (output as number) < 0) throw new SemanticFailure('unknown-usage')
-          const actual = costOf(input as number, output as number, dependencies.price!)
+          // Usage in the pinned SDK need not describe cache writes. Charge the verified
+          // maximum input/output rates, visibly an upper bound, rather than claiming
+          // ordinary uncached input is the actual bill. Reasoning is already in output.
+          const actual = costOf(input as number, output as number, dependencies.price!, true)
           settlementAttempted = true
-          ledger.settle(digest, actual); cost = { ...cost, actualUsd: actual, status: 'completed' }
+          ledger.settle(digest, actual, 'provider-usage-upper-bound'); cost = { ...cost, actualUsd: actual, usageCostBasis: 'provider-usage-upper-bound', status: 'completed' }
           if ((input as number) > cost.inputTokens! || (output as number) > cost.outputTokens) throw new SemanticFailure('usage-exceeds-reservation')
           checkCombinedResponse(raw.status, Buffer.byteLength(raw.output_text))
           const validated = validateSemantic(plan, JSON.parse(raw.output_text))

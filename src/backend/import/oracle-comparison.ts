@@ -40,7 +40,10 @@ export function compareWithOracle(raw: unknown, oracle: FrozenOracle) {
   const matched = new Set<number>()
   for (const expected of oracle.findings) {
     const subject = expected.component + ': ' + expected.description
-    const index = result.technical.findings.findIndex((finding, index) => !matched.has(index) && normalized(finding.component) === normalized(expected.component) && normalized(finding.description) === normalized(expected.description))
+    const possible = result.technical.findings.map((finding, index) => ({ finding, index })).filter(({ finding, index }) => !matched.has(index) && normalized(finding.component) === normalized(expected.component) && normalized(finding.description) === normalized(expected.description))
+    // Equal prose can describe different physical conditions. Prefer the expected
+    // original anchors before falling back to an unmatched condition for diagnostics.
+    const index = possible.find(({ finding }) => expected.sources.every(source => supports(finding.sources, source)))?.index ?? possible[0]?.index ?? -1
     if (index < 0) { report('missing-finding', subject); continue }
     matched.add(index)
     const finding = result.technical.findings[index]!

@@ -1,0 +1,14 @@
+
+> property-acquisition-agent@0.0.0 prepare:live-test
+> node src/backend/import/prepare-live-test.ts .docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/synthetic-packet
+
+{
+  "ready": false,
+  "blockers": [
+    "server-token-count-required",
+    "token-count-price-unverified"
+  ],
+  "requestDigest": "cacb1b039e863a07fd39928832eaddf5f5b633bd5e7bf0432166ed060277f200",
+  "packet": "/Users/madschristophersen/IBE160/G20-christophersen/.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/synthetic-packet/packet.json",
+  "externalCalls": 0
+}

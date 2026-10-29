@@ -51,8 +51,9 @@ export function ProspectusImport({ session, dispatch, client, role }: { session:
         <p>Inputtokens: {outcome.cost.inputTokens ?? 'Kan ikke verifiseres'} · Outputtak: {outcome.cost.outputTokens} tokens inklusive reasoning.</p>
         <p>{outcome.cost.status === 'completed' ? 'Lokal eller offline stubbet behandling fullført. Ingen betalt modellbruk.' : 'Semantisk behandling er sperret eller ufullført. Rapportbekreftelse krever komplett grunnlag.'}</p>
         {outcome.cost.reason && <p>{semanticStopReason(outcome.cost.reason)}</p>}
-        {outcome.cost.tokenizer === 'test-only' && <p>Token- og kostnadstallene bruker en testteller og er ikke verifisert for live.</p>}
-        {outcome.cost.tokenizer !== 'verified-local-model-and-request-framing' && <p>Ingen verifisert lokal modelltilpasset tokentelling. Live-porten er stengt.</p>}
+        {['test-only', 'offline-sdk-stub'].includes(outcome.cost.tokenizer) && <p>Token- og kostnadstallene bruker en testteller eller SDK-stub og er ikke verifisert for live.</p>}
+        {outcome.cost.tokenizer === 'verified-server-input-tokens' ? <p>Inputtelling fra Responses API. Live-porten krever også verifisert pris, budsjett og godkjenning.</p>
+          : <p>Ingen verifisert tokentelling for hele modellforespørselen. Live-porten er stengt.</p>}
         {outcome.manifest && <details><summary>Uløst grunnlag: {outcome.manifest.residual.length} poster</summary><ul>{outcome.manifest.residual.map((item, index) => <li key={index}>Fysisk PDF-side {item.pdfPage}: {coverageReason(item.reason)}</li>)}</ul></details>}
       </section>}
       <p>Økonomidekning: {coverageLabels[outcome.coverage.economy.status]} · Rapportdekning: {coverageLabels[outcome.coverage.technical.status]}</p>
@@ -135,12 +136,13 @@ function pageRanges(pages: number[]) {
 }
 
 function semanticStopReason(code: string) {
-  if (code.includes('local-tokenizer-unavailable')) return 'Kostnaden kan ikke verifiseres uten en lokal modelltilpasset tokenteller. Ingen modellforespørsel er startet.'
+  if (code.includes('local-tokenizer-unavailable') || code.includes('server-token-count-required')) return 'Verifisert tokentelling mangler for den endelige modellforespørselen. Ingen generering er startet.'
   const messages: Record<string, string> = {
     'analysis-budget-exceeded': 'Hele det nødvendige grunnlaget får ikke plass innen gjenværende analyseramme på USD 0,20. Analysen er stoppet; ingen tekst eller funn er utelatt for å redusere prisen.',
     'input-token-limit': 'Det nødvendige tekstgrunnlaget overskrider grensen på 40 000 inputtokens. Analysen er stoppet uten avkorting.',
     'output-token-limit': 'Svarbudsjettet er utenfor den tillatte grensen. Ingen modellforespørsel er startet.',
     'unknown-price': 'Et verifisert prisgrunnlag mangler. Ingen modellforespørsel er startet.',
+    'token-count-price-unverified': 'Prisen for ekstern tokentelling er ikke verifisert. Ingen telleforespørsel eller generering er startet.',
     'budget-history-unavailable': 'Tidligere forbruk og reservasjoner kan ikke verifiseres. Ingen ny modellforespørsel er startet.',
     'document-already-attempted': 'Dokumentet er allerede forsøkt i denne analysen. Ingen ny modellforespørsel er startet.',
   }

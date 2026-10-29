@@ -30,8 +30,9 @@ describe('analysis-scoped conservative reservation', () => {
   it('production preflight cannot use test counter, unverified tariff or lost restart history', () => {
     const ledger = new AnalysisBudget('analysis'), verifiedCounter = { ...tokenizer(100), verification: 'verified-local-model-and-request-framing' as const }
     expect(preflightSemantic(request(),hash,ledger,{tokenizer:tokenizer(100),price:REFERENCE_PRICE}).reason).toBe('local-tokenizer-unavailable')
-    expect(preflightSemantic(request(),hash,ledger,{tokenizer:verifiedCounter,price:REFERENCE_PRICE}).reason).toBe('unknown-price')
-    expect(preflightSemantic(request(),hash,ledger,{tokenizer:verifiedCounter,price:{...REFERENCE_PRICE,verified:true}}).reason).toBe('budget-history-unavailable')
+    expect(preflightSemantic(request(),hash,ledger,{tokenizer:verifiedCounter,price:REFERENCE_PRICE}).reason).toBe('local-tokenizer-unavailable')
+    expect(preflightSemantic(request(),hash,ledger,{tokenizer:verifiedCounter,price:{...REFERENCE_PRICE,verified:true}}).reason).toBe('local-tokenizer-unavailable')
+    expect(preflightSemantic(request(),hash,ledger,{tokenizer:verifiedCounter,price:REFERENCE_PRICE}).tokenizer).toBe('unavailable')
     expect(ledger.snapshot()).toEqual([])
   })
   it('USD .20 is inclusive; over-budget, reload, changed digest and separate report cannot reset the allowance', () => {

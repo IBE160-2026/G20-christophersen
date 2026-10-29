@@ -456,3 +456,25 @@ er dokumentert lokal teller/framing eller særskilt avklart/autoriserbar
 serverkalibrering, samt valg og frysing av representativt prøvegrunnlag.
 Betalt transport er ikke aktivert; konkret live-opplegg må godkjennes før
 første kall. Denne oppføringen lukker ingen tidligere port eller avvik.
+
+**PAA-SO2, server-count og privat mottak 2026-10-29 — Status: fortsatt Åpen.**
+To parallelle subagenter har implementert SDK 6.9.1 Responses inputTokens.count
+med hele input-/schema-/reasoninggrunnlaget, digestbundet kvittering og ærlig
+server-/stubproveniens. USD 0,20 forblir samlet og varig, inklusive separat
+rapport; øvre usage-kostnad og grunnlaget bevares også etter omstart.
+Verktøy er deaktivert og uventet verktøybruk stopper trygt.
+
+Privat intake/freeze/check bevarer ekte original, sider, fasit og output under
+ignorert `private/`; tomme menneskelige skjemaer fylles aldri automatisk.
+[Mottaks-/fasitprosedyre](salgsoppgave-blockers-2026-10-29/representative-document-procedure.md),
+[spec/AC](spec-salgsoppgave-blocker-resolution.md) og
+[faktisk test-/reviewbevis og gjenværende porter](salgsoppgave-blockers-2026-10-29/verifikasjon.md).
+
+Lokal encoder er ikke lenger den valgte tellerveien. Faktisk servertelling er
+likevel ikke utført: endpointprisen er ikke verifisert eller antatt gratis,
+og serverfabrikken stopper før nettverk. Pris og eventuell count-reservasjon
+må dokumenteres under samme USD 0,20 før åpning. Faktisk dokument fra Mads og
+uavhengig menneskelig fasit mangler fortsatt. Ingen menneskelig verifikasjon,
+modellkvalitet, kontotilgang eller representativ prøve er fabrikkert.
+Ingen API-count, betalt generering, live-aktivering eller push er utført.
+Denne leveransen lukker ikke live-/kvalitetsporten eller tidligere avvik.

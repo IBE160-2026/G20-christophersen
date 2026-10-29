@@ -34,7 +34,7 @@ it('offline preparation reproduces exact SDK packet with zero external calls and
   const directory=await mkdtemp(join(tmpdir(),'prepare-live-'));directories.push(directory)
   const result=await prepareLiveTest({outputDirectory:directory,budgetDirectory:join(directory,'missing-history')})
   expect(result.ready).toBe(false)
-  expect(result.blockers).toEqual(['local-tokenizer-unavailable','budget-history-unavailable'])
+  expect(result.blockers).toEqual(['server-token-count-required','token-count-price-unverified','budget-history-unavailable'])
   expect(result.externalCalls).toBe(0)
   const packet=JSON.parse(await readFile(result.packet,'utf8'))
   expect(packet.reservationsCreated).toBe(0);expect(packet.budget.history).toBeNull()
@@ -54,7 +54,7 @@ it('known durable empty history removes only that blocker; preparation reads no 
   globalThis.fetch=async()=>{externalFetches++;throw new Error('network-forbidden')}
   try{
     const result=await prepareLiveTest({outputDirectory:directory,budgetDirectory:budgets})
-    expect(result.blockers).toEqual(['local-tokenizer-unavailable']);expect(result.ready).toBe(false)
+    expect(result.blockers).toEqual(['server-token-count-required','token-count-price-unverified']);expect(result.ready).toBe(false)
     expect(keyReads).toBe(0);expect(externalFetches).toBe(0)
     const store=AnalysisBudgetStore.open(budgets,oracle.original.sha256)
     try{expect(store.snapshot()).toEqual([]);expect(store.remaining()).toBe('0.20000000')}finally{store.close()}

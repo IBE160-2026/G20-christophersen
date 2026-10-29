@@ -6,6 +6,8 @@ import type { SemanticRequest } from './semantic-request.ts'
 import { preflightSemantic, compatibleStandardRequest, isGlobalStandardPrice } from './budget.ts'
 import type { SemanticPrice, SemanticTokenizer } from './budget.ts'
 import { AnalysisBudgetStore } from './analysis-budget-store.ts'
+import { verifySemanticTokenCount, COUNT_PRICE_EVIDENCE } from './token-count.ts'
+import type { SemanticTokenCount } from './token-count.ts'
 
 export type SdkWire = { sdkVersion: string; method: string; url: string; body: string; bodySha256: string; requestDigest: string }
 const sha256 = (text: string) => createHash('sha256').update(text).digest('hex')
@@ -34,17 +36,18 @@ export function verifySemanticWire(request: SemanticRequest, wire: SdkWire) {
 /** Evaluates/reserves only with durable caller-owned history and verified dependencies.
  * Offline preparation omits these dependencies and therefore cannot become ready.
  */
-export function assessLivePreflight(request: SemanticRequest, documentHash: string, wire: SdkWire, options: { ledger?: AnalysisBudgetStore; tokenizer?: SemanticTokenizer; price?: SemanticPrice; historyError?: string } = {}) {
+export function assessLivePreflight(request: SemanticRequest, documentHash: string, wire: SdkWire, options: { ledger?: AnalysisBudgetStore; tokenizer?: SemanticTokenizer; tokenCount?: SemanticTokenCount; price?: SemanticPrice; historyError?: string } = {}) {
   const blockers: string[] = []
   if (!verifySemanticWire(request, wire)) blockers.push('sdk-wire-mismatch')
   if (!compatibleStandardRequest(request)) blockers.push('incompatible-standard-request')
-  if (!options.tokenizer || options.tokenizer.verification !== 'verified-local-model-and-request-framing') blockers.push('local-tokenizer-unavailable')
+  if (!verifySemanticTokenCount(request, options.tokenCount)) blockers.push(options.tokenCount?.provenance === 'offline-sdk-stub' ? 'token-count-stub-only' : options.tokenCount ? 'token-count-evidence-mismatch' : 'server-token-count-required')
+  if (!COUNT_PRICE_EVIDENCE.verified) blockers.push('token-count-price-unverified')
   if (!isGlobalStandardPrice(options.price)) blockers.push('unknown-price')
   if (!(options.ledger instanceof AnalysisBudgetStore) || !options.ledger.historyRestored) blockers.push(options.historyError ?? 'budget-history-unavailable')
   const root = semanticDocumentBinding(request, documentHash)
   if (!root) blockers.push('request-document-mismatch')
   else if (options.ledger && options.ledger.analysisId !== root) blockers.push('analysis-root-mismatch')
   if (blockers.length) return { ready: false as const, blockers, cost: null, requestDigest: semanticDigest(request) }
-  const cost = preflightSemantic(request, documentHash, options.ledger!, { tokenizer: options.tokenizer, price: options.price })
+  const cost = preflightSemantic(request, documentHash, options.ledger!, { tokenCount: options.tokenCount, price: options.price })
   return { ready: cost.status === 'reserved', blockers: cost.reason ? [cost.reason] : [], cost, requestDigest: semanticDigest(request) }
 }

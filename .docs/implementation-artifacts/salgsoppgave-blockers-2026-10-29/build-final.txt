@@ -1,0 +1,10 @@
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+tests/integration/preparation-count-intake.test.ts(47,74): error TS2352: Conversion of type '{ basis: ImportBasis; oracle: { reportPages: number[]; version: number; kind: string; authoredBeforeComparison: string; original: { file: string; sha256: string; pageCount: number; pagesSha256: string; }; findings: { ...; }[]; economy: { ...; }; independentAudit: string; }; directory: string; }' to type '{ directory: string; basis: ImportBasis; oracle: FrozenOracle; manifest: { version: 1; caseId: string; importedAt: string; original: { file: "original.pdf"; sha256: string; pageCount: number; pagesSha256: string; }; }; receipt: { ...; }; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ basis: ImportBasis; oracle: { reportPages: number[]; version: number; kind: string; authoredBeforeComparison: string; original: { file: string; sha256: string; pageCount: number; pagesSha256: string; }; findings: { ...; }[]; economy: { ...; }; independentAudit: string; }; directory: string; }' is missing the following properties from type '{ directory: string; basis: ImportBasis; oracle: FrozenOracle; manifest: { version: 1; caseId: string; importedAt: string; original: { file: "original.pdf"; sha256: string; pageCount: number; pagesSha256: string; }; }; receipt: { ...; }; }': manifest, receipt

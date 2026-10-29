@@ -1,0 +1,25 @@
+{
+  "ready": false,
+  "blockers": [
+    "server-token-count-required",
+    "token-count-price-unverified"
+  ],
+  "externalCalls": 0,
+  "reservationsCreated": 0,
+  "remainingUsd": "0.20000000",
+  "countProjectionMatches": true,
+  "files": [
+    {
+      "file": "request.json",
+      "bytes": 13274,
+      "sha256": "9f1777da3d0af5db6ccd58044ff4fc2efe10f92a8121ffb2158982dba98ff369",
+      "matchesWire": true
+    },
+    {
+      "file": "count-request.json",
+      "bytes": 13195,
+      "sha256": "48e0b179c5c26a42c12acf44e0c3d342d68266492d2a53944c23a3ac050fbf0f",
+      "matchesWire": true
+    }
+  ]
+}

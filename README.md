@@ -120,28 +120,61 @@ requesten skal telles før reservasjon. USD 0,04–0,08 er regneeksempler for
 10–20k input og 2–4k output, ikke målt gjennomsnitt. Budsjettbrudd gir stopp,
 aldri avkorting eller automatisk nytt kall.
 
-**Ny live-import er fortsatt stengt.** Det finnes ingen verifisert lokal
-modelltilpasset teller for hele requestens framing. Ukjent teller/pris eller
-manglende forbrukshistorikk sperrer transport. SDK-grensen testes bare med
-injisert offline-transport og tydelig merket testteller; den oppretter ingen
-produksjonsklient i opplastingsruten. Lokale uttrekk koster ingen modellbruk.
+**Ny live-import er fortsatt stengt.** Presis inputtelling er implementert via
+Responses `inputTokens.count` i låst SDK 6.9.1, inklusive prompt, schema og
+reasoning-konfigurasjon. Hele genereringsrequesten bindes til tellegrunnlaget.
+Dette er serverbasert telling; offline SDK-stub er bare serialiseringsbevis.
+Count-endepunktets pris er ikke verifisert eller etablert som gratis i de
+kontrollerte kildene, så serverfabrikken stopper før nettverk. Ukjent teller,
+pris eller forbrukshistorikk sperrer transport. Ingen produksjonsklient
+opprettes i opplastingsruten. Lokale uttrekk koster ingen modellbruk.
 Når semantikk er nødvendig, viser appen restgrunnlaget og manglende estimat,
 og tillater ikke rapportbekreftelse. `ANALYSIS_MODE=live` åpner ikke denne
 porten. Første live-test krever ny godkjenning og underbygget preflight.
 
 Offline klargjøring kjøres fra reporoten med `npm run prepare:live-test`.
 Den lagrer eksakt SDK-request og kontrollpakke i ignorert
-`private/salgsoppgave-live-preflight/`, uten nøkkellesing eller eksterne kall.
+`private/salgsoppgave-live-preflight/`, inklusive separat SDK-count-request,
+uten nøkkellesing eller eksterne kall.
 Eksisterende budsjettjournal under `private/analysis-budgets/` må være
 initialisert én gang for den nye analysen; kommandoen initialiserer eller
-nullstiller aldri historikk. Manglende/korrupt historikk og ukjent lokal
-tokenteller gir `ready: false`. Reservasjoner beholdes ved omstart og deles
+nullstiller aldri historikk. Manglende/korrupt historikk og ukjent telling
+eller pris gir `ready: false`. Reservasjoner beholdes ved omstart og deles
 med separat rapport. Krasjlåser krever manuell avstemming, aldri automatisk
 ny kvote. Det finnes ingen live-bryter i klargjøringskommandoen.
 
 Den frosne femsiders originalen har separat økonomi-/TG-fasit og negative
 sammenligningstester. Den er en syntetisk teknisk prøve, ingen representativ
-produksjonsbenchmark. [Klargjøring og gjenværende porter](.docs/implementation-artifacts/salgsoppgave-live-preflight-2026-10-29/verifikasjon.md).
+produksjonsbenchmark. [Tidligere klargjøring](.docs/implementation-artifacts/salgsoppgave-live-preflight-2026-10-29/verifikasjon.md).
+
+### Privat mottak av første ekte salgsoppgave
+
+Legg den komplette PDF-en i `private/incoming/salgsoppgave.pdf`, eller behold
+den utenfor repoet og oppgi lokal sti. Bruk et nøytralt case-ID uten adresse
+eller personnavn. Ikke legg ekte dokumenter i `tests/fixtures` eller `.docs`.
+
+```sh
+npm run representative:document -- intake private/incoming/salgsoppgave.pdf first-real
+npm run representative:document -- freeze first-real
+npm run representative:document -- check first-real
+npm run prepare:live-test -- --representative-case first-real
+```
+
+Kjør først bare `intake`. Det bevarer originalbytes, fysisk sidetekst og
+dekningsgrunnlag under ignorert `private/representative-cases/first-real/`.
+Fasit og menneskelig side-/kildekontroll er tomme og uavklarte. `freeze`
+stopper inntil et menneske har lest originalen uavhengig, skrevet fasit før
+modelloutput og dokumentert alle sider, TG-kandidater og økonomifelt.
+Attestasjonen er selvrapportert; programmet beviser ikke hvem som leste PDF-en.
+`check` kontrollerer frosne bytes/kilder på nytt. Privat preflight kan deretter
+lage requestene, men kaller aldri count eller generering og nullstiller aldri
+budsjett. Verktøy er deaktivert; uventet verktøybruk sperrer resultatet.
+
+[Prosedyre for uavhengig fasit og kildekontroll](.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/representative-document-procedure.md)
+beskriver utfylling, frysing og grensen mot faktisk test. `.gitignore` hindrer
+vanlig staging, men kan overstyres med `git add -f`; ikke gjør det for private
+originaler, tekst, fasit eller resultater. Første ekte dokument er ennå ikke
+mottatt. [Nytt test-/reviewbevis og faktiske porter](.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/verifikasjon.md).
 
 ## Prøv F1–F4 fra start til resultat
 

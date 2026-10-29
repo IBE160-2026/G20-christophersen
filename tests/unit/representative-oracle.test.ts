@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest'
 import { ListingKeySchema } from '../../src/contracts/listing.ts'
 import type { ImportBasis } from '../../src/backend/import/local-plan.ts'
-import { representativeHash, representativeTemplates, validateRepresentativeOracle } from '../../src/backend/import/representative-oracle.ts'
+import { quoteContainsAmount, representativeHash, representativeTemplates, validateRepresentativeOracle } from '../../src/backend/import/representative-oracle.ts'
 import type { RepresentativeManifest } from '../../src/backend/import/representative-oracle.ts'
 
 function controlledCase(summary = false, priceText = '3 000 000') {
@@ -156,4 +156,10 @@ it('rejects ambiguous three-digit separators and partial numeric prefix or suffi
     value.oracle.economy.fields[0]!.amount = amount!
     expect(() => validateRepresentativeOracle(value.oracle, value.review, value.manifest, value.basis)).toThrow('representative-economy-transcription-mismatch')
   }
+})
+
+it('delt leksikalsk beløpskontroll avviser Unicode-minus som positiv verdi', () => {
+  expect(quoteContainsAmount('Prisantydning: − 125 000 kr', '125000')).toBe(false)
+  expect(quoteContainsAmount('Prisantydning: - 125 000 kr', '125000')).toBe(false)
+  expect(quoteContainsAmount('Prisantydning: 125 000 kr', '125000')).toBe(true)
 })

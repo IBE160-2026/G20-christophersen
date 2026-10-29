@@ -1,4 +1,5 @@
 import Big from 'big.js'
+import { isEconomyConfiguration } from './economy-request.ts'
 import { CODE_FIRST_MODEL } from '../../contracts/document-import.ts'
 import type { ImportCost } from '../../contracts/document-import.ts'
 import { SEMANTIC_LIMITS, semanticDigest, SEMANTIC_PROMPT, semanticTextConfiguration, canonicalJson } from './semantic-request.ts'
@@ -29,7 +30,7 @@ export function compatibleStandardRequest(request: SemanticRequest) {
   return Object.keys(request).length === allowed.length && Object.keys(request).every(key => allowed.includes(key))
     && request.model === CODE_FIRST_MODEL && request.reasoning?.effort === 'low' && Object.keys(request.reasoning).length === 1
     && request.service_tier === 'default' && request.stream === false && request.store === false && request.truncation === 'disabled'
-    && request.instructions === SEMANTIC_PROMPT && canonicalJson(request.text) === canonicalJson(semanticTextConfiguration())
+    && (request.instructions === SEMANTIC_PROMPT && canonicalJson(request.text) === canonicalJson(semanticTextConfiguration()) || isEconomyConfiguration(request))
     && request.input?.length === 1 && request.input[0]?.role === 'user' && Object.keys(request.input[0]).length === 2
     && request.input[0].content?.length === 1 && request.input[0].content[0]?.type === 'input_text' && typeof request.input[0].content[0].text === 'string'
     && Object.keys(request.input[0].content[0]).length === 2

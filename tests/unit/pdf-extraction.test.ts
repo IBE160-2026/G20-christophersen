@@ -81,3 +81,21 @@ describe('Story 2.3 – full dekoding for strukturelt blankbevis', () => {
     expect(inspectStreamBytes(whitespace, ['UnrecognisedFilter'])).toBe('unknown')
   })
 })
+
+it('dekodingslimit er egen årsak og beholder tekst og fysisk side uten damaged/blank/readable', async () => {
+  const compressed = deflateSync(Buffer.alloc(1024 * 1024 + 1, 32))
+  expect(inspectStreamBytes(compressed, ['FlateDecode'], 1024 * 1024)).toBe('limit')
+  const page = pageWith(async ({ sink }) => sink.enqueue({ items: [{ str: 'Bevart økonomitekst' }] }))
+  expect(await extractPage(4, page, 'limit', false, {}, {}, silent)).toMatchObject({ pdfPage: 4, text: 'Bevart økonomitekst', status: 'unknown', reason: expect.stringContaining('1 MiB') })
+})
+
+
+it.each([true, false])('dekodingslimit beholder kjent tap med/uten tekst: %s', async hasText => {
+  const page = pageWith(async ({ sink }) => { if (hasText) sink.enqueue({ items: [{ str: 'Bevart' }] }); throw new Error('rejected') })
+  const result = await extractPage(5, page, 'limit', false, {}, {}, silent)
+  expect(result).toMatchObject({ pdfPage: 5, status: hasText ? 'incomplete' : 'unreadable', text: hasText ? 'Bevart' : '', reason: expect.stringContaining('1 MiB') })
+})
+it('dekodingslimit skjuler ikke diagnostisert teksttap', async () => {
+  const page = pageWith(async ({ sink }) => sink.enqueue({ items: [{ str: 'Delvis' }] }))
+  expect(await extractPage(6, page, 'limit', false, {}, {}, () => 'loss')).toMatchObject({ status: 'incomplete', reason: expect.stringContaining('1 MiB') })
+})

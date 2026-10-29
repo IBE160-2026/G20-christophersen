@@ -2,7 +2,7 @@ import { inflateSync } from 'node:zlib'
 import type { DocumentBasis } from '../../contracts/document-analysis.ts'
 
 type PageRecord = DocumentBasis['pages'][number]
-export type Inspection = 'empty' | 'content' | 'unknown' | 'damaged'
+export type Inspection = 'empty' | 'content' | 'unknown' | 'damaged' | 'limit'
 export type TextItem = { str: string; hasEOL?: boolean }
 export type TextChunk = { items: TextItem[] }
 export type TextPage = {
@@ -47,7 +47,9 @@ export function inspectStreamBytes(raw: Uint8Array, filters: string[], maxDecode
       } else return 'unknown'
     }
     return bytes.every(byte => [0, 9, 10, 12, 13, 32].includes(byte)) ? 'empty' : 'content'
-  } catch { return 'damaged' }
+  } catch (error) {
+    return error instanceof Error && 'code' in error && error.code === 'ERR_BUFFER_TOO_LARGE' ? 'limit' : 'damaged'
+  }
 }
 
 /** A page-local extraction failure never removes that physical page or a delivered text chunk. */
@@ -83,12 +85,14 @@ export async function extractPage(pdfPage: number, page: TextPage, inspection: I
   const text = items.map(item => item.str + (item.hasEOL ? '\n' : '')).join('')
   const hasText = text.trim().length > 0
   const diagnostic = diagnostics()
+  const limitReason = inspection === 'limit' ? ' Innholdsstrømmens dekoding overskred grensen på 1 MiB.' : ''
   if ((rejected || inspection === 'damaged' || diagnostic === 'loss') && hasText) {
-    return { pdfPage, text, status: 'incomplete', reason: 'Tekstuttrekket er kjent ufullstendig på denne PDF-siden.' }
+    return { pdfPage, text, status: 'incomplete', reason: 'Tekstuttrekket er kjent ufullstendig på denne PDF-siden.' + limitReason }
   }
   if (rejected || inspection === 'damaged' || diagnostic === 'loss') {
-    return { pdfPage, text, status: 'unreadable', reason: 'Tekstlesingen ble avvist på denne PDF-siden.' }
+    return { pdfPage, text, status: 'unreadable', reason: 'Tekstlesingen ble avvist på denne PDF-siden.' + limitReason }
   }
+  if (inspection === 'limit') return { pdfPage, text, status: 'unknown', reason: limitReason.trim() }
   if (inspection === 'unknown' || diagnostic === 'uncertain' || hasOtherContent === null) {
     return { pdfPage, text, status: 'unknown', reason: 'Sideinnholdet kunne ikke inspiseres fullstendig og pålitelig.' }
   }

@@ -45,11 +45,11 @@ const canonicalDecimal = (value: string) => {
   return integer.replace(/^0+(?=\d)/, '') + (tail ? `.${tail}` : '')
 }
 /** Lexical transcription only: no arithmetic, currency inference or relationship derivation. */
-function quoteContainsAmount(quote: string, amount: string) {
+export function quoteContainsAmount(quote: string, amount: string) {
   // Consume the entire punctuated token first; unsupported forms must not match a numeric prefix/suffix.
   const numbers = quote.matchAll(/(?<![\d.,])\d+(?:(?:[.,]\d+)|(?:[ \u00a0\u202f]\d{3}(?!\d)))*(?!\d|[.,]\d)/gu)
   for (const number of numbers) {
-    if (/-\s*$/.test(quote.slice(0, number.index))) continue
+    if (/[-\u2212]\s*$/.test(quote.slice(0, number.index))) continue
     const token = number[0]
     let decimal: string | null = null
     if (/^\d+(?:[.,]\d{1,2})?$/.test(token)) decimal = token.replace(',', '.')
@@ -60,7 +60,7 @@ function quoteContainsAmount(quote: string, amount: string) {
   }
   return false
 }
-function quoteContainsYear(quote: string, value: string) {
+export function quoteContainsYear(quote: string, value: string) {
   return [...quote.matchAll(/(?<!\d)\d{4}(?!\d)/g)].some(match => match[0] === value)
 }
 

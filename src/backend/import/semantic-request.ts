@@ -41,7 +41,7 @@ export function canonicalJson(value: unknown): string {
   if (value !== null && typeof value === 'object') return '{' + Object.entries(value).sort(([a], [b]) => a.localeCompare(b, 'en')).map(([key, item]) => JSON.stringify(key) + ':' + canonicalJson(item)).join(',') + '}'
   return JSON.stringify(value)
 }
-export type SemanticRequest = ReturnType<typeof createSemanticRequest>
+export type SemanticRequest = Omit<ReturnType<typeof createSemanticRequest>, 'text' | 'max_output_tokens'> & { max_output_tokens: number; text: { format: { type: 'json_schema'; name: string; strict: true; schema: Record<string, unknown> } } }
 export function semanticDigest(request: SemanticRequest) { return createHash('sha256').update(canonicalJson(request)).digest('hex') }
 /** A report belongs to its parent's analysis; a prospectus owns its own analysis. */
 export function semanticDocumentBinding(request: SemanticRequest, documentHash: string) {

@@ -42,6 +42,7 @@ interface Parser {
   EOF: unknown
   DefaultPartialEvaluatorOptions: object
   WorkerTask: new (name: string) => { finish(): void; terminate(): void }
+  stringToPDFString(value: string, keepEscapeSequence?: boolean): string
   setVerbosityLevel(level: number): void
 }
 let manager: Manager | undefined
@@ -55,7 +56,7 @@ console.warn = console.info = (...args: unknown[]) => { messages.push(args.map(S
 try {
   const source = await readFile(new URL(import.meta.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs')), 'utf8')
   if (createHash('sha256').update(source).digest('hex') !== WORKER_SHA256) throw new Error('Incompatible parser')
-  const moduleUrl = 'data:text/javascript;base64,' + Buffer.from(source + '\nexport { LocalPdfManager, Page, Dict, Ref, Name, BaseStream, Stream, DefaultPartialEvaluatorOptions, WorkerTask, setVerbosityLevel, Lexer, Cmd, EOF, EvaluatorPreprocessor };\n').toString('base64')
+  const moduleUrl = 'data:text/javascript;base64,' + Buffer.from(source + '\nexport { LocalPdfManager, Page, Dict, Ref, Name, BaseStream, Stream, DefaultPartialEvaluatorOptions, WorkerTask, setVerbosityLevel, Lexer, Cmd, EOF, EvaluatorPreprocessor, stringToPDFString };\n').toString('base64')
   const parser = await import(moduleUrl) as Parser
   parser.setVerbosityLevel(5)
   const handler = {
@@ -120,12 +121,96 @@ try {
         raw.reset()
         const inspected = inspectStreamBytes(Uint8Array.from(raw.getBytes()), filters.map(filter => (filter as { name: string }).name), bounded ? 1024 * 1024 : undefined)
         raw.pos = originalPosition
+        if (inspected === 'limit') return resultOf('limit', 'Innholdsstrømmens dekoding overskred grensen på 1 MiB.')
         if (inspected === 'damaged') return resultOf(inspected)
         if (inspected === 'unknown') result = inspected
         else if (inspected === 'content' && result !== 'unknown') result = inspected
       }
       return resultOf(result, result === 'unknown' ? 'Innholdsstrømmens dekoding er ikke uavhengig verifisert.' : null)
     } catch { return resultOf('unknown', 'Innholdsstrømmens struktur eller referanse kunne ikke kontrolleres.') }
+  }
+  // Metadata is accepted only after validating its complete, non-painting structure.
+  function pieceInfo(raw: unknown): boolean {
+    const value = resolve(raw)
+    if (!(value instanceof parser.Dict) || ![...value.getKeys()].length) return false
+    return value.getKeys().every(key => {
+      const entry = resolve(value.getRaw(key))
+      const inDesignKeys = ['DocumentID', 'OriginalDocumentID', 'NumberofPages', 'PageTransformationMatrixList', 'PageUIDList', 'PageWidthList']
+      const allowed = ['LastModified', 'Private', ...(key === 'InDesign' ? inDesignKeys : [])]
+      if (!(entry instanceof parser.Dict) || !entry.has('LastModified') || entry.getKeys().some(field => !allowed.includes(field))) return false
+      const rawDate = resolve(entry.getRaw('LastModified'))
+      if (typeof rawDate !== 'string') return false
+      // PDF text strings may carry UTF-16 BOMs. Reject truncated code units before
+      // PDF.js's intentionally forgiving decoder can silently trim an odd byte.
+      if ((rawDate.startsWith('\xFE\xFF') || rawDate.startsWith('\xFF\xFE')) && rawDate.length % 2 !== 0) return false
+      const date = parser.stringToPDFString(rawDate, true)
+      if (!/^D:\d{14}(?:Z|[+-]\d{2}'\d{2}')?$/.test(date)) return false
+      for (const field of inDesignKeys) {
+        if (!entry.has(field)) continue
+        const item = resolve(entry.getRaw(field))
+        if (['DocumentID', 'OriginalDocumentID'].includes(field)) { if (typeof item !== 'string' || !item.length) return false }
+        else if (field === 'NumberofPages') { if (!Number.isSafeInteger(item) || (item as number) < 1) return false }
+        else {
+          if (!(item instanceof parser.Dict) || ![...item.getKeys()].length) return false
+          for (const pageKey of item.getKeys()) {
+            if (!/^\d+$/.test(pageKey)) return false
+            const data = resolve(item.getRaw(pageKey))
+            if (field === 'PageTransformationMatrixList') {
+              if (!Array.isArray(data) || data.length !== 6 || !data.every(rawNumber => typeof resolve(rawNumber) === 'number' && Number.isFinite(resolve(rawNumber)))) return false
+            } else if (field === 'PageUIDList') { if (!Number.isSafeInteger(data) || (data as number) < 0) return false }
+            else if (typeof data !== 'number' || !Number.isFinite(data) || data <= 0) return false
+          }
+        }
+      }
+      // Private payloads cannot introduce unchecked references or appearance structures.
+      const seen = new Set<unknown>()
+      const safe = (rawValue: unknown, depth: number): boolean => {
+        if (depth > 16) return false
+        const item = resolve(rawValue)
+        if (item == null || typeof item === 'string' || typeof item === 'boolean' || typeof item === 'number' && Number.isFinite(item) || item instanceof parser.Name) return true
+        if (seen.has(item)) return false
+        seen.add(item)
+        if (Array.isArray(item)) return item.every(child => safe(child, depth + 1))
+        if (!(item instanceof parser.Dict) || item.getKeys().some(field => ['AP', 'XFA'].includes(field))) return false
+        return item.getKeys().every(field => safe(item.getRaw(field), depth + 1))
+      }
+      return !entry.has('Private') || safe(entry.getRaw('Private'), 0)
+    })
+  }
+  function transparencyGroup(raw: unknown): boolean {
+    const group = resolve(raw)
+    if (!(group instanceof parser.Dict) || group.getKeys().some(key => !['Type', 'S', 'CS', 'I', 'K'].includes(key))) return false
+    const name = (value: unknown, expected: string) => value instanceof parser.Name && value.name === expected
+    if (!name(resolve(group.getRaw('S')), 'Transparency') || group.has('Type') && !name(resolve(group.getRaw('Type')), 'Group')) return false
+    if (['I', 'K'].some(key => group.has(key) && typeof resolve(group.getRaw(key)) !== 'boolean')) return false
+    if (!group.has('CS')) return true
+    const color = resolve(group.getRaw('CS'))
+    if (color instanceof parser.Name) return ['DeviceGray', 'DeviceRGB', 'DeviceCMYK'].includes(color.name)
+    if (!Array.isArray(color) || color.length !== 2 || !name(resolve(color[0]), 'ICCBased')) return false
+    const profile = resolve(color[1])
+    if (!(profile instanceof parser.BaseStream) || ![1, 3, 4].includes(resolve(profile.dict.getRaw('N')) as number)) return false
+    if (profile.dict.getKeys().some(key => !['Length', 'Filter', 'DecodeParms', 'N', 'Alternate', 'Range'].includes(key))) return false
+    const n = resolve(profile.dict.getRaw('N')) as number
+    if (profile.dict.has('Alternate')) {
+      const alternate = resolve(profile.dict.getRaw('Alternate'))
+      if (!(alternate instanceof parser.Name) || alternate.name !== (n === 1 ? 'DeviceGray' : n === 3 ? 'DeviceRGB' : 'DeviceCMYK')) return false
+    }
+    if (profile.dict.has('Range')) {
+      const range = resolve(profile.dict.getRaw('Range'))
+      if (!Array.isArray(range) || range.length !== n * 2 || !range.every(item => typeof resolve(item) === 'number' && Number.isFinite(resolve(item)))) return false
+      for (let i = 0; i < range.length; i += 2) if ((resolve(range[i]) as number) >= (resolve(range[i + 1]) as number)) return false
+    }
+    // Decode the actual profile, not merely its dictionary; ICC headers bind N.
+    const position = profile.pos
+    try {
+      profile.reset()
+      const bytes = profile.getBytes(1024 * 1024 + 1)
+      const n = resolve(profile.dict.getRaw('N'))
+      const signature = Buffer.from(bytes.subarray(16, 20)).toString('ascii')
+      return bytes.length >= 128 && bytes.length <= 1024 * 1024 && Buffer.from(bytes.subarray(36, 40)).toString('ascii') === 'acsp'
+        && new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(0) === bytes.length
+        && signature === (n === 1 ? 'GRAY' : n === 3 ? 'RGB ' : 'CMYK')
+    } finally { profile.pos = position }
   }
   function otherContent(dict: Dict): { content: boolean | null; textLoss: boolean; uncertainAnnotation: boolean; reason: string | null } {
     let content = false
@@ -146,10 +231,19 @@ try {
       while (current) {
         if (seen.has(current)) return unknown()
         seen.add(current)
-        if (current.getKeys().some(key => !nonContent.has(key) && !contentKeys.includes(key))) return unknown()
+        if (current.has('PieceInfo') && !pieceInfo(current.getRaw('PieceInfo'))) return unknown()
+        if (current.has('Group') && !transparencyGroup(current.getRaw('Group'))) return unknown()
+        if (current.getKeys().some(key => !nonContent.has(key) && !['PieceInfo', 'Group'].includes(key) && !contentKeys.includes(key))) return unknown()
         for (const key of contentKeys) {
           if (!current.has(key)) continue
           const value = resolve(current.getRaw(key))
+          if (key === 'XFA') return unknown()
+          if (key === 'AP') {
+            if (value == null) return unknown()
+            uncertainAnnotation = true
+            content = true
+            continue
+          }
           if (key === 'Annots') {
             if (!Array.isArray(value)) return unknown()
             if (value.length === 0) continue

@@ -1,0 +1,44 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/integration/pdf-extraction.test.ts (44 tests | 1 failed) 18242ms
+   ❯ Story 2.3 AC3/AC4 – konservativ blankregel og fullføringssperre (15)
+     × structural-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget 382ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/pdf-extraction.test.ts > Story 2.3 AC3/AC4 – konservativ blankregel og fullføringssperre > structural-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget
+AssertionError: expected [ 'unknown', 'unknown', …(3) ] to deeply equal [ 'unknown', 'unknown', …(3) ]
+
+- Expected
++ Received
+
+  [
+    "unknown",
+    "unknown",
+    "unknown",
+-   "unreadable",
++   "unknown",
+    "unknown",
+  ]
+
+ ❯ tests/integration/pdf-extraction.test.ts:110:53
+    108|     const { document, error } = await extractFile(name)
+    109|     preservesPositions(document)
+    110|     expect(document.pages.map(page => page.status)).toEqual(oracle[nam…
+       |                                                     ^
+    111|     expect(error?.kind).toBe('document')
+    112|     const blocked = bindAnalysisOutcome(document, completed)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 60 passed (61)
+      Tests  1 failed | 1478 passed (1479)
+   Start at  00:33:28
+   Duration  87.64s (tests 97%, import 3%)
+

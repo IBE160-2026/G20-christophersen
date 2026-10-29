@@ -1,0 +1,44 @@
+# Avgrenset økonomiprøve – 2026-10-30
+
+Brukeren autoriserte videre kodearbeid fra full baseline
+`58f11cfd9e3d25481ed3a385464e31aec4b1df1c`, avgrenset første prøve til økonomiske
+opplysninger og dokumenterte begrensninger, og ba om stopp for fasit-/betalt
+kallgodkjenning. Teknisk/TG-dekning forblir uavklart. Aktiv automatisk
+[promptlogg](../prompts/session-01a187a8-c6d4-78e1-83e0-6cc45de8cd2c.jsonl) er bevart.
+
+BMAD-build ble kjørt med kort intern [implementeringsspec](../../implementation-artifacts/spec-salgsoppgave-economy-trial.md),
+ingen ny designgodkjenningsrunde. To undersøkelsesagenter ga konkrete kode-/pris-
+funn; én sekvensiell implementeringsagent utførte endringene. Root integrerte,
+kontrollerte originalgrunnlaget privat og utførte tre kontekstfrie BMAD-reviewlag.
+Alle reviewfunn, inkludert to fra nykontroll, ble rettet og kontrollert igjen.
+
+PDF-kontrollen validerer kjente PieceInfo/InDesign-/Transparency-strukturer,
+inklusive UTF-16-metadata, uten generell metadata-unntaksregel. Ressursgrense
+blandes ikke lenger med skadet komprimering. Samtidig kjent teksttap beholdes.
+Raster og usikre sider fjernes aldri fra originalregnskapet. En innledende
+AP-statusregresjon ble rettet mot uendret historisk fasit.
+
+Ny økonomiprøve sender kun eksplisitt valgte lesbare sider som tekst og har
+eget avgrenset formål. Den fullstendige TG-prøvens porter er uendret. Originalen
+leses på nytt før preflight. Faste felt, kategorier, rå beløp/kvalifikasjoner,
+kildespenn og usikkerhet kontrolleres; kandidatresultatet krever menneskelig
+fasitsammenligning og blir aldri en ferdig finans-/screeningvurdering.
+
+Root laget en privat enkel fasitoversikt med eksakte originalkilder og tydelige
+forbehold. Menneskelig godkjenning er null. Pakke-/request-/fasitforslagets binding
+ligger i en separat privat ventende godkjenningsmanifest. Maskinens lokale felt
+blir ikke automatisk menneskelig fasit. Originalfiler, tidligere fasitskjemaer og
+attestasjoner er bevart; ingen frysing eller budsjettinitialisering er gjort.
+
+Offisiell OpenAI-dokumentasjon ble åpnet og kontrollert på nytt. SDK-count-
+støtte og modellmakspriser er kjent, men count-endepunktets egen pris er fortsatt
+ikke dokumentert. Ikke anta gratispris eller at et vilkårlig restbeløp dekker
+gebyret. Ukjent pris stopper før count/generering; ingen godkjenning er innhentet
+eller satt automatisk. Samlet USD 0,20, reasoning/output, separat rapport og
+varig historikk gjelder fortsatt. Dagens preflight er ikke API-klar.
+
+Alle dokumentverdier, navn, kildeutdrag, originalhash, ekte request og visuelle
+kontroller ligger kun i ignorert private/. Versjonert bevis er anonymisert.
+Ingen privat fil er sporet/staget, ingen nøkkel er lest og ingen betalt count,
+modellgenerering eller push er utført. Fullt test-/reviewbevis og fortsatt åpne
+porter står i [sluttverifikasjon](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/verifikasjon.md).

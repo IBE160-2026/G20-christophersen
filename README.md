@@ -178,6 +178,33 @@ privat 30. oktober; ukjent/ufullstendig tekstdekning og manglende menneskelig
 fasit sperrer kvalitetsprøven. [Mottakscheckpoint](.docs/process/arbeidsokter/2026-10-30-salgsoppgave-document-intake.md).
 [Kode-/reviewbevis og øvrige porter](.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/verifikasjon.md).
 
+### Avgrenset økonomiprøve før teknisk analyse
+
+`src/backend/import/economy-trial.ts` har separat offline klargjøring med
+`prepareEconomyTrial(originalBytes, basis, selectedPhysicalPages)` og
+`prepareEconomyPreflight(packet, originalBytes, basis)`. Den siste leser
+originalen på nytt og kontrollerer hele pakke-/kildebindingen. Dette er et
+backendhjelpemiddel, ikke en ny opplastings- eller livekommando.
+
+Valgte sider må ha lesbart originalt tekstlag. Resten av sidene og raster-
+advarsler beholdes i lokalt sideregnskap, men sendes ikke. Ukjente kart eller
+OCR utenfor utvalget godkjenner eller blokkerer ikke tekstprøven. Ingen teknisk
+fullstendighet kan bekreftes. Kjent metadata valideres eksplisitt; dekodings-
+grense er egen årsak og blir ikke automatisk bevis på korrupt original.
+
+Økonomisvar er bare ubekreftede kandidater med eksakte kilder, originaltekst
+og krav om sammenligning mot menneskelig godkjent fasit. Kvartal/mva/avvik
+bevares; ingen årsomregning eller finans-/screeningendring utføres. Privat
+fasitforslag er ikke en menneskelig attestasjon. Fullstendig TG-prøve følger
+fortsatt den strengere prosedyren over.
+
+Preflight bruker bare lokale SDK-stubber, oppretter ingen budsjettjournal og
+gir `ready: false`. Faktisk count-kvittering, verifisert countpris, varig
+fellesbudsjett og særskilt betalt testgodkjenning mangler fortsatt. Maksimal
+modellreserve ved 40k input / 8k output inklusive reasoning er USD 0,18;
+ukjent tellegebyr kan ikke antas dekket av resten av USD 0,20.
+[Verifikasjon og godkjenningsgrense](.docs/implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/verifikasjon.md).
+
 ## Prøv F1–F4 fra start til resultat
 
 For en enkel offline-prøve etter installasjon: installer også Chromium først hvis testene skal kjøres, slå deretter av Wi-Fi/koble fra Ethernet og behold localhost tilgjengelig. Registrer hvordan nett ble sperret i et faktisk S6-forsøk. Installasjonens nettbehov er ikke en del av offline-demoen.

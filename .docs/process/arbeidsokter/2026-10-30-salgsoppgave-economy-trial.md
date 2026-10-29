@@ -53,3 +53,10 @@ Oppdatert offentlig dokumentsøk etablerte fortsatt ikke count-endepunktets
 pris. [Prisavklaring og usendt konkret henvendelse](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/prisavklaring.md)
 beskriver dette og hva som må foreligge før sperren kan åpnes. Historiske
 beskrivelser av null godkjenning ovenfor gjelder forrige checkpoint.
+
+Brukeren fjernet deretter server-count som obligatorisk for første prøve og
+autoriserte lokal konservativ kontroll. [Implementasjon og målrettet bevis](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/lokalt-budsjett.md)
+viser ettkallsport, helt request-/schemabudsjett, 4000 output inklusive reasoning,
+USD 0,14 modellmaksimum og USD 0,15 varig reservasjon med USD 0,05 margin.
+7 nye tester, typecheck og avgrenset lint består; ingen omfattende testrunde.
+Første prøve er klar for særskilt betalt godkjenning, men ikke kjørt.

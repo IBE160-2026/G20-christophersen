@@ -517,3 +517,12 @@ er fabrikkert og ingen fullstendig teknisk analyse er godkjent. Countpris er
 fortsatt ukjent og stopper før nettverk. Ekte telling, felles budsjett og
 særskilt betalt testgodkjenning gjenstår. Ingen privat fil i commit, betalt
 API-kjøring, finans-/screeningendring eller push. Tidligere poster bevares.
+
+**PAA-SO2, lokal kostnadsport 2026-10-30 — Status: fortsatt Åpen.**
+Brukeren har godkjent det avgrensede fasitforslaget og fjernet obligatorisk
+server-count kun for første økonomitest. [Lokal ettkallsport og målrettet
+verifikasjon](salgsoppgave-economy-trial-2026-10-30/lokalt-budsjett.md) er
+implementert med konservativt helt requestbudsjett og bevart totalramme.
+Første prøve er klar til betalt godkjenning; ingen betalt prøve er kjørt.
+Generell count-/TG-preflight er uendret, og reell modellkvalitet/full TG-dekning
+er fortsatt uverifisert. Tidligere prisundersøkelse bevares som historikk.

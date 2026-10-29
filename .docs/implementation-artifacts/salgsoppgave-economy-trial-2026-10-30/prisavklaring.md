@@ -1,5 +1,10 @@
 # Fasit godkjent; count-pris fortsatt uavklart
 
+**Senere scopeendring samme dag:** Brukeren har fjernet count som obligatorisk
+avhengighet kun for første økonomitest. Se [lokal kostnadsport](lokalt-budsjett.md).
+Prisundersøkelsen nedenfor bevares som historikk; den blokkerer ikke den nye
+lokale prøveformen. Ingen gratispris for count er antatt.
+
 Checkpoint etter `6bf8eaa`, 2026-10-30. Brukeren har uttrykkelig godkjent
 fasitforslaget for den avgrensede økonomitesten med alle avvik og forbehold.
 Dette godkjenner ikke betalte kall eller teknisk/TG-dekning.

@@ -104,3 +104,10 @@ AC1–4 og alle fire I/O-matriselinjer er akseptert for dette offline-scope.
 Live-porten forblir ubetinget stengt; lokal verifisert token-/framingteller,
 gjeldende pris-/forbrukshistorikk, produksjonstransport og reell kvalitetsprøve
 er ikke aktivert eller bevist av stubtestene. Ingen betalte API-kall eller push.
+
+## Lokal løsningscommit
+
+`16125bf0b617136c3c0c5507bc8ffdb0edfd13dd` inneholder implementeringen,
+aktiv promptlogg, test-/reviewbevis og den aksepterte offline-leveransen.
+Et påfølgende dokumentcheckpoint registrerer denne faktiske commit-ID-en.
+Ingen betalt API-transport, første live-test eller push er utført.

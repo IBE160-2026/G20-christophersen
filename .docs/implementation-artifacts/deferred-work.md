@@ -435,3 +435,7 @@ verifisert lokal requestteller, produksjonstransport eller reell modellkvalitet
 utledes av offline-prøvene. Ingen første live-test eller push er utført.
 Tidligere oppføringer og historikk er bevart; denne akseptansen lukker ikke
 PAA-SO2 eller historiske S5/S6-porter.
+
+Lokal offline-løsningscommit med aktiv promptlogg og godkjent review/testbevis:
+`16125bf0b617136c3c0c5507bc8ffdb0edfd13dd`. **PAA-SO2 er fortsatt Åpen** for
+den dokumenterte live-/kvalitetsgrensen; ingen aktivering eller betalt prøve.

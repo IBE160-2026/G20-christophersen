@@ -73,3 +73,7 @@ og hovedteksten samler identiske forklaringer uten å fjerne fysisk rest.
 Alle 20 registrerte reviewfunn er rettet; ingen nye sentrale issue-systemer
 eller endrede finans-/screeningregler er innført. Lokal commit med aktiv
 promptlogg ferdigstiller offline-bestillingen. Første live-test er ikke startet.
+
+Faktisk lokal løsningscommit: `16125bf0b617136c3c0c5507bc8ffdb0edfd13dd`.
+Arbeidstreet var rent etter commit. Dette etterfølgende dokumentcheckpointet
+registrerer den kanoniske identifikatoren uten produkt-/testendring.

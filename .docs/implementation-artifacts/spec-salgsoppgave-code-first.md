@@ -6,6 +6,7 @@ status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: '15402fc307726e0528c1ae0a068b36ab3dee5845'
+implementation_commit: '16125bf0b617136c3c0c5507bc8ffdb0edfd13dd'
 context:
   - '{project-root}/.docs/planning-artifacts/salgsoppgave-code-first-design-2026-10-29.md'
 ---
@@ -94,6 +95,10 @@ uavhengige nykontroller er uten restfunn. Se
 er bevart. Ingen reviewfunn er utsatt; PAA-SO2 forblir åpen for senere live/kvalitet.
 Ingen produksjonsteller eller reell modellkvalitet påstås. Lokal commit følger
 med aktiv promptlogg, uten betalte kall/push og med stopp før første live-test.
+
+Lokal løsningscommit: `16125bf0b617136c3c0c5507bc8ffdb0edfd13dd`, med aktiv
+promptlogg og alle sluttbevis. Et rent dokumentcheckpoint registrerer den
+faktiske identifikatoren; ingen produktkode eller testforventning endres.
 
 ## Spec Change Log
 

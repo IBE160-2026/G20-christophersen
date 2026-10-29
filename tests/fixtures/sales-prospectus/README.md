@@ -58,3 +58,30 @@ Genererte forhåndsvisninger beholdes i systemets tempområde.
 
 [Faktisk prøve og begrensninger](../../../.docs/implementation-artifacts/salgsoppgave-correct-course-2026-10-28/pdf-probe.json).
 [Spec og fremtidige AC](../../../.docs/implementation-artifacts/spec-salgsoppgave-input.md).
+
+
+## Godkjent offline-implementering 2026-10-28
+
+De opprinnelige 13 PDF-ene, `expected.json` og `sha256.json` er bevart.
+`extended-expected.json` er håndskrevet uavhengig fasit for sju nye originaler;
+`generate-extended.py` lager bare disse og `extended-sha256.json`.
+
+- `bounded-200.pdf`: økonomi/sammendrag 1–2, eksplisitt rapport 5–12 og
+  188 etterfølgende irrelevante sider. Kombinert utvalg [1,2,5,6,7,8,9,10,11,12].
+- `raster-footer-12.pdf`: skannet TG3 på fysisk 10 med digital bunntekst.
+  Bunnteksten er lesbar; selve rasterrapporten forblir ulest.
+- `ambiguous-12.pdf`: to rapportstarter; ingen entydig fullstendig rapport.
+- `wrong-property-report-4.pdf`: kjent adresseforskjell mot `bounded-200.pdf`.
+- `logo-economy-12.pdf`: lesbar økonomitekst med liten rasterlogo; tekstgrunnlaget
+  bevares, og rasteret hevdes ikke lest.
+- `inline-raster-footer-12.pdf`: inline-bilder uten image XObjects, lesbart
+  økonomitekstlag og digital rapportbunntekst; rasterrapporten sperres.
+- `integrated-identity-conflict-12.pdf`: ulike kildebundne eiendomsadresser
+  på fysisk 1 og 5 sperrer teknisk bruk, men bevarer økonomi.
+
+Ny import bruker disse originalhashene og versjonene, aldri filnavnet som
+oppslagsnøkkel. Ukjent original er utilgjengelig demo uten nett/fallback.
+Fasiten for finansieringsflyten bygger på eksplisitt 0 % rente:
+3075000/300 = 10250/mnd, ×12 = 123000/år, pluss fellesgjeld 12000 = J135000.
+Visuell kontroll av de nye relevante sidene er dokumentert i
+[leveringsbeviset](../../../.docs/implementation-artifacts/salgsoppgave-implementation-2026-10-28/verifikasjon.md).

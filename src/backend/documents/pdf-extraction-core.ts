@@ -35,13 +35,13 @@ function ascii85(bytes: Uint8Array): Uint8Array {
 }
 
 /** Independent full decode prevents PDF.js's forgiving decoders from proving false emptiness. */
-export function inspectStreamBytes(raw: Uint8Array, filters: string[]): Inspection {
+export function inspectStreamBytes(raw: Uint8Array, filters: string[], maxDecodedBytes?: number): Inspection {
   try {
     let bytes = raw
     for (const filter of filters) {
       if (filter === 'ASCII85Decode' || filter === 'A85') bytes = ascii85(bytes)
       else if (filter === 'FlateDecode' || filter === 'Fl') {
-        const decoded = inflateSync(bytes, { info: true }) as unknown as { engine: { bytesWritten: number }; buffer: Uint8Array }
+        const decoded = inflateSync(bytes, { info: true, ...(maxDecodedBytes ? { maxOutputLength: maxDecodedBytes } : {}) }) as unknown as { engine: { bytesWritten: number }; buffer: Uint8Array }
         if (decoded.engine.bytesWritten !== bytes.length) return 'damaged'
         bytes = decoded.buffer
       } else return 'unknown'
@@ -51,20 +51,34 @@ export function inspectStreamBytes(raw: Uint8Array, filters: string[]): Inspecti
 }
 
 /** A page-local extraction failure never removes that physical page or a delivered text chunk. */
+export class TextBudgetExceeded extends Error {}
+export interface TextBudget { pageBytes: number; totalBytes: number; used: number }
+
 export async function extractPage(pdfPage: number, page: TextPage, inspection: Inspection,
   hasOtherContent: boolean | null, handler: object, task: object,
-  diagnostics: () => 'loss' | 'uncertain' | null): Promise<PageRecord> {
+  diagnostics: () => 'loss' | 'uncertain' | null, budget?: TextBudget): Promise<PageRecord> {
   // Structural emptiness proves no text operators exist; avoid forgiving parser shortcuts.
   if (inspection === 'empty' && hasOtherContent === false && diagnostics() === null) return { pdfPage, text: '', status: 'blank', reason: null }
   const items: TextItem[] = []
   let rejected = false
+  let pageBytes = 0
+  let exceeded = false
   try {
     await page.extractTextContent({ handler, task, includeMarkedContent: false, disableNormalization: false,
       sink: { desiredSize: Infinity, ready: Promise.resolve(), enqueue(chunk: TextChunk) {
         // PDF.js reuses/empties its chunk arrays after enqueue.
-        items.push(...chunk.items.filter(item => typeof item.str === 'string').map(item => ({ str: item.str, hasEOL: item.hasEOL })))
+        for (const item of chunk.items) {
+          if (typeof item.str !== 'string') continue
+          if (budget) {
+            const count = Buffer.byteLength(item.str + (item.hasEOL ? '\n' : ''), 'utf8')
+            pageBytes += count; budget.used += count
+            if (pageBytes > budget.pageBytes || budget.used > budget.totalBytes) { exceeded = true; throw new TextBudgetExceeded('Tekstgrensen er overskredet.') }
+          }
+          items.push({ str: item.str, hasEOL: item.hasEOL })
+        }
       } } })
   } catch { rejected = true }
+  if (exceeded) throw new TextBudgetExceeded('Tekstgrensen er overskredet.')
   // PDF.js already supplies word/gap spaces; font changes can split one word.
   const text = items.map(item => item.str + (item.hasEOL ? '\n' : '')).join('')
   const hasText = text.trim().length > 0

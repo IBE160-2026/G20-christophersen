@@ -1,0 +1,212 @@
+[
+  {
+    "id": "B1",
+    "lens": "blind-hunter",
+    "verdict": "high",
+    "location": "src/frontend/state/import-session.ts:39",
+    "finding": "D får finansieringsåret i stedet for dokumentert kostnadsår.",
+    "evidence": "Autofill velger p.financing.year for begge felter; reproduksjon fra edge-review bekrefter 2026→2027.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B2",
+    "lens": "blind-hunter",
+    "verdict": "high",
+    "location": "src/backend/documents/pdf-extraction-worker.ts:202",
+    "finding": "Inline-bilder uten XObject kan unngå rasterflagget.",
+    "evidence": "Rasterkontrollen går bare gjennom Resources/XObject; BI-operatør i sidens innholdsstrøm inspiseres ikke.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B3",
+    "lens": "blind-hunter",
+    "verdict": "high",
+    "location": "src/frontend/state/import-session.ts:17",
+    "finding": "Intern eiendomsmotstrid i integrert dokument kan bekreftes.",
+    "evidence": "Conflict beregnes bare ved separate utfall; comparePropertyIdentity(self,self) må også brukes på kandidater i samme original.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B4",
+    "lens": "blind-hunter",
+    "verdict": "medium",
+    "location": "src/contracts/document-import.ts:80",
+    "finding": "Vedleggsmetadata kan motsies av tomme dekningslister.",
+    "evidence": "Schema kontrollerer lengde ved komplett rapport, men avstemmer ikke faktisk attachment-ID-sett.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B5",
+    "lens": "blind-hunter",
+    "verdict": "high",
+    "location": "src/frontend/state/import-session.ts:50",
+    "finding": "Importerte kostnadsrader slettes også etter manuelt eierskap.",
+    "evidence": "Filteret fjerner import-prefiks uten å se manualFields, mens D/J-verdiene bevares.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B6",
+    "lens": "blind-hunter",
+    "verdict": "medium",
+    "location": "src/frontend/state/import-session.ts:44",
+    "finding": "Urelaterte eksplisitte nullbekreftelser tømmes.",
+    "evidence": "autofill setter explicitZeros=[] selv når manuelt felt ikke erstattes.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B7",
+    "lens": "blind-hunter",
+    "verdict": "medium",
+    "location": "src/domain/document-import.ts:5",
+    "finding": "Eierform styrer ikke avgiftens relevanskontroll.",
+    "evidence": "Draftet mister eierform; dokumentavgiften behandles likt ved ukjent eierform/borettslag. Løs med eksplisitt brukerbegrunnelse, aldri lovtolkning eller ny avgiftsberegning.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B8",
+    "lens": "blind-hunter",
+    "verdict": "medium",
+    "location": "src/frontend/state/prospectus.ts",
+    "finding": "Feil separat rapport kan ikke fjernes til fordel for bevart integrert grunnlag.",
+    "evidence": "technicalImport foretrekker report.selected og eksisterende handlinger tømmer den ikke; lokal gjenoppretting kan bruke bevart uttrekk uten nytt kall.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B9",
+    "lens": "blind-hunter",
+    "verdict": "medium",
+    "location": "src/frontend/screens/ProspectusImport.tsx",
+    "finding": "Belegg for eierform/identitet/område vises ikke ved kontroll.",
+    "evidence": "UI viser økonomifeltets kilder, men ikke ownershipSources/propertyIdentity/sections.basis.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "B10",
+    "lens": "blind-hunter",
+    "verdict": "medium",
+    "location": "leveringsbevis/README",
+    "finding": "Review-snapshot mangler lenkede verifikasjons-/prosessfiler.",
+    "evidence": "Filene ble ferdigstilt etter snapshot, er nå kontrollert på disk og inkluderes i sluttstaging; lenkekontroll er grønn.",
+    "route": "patch-resolved",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "E1",
+    "lens": "edge-case-hunter",
+    "verdict": "high",
+    "location": "src/frontend/state/import-session.ts:39",
+    "finding": "D-år samsvarer ikke med kildene.",
+    "evidence": "Uavhengig reproduksjon /private/tmp/so1-edge-repro.mjs bekrefter samme rotårsak som B1; beholdes som egen triagerad.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "E2",
+    "lens": "edge-case-hunter",
+    "verdict": "medium",
+    "location": "src/contracts/document-import.ts:63",
+    "finding": "end utenfor sidetekst godtas fordi slice klamper.",
+    "evidence": "Kildevalideringen har ingen end<=text.length; reproduksjon viser akseptert ugyldig suffix-range.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "V1",
+    "lens": "verification-gap",
+    "verdict": "medium",
+    "location": "tests/integration/document-import.test.ts",
+    "finding": "Tekstbudsjettets faktiske worker-/HTTP-kobling mangler grenseprøve.",
+    "evidence": "Pre-verifisert: helpertestene sender budsjettet selv og oppdager ikke fjernet worker-argument.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "V2",
+    "lens": "verification-gap",
+    "verdict": "medium",
+    "location": "tests/unit/import-session.test.ts",
+    "finding": "Aktiv import testes ikke med gyldig svar bundet til feil dokument/forelder.",
+    "evidence": "Pre-verifisert: eksisterende sene svar stoppes før metadata-mismatch-grenen.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  },
+  {
+    "id": "R1",
+    "lens": "root-independent-pdf",
+    "verdict": "medium",
+    "location": "tests/fixtures/sales-prospectus/generate-extended.py",
+    "finding": "Ny inline-fixture har utenlandsk fontreferanse fra separat PdfReader.",
+    "evidence": "Uavhengig pypdf extract_text på fysisk10 gir KeyError('/Subtype'); resources må klones inn i writer før inline-regresjon kan bevise BI-deteksjon.",
+    "route": "patch",
+    "resolution": {
+      "status": "resolved",
+      "date": "2026-10-29",
+      "evidence": "review-fixes-targeted.txt (136 tester), final-full-tests.txt (1314 tester), independent-pdf-check.json, og tre fokuserte rechecks uten restfunn; lokal løsningscommit føres etter sluttkontroll."
+    }
+  }
+]

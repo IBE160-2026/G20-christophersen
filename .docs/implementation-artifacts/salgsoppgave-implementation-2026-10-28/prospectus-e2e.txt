@@ -1,0 +1,18 @@
+[WebServer] (node:17731) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:17732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Gå videre (2.8s)
+  ✓  2 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Forkast (2.4s)
+  ✓  3 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Innhent mer informasjon (2.4s)
+  ✓  4 tests/e2e/prospectus-import.spec.ts:48:1 › SO-AC5/6: økonomikilde og fysisk10/trykt6 åpnes i riktig original; to bad og ett tak består (2.5s)
+  ✓  5 tests/e2e/prospectus-import.spec.ts:64:1 › SO-AC4/12: faktisk PDF-vedlegg ber om separat fil; rapportbytte bevarer økonomi og åpner separat fysisk3 (3.1s)
+  ✓  6 tests/e2e/prospectus-import.spec.ts:77:1 › SO-AC3/4: raster med digital bunntekst og uklare rapporter kan ikke få komplett kontroll (1.9s)
+  ✓  7 tests/e2e/prospectus-import.spec.ts:82:1 › SO-AC12: sammehash gjenbruk og nyhash tømmer manuell økonomi/finansiering (2.4s)
+  ✓  8 tests/e2e/prospectus-import.spec.ts:92:1 › SO-AC9/11: kontrollert dokumentøkonomi og delt slider/finansiering fyller P/D/J uten manuell overføring (3.4s)
+  ✓  9 tests/e2e/prospectus-import.spec.ts:121:1 › salgsoppgavens hovedinngang og selektivt 200-sidersgrunnlag er synlig uten intern kildeinformasjon i hovedtekst (2.8s)
+
+  9 passed (24.9s)

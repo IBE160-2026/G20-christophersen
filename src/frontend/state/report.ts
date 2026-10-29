@@ -1,5 +1,6 @@
 import { AnalysisHttpResponseSchema } from '../../contracts/analysis-http.ts'
 import type { AnalysisHttpCorrelation } from '../../contracts/analysis-http.ts'
+import type { DocumentImport, ImportControlOutcome, ImportControlGate } from '../../contracts/document-import.ts'
 import type { AnalysisOutcome } from '../../contracts/document-analysis.ts'
 import { evaluateKnownDeficiencies } from '../../domain/screening.ts'
 import { LimitationReviewSchema } from '../../contracts/finding-control.ts'
@@ -20,10 +21,12 @@ export interface ReportState {
   status: 'missing' | 'selecting' | 'ready' | 'analysing' | 'completed' | 'failed'
   selected: SelectedReport | null
   active: AnalysisHttpCorrelation | null
-  outcome: AnalysisOutcome | null
+  outcome: AnalysisOutcome | ImportControlOutcome | null
   error: string | null
+  documentImport?: DocumentImport | null
+  documentImportGate?: ImportControlGate | null
   /** Bare intern feilbevaring for samme rapport/generasjon ved manuell duplikatavvisning. */
-  previousFailure: { generation: number; reportHash: string; documentName: string; outcome: AnalysisOutcome | null; error: string; duplicateRejected: boolean } | null
+  previousFailure: { generation: number; reportHash: string; documentName: string; outcome: AnalysisOutcome | ImportControlOutcome | null; error: string; duplicateRejected: boolean } | null
   view: { findingId: string | null; pdfPage: number | null; zoom: number }
   listVisibleGeneration: number | null
   findingControls: FindingControl[]
@@ -108,7 +111,7 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
     } else if (action.type === 'report-finding-draft') {
       if (!control.draft) return state
       const draft = { ...control.draft, [action.field]: action.value }
-      const validation = validateFindingCorrection(draft, outcome)
+      const validation = validateFindingCorrection(draft, outcome, state.documentImport)
       // Vis bare allerede identifiserte feil under inntasting, til deres grunnlag er rettet.
       const errors = Object.fromEntries(Object.entries(validation.errors).filter(([field]) => field in control.errors))
       next = { ...control, draft, errors }
@@ -120,7 +123,7 @@ export function reportReducer(state: ReportState, action: ReportAction): ReportS
       next = { ...control, confirmedRevision: control.revision }
     } else if (action.type === 'report-finding-apply') {
       if (!control.draft) return state
-      const validation = validateFindingCorrection(control.draft, outcome)
+      const validation = validateFindingCorrection(control.draft, outcome, state.documentImport)
       next = validation.correction
         ? { ...control, correction: validation.correction, draft: null, errors: {}, revision: control.revision + 1, confirmedRevision: null }
         : { ...control, errors: validation.errors }
@@ -197,7 +200,7 @@ export function currentTg3Findings(state: ReportState): Tg3Finding[] {
 export function findingListBasis(state: ReportState) {
   return { status: state.status, outcome: state.outcome, error: state.error,
     reportIdentity: state.selected ? { reportHash: state.selected.hash, documentName: state.selected.file.name.trim() } : null,
-    limitationReviews: state.limitationReviews, tg3Revision: state.tg3Revision,
+    documentImport: state.documentImport, documentImportGate: state.documentImportGate, limitationReviews: state.limitationReviews, tg3Revision: state.tg3Revision,
     controls: state.findingControls, listRevision: state.listRevision, listConfirmationRevision: state.listConfirmationRevision,
     tg3Findings: currentTg3Findings(state) }
 }

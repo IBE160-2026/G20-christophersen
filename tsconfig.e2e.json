@@ -5,5 +5,5 @@
     "lib": ["ES2023", "DOM"],
     "jsx": "react-jsx"
   },
-  "include": ["playwright.config.ts", "playwright.dev.config.ts", "playwright.components.config.ts", "tests/e2e", "tests/components"]
+  "include": ["playwright.config.ts", "playwright.dev.config.ts", "playwright.components.config.ts", "tests/e2e", "tests/components", "tests/unit/**/*.test.tsx"]
 }

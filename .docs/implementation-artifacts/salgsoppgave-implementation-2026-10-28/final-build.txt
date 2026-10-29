@@ -1,0 +1,9 @@
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+tests/unit/import-review-ui.test.ts(4,57): error TS6142: Module '../../src/frontend/screens/ProspectusImport.tsx' was resolved to '/Users/madschristophersen/IBE160/G20-christophersen/src/frontend/screens/ProspectusImport.tsx', but '--jsx' is not set.

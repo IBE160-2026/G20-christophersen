@@ -50,7 +50,7 @@ async function destroyResources(task: ReturnType<typeof getDocument> | undefined
 }
 
 /** Uses bytes only; documentName is display metadata and is never opened as a path. */
-export async function validatePdf(bytes: Uint8Array, documentName: string): Promise<PdfFormatOutcome> {
+export async function validatePdf(bytes: Uint8Array, documentName: string, profile: { maxPages: 30 | 200 } = { maxPages: 30 }): Promise<PdfFormatOutcome> {
   // Snapshot before awaiting: caller mutation and PDF.js buffer transfer must not change the original.
   const originalBytes = Uint8Array.from(bytes)
   const identity = { documentName, reportHash: createHash('sha256').update(originalBytes).digest('hex') }
@@ -63,7 +63,11 @@ export async function validatePdf(bytes: Uint8Array, documentName: string): Prom
     await task.promise
     const pageCount = await countPdfPages(originalBytes)
     if (pageCount === null) return failure(identity, 'invalid-container', null)
-    if (pageCount > 30) return failure(identity, 'page-limit', pageCount)
+    if (pageCount > profile.maxPages) {
+      const result = failure(identity, 'page-limit', pageCount)
+      if (result.status === 'failed') result.error.reason = `PDF-en har mer enn ${profile.maxPages} sider. Velg en fil på høyst ${profile.maxPages} sider.`
+      return result
+    }
     if (!Number.isInteger(pageCount) || pageCount < 1) return failure(identity, 'invalid-container', null)
     // The Count-independent traversal also validates every actual page's metadata.
     return { ...identity, status: 'format-validated', originalBytes, pageCount }

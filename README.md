@@ -1,9 +1,11 @@
 # Property Acquisition Agent — IBE160, G20
 
-> **Produktretning 2026-10-28:** Salgsoppgave er besluttet som ny hovedinngang.
-> Funksjonen er under [Correct Course-avklaring](.docs/planning-artifacts/sprint-change-proposal-2026-10-28.md) og er ikke implementert ennå.
-> FINN videreutvikles eller live-aktiveres ikke nå. Kjøreoppskriften nedenfor
-> gjelder den eksisterende leveransen.
+> **Salgsoppgave først, 28. oktober 2026:** Den godkjente offline-flyten er implementert.
+> Last opp en syntetisk salgsoppgave før tallbekreftelse, kontroller dokumentøkonomi
+> og finansiering, og kontroller integrert eller separat rapport før screening.
+> [Krav, nye bevis og begrensninger](.docs/implementation-artifacts/salgsoppgave-implementation-2026-10-28/verifikasjon.md).
+> Ny dokumentimport er alltid offline; `ANALYSIS_MODE=live` åpner den ikke.
+> FINN beholdes som utsatt alternativ. Historisk S5/S6 gjelder sine opprinnelige versjoner.
 
 Lokal førstevurdering av **ett boligutleieobjekt**, laget for investorens tidlige sortering. Brukeren registrerer og kontrollerer økonomiske forutsetninger, leser tilstandsrapportens original, kontrollerer TG2/TG3-funn og får en kodebestemt anbefaling: **Gå videre**, **Forkast** eller **Innhent mer informasjon**. Beregningene er bruttoyield, NOI, nettoyield og kontantstrøm før skatt. Investoren tar beslutningen; dette er ingen teknisk godkjenning eller komplett investeringsanalyse.
 
@@ -13,7 +15,7 @@ Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rappo
 
 **FINN-utvidelse 28. oktober 2026:** Importmotor, kontroll-UI, finansieringsforslag og backendens Responses-kobling er implementert og [offline-verifisert med uavhengig review](.docs/implementation-artifacts/finn-responses-2026-10-28/sluttverifikasjon.md). **Tilgangsgaten er stengt som standard.** [Første implementeringsbevis](.docs/implementation-artifacts/finn-import-2026-10-28/sluttverifikasjon.md) og [tidligere gjennomførbarhet](.docs/implementation-artifacts/finn-import-checkpoint-2026-10-28.md) bevares som historikk. Eksisterende manuell registrering, rapport-PDF og screening beholdes. Ingen estimater, automatisk PDF eller overvåking inngår.
 
-I **Tallgrunnlag** kan du lime inn en FINN-boliglenke og prøve import. Med standardoppsettet returnerer serveren en gatemelding uten nøkkellesing eller eksternt kall. `ANALYSIS_MODE=live` gjelder bare rapportanalyse og åpner ikke FINN-gaten. SDK-koblingen bruker den eksakte validerte lenken og godtar bare ett fullført `open_page` på denne URL-en. Entydig P fylles automatisk som ubekreftet; kostnader/kilder vises for kontroll, mens ufullstendig D/J forblir ukjent. Manuelle verdier bevares. Rapport-PDF lastes fortsatt opp manuelt.
+I **Tallgrunnlag**, under **FINN som alternativ**, kan du lime inn en FINN-boliglenke og prøve import. Med standardoppsettet returnerer serveren en gatemelding uten nøkkellesing eller eksternt kall. `ANALYSIS_MODE=live` gjelder bare rapportanalyse og åpner ikke FINN-gaten. SDK-koblingen bruker den eksakte validerte lenken og godtar bare ett fullført `open_page` på denne URL-en. Entydig P fylles automatisk som ubekreftet; kostnader/kilder vises for kontroll, mens ufullstendig D/J forblir ukjent. Manuelle verdier bevares. Rapport-PDF lastes fortsatt opp manuelt.
 
 Den [videre godkjente FINN-2-koblingen](.docs/implementation-artifacts/spec-finn-responses-kobling.md) bruker offisielt SDK og backendens `OPENAI_API_KEY`. Før en kontrollert faktisk UI-prøve må operatøren ha dokumentert tilgang og kostnadsautorisasjon, og konfigurere **alle tre** backendverdiene: `FINN_IMPORT_ENABLED=true`, `FINN_IMPORT_ACCESS_REFERENCE` og `FINN_IMPORT_COST_REFERENCE` med ikke-tomme godkjenningsreferanser. Nøkkelen skal bare ligge i backendmiljøet, aldri i frontend-/Vite-variabler. Referansene er operatørens dokumentasjon, ikke automatisk vurdering av tillatelsen. Ingen gate er åpnet eller reelt oppslag utført i utviklingsøkten.
 
@@ -36,6 +38,59 @@ De to første kommandoene skal vise `v24.21.0` og `11.19.0`. `npm ci` installere
 Stopp med **Ctrl+C** i serverterminalen. Port 3000 må være ledig; serveren velger ikke en annen port. Ved «Bygget app mangler» kjører du `npm run build`. Ved opptatt port stopper du din tidligere demo/dev/testserver før ny oppstart. Ikke kjør dem samtidig. Oppdatering/lukking av siden avslutter den midlertidige økten, inklusive tall, rapport, kontroll og resultat; ingen brukerdata lagres.
 
 Oppskriften er egenprøvd på macOS 26.6.2 arm64; andre plattformer er ikke egenprøvd. npm kan varsle om det valgfrie installasjonsscriptet til `fsevents@2.3.3` på macOS. Vite kan varsle om stor chunk; faktisk exitstatus og testresultat må fortsatt kontrolleres.
+
+## Prøv salgsoppgave fra opplasting til resultat
+
+Bruk [syntetiske salgsoppgaver](tests/fixtures/sales-prospectus/README.md).
+Faktiske kundedokumenter har ingen lagret demo og skal ikke legges i repoet.
+Importen bruker en egen versjonert grense på **200 fysiske sider**, **50 MiB per fil
+og samlet beholdt salgsoppgave + separat rapport**. Den gamle manuelle rapportruten
+beholder **30 sider**. Dokumentnavn og trykt sidetall erstatter aldri fysisk PDF-side.
+
+1. Velg `mixed-12.pdf` i **Last opp salgsoppgave** øverst i Tallgrunnlag.
+   Lesingen starter uten P/L/D/J/Ymin. P=3200000 fylles automatisk **ubekreftet**.
+   Kontantbehovet er 3075000; dokumentavgiften inngår allerede i omkostningene.
+   Kjent driftssubtotal er 60000/år og fellesgjeldsbetaling 12000/år, men full D
+   forblir ukjent til innholdet er kontrollert. Foto på fysisk side 3 forblir ulest.
+2. Åpne økonomifeltene og sammenlign hvert belegg med **Vis originalkilde**.
+   Kontroller beløp, periode/år, inkludering og gjeldsdel. Marker hvert relevant felt
+   og bekreft at hele driftsinnholdet er med **bare i denne tydelig fiktive varianten**.
+   Ingen fraværende avgift eller leie beregnes automatisk.
+3. Prøv finansieringen: egenkapital 1000000 viser slideren; flytt den til 0.
+   Sett rente 0 %, løpetid 300 måneder og år 2026. Velg **Bruk kontrollert
+   dokumentgrunnlag og finansiering**. Fasit: P=3200000, D=60000, J=135000.00
+   (3075000/300×12 + 12000). J merkes som egen forutsetning. Ingen tall bekreftes
+   automatisk. Manuelle P/D/J-rettinger beholdes ved senere bruk av importen.
+4. Oppgi L=400000/år i 2026 med forventet leie og egen begrunnet forutsetning,
+   samt Ymin=7 med eget kildegrunnlag. Kontroller og bekreft tallene.
+5. I Tilstandsrapport kontrollerer du rapportens tilhørighet mot originalen og
+   hele området, fysisk side 5–12. **Gå til Kontroller funn** viser to ulike bad
+   og ett takforhold med flere belegg. Taket ligger på fysisk 10 / trykt 6;
+   sammendragets fysiske side 2 er et ekstra belegg for samme forhold.
+6. Kontroller og bekreft enkeltfunn. Velg **Avklart** med en uttrykkelig fiktiv
+   begrunnelse og konkret eksternt avklaringsgrunnlag for taket, bekreft listen
+   og beregn resultatet: **Gå videre**. Med L=100000 og ny relevant bekreftelse
+   blir utfallet **Forkast**. Med TG3 **Uavklart** blir det **Innhent mer informasjon**.
+
+`attached-report-6.pdf` viser navn på ubehandlet PDF-vedlegg; last deretter opp
+`separate-report-4.pdf` i **Last opp separat tilstandsrapport**. Økonomien beholdes,
+mens rapportkontroll/TG3 må gjøres på nytt. Identiteten er ukjent i disse fiktive
+filene og krever eksplisitt kontroll mot begge originaler. Takets kilde åpner
+**separat fysisk side 3 / trykt 1**. `scanned-report-12.pdf` og
+`raster-footer-12.pdf` blokkerer komplett rapportgrunnlag; digital bunntekst gjør
+ikke rasterrapporten lest. `ambiguous-12.pdf` krever en entydig separat rapport.
+`bounded-200.pdf` beholder 200 sidestatuser, men velger bare økonomi/sammendrag
+og hele rapporten 5–12 til det kombinerte grunnlaget.
+
+Ny salgsoppgavehash tømmer hele det tidligere objektet. Samme hash i samme
+aktive versjons-/moduskontekst gjenbruker vurderingen, også ved nytt filnavn.
+Sidelasting avslutter økten. Backend beholder ingen originaler eller tekst mellom
+requests. Ingen OCR, automatisk vedleggsutpakking, betalt kall, token-count-tjeneste
+eller live-fallback inngår. Lokal frist er 60 s; tekstgrensene er 128 KiB/side og
+1 MiB samlet UTF-8, svargrensen 8 MiB. PDF-barnet har 256 MiB V8-heap, og
+forelderen stopper ved målt RSS over 512 MiB. RSS er best effort, ingen hard
+OS-garanti mot korte native topper. Hele prosessen stenges før behandlingslåsen
+frigis. Ingen tokenbasert live-kapasitet eller reell kildekvalitet er validert.
 
 ## Prøv F1–F4 fra start til resultat
 

@@ -1,10 +1,11 @@
 import { FindingCorrectionSchema, LimitationReviewSchema } from '../contracts/finding-control.ts'
 import type { FindingDraft, FindingErrors, FindingListBasis, FindingListAssessment } from '../contracts/finding-control.ts'
+import type { DocumentImport } from '../contracts/document-import.ts'
 import type { AnalysisContext } from '../contracts/document-analysis.ts'
 import { sameTg3Basis, validateTg3Resolution } from './tg3-resolution.ts'
 
 /** Kontrollerer struktur og fysisk kildeområde, aldri rapportens semantikk. */
-export function validateFindingCorrection(draft: FindingDraft, context: AnalysisContext) {
+export function validateFindingCorrection(draft: FindingDraft, context: Pick<AnalysisContext, 'documentName' | 'reportHash' | 'pageCount'>, documentImport?: DocumentImport | null) {
   const errors: FindingErrors = {}
   if (draft.grade !== 'TG2' && draft.grade !== 'TG3') errors.grade = 'Velg eksplisitt TG2 eller TG3 fra originalrapporten.'
   if (!draft.description.trim()) errors.description = 'Skriv beskrivelsen fra originalrapporten.'
@@ -12,6 +13,8 @@ export function validateFindingCorrection(draft: FindingDraft, context: Analysis
   if (!Number.isSafeInteger(page) || context.pageCount === null || page > context.pageCount) {
     errors.pdfPage = `Oppgi fysisk PDF-side fra 1 til ${context.pageCount ?? 'kjent sideantall'}. Ingen side gjettes.`
   }
+  if (documentImport && (!documentImport.sections.some(section => page >= section.startPage && page <= section.endPage)
+    || documentImport.pages[page - 1]?.status !== 'readable' || documentImport.pages[page - 1]?.rasterUnprocessed)) errors.source = 'Kilden må være en lesbar fysisk side inne i det komplette rapportområdet.'
   const parsed = FindingCorrectionSchema.safeParse({ grade: draft.grade, description: draft.description.trim(),
     source: { documentName: context.documentName, reportHash: context.reportHash, pdfPage: page } })
   if (!parsed.success && Object.keys(errors).length === 0) errors.source = 'Kontrollerbar kilde i valgt originalrapport mangler.'
@@ -23,7 +26,11 @@ export function assessFindingList(basis: FindingListBasis): FindingListAssessmen
   const { outcome } = basis
   const extraction = outcome?.status === 'completed' ? outcome : outcome?.partialResult
   const reportDeficiencies: FindingListAssessment['reportDeficiencies'] = []
-  const completed = basis.status === 'completed' && outcome?.status === 'completed'
+  const gate = basis.documentImportGate
+  const importReady = outcome?.contractVersion !== 'document-import-1' || Boolean(gate && gate.hash === outcome.reportHash && gate.requestId === outcome.requestId
+    && gate.coverageComplete && gate.identityChecked && gate.areaChecked && !gate.identityConflict)
+  if (!importReady) reportDeficiencies.push({ code: 'incomplete-report', reason: 'Rapportdekning, eiendomsidentitet og fullstendig fysisk område må være avklart. Ulest eller motstridende grunnlag kan ikke overstyres.' })
+  const completed = importReady && basis.status === 'completed' && outcome?.status === 'completed'
     && basis.reportIdentity?.reportHash === outcome.reportHash && basis.reportIdentity.documentName === outcome.documentName
   if (basis.status === 'missing' || basis.error === 'missing-report') {
     reportDeficiencies.push({ code: 'missing-report', reason: 'Velg én tekstbasert PDF på høyst 30 sider.' })

@@ -1,0 +1,14 @@
+{
+  "checkedFiles": [
+    "README.md",
+    "tests/fixtures/sales-prospectus/README.md",
+    ".docs/implementation-artifacts/spec-salgsoppgave-offline-build.md",
+    ".docs/implementation-artifacts/salgsoppgave-implementation-2026-10-28/verifikasjon.md",
+    ".docs/implementation-artifacts/salgsoppgave-implementation-2026-10-28/review.md",
+    ".docs/process/arbeidsokter/2026-10-28-salgsoppgave-offline-build.md"
+  ],
+  "missingLocalLinks": [],
+  "lockedFilesPreserved": 73,
+  "newSyntheticPdfs": 7,
+  "originalSyntheticPdfsUnchanged": 13
+}

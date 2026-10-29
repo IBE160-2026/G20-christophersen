@@ -1,0 +1,116 @@
+{
+  "purpose": "Uavhengig håndskrevet fasit før generator og adapterdata; de opprinnelige 13 originalene og expected.json bevares.",
+  "bounded-200.pdf": {
+    "pageCount": 200,
+    "reportStart": 5,
+    "reportEnd": 12,
+    "selectedPages": [
+      1,
+      2,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "omittedCount": 190,
+    "address": "Eksempelveien 1, 0001 Testby",
+    "P": "3200000",
+    "cashRequired": "3075000",
+    "operatingSubtotal": "60000",
+    "sharedAnnualPayment": "12000",
+    "completeD": null
+  },
+  "raster-footer-12.pdf": {
+    "pageCount": 12,
+    "unreadPages": [
+      3,
+      10
+    ],
+    "technicalStatus": "unreadable",
+    "page10HasDigitalFooter": true
+  },
+  "ambiguous-12.pdf": {
+    "pageCount": 12,
+    "technicalStatus": "ambiguous",
+    "reportCandidates": 2
+  },
+  "wrong-property-report-4.pdf": {
+    "pageCount": 4,
+    "address": "Annenveien 9, 0002 Testby",
+    "identityAgainstBounded200": "conflict"
+  },
+  "annualEconomicOracle": {
+    "P": "3200000",
+    "cashRequired": "3075000",
+    "knownAnnualOperatingSubtotal": "60000",
+    "sharedAnnualPayment": "12000",
+    "completeD": null
+  },
+  "screening": {
+    "go": {
+      "L": "400000",
+      "D": "60000",
+      "J": "12000",
+      "Ymin": "7",
+      "recommendation": "Gå videre"
+    },
+    "reject": {
+      "L": "100000",
+      "D": "60000",
+      "J": "12000",
+      "Ymin": "7",
+      "recommendation": "Forkast"
+    },
+    "missing": {
+      "L": "400000",
+      "D": "60000",
+      "J": "12000",
+      "Ymin": "7",
+      "unresolvedTG3": true,
+      "recommendation": "Innhent mer informasjon"
+    }
+  },
+  "financingPath": {
+    "equity": "0",
+    "annualInterest": "0",
+    "months": "300",
+    "year": "2026",
+    "loan": "3075000",
+    "monthly": "10250.00",
+    "annualOwnPayment": "123000.00",
+    "P": "3200000",
+    "D": "60000",
+    "J": "135000.00"
+  },
+  "logo-economy-12.pdf": {
+    "pageCount": 12,
+    "economyTextStatus": "readable",
+    "page1RasterUnprocessed": true,
+    "P": "3200000",
+    "cashRequired": "3075000",
+    "technicalStatus": "complete"
+  },
+  "inline-raster-footer-12.pdf": {
+    "pageCount": 12,
+    "page1TextStatus": "readable",
+    "page1RasterUnprocessed": true,
+    "page10TextStatus": "readable",
+    "page10RasterUnprocessed": true,
+    "P": "3200000",
+    "cashRequired": "3075000",
+    "technicalStatus": "unreadable",
+    "inlineImagesWithoutImageXObjects": true
+  },
+  "integrated-identity-conflict-12.pdf": {
+    "pageCount": 12,
+    "addressPage1": "Eksempelveien 1, 0001 Testby",
+    "addressPage5": "Annenveien 9, 0002 Testby",
+    "identityStatus": "conflict",
+    "P": "3200000",
+    "technicalUseBlocked": true
+  }
+}

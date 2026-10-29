@@ -1,6 +1,8 @@
 import express, { type ErrorRequestHandler } from 'express'
 import { createListingBackend } from './listing/backend.ts'
 import { createListingRouter } from './http/listing-route.ts'
+import { createImportRouter } from './http/import-route.ts'
+import { createProcessingLock } from './http/processing-lock.ts'
 import { createAnalysisRouter } from './http/analysis-route.ts'
 import { access, readFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
@@ -34,7 +36,10 @@ async function start() {
 
   const mode = process.env.ANALYSIS_MODE ?? 'demo'
   if (mode !== 'demo' && mode !== 'live') throw new Error('Ugyldig lokal analysemodus')
-  const analysis = createAnalysisRouter({ mode })
+  const lock = createProcessingLock()
+  const analysis = createAnalysisRouter({ mode, lock })
+  const documentImport = createImportRouter({ lock })
+  app.use('/api', documentImport)
   app.use('/api', analysis)
   app.use('/api', createListingRouter(createListingBackend()))
 
@@ -89,7 +94,7 @@ async function start() {
   async function stop() {
     const closed = new Promise<void>(resolve => server.close(() => resolve()))
     server.closeAllConnections()
-    await analysis.stop()
+    await Promise.all([analysis.stop(), documentImport.stop()])
     await vite?.close()
     await closed
     process.exit(0)

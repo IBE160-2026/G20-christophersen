@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { CheckableFindingSchema } from './document-analysis.ts'
+import type { DocumentImport, ImportControlOutcome, ImportControlGate } from './document-import.ts'
 import type { AnalysisOutcome } from './document-analysis.ts'
 import type { KnownReportDeficiency } from './screening.ts'
 import type { Tg3Finding } from './tg3-resolution.ts'
@@ -22,9 +23,11 @@ export interface FindingControl {
 /** Rent kontrollgrunnlag, delt av state, UI og senere screening. */
 export interface FindingListBasis {
   status: 'missing' | 'selecting' | 'ready' | 'analysing' | 'completed' | 'failed'
-  outcome: AnalysisOutcome | null
+  outcome: AnalysisOutcome | ImportControlOutcome | null
   error: string | null
   reportIdentity: { reportHash: string; documentName: string } | null
+  documentImport?: DocumentImport | null
+  documentImportGate?: ImportControlGate | null
   limitationReviews?: LimitationReview[]
   tg3Revision?: number
   controls: FindingControl[]

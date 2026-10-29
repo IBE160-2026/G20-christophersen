@@ -84,7 +84,9 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 720, height: 450 
     ]
     const controls = page.locator('.financial-input :is(input, select, button):not(.listing-import *)')
     expect(await controls.count()).toBe(legacyOrder.length)
-    await expect(page.locator('.listing-import :is(input, button)')).toHaveCount(2)
+    await expect(page.locator('#import-file-prospectus')).toBeVisible()
+    await page.locator('#listing-alternative-toggle').click()
+    await expect(page.locator('.financial-input .listing-import :is(input, button)')).toHaveCount(2)
     await expect(page.getByText('FINN-import krever operatørens tilgangs- og kostnadsgodkjenning', { exact: false })).toBeVisible()
     await page.locator('#listing-url').fill('https://www.finn.no/realestate/homes/ad/476576649')
     const expectedOrder = ['listing-url', 'listing-fetch', ...legacyOrder]

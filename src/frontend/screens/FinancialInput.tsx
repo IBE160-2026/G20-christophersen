@@ -60,7 +60,7 @@ export function FinancialInput({ financial, sources, costItems, dispatch, sessio
         <p>Oppgi dine tall for ett boligutleieobjekt. Velg periode og år for leie, drift og gjeldsbetjening.</p>
         <p className="meta">Opplysningene beholdes mens siden er åpen. Oppdatering eller lukking av siden avslutter økten.</p>
       </div>
-      <ListingImport session={session} dispatch={dispatch} />
+      <details className="listing-alternative"><summary id="listing-alternative-toggle">FINN som alternativ</summary><ListingImport session={session} dispatch={dispatch} /></details>
       {fields.map(({ id, label, description, unit }) => {
         const value = financial[id]
         const visibleIssues = attempted ? attemptValidation.fields[id].issues : []

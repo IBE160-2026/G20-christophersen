@@ -1,0 +1,33 @@
+{
+  "inline-raster-footer-12.pdf": {
+    "pages": 12,
+    "hashVerified": true,
+    "physical10ReadableDigitalFooter": true,
+    "physical10NoTGText": true,
+    "physical10NoImageXObjects": true
+  },
+  "integrated-identity-conflict-12.pdf": {
+    "pages": 12,
+    "hashVerified": true
+  },
+  "logo-economy-12.pdf": {
+    "pages": 12,
+    "hashVerified": true
+  },
+  "bounded-200.pdf": {
+    "pages": 200,
+    "hashVerified": true
+  },
+  "raster-footer-12.pdf": {
+    "pages": 12,
+    "hashVerified": true
+  },
+  "ambiguous-12.pdf": {
+    "pages": 12,
+    "hashVerified": true
+  },
+  "wrong-property-report-4.pdf": {
+    "pages": 4,
+    "hashVerified": true
+  }
+}

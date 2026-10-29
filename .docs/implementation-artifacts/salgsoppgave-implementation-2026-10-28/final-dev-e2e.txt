@@ -1,0 +1,24 @@
+[WebServer] (node:37491) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:37500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/dev-shell.spec.ts:5:1 › AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil (473ms)
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/private/story-1-2-dev-ULJXDH/private.txt" is outside of Vite serving allow list.
+[WebServer] 
+[WebServer] - /Users/madschristophersen/IBE160/G20-christophersen
+[WebServer] 
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+[WebServer] 
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+  ✓  2 tests/e2e/dev-shell.spec.ts:21:1 › AC5: dev avviser eksisterende private dokumenter, backend og miljøfiler (37ms)
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.git/HEAD" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/.docs/specs/spec-IBE160/SPEC.md" is outside of Vite serving allow list.
+[WebServer] The request id "/Users/madschristophersen/IBE160/G20-christophersen/src/backend/server.ts" is outside of Vite serving allow list.
+  ✓  3 tests/e2e/dev-shell.spec.ts:38:1 › 2.7 uavhengig review: lokal PDF-ressursrute åpner ikke prosjektets private grense (12ms)
+
+  3 passed (1.8s)

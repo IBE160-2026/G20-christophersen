@@ -1,3 +1,5 @@
+import type { ImportClient } from '../analysis/import-client.ts'
+import { ProspectusImport, ImportCoverageControl } from './ProspectusImport.tsx'
 import { analysisModeLabel } from '../../contracts/analysis-http.ts'
 import { useEffect, useRef } from 'react'
 import { validateTg3Resolution } from '../../domain/tg3-resolution.ts'
@@ -13,9 +15,10 @@ import { reportDeficiencies, analysisStatus, currentFinding, findingListAssessme
 import type { SessionAction, SessionState } from '../state/session.ts'
 import { isFinancialConfirmed } from '../state/session.ts'
 
-export function ReportAnalysis({ session, dispatch, client }: {
-  session: SessionState; dispatch: Dispatch<SessionAction>; client: ReportClient
+export function ReportAnalysis({ session, dispatch, client, importClient }: {
+  session: SessionState; dispatch: Dispatch<SessionAction>; client: ReportClient; importClient?: ImportClient
 }) {
+  const imported = Boolean(session.prospectus.prospectus.selected)
   const report = session.report
   const list = useRef<HTMLHeadingElement>(null)
   const selectedButton = useRef<HTMLButtonElement>(null)
@@ -46,16 +49,17 @@ export function ReportAnalysis({ session, dispatch, client }: {
   const canStart = isFinancialConfirmed(session) && report.selected !== null && ['ready', 'failed'].includes(report.status)
   return <section className="financial-input report-analysis" aria-labelledby="report-next-title">
     <h2 id="report-next-title">Rapportgrunnlag</h2>
-    <p>{analysisModeLabel(session.report.mode)}. Velg én tekstbasert PDF på høyst 30 sider og 50 MiB.</p>
-    {session.currentStep === 'tilstandsrapport' && <><label htmlFor="report-file">Velg tilstandsrapport (PDF)</label>
+    {imported && importClient && <><ImportCoverageControl session={session} dispatch={dispatch} /><ProspectusImport session={session} dispatch={dispatch} client={importClient} role="report" /></>}
+    {!imported && <p>{analysisModeLabel(session.report.mode)}. Velg én tekstbasert PDF på høyst 30 sider og 50 MiB.</p>}
+    {!imported && session.currentStep === 'tilstandsrapport' && <><label htmlFor="report-file">Velg tilstandsrapport (PDF)</label>
     <input id="report-file" type="file" accept="application/pdf,.pdf" onChange={event => { void client.select(event.currentTarget.files?.[0] ?? null, report) }} /></>}
-    {report.selected && <p className="report-identity">Gjeldende dokument: <strong>{report.selected.file.name}</strong><br />SHA-256: {report.selected.hash}</p>}
+    {report.selected && <details className="report-identity"><summary>Gjeldende dokument: <strong>{report.selected.file.name}</strong></summary><p>SHA-256: {report.selected.hash}</p></details>}
     <p id="analysis-status">{analysisStatus(report)}</p>
     <p id="analysis-start-reason">{!isFinancialConfirmed(session) ? 'Kontroller og bekreft gyldig tallgrunnlag før analyse.'
       : !report.selected ? 'Velg én rapport før du starter analysen.'
         : report.status === 'completed' ? 'Uendret rapportuttrekk gjenbrukes. Velg en ny rapport for ny analyse.'
           : report.status === 'analysing' ? 'En analyse pågår. Ny start er sperret.' : report.status === 'failed' ? 'Start analyse gjør et nytt manuelt forsøk. En tidligere behandlet rapport kan avvises av duplikatsperren uten nytt analyseuttak.' : 'Start analyse sender den valgte rapporten én gang.'}</p>
-    {session.currentStep === 'tilstandsrapport' && <button className="primary-action" type="button" aria-disabled={!canStart} aria-describedby="analysis-start-reason" onClick={() => { void client.start(isFinancialConfirmed(session), report) }}>Start analyse</button>}
+    {!imported && session.currentStep === 'tilstandsrapport' && <button className="primary-action" type="button" aria-disabled={!canStart} aria-describedby="analysis-start-reason" onClick={() => { void client.start(isFinancialConfirmed(session), report) }}>Start analyse</button>}
     {report.status === 'analysing' && <button className="secondary-action" type="button" onClick={() => {
       dispatch({ type: 'report-abandon' }); client.abort()
     }}>Avbryt analyse</button>}
@@ -87,6 +91,7 @@ export function ReportAnalysis({ session, dispatch, client }: {
           <p>Opprinnelig grad: {candidate.original.grade ?? 'Ikke oppgitt'} · Oppgitt dokument: {candidate.original.source?.documentName ?? 'Ikke oppgitt'} · Oppgitt PDF-side: {candidate.original.source?.pdfPage ?? 'Ikke oppgitt'}</p>
           </> : finding ? <>
           <h3><button ref={report.view.findingId === candidate.findingId ? selectedButton : undefined} className="finding-select" type="button" aria-pressed={report.view.findingId === finding.findingId} onClick={() => onView({ ...report.view, findingId: finding.findingId, pdfPage: finding.source.pdfPage })}>{finding.grade} · {finding.description}</button></h3>
+          {report.documentImport?.technical.findings.find(item => item.findingId === candidate.findingId)?.sources.map((source, index) => <p key={index}><q>{source.quote}</q> · {source.documentName}, fysisk PDF-side {source.pdfPage}{source.printedPage ? `, trykt side ${source.printedPage}` : ''} <button type="button" className="secondary-action" onClick={() => onView({ ...report.view, findingId: candidate.findingId, pdfPage: source.pdfPage })}>Vis kildebelegg {index + 1}</button></p>)}
           <p>{finding.source.documentName} · PDF-side {finding.source.pdfPage} · {finding.findingId}</p>
           <p>{control?.correction ? 'Brukerkorrigert' : 'Opprinnelig KI-uttrekk'} · {control?.confirmedRevision === (control?.revision ?? 0) ? 'Kontrollert og bekreftet mot originalrapporten' : 'Ikke kontrollert'}</p>
           </> : <>

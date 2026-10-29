@@ -1,5 +1,7 @@
 import { analysisModeLabel } from '../contracts/analysis-http.ts'
 import { useEffect, useReducer, useRef, useState } from 'react'
+import { ImportClient } from './analysis/import-client.ts'
+import { ProspectusImport } from './screens/ProspectusImport.tsx'
 import { ReportClient } from './analysis/report-client.ts'
 import { analysisStatus, findingListAssessment } from './state/report.ts'
 import { ReportAnalysis } from './screens/ReportAnalysis.tsx'
@@ -10,6 +12,11 @@ import { createInitialSession, isFinancialConfirmed, sessionReducer } from './st
 
 function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
   const [session, dispatch] = useReducer(sessionReducer, mode, createInitialSession)
+  const [importClient] = useState(() => new ImportClient(dispatch))
+  useEffect(() => () => importClient.abort(), [importClient])
+  useEffect(() => {
+    if (session.prospectus.prospectus.status === 'idle' && session.prospectus.report.status === 'idle') importClient.abort()
+  }, [session.prospectus.generation, session.prospectus.prospectus.status, session.prospectus.report.status, importClient])
   const [client] = useState(() => new ReportClient(dispatch))
   useEffect(() => {
     if (session.report.status !== 'analysing') client.abort()
@@ -84,8 +91,8 @@ function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
           </div>
           <span className="status-label">{resultStep ? result.status === 'historical' ? 'Utdatert / Må bekreftes på nytt' : result.label : status}</span>
         </div>
-        {financialStep ? <FinancialInput financial={session.financial} sources={session.sources} costItems={session.costItems} session={session} dispatch={dispatch} />
-          : resultStep ? <ScreeningResult session={session} dispatch={dispatch} /> : <ReportAnalysis session={session} dispatch={dispatch} client={client} />}
+        {financialStep ? <><ProspectusImport session={session} dispatch={dispatch} client={importClient} role="prospectus" /><FinancialInput financial={session.financial} sources={session.sources} costItems={session.costItems} session={session} dispatch={dispatch} /></>
+          : resultStep ? <ScreeningResult session={session} dispatch={dispatch} /> : <ReportAnalysis session={session} dispatch={dispatch} client={client} importClient={importClient} />}
       </main>
     </div>
   )

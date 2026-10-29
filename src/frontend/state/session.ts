@@ -1,3 +1,6 @@
+import { reduceImportSession } from './import-session.ts'
+import { createProspectusState } from './prospectus.ts'
+import type { ProspectusState, ProspectusAction } from './prospectus.ts'
 import { ListingResponseSchema } from '../../contracts/listing.ts'
 import type { ListingCorrelation, ListingCorrection } from '../../contracts/listing.ts'
 import { createListingDraft, listingFinancingSuggestion, listingSuggestions, validateListingImport, validateListingUrl } from '../../domain/listing.ts'
@@ -16,6 +19,7 @@ import type { ResultChange, ResultSnapshot } from '../../contracts/result.ts'
 import { calculateResultSnapshot, describeResultChange, resultBinding, sameResultBinding } from './result.ts'
 
 export interface SessionState {
+  prospectus: ProspectusState
   listing: ListingState
   financial: RegisteredFinancialInput
   sources: FinancialSources
@@ -31,7 +35,7 @@ export interface SessionState {
   resultChanges: ResultChange[]
 }
 
-export type SessionAction = ReportAction
+export type SessionAction = ReportAction | ProspectusAction
   | { type: 'listing-url'; url: string }
   | { type: 'listing-start'; correlation: ListingCorrelation }
   | { type: 'listing-response'; correlation: ListingCorrelation; body: unknown; ok: boolean }
@@ -56,6 +60,7 @@ export type SessionAction = ReportAction
 export function createInitialSession(mode: 'demo' | 'live' = 'demo'): SessionState {
   const source = (): FinancialSource => ({ kind: '', description: '', conflict: null })
   return {
+    prospectus: createProspectusState(),
     listing: createListingState(),
     financial: {
       P: { rawValue: '', confirmed: false },
@@ -118,12 +123,16 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       next = invalidate(next, { financial: { ...next.financial, J: { rawValue: '', period: '', year: '', confirmed: false } } }, ['J'])
     }
   }
-  if (!state.resultSnapshot || sameResultBinding(resultBinding(state), resultBinding(next))) return next
+  if (next !== state && action.type === 'register-value' && action.field === 'P' && next.prospectus.prospectus.outcome && !next.listing.manualFields.includes('J')) {
+    next = invalidate(next, { financial: { ...next.financial, J: { rawValue: '', period: '', year: '', confirmed: false } } }, ['J'])
+  }
+  if (!state.resultSnapshot || !next.resultSnapshot || sameResultBinding(resultBinding(state), resultBinding(next))) return next
   const change = describeResultChange(action, state)
   return { ...next, resultChanges: [...state.resultChanges.filter(item => item.kind !== change.kind || item.target !== change.target || item.message !== change.message), change] }
 }
 
 function reduceSession(state: SessionState, action: SessionAction): SessionState {
+  if (action.type.startsWith('import-')) return reduceImportSession(state, action as ProspectusAction)
   if (action.type === 'listing-url') {
     if (state.listing.status === 'loading' || state.listing.url === action.url) return state
     const identity = validateListingUrl(action.url)
@@ -131,6 +140,8 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
     if (!identity || identity.listingCode === state.listing.objectCode) return { ...state, listing }
     const clean = createInitialSession(state.report.mode)
     return invalidate(state, { financial: clean.financial, sources: clean.sources, costItems: [],
+      prospectus: { ...createProspectusState(), generation: state.prospectus.generation + 1 },
+      ...(state.prospectus.prospectus.selected ? { resultSnapshot: null, resultChanges: [] } : {}),
       report: { ...clean.report, generation: state.report.generation + 1 },
       listing: { ...createListingState(), url: action.url, objectCode: identity.listingCode, generation: state.listing.generation + 1 }, currentStep: 'tallgrunnlag',
     }, [...FinancialFieldSchema.options])
@@ -205,6 +216,8 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
       periodD: useD ? next.financial.D.period : applied?.periodD ?? '', yearD: useD ? next.financial.D.year : applied?.yearD ?? '', periodJ: useJ ? next.financial.J.period : applied?.periodJ ?? '', yearJ: useJ ? next.financial.J.year : applied?.yearJ ?? '',
       D: useD ? suggested.D : clearD ? null : applied?.D ?? null, J: useJ ? J : clearJ ? null : applied?.J ?? null, sourceD: useD ? JSON.stringify(next.sources.D) : applied?.sourceD ?? '', sourceJ: useJ ? JSON.stringify(next.sources.J) : applied?.sourceJ ?? '' } } }
   }
+  if ((state.prospectus.prospectus.selected || state.prospectus.prospectus.status === 'selecting')
+    && ['report-selecting', 'report-selected', 'report-start', 'report-response'].includes(action.type)) return state
   if (action.type === 'report-start' && (!isFinancialConfirmed(state) || state.currentStep === 'tallgrunnlag')) return state
   if (action.type.startsWith('report-')) return { ...state, report: reportReducer(state.report, action as ReportAction) }
   if (action.type === 'navigate') {

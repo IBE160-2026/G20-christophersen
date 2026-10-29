@@ -16,5 +16,6 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts", "vitest.config.ts", "src/backend", "tests/unit", "tests/integration"]
+  "include": ["vite.config.ts", "vitest.config.ts", "src/backend", "tests/unit", "tests/integration"],
+  "exclude": ["tests/unit/**/*.test.tsx"]
 }

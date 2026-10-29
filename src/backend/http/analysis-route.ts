@@ -1,3 +1,4 @@
+import type { ProcessingLock } from './processing-lock.ts'
 import { Router } from 'express'
 import type { Request, Response } from 'express'
 import { AnalysisStartupSchema, AnalysisHttpCorrelationSchema, AnalysisHttpResponseSchema } from '../../contracts/analysis-http.ts'
@@ -7,13 +8,14 @@ import { runPipeline } from './run-pipeline.ts'
 import type { PipelineOptions } from './run-pipeline.ts'
 
 /** Server-instance lifetime equals process lifetime in the loopback server. No report cache. */
-export function createAnalysisRouter(options: PipelineOptions = {}) {
+export function createAnalysisRouter(options: PipelineOptions & { lock?: ProcessingLock } = {}) {
   const router = Router()
   const startup = AnalysisStartupSchema.parse({ mode: options.mode ?? 'demo' })
   router.get('/analysis-config', (_request, response) => {
     response.setHeader('Cache-Control', 'no-store')
     response.json(startup)
   })
+  const lock = options.lock
   const active = new Set<string>()
   const markers = new Set<string>()
   const pending = new Set<Promise<void>>()
@@ -40,7 +42,7 @@ export function createAnalysisRouter(options: PipelineOptions = {}) {
     if (stopping) { closeUpload(); reject(response, 503, 'processing-failure'); return }
     if (!correlation.success) { closeUpload(); reject(response, 400, 'invalid-request'); return }
     const { sessionId, requestId } = correlation.data
-    if (active.has(sessionId)) { closeUpload(); reject(response, 409, 'analysis-active'); return }
+    if (active.has(sessionId) || (lock !== undefined && !lock.acquire())) { closeUpload(); reject(response, 409, 'analysis-active'); return }
     // Before the first await, including upload and regardless of hash/request/generation.
     active.add(sessionId)
     const controller = new AbortController()
@@ -76,6 +78,7 @@ export function createAnalysisRouter(options: PipelineOptions = {}) {
       // A rejected upload's transport must also close before the flow is released.
       if (!request.complete && !request.destroyed) await new Promise<void>(resolve => request.once('close', resolve))
       active.delete(sessionId)
+      lock?.release()
       requests.delete(request)
       pending.delete(completion)
       finished()

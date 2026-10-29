@@ -1,12 +1,20 @@
 ---
 title: 'PAA-SO1: Salgsoppgave som hovedinngang'
 created: '2026-10-28'
-status: 'awaiting-product-gates'
+status: 'approved-offline'
 baseline_commit: 'b259207'
 change_proposal: '../planning-artifacts/sprint-change-proposal-2026-10-28.md'
 ---
 
 # Implementeringsspec: salgsoppgave
+
+**Godkjent 2026-10-28:** Mads godkjente D1–D3 og alle SO-AC1–15, med
+selektivt kombinert grunnlag og økonomi uavhengig av manglende rapport.
+[Arbeidsplan](spec-salgsoppgave-offline-build.md) og
+[ny verifikasjon](salgsoppgave-implementation-2026-10-28/verifikasjon.md) viser
+gjennomføringen. Avventende formuleringer nedenfor dokumenterer tilstanden
+før godkjenningen; kravene og AC-fasiten er bevart. Godkjenningen omfatter
+offline implementering, ingen betalte kall eller live-aktivering.
 
 Produktretningen er besluttet av Mads 2026-10-28. Denne specen konkretiserer
 bestillingen. **Produktkode er ikke implementert: D1–D3 i endringsforslaget

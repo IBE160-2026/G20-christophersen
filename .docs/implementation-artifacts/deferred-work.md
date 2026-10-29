@@ -360,3 +360,16 @@ Neste eier er Mads for D1–D3; deretter PM/arkitekt og utvikler for
 specens 6.1–6.5. Lukking krever dokumentert gjennomføring, godkjent relevant
 uavhengig review og tester, dato, faktisk løsningscommit og verifikasjonslenker.
 Planlegging eller bestått eksisterende regresjon lukker ikke produktarbeidet.
+
+
+**PAA-SO1, gjennomføring 2026-10-28:** Mads har godkjent D1–D3 og hele
+SO-AC1–15; [frossen arbeidsplan](spec-salgsoppgave-offline-build.md).
+Den sammenhengende offline-flyten er implementert med separat 200-sidersgrense,
+bevart legacy 30, kildebundet økonomi/TG, kontrollert rapportdekning og
+integrert/separat original. Nye tester og faktisk
+[verifikasjon/review](salgsoppgave-implementation-2026-10-28/verifikasjon.md)
+gjelder denne utvidelsen. **Status: Åpen — uavhengig sluttreview og dokumentert
+løsningscommit gjenstår før eventuell eksplisitt lukking.** Ny live er stengt;
+reell live-kvalitet/tokenizer/kostnadsautorisasjon er en senere bestilling,
+ikke bevisført av denne offline-leveransen. Original oppføring/historikk og
+S5/S6-status er bevart.

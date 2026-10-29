@@ -138,7 +138,7 @@ export type PartialExtraction = z.infer<typeof PartialExtractionSchema>
 export type AnalysisError = z.infer<typeof AnalysisErrorSchema>
 
 // Én kildekontroll brukes både når resultat bindes og når ferdig svar leses.
-export function getCandidateIssues(original: OriginalCandidate, context: AnalysisContext): CandidateIssue[] {
+export function getCandidateIssues(original: OriginalCandidate, context: Pick<AnalysisContext, 'documentName' | 'reportHash' | 'pageCount'>): CandidateIssue[] {
   const issues: CandidateIssue[] = []
   if (original.grade !== 'TG2' && original.grade !== 'TG3') {
     issues.push({ code: 'unclear-grade', reason: 'Eksplisitt TG2 eller TG3 mangler eller er uklar.' })

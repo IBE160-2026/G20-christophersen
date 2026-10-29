@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Dispatch } from 'react'
 import type { ListingCorrection } from '../../contracts/listing.ts'
 import { listingFinancingSuggestion, listingSuggestions, validateListingUrl } from '../../domain/listing.ts'
-import { parseFinancialDecimal } from '../../domain/validation.ts'
+import { FinancingControls } from '../components/FinancingControls.tsx'
 import { ListingClient } from '../analysis/listing-client.ts'
 import type { SessionAction, SessionState } from '../state/session.ts'
 
@@ -14,8 +14,6 @@ export function ListingImport({ session, dispatch }: { session: SessionState; di
   const draft = state.draft
   const suggested = draft ? listingSuggestions(draft) : null
   const financing = draft ? listingFinancingSuggestion(draft, state.financing, state.manualFields.includes('P') ? session.financial.P.rawValue : undefined) : null
-  const canonicalEquity = financing?.loan != null ? parseFinancialDecimal(state.financing.equity) : null
-  const rangeEquity = canonicalEquity !== null && /^\d+(?:\.\d{1,2})?$/.test(canonicalEquity) ? canonicalEquity : null
   const statuses = { available: 'Tilgjengelig', missing: 'Mangler', unavailable: 'Utilgjengelig', conflict: 'Motstrid' }
   const periods = { once: 'Engang', month: 'Måned', year: 'År', unknown: 'Ukjent periode' }
   return <section className="listing-import" aria-labelledby="listing-title">
@@ -66,15 +64,7 @@ export function ListingImport({ session, dispatch }: { session: SessionState; di
       <label><input type="checkbox" checked={draft.completeOperatingCosts} onChange={event => dispatch({ type: 'listing-complete-costs', complete: event.target.checked })} />Jeg har kontrollert at alle eierbetalte driftskostnader er med, og avklart inkludering og rentedeler.</label>
       <h3>Finansieringsforutsetninger</h3>
       <p>Kontantbehov: {suggested?.cashRequired ?? 'Ukjent'} NOK. Fellesgjelden finansieres ikke på nytt.</p>
-      <label htmlFor="listing-equity">Egenkapital (NOK)</label>
-      <input id="listing-equity" inputMode="decimal" value={state.financing.equity} onChange={event => dispatch({ type: 'listing-financing', field: 'equity', value: event.target.value })} />
-      {rangeEquity !== null ? <>
-        <label htmlFor="listing-equity-range">Egenkapital med slider (NOK)</label>
-        <input id="listing-equity-range" type="range" min="0" max={suggested?.cashRequired ?? '0'} step="0.01" value={rangeEquity} onChange={event => dispatch({ type: 'listing-financing', field: 'equity', value: event.target.value })} />
-      </> : <p>Slideren vises når egenkapitalen er et gyldig beløp med høyst to desimaler mellom 0 og kjent kontantbehov. Tallfeltet beholder din nøyaktige verdi.</p>}
-      {([{ field: 'annualInterest', label: 'Årsrente (%)' }, { field: 'months', label: 'Løpetid (måneder)' }, { field: 'year', label: 'År for gjeldsbetjening' }] as const).map(({ field, label }) => <div key={field}>
-        <label htmlFor={`listing-finance-${field}`}>{label}</label><input id={`listing-finance-${field}`} inputMode="decimal" value={state.financing[field]} onChange={event => dispatch({ type: 'listing-financing', field, value: event.target.value })} />
-      </div>)}
+      <FinancingControls prefix="listing" financing={state.financing} cashRequired={suggested?.cashRequired ?? null} loan={financing?.loan ?? null} onChange={(field, value) => dispatch({ type: 'listing-financing', field, value })} />
       <p>Eget lån: {financing?.loan ?? 'Ukjent'} NOK · Månedlig betaling: {financing?.monthly ?? 'Ukjent'} NOK · Årlig egen betaling: {financing?.annual ?? 'Ukjent'} NOK</p>
       <p>Forslag P: {suggested?.P ?? 'Ukjent'} · D: {suggested?.D ?? 'Ukjent'} · J: {financing?.J ?? 'Ukjent'} NOK/år</p>
       {suggested?.issues.map(issue => <p key={issue}>{issue}</p>)}

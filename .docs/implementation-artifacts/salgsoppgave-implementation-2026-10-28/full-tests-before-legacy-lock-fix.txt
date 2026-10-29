@@ -1,0 +1,74 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/integration/http-analysis.test.ts (22 tests | 2 failed) 98802ms
+   ❯ Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp (22)
+     × PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked 3943ms
+     × aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon 1350ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked
+AssertionError: expected { status: 409, body: { …(2) } } to deeply equal { status: 413, body: { …(2) } }
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "payload-too-large",
++     "code": "analysis-active",
+      "kind": "rejected",
+    },
+-   "status": 413,
++   "status": 409,
+  }
+
+ ❯ tests/integration/http-analysis.test.ts:157:23
+    155|       'Content-Length': String(frame.start.length + MAX_PDF_BYTES + 1 …
+    156|     })
+    157|     expect(knownFile).toEqual({ status: 413, body: { kind: 'rejected',…
+       |                       ^
+    158|     expect(events.filter(event => event.kind === 'process-started')).t…
+    159|   }, 30_000)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon
+AssertionError: expected { kind: 'rejected', …(1) } to match object { kind: 'analysis', outcome: { …(2) } }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "analysis",
+-   "outcome": {
+-     "error": {
+-       "code": "invalid-format",
+-     },
+-     "status": "failed",
+-   },
++   "kind": "rejected",
+  }
+
+ ❯ tests/integration/http-analysis.test.ts:218:32
+    216|       // An independent session reaches document validation while the …
+    217|       const independent = await post(url, await fixture('invalid-forma…
+    218|       expect(independent.body).toMatchObject({ kind: 'analysis', outco…
+       |                                ^
+    219|       expect(events.filter(event => event.kind === 'process-started'))…
+    220|       expect(events.filter(event => event.kind === 'adapter-permitted'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 47 passed (48)
+      Tests  2 failed | 1272 passed (1274)
+   Start at  22:38:04
+   Duration  99.10s (tests 96%, import 3%, transform 1%)
+

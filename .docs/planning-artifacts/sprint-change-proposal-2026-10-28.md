@@ -3,13 +3,20 @@ title: 'Correct Course: Salgsoppgave som hovedinngang til PAA'
 date: '2026-10-28'
 workflow: 'bmad-correct-course'
 mode: 'batch'
-status: 'product-direction-accepted-technical-gates-pending'
+status: 'technical-gates-approved-offline'
 decision_owner: 'Mads'
 scope: 'major-planning-change'
 baseline_commit: 'b259207'
 ---
 
 # Sprint Change Proposal — Property Acquisition Agent
+
+**Vedtak 2026-10-28:** Mads har godkjent hele forslaget, D1–D3 og alle 15 AC.
+Offline implementering er autorisert; selektivt kombinert grunnlag skal bevare
+fysiske sider, og manglende rapport skal ikke stoppe tilgjengelig økonomi.
+[Arbeidsplan og gjennomføring](../implementation-artifacts/spec-salgsoppgave-offline-build.md).
+Avventende portstatus nedenfor er bevart som beslutningshistorikk.
+Ingen ny live- eller kostnadsautorisasjon følger av vedtaket.
 
 **Salgsoppgave er den vedtatte produktretningen.** Mads bestilte denne
 endringen 2026-10-28: én opplasting skal gi mest mulig kontrollerbart

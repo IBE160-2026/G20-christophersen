@@ -3,6 +3,7 @@ import type { ScreeningAssessment } from './screening.ts'
 
 /** Binding innen ett objekt i den aktive frontendøkten; ingen varig historikk. */
 export interface ResultBinding {
+  documentImport?: { prospectusHash: string | null; reportHash: string | null; inputDigest: string | null; coverageRevision: number; identityChecked: boolean; areaChecked: boolean }
   financialRevision: number
   financialConfirmations: Record<FinancialField, boolean>
   listRevision: number

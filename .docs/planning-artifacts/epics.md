@@ -1968,3 +1968,24 @@ Ingen installasjon, appkode, fixtures, produkttester, live-kjøring eller sprint
 Mads valgte C ved det terminale kontrollpunktet 2026-10-16. Alle fire workflow-steg er fullført, og planleggingsworkflowen er avsluttet med dokumenterte readiness-forbehold. Godkjenningen lukker ikke de fire avklaringspunktene, endrer ingen låst kilde og starter ingen implementering.
 
 **Status: Epics og stories ferdigstilt. Implementation readiness: CONCERNS.**
+
+
+## Epic 6 — Godkjent salgsoppgaveflyt, tillegg 2026-10-28
+
+Mads har godkjent D1–D3 og alle SO-AC1–15 i
+[den frosne arbeidsplanen](../implementation-artifacts/spec-salgsoppgave-offline-build.md),
+med [detaljkravene](../implementation-artifacts/spec-salgsoppgave-input.md) som
+normativt vedlegg. Tidligere portstatus i Correct Course beskriver historikken.
+Denne leveransen åpner ikke live, FINN eller ny historisk S5/S6-akseptanse.
+
+| Story | Godkjent leveranse / kravspor | Faktisk status |
+|---|---|---|
+| 6.1 | Egen versjonert import, 200/50 MiB-profil, tekst/RSS/frist/cleanup; SO-AC2–5/13, FR-6/8/9, AD-3–6/9 | Offline done 2026-10-29 |
+| 6.2 | Kildeuavhengig økonomi og delt FINN-normalisering uten nye finansregler; SO-AC7–10, FR-1–3, AD-7 | Offline done 2026-10-29 |
+| 6.3 | Integrert/separat rapport, eksakte belegg og samme-forhold-duplikater; SO-AC3–6/12, FR-5–11, AD-2–6/8 | Offline done 2026-10-29 |
+| 6.4 | Opplasting før bekreftelse, ubekreftet utfylling, delt finansiering og aktiv økt; SO-AC1/11/12/14, FR-4/15/18 | Offline done 2026-10-29 |
+| 6.5 | Uavhengig review, nye AC-bevis, samlet regresjon og oppdatert kjøreoppskrift; alle SO-AC, særlig 13–15, AD-10 | Offline verifisert/reviewet 2026-10-29 |
+
+Story 6.1–6.5 leveres som én sammenhengende brukerreise etter godkjenningen.
+[AC-spor og faktiske testutskrifter](../implementation-artifacts/salgsoppgave-implementation-2026-10-28/verifikasjon.md)
+er nye bevis; historiske epics, krav og statusopphav over er bevart.

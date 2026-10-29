@@ -32,7 +32,7 @@
 # development_status er gruppert per epic, ikke etter implementeringsrekkefølge.
 # BMADs generiske statusanbefaling håndhever ikke avhengigheter eller porter.
 generated: 10-16-2026 18:23
-last_updated: 10-27-2026
+last_updated: 10-29-2026
 project: IBE160
 project_key: NOKEY
 tracking_system: file-system
@@ -93,6 +93,15 @@ development_status:
   5-5-samle-etterprøvbare-leveransebevis-og-kontrollere-repoet: in-progress
   # Kun bestilt leveringsforberedelse; full akseptanse venter på ekte S6.
   epic-5-retrospective: optional
+
+  epic-6: done
+  6-1-versjonert-dokumentimport-og-ressursprofil: done
+  6-2-kildebundet-okonomi-og-normalisering: done
+  6-3-rapportomrade-tg-og-kildebelegg: done
+  6-4-opplastingsflyt-finansiering-og-offline-demo: done
+  6-5-uavhengig-review-regresjon-og-leveringsbevis: done
+  epic-6-retrospective: optional
+  # Mads godkjente D1–D3/SO-AC1–15 2026-10-28; gammel S5/S6-status er uendret.
 
 # Planmetadata fra Sprint Planning 2026-10-16; Story 1.1 startet 2026-10-16.
 # Custom keys bevares av BMAD-generatoren. Les sprint_plan_file før storyvalg.
@@ -171,3 +180,12 @@ delivery_preparation:
   pre_submission_checked_on: 2026-10-28
   s6_candidate_source_commit: 7e55652c8a172a129ca879596ed7fd1bc2f3b4f8
   s6_handoff_record: .docs/implementation-artifacts/story-5-4-s6-overlevering-2026-10-28.md
+
+salgsoppgave_offline:
+  decision_owner: Mads
+  decision_date: 2026-10-28
+  approved_scope: D1-D3 og SO-AC1-15
+  build_spec: .docs/implementation-artifacts/spec-salgsoppgave-offline-build.md
+  evidence: .docs/implementation-artifacts/salgsoppgave-implementation-2026-10-28/verifikasjon.md
+  live_enabled: false
+  historical_s5_s6_reopened: false

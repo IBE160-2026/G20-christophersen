@@ -1,0 +1,26 @@
+
+Running 13 tests using 4 workers
+
+(node:37612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37621) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37619) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 tests/components/screening-result.spec.ts:22:1 › AC4: Ikke beregnet viser kontrollbehov uten anbefaling eller tidligere tall (351ms)
+  ✓   2 tests/components/screening-result.spec.ts:39:1 › AC3: analysefeil er kompakt og ikke tom suksess eller kopi av lokal langfeil (422ms)
+  ✓   4 tests/components/screening-result.spec.ts:59:1 › AC4: historiske tall, anbefaling og funn blandes ikke med ny aktiv leie eller korrigering; utkast opplyses (424ms)
+  ✓   1 tests/components/screening-result.spec.ts:29:1 › AC3: manglende J og ubekreftet liste samles med konkrete handlinger og gyldig delgrunnlag (462ms)
+  ✓   5 tests/components/screening-result.spec.ts:74:1 › AC2/6: TG3-status synlig fra start og begrunnelse/opphav bak native tastaturdisclosure (374ms)
+  ✓   8 tests/components/screening-result.spec.ts:125:1 › review B2/E4: identisk bevart PDF er ikke erstattet bare fordi analysestatus feiler (299ms)
+  ✓   6 tests/components/screening-result.spec.ts:88:1 › AC2: Avklart beholder TG3, begrunnelse og konkret brukergrunnlag uten teknisk godkjenning (342ms)
+  ✓   7 tests/components/screening-result.spec.ts:105:1 › AC4: brukt retting etter snapshot endrer ikke historiske funn; ny rapport får ingen historisk kildehandling (360ms)
+  ✓  10 tests/components/screening-result.spec.ts:153:1 › review E3: TG3-ID-prefikser beholder hvert sitt faktiske avgjørende forhold (193ms)
+  ✓  11 tests/components/screening-result.spec.ts:168:1 › review B5/B6/B10: reelt deluttrekk ignorerer gamle rettinger/avvisninger og beholder TG3, usikkerhet og mangler (212ms)
+  ✓  12 tests/components/screening-result.spec.ts:195:1 › review A2: kompakt dokumentfeil bevarer alle berørte sider uten lokal langforklaring (200ms)
+  ✓   9 tests/components/screening-result.spec.ts:133:1 › review B3: ugyldig TG3-binding forklares sammen med bevart brukeropplysning (270ms)
+  ✓  13 tests/components/screening-result.spec.ts:208:1 › review V1/R1: begge økonomiske brudd, prioritet og tallfestet regelgrunnlag er åpne fra start (149ms)
+
+  13 passed (2.0s)

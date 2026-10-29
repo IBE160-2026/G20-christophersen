@@ -8,6 +8,7 @@ import { createInitialSession, sessionReducer } from '../../src/frontend/state/s
 import type { SessionState } from '../../src/frontend/state/session.ts'
 import { screeningState } from '../helpers/screening-state.ts'
 import { bindAnalysisOutcome } from '../../src/contracts/analysis-validation.ts'
+import { AnalysisOutcomeSchema } from '../../src/contracts/document-analysis.ts'
 import type { AnalysisOutcome } from '../../src/contracts/document-analysis.ts'
 const css = readFileSync(new URL('../../src/frontend/styles.css', import.meta.url), 'utf8')
 function documentFor(outcome: Extract<AnalysisOutcome, { status: 'completed' }>) {
@@ -38,7 +39,7 @@ test('AC3: manglende J og ubekreftet liste samles med konkrete handlinger og gyl
 test('AC3: analysefeil er kompakt og ikke tom suksess eller kopi av lokal langfeil', async ({ page }) => {
   const local = 'Lang lokal årsak som bare skal vises i problemtrinnet.'
   let state = screeningState()
-  const original = state.report.outcome!
+  const original = AnalysisOutcomeSchema.parse(state.report.outcome)
   state = { ...state, report: { ...state.report, status: 'failed', error: 'timeout', outcome: {
     contractVersion: original.contractVersion, extractionVersion: original.extractionVersion, mode: original.mode,
     requestId: original.requestId, reportHash: original.reportHash, documentName: original.documentName, pageCount: original.pageCount,
@@ -151,10 +152,10 @@ test('review B3: ugyldig TG3-binding forklares sammen med bevart brukeropplysnin
 
 test('review E3: TG3-ID-prefikser beholder hvert sitt faktiske avgjørende forhold', async ({ page }) => {
   let state = screeningState({ report: 'tg3' })
-  const original = state.report.outcome!
+  const original = AnalysisOutcomeSchema.parse(state.report.outcome)
   if (original.status !== 'completed') throw new Error('Fixture må være completed')
   const candidate = original.findings.find(item => item.grade === 'TG3')!.original
-  const outcome = bindAnalysisOutcome(documentFor(original), {
+  const outcome = bindAnalysisOutcome(documentFor(AnalysisOutcomeSchema.parse(original) as Extract<AnalysisOutcome, { status: 'completed' }>), {
     contractVersion: '2', extractionVersion: '1', status: 'completed', limitations: [],
     findings: [{ ...candidate, findingId: 'TG3-A', description: 'Første takforhold' }, { ...candidate, findingId: 'TG3-A:B', description: 'Andre takforhold' }],
   })
@@ -166,7 +167,7 @@ test('review E3: TG3-ID-prefikser beholder hvert sitt faktiske avgjørende forho
 
 test('review B5/B6/B10: reelt deluttrekk ignorerer gamle rettinger/avvisninger og beholder TG3, usikkerhet og mangler', async ({ page }) => {
   let state = screeningState({ report: 'tg3' })
-  const original = state.report.outcome!
+  const original = AnalysisOutcomeSchema.parse(state.report.outcome)
   if (original.status !== 'completed') throw new Error('Fixture må være completed')
   const tg2 = original.findings.find(item => item.grade === 'TG2')!
   state = sessionReducer(state, { type: 'report-finding-edit', generation: 1, findingId: tg2.findingId })
@@ -175,7 +176,7 @@ test('review B5/B6/B10: reelt deluttrekk ignorerer gamle rettinger/avvisninger o
   state = sessionReducer(state, { type: 'report-finding-confirm', generation: 1, findingId: tg2.findingId })
   state = sessionReducer(state, { type: 'report-finding-reject', generation: 1, findingId: 'F4-TG3-1' })
   state = sessionReducer(state, { type: 'report-list-confirm', generation: 1, reportHash: original.reportHash, documentName: original.documentName, listRevision: state.report.listRevision })
-  const outcome = bindAnalysisOutcome(documentFor(original), {
+  const outcome = bindAnalysisOutcome(documentFor(AnalysisOutcomeSchema.parse(original) as Extract<AnalysisOutcome, { status: 'completed' }>), {
     contractVersion: '2', extractionVersion: '1', status: 'failed', code: 'timeout', target: { kind: 'page', pdfPage: 3 },
     partialResult: { findings: [...original.findings.map(item => item.original), { ...tg2.original, findingId: 'uncertain-wall', description: 'Usikker vegg', uncertainties: ['Veggens kildegrunnlag er uavklart'] }], limitations: ['Siste rapportdel mangler'] },
   })
@@ -193,9 +194,9 @@ test('review B5/B6/B10: reelt deluttrekk ignorerer gamle rettinger/avvisninger o
 
 test('review A2: kompakt dokumentfeil bevarer alle berørte sider uten lokal langforklaring', async ({ page }) => {
   let state = screeningState({ report: 'tg3' })
-  const original = state.report.outcome!
+  const original = AnalysisOutcomeSchema.parse(state.report.outcome)
   if (original.status !== 'completed') throw new Error('Fixture må være completed')
-  const outcome = bindAnalysisOutcome({ ...documentFor(original), pages: Array.from({ length: original.pageCount }, (_, index) => ({ pdfPage: index + 1, text: index === 1 || index === 2 ? '' : 'Fiktiv rapport', status: index === 1 || index === 2 ? 'unreadable' : 'readable', reason: index === 1 || index === 2 ? 'Lang lokal sideforklaring som blir i problemtrinnet.' : null })) }, null)
+  const outcome = bindAnalysisOutcome({ ...documentFor(AnalysisOutcomeSchema.parse(original) as Extract<AnalysisOutcome, { status: 'completed' }>), pages: Array.from({ length: original.pageCount }, (_, index) => ({ pdfPage: index + 1, text: index === 1 || index === 2 ? '' : 'Fiktiv rapport', status: index === 1 || index === 2 ? 'unreadable' : 'readable', reason: index === 1 || index === 2 ? 'Lang lokal sideforklaring som blir i problemtrinnet.' : null })) }, null)
   state = sessionReducer({ ...state, report: { ...state.report, status: 'failed', error: 'unreadable-text', outcome } }, { type: 'calculate-result' })
   await render(page, state)
   await expect(page.locator('.result-triggers')).toContainText('Dokumentfeil: unreadable-text')

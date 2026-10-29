@@ -8,6 +8,8 @@ import type { SessionAction, SessionState } from './session.ts'
 export function resultBinding(state: SessionState): ResultBinding {
   const report = state.report
   return {
+    documentImport: { prospectusHash: state.prospectus.prospectus.selected?.hash ?? null, reportHash: state.prospectus.report.selected?.hash ?? null,
+      inputDigest: (state.prospectus.report.outcome ?? state.prospectus.prospectus.outcome)?.inputDigest ?? null, coverageRevision: state.prospectus.coverageRevision, identityChecked: state.prospectus.identityChecked, areaChecked: state.prospectus.areaChecked },
     financialRevision: state.financialRevision,
     financialConfirmations: Object.fromEntries(FinancialFieldSchema.options.map(field => [field, state.financial[field].confirmed])) as ResultBinding['financialConfirmations'],
     listRevision: report.listRevision, listConfirmationRevision: report.listConfirmationRevision,
@@ -57,6 +59,7 @@ export function selectResult(state: SessionState): ResultSelection {
 
 /** Kalles bare etter en faktisk endring av bindingen. Bekreftelsesregler eies fortsatt av Epic 1/2. */
 export function describeResultChange(action: SessionAction, before: SessionState): ResultChange {
+  if (action.type.startsWith('import-')) return { kind: 'report', target: 'document-import', message: 'Dokument-, økonomi- eller dekningsgrunnlaget er endret.', nextAction: 'Kontroller tall, rapportområde, tilhørighet og funn før ny vurdering.' }
   if (action.type === 'listing-url' || action.type === 'listing-apply' || action.type === 'listing-response') return { kind: 'financial', target: 'listing',
     message: action.type === 'listing-url' ? 'Objektlenken er endret; tidligere tall og rapport tilhører ikke det nye objektet.' : action.type === 'listing-response' ? 'Kildestøttet FINN-grunnlag er fylt inn som ubekreftet.' : 'Kontrollert FINN-grunnlag og finansieringsforutsetninger er brukt.',
     nextAction: 'Kontroller og bekreft gjeldende tall og rapportgrunnlag før ny vurdering.' }

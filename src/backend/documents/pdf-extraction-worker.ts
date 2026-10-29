@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { parentPort, workerData } from 'node:worker_threads'
-import { extractPage, inspectStreamBytes } from './pdf-extraction-core.ts'
+import { extractPage, inspectStreamBytes, TextBudgetExceeded } from './pdf-extraction-core.ts'
 import type { Inspection, TextPage } from './pdf-extraction-core.ts'
 import type { DocumentBasis } from '../../contracts/document-analysis.ts'
 
@@ -17,7 +17,7 @@ interface Stream {
   dict: Dict
   length: number
   pos: number
-  getBytes(): Uint8Array
+  getBytes(length?: number): Uint8Array
   reset(): void
   getOriginalStream(): Stream
 }
@@ -35,14 +35,18 @@ interface Parser {
   Ref: new (...args: never[]) => object
   Name: new (...args: never[]) => { name: string }
   BaseStream: new (...args: never[]) => Stream
-  Stream: new (...args: never[]) => Stream
+  Stream: new (bytes: Uint8Array) => Stream
+  Lexer: new (stream: Stream, commands: object) => { getObj(): unknown }
+  EvaluatorPreprocessor: { opMap: object }
+  Cmd: new (...args: never[]) => { cmd: string }
+  EOF: unknown
   DefaultPartialEvaluatorOptions: object
   WorkerTask: new (name: string) => { finish(): void; terminate(): void }
   setVerbosityLevel(level: number): void
 }
 let manager: Manager | undefined
-let reply: { kind: 'extracted'; pages: DocumentBasis['pages'] } | { kind: 'unavailable' } = { kind: 'unavailable' }
-const pages: DocumentBasis['pages'] = []
+let reply: { kind: 'extracted'; pages: DocumentBasis['pages']; attachments?: { id: string; name: string; isPdf: boolean }[] } | { kind: 'unavailable' | 'text-limit' } = { kind: 'unavailable' }
+const pages: (DocumentBasis['pages'][number] & { rasterUnprocessed?: boolean })[] = []
 const originalWarn = console.warn
 const originalInfo = console.info
 let messages: string[] = []
@@ -51,7 +55,7 @@ console.warn = console.info = (...args: unknown[]) => { messages.push(args.map(S
 try {
   const source = await readFile(new URL(import.meta.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs')), 'utf8')
   if (createHash('sha256').update(source).digest('hex') !== WORKER_SHA256) throw new Error('Incompatible parser')
-  const moduleUrl = 'data:text/javascript;base64,' + Buffer.from(source + '\nexport { LocalPdfManager, Page, Dict, Ref, Name, BaseStream, Stream, DefaultPartialEvaluatorOptions, WorkerTask, setVerbosityLevel };\n').toString('base64')
+  const moduleUrl = 'data:text/javascript;base64,' + Buffer.from(source + '\nexport { LocalPdfManager, Page, Dict, Ref, Name, BaseStream, Stream, DefaultPartialEvaluatorOptions, WorkerTask, setVerbosityLevel, Lexer, Cmd, EOF, EvaluatorPreprocessor };\n').toString('base64')
   const parser = await import(moduleUrl) as Parser
   parser.setVerbosityLevel(5)
   const handler = {
@@ -74,6 +78,18 @@ try {
   const leaves = await manager.ensureCatalog('getAllPageDicts', [false])
   if (leaves.size !== workerData.pageCount) throw new Error('Changed physical page basis')
   const { xref, catalog } = manager.pdfDocument
+  const bounded = workerData.importProfile === true
+  const budget = bounded ? { pageBytes: 128 * 1024, totalBytes: 1024 * 1024, used: 0 } : undefined
+  // Pinned Catalog.attachments contains FileSpec.serializable metadata only. Never request attachmentContent.
+  const attachments: { id: string; name: string; isPdf: boolean }[] = []
+  if (bounded && catalog.attachments instanceof Map) {
+    if (catalog.attachments.size > 40) throw new TextBudgetExceeded()
+    for (const [id, metadata] of catalog.attachments as Map<string, { filename?: string }>) {
+      const name = metadata.filename ?? id
+      if (Buffer.byteLength(id) > 1024 || Buffer.byteLength(name) > 1024) throw new TextBudgetExceeded()
+      attachments.push({ id, name, isPdf: /\.pdf$/i.test(name) })
+    }
+  }
   const resolve = (raw: unknown) => {
     const value = xref.fetchIfRef(raw)
     if (raw instanceof parser.Ref && value == null) throw new Error('Unresolved reference')
@@ -102,7 +118,7 @@ try {
         if (resolve(stream.dict.getRaw('DecodeParms') ?? stream.dict.getRaw('DP')) != null) return resultOf('unknown', 'Innholdsstrømmens dekodingsparametre er ikke uavhengig verifisert.')
         const originalPosition = raw.pos
         raw.reset()
-        const inspected = inspectStreamBytes(Uint8Array.from(raw.getBytes()), filters.map(filter => (filter as { name: string }).name))
+        const inspected = inspectStreamBytes(Uint8Array.from(raw.getBytes()), filters.map(filter => (filter as { name: string }).name), bounded ? 1024 * 1024 : undefined)
         raw.pos = originalPosition
         if (inspected === 'damaged') return resultOf(inspected)
         if (inspected === 'unknown') result = inspected
@@ -190,6 +206,57 @@ try {
       return { content, textLoss, uncertainAnnotation, reason: null }
     } catch { return unknown() }
   }
+  // Conservatively mark raster-bearing pages even when a digital footer exists.
+  function raster(dict: Dict): boolean {
+    const visited = new Set<unknown>()
+    const inline = (stream: Stream) => {
+      const position = stream.pos
+      try {
+        stream.reset()
+        const bytes = Uint8Array.from(stream.getBytes(1024 * 1024 + 1))
+        if (bytes.length > 1024 * 1024) return true
+        const lexer = new parser.Lexer(new parser.Stream(bytes), parser.EvaluatorPreprocessor.opMap)
+        for (let tokens = 0; tokens < 250_000; tokens++) {
+          const token = lexer.getObj()
+          if (token === parser.EOF) return false
+          // Stop before consuming image bytes. Strings, names and comments are not commands.
+          if (token instanceof parser.Cmd && token.cmd === 'BI') return true
+        }
+        return true
+      } catch { return true } finally { stream.pos = position }
+    }
+    const inspect = (resources: unknown, depth: number): boolean => {
+      if (depth > 16) return true
+      const resolved = resolve(resources)
+      if (!(resolved instanceof parser.Dict)) return false
+      const objects = resolve(resolved.getRaw('XObject'))
+      if (!(objects instanceof parser.Dict)) return false
+      for (const key of objects.getKeys()) {
+        const value = resolve(objects.getRaw(key))
+        if (visited.has(value)) continue
+        visited.add(value)
+        if (value instanceof parser.BaseStream) {
+          const subtype = resolve(value.dict.getRaw('Subtype'))
+          if (subtype instanceof parser.Name && subtype.name === 'Image') return true
+          if (subtype instanceof parser.Name && subtype.name === 'Form' && (inline(value) || inspect(value.dict.getRaw('Resources'), depth + 1))) return true
+        }
+      }
+      return false
+    }
+    try {
+      const contents = resolve(dict.getRaw('Contents'))
+      for (const item of Array.isArray(contents) ? contents : contents == null ? [] : [contents]) {
+        const stream = resolve(item)
+        if (!(stream instanceof parser.BaseStream) || inline(stream)) return true
+      }
+      let current: Dict | null = dict
+      while (current) {
+        if (inspect(current.getRaw('Resources'), 0)) return true
+        current = current.has('Parent') ? resolve(current.getRaw('Parent')) as Dict : null
+      }
+      return false
+    } catch { return true }
+  }
   const documentMessages = [...messages]
   for (const [pageIndex, [dict, ref]] of leaves) {
     messages = [...documentMessages]
@@ -209,7 +276,10 @@ try {
         if (other.textLoss) return 'loss'
         if (messages.some(message => /ignoring|Invalid stream|not available|failed/i.test(message))) return 'loss'
         return messages.length ? 'uncertain' : null
-      })
+      }, budget)
+      // Text-layer reliability and unprocessed raster are independent in the new envelope.
+      // A logo must not hide usable economy text; raster inside the report still blocks coverage.
+      if (bounded) Object.assign(extracted, { rasterUnprocessed: raster(dict) })
       if (extracted.status === 'readable' && other.uncertainAnnotation) {
         extracted.status = 'unknown'
         extracted.reason = 'Annotasjonens tekstgrunnlag kunne ikke kontrolleres fullstendig.'
@@ -218,11 +288,12 @@ try {
       pages.push(extracted)
     } finally { task.terminate(); task.finish(); await manager.cleanup() }
   }
-  reply = { kind: 'extracted', pages }
-} catch {
+  reply = { kind: 'extracted', pages, ...(bounded ? { attachments } : {}) }
+} catch (error) {
   // A parser/mapping failure after startup cannot certify any physical page.
   // Preserve the trusted 2.2 positions; do not invent a damaged-document cause.
-  if (manager) reply = { kind: 'extracted', pages: Array.from({ length: workerData.pageCount }, (_, index) => ({
+  if (error instanceof TextBudgetExceeded) reply = { kind: 'text-limit' }
+  else if (manager) reply = { kind: 'extracted', pages: Array.from({ length: workerData.pageCount }, (_, index) => ({
     ...(pages[index] ?? { pdfPage: index + 1, text: '', status: 'unknown', reason: 'PDF-sidens innhold kunne ikke kontrolleres.' }),
   })) }
 }

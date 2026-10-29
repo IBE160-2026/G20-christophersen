@@ -106,7 +106,7 @@ describe('Story 4.4 — eksplisitt brukervurdering av generell begrensning', () 
   it.each(['unreadable-text', 'unknown-readability', 'incomplete-text', 'timeout'] as const)('ekte %s-feil kan aldri gjøres til fullført/tilstrekkelig analyse', code => {
     const state = original()
     const report = save(state.report)
-    const outcome: AnalysisOutcome = { ...report.outcome!, status: 'failed', error: code === 'timeout' ? { kind: 'analysis', code, reason: 'Kritisk feil', target: null }
+    const outcome: AnalysisOutcome = { ...AnalysisOutcomeSchema.parse(report.outcome), status: 'failed', error: code === 'timeout' ? { kind: 'analysis', code, reason: 'Kritisk feil', target: null }
       : { kind: 'document', code, reason: 'Kritisk feil', target: { kind: 'page', pdfPage: 2 } }, partialResult: null }
     const failed: ReportState = { ...report, status: 'failed', error: code, outcome }
     expect(save(failed, report.limitationReviews[0]!)).toBe(failed)

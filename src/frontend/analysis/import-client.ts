@@ -1,5 +1,5 @@
 import type { Dispatch } from 'react'
-import { IMPORT_MAX_PDF_BYTES, IMPORT_VERSION, IMPORT_EXTRACTION_VERSION, IMPORT_PROMPT_VERSION, IMPORT_MODEL } from '../../contracts/document-import.ts'
+import { IMPORT_MAX_PDF_BYTES, currentImportContext } from '../../contracts/document-import.ts'
 import type { ImportRole } from '../../contracts/document-import.ts'
 import type { SessionAction } from '../state/session.ts'
 import type { ProspectusState } from '../state/prospectus.ts'
@@ -27,8 +27,7 @@ export class ImportClient {
       if (this.ticket !== ticket) return
       this.dispatch({ type: 'import-selected', role, generation, selected: { file, bytes, hash } })
       const original = state[role].outcome
-      if (hash === state[role].selected?.hash && original?.contractVersion === IMPORT_VERSION && original.extractionVersion === IMPORT_EXTRACTION_VERSION
-        && original.promptVersion === IMPORT_PROMPT_VERSION && original.model === IMPORT_MODEL && original.mode === 'demo' && original.role === role) return
+      if (hash === state[role].selected?.hash && currentImportContext(original, role)) return
       if (hash === state[role].selected?.hash && original) { fail('incompatible-context'); return }
       const controller = this.controller = new AbortController()
       const correlation = { sessionId: this.sessionId, requestId: this.dependencies.id(), generation }

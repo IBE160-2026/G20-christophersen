@@ -1,0 +1,13 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/code-first-import.test.ts tests/unit/code-first-budget.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  2 passed (2)
+      Tests  36 passed (36)
+   Start at  18:03:56
+   Duration  336ms (import 48%, tests 39%, transform 12%, worker 1%)
+

@@ -24,7 +24,7 @@ export function ProspectusImport({ session, dispatch, client, role }: { session:
     'analysis-active': 'En dokumentbehandling pågår. Vent til den er avsluttet før du velger filen på nytt.', 'duplicate-analysis': 'Dokumentet er allerede forsøkt i denne økten. Ingen ny analyse er startet. Behold kontrollgrunnlaget eller start en ny vurdering.',
     'invalid-format': 'PDF-en kunne ikke kontrolleres. Velg en intakt tekstbasert PDF.', 'text-limit': 'Dokumentets tekstgrunnlag er for stort for denne støtteprofilen. Velg en mindre tekstbasert PDF.',
     'response-limit': 'Uttrekkssvaret overskred ressursgrensen. Analysen er stoppet; velg et annet støttet dokument.', 'memory-limit': 'Dokumentbehandlingen overskred minnegrensen og er stoppet. Velg en enklere tekstbasert PDF.',
-    'processing-timeout': 'Dokumentbehandlingen overskred tidsfristen og er stoppet. Velg et annet støttet dokument.', 'live-disabled': 'Live-import er stengt. Bruk de syntetiske dokumentene i offline-demoen.',
+    'processing-timeout': 'Dokumentbehandlingen overskred tidsfristen og er stoppet. Velg et annet støttet dokument.', 'live-disabled': 'Live-import er stengt. Lokale eksplisitte uttrekk kan kontrolleres, men uløst tekst sperrer rapportbekreftelse.',
     'interrupted': 'Importen er avbrutt. Ingen fullføring er bekreftet.', 'transport-failure': 'Forbindelsen til den lokale serveren ble avbrutt. Kontroller at serveren kjører; grunnlaget er ufullført.',
     'incompatible-context': 'Det bevarte uttrekket har en annen analysekontekst. Start en ny vurdering med gjeldende versjon.',
   }
@@ -35,17 +35,28 @@ export function ProspectusImport({ session, dispatch, client, role }: { session:
   const pageLabels = { readable: 'Lesbar tekst', blank: 'Bekreftet blank', unreadable: 'Uleselig', incomplete: 'Ufullstendig', unknown: 'Uavklart lesbarhet' }
   return <section className="listing-import" aria-labelledby={`import-title-${role}`}>
     <h2 id={`import-title-${role}`}>{role === 'prospectus' ? 'Last opp salgsoppgave' : 'Last opp separat tilstandsrapport'}</h2>
-    <p>Offline syntetisk demo · PDF med tekstlag, høyst 200 fysiske sider. 50 MiB per fil og samlet for salgsoppgave og separat rapport. Ingen OCR. Live-import er stengt.</p>
+    <p>Lokal dokumentanalyse og syntetisk demo · PDF med tekstlag, høyst 200 fysiske sider. 50 MiB per fil og samlet for salgsoppgave og separat rapport. Ingen OCR. Live-import er stengt.</p>
     <label htmlFor={`import-file-${role}`}>{role === 'prospectus' ? 'Velg salgsoppgave (PDF)' : 'Velg separat rapport (PDF)'}</label>
     <input id={`import-file-${role}`} type="file" accept="application/pdf,.pdf" onChange={event => { setView(null); void client.select(event.currentTarget.files?.[0] ?? null, p, role) }} />
-    <p role="status">{slot.status === 'loading' ? 'Leser dokument og forbereder økonomi og rapport …' : slot.status === 'selecting' ? 'Kontrollerer dokumentets hash …' : slot.status === 'imported' ? 'Dokumentuttrekk klart. Import er ubekreftet; kontroller mot originalen.' : slot.error ? errorMessages[slot.error] ?? 'Dokumentimporten kunne ikke fullføres. Velg en støttet syntetisk PDF og kontroller det nye grunnlaget.' : 'Import starter når du velger fil. Ingen finansverdier kreves først.'}</p>
+    <p role="status">{slot.status === 'loading' ? 'Leser dokument og forbereder økonomi og rapport …' : slot.status === 'selecting' ? 'Kontrollerer dokumentets hash …' : slot.status === 'imported' ? 'Dokumentuttrekk klart. Import er ubekreftet; kontroller mot originalen.' : slot.error ? errorMessages[slot.error] ?? 'Dokumentimporten kunne ikke fullføres. Velg en tekstbasert PDF og kontroller det nye grunnlaget.' : 'Import starter når du velger fil. Ingen finansverdier kreves først.'}</p>
     {slot.error && <details><summary>Teknisk feilkode</summary><p>{slot.error}</p></details>}
     {['loading', 'selecting'].includes(slot.status) && <button type="button" className="secondary-action" onClick={() => { client.abort(); dispatch({ type: 'import-abandon' }) }}>Avbryt dokumentimport</button>}
     {role === 'report' && selected && p.prospectus.outcome && <button type="button" className="secondary-action" onClick={() => { client.abort(); setView(null); dispatch({ type: 'import-restore-integrated' }) }}>Bruk integrert rapport igjen</button>}
     {selected && <details><summary>Dokumentidentitet: {selected.file.name}</summary><p>SHA-256 {selected.hash}</p></details>}
     {outcome && <>
+      {outcome.cost && <section aria-label="Kostnad og semantisk rest">
+        <h3>Kostnad og uløst grunnlag</h3>
+        <p>Samlet analyseramme: USD 0,20. Salgsoppgave og separat rapport deler rammen.</p>
+        <p>Forhåndsestimat: {outcome.cost.estimatedUsd === null ? 'Utilgjengelig' : `USD ${outcome.cost.estimatedUsd}`} · Reservert: USD {outcome.cost.reservedUsd} · Gjenstående: USD {outcome.cost.remainingUsd}.</p>
+        <p>Inputtokens: {outcome.cost.inputTokens ?? 'Kan ikke verifiseres'} · Outputtak: {outcome.cost.outputTokens} tokens inklusive reasoning.</p>
+        <p>{outcome.cost.status === 'completed' ? 'Lokal eller offline stubbet behandling fullført. Ingen betalt modellbruk.' : 'Semantisk behandling er sperret eller ufullført. Rapportbekreftelse krever komplett grunnlag.'}</p>
+        {outcome.cost.reason && <p>{semanticStopReason(outcome.cost.reason)}</p>}
+        {outcome.cost.tokenizer === 'test-only' && <p>Token- og kostnadstallene bruker en testteller og er ikke verifisert for live.</p>}
+        {outcome.cost.tokenizer !== 'verified-local-model-and-request-framing' && <p>Ingen verifisert lokal modelltilpasset tokentelling. Live-porten er stengt.</p>}
+        {outcome.manifest && <details><summary>Uløst grunnlag: {outcome.manifest.residual.length} poster</summary><ul>{outcome.manifest.residual.map((item, index) => <li key={index}>Fysisk PDF-side {item.pdfPage}: {coverageReason(item.reason)}</li>)}</ul></details>}
+      </section>}
       <p>Økonomidekning: {coverageLabels[outcome.coverage.economy.status]} · Rapportdekning: {coverageLabels[outcome.coverage.technical.status]}</p>
-      {[...outcome.coverage.economy.reasons, ...outcome.coverage.technical.reasons].map((reason, index) => <p key={index}>{reason}</p>)}
+      {uniqueCoverageReasons([...outcome.coverage.economy.reasons, ...outcome.coverage.technical.reasons]).map(reason => <p key={reason}>{reason}</p>)}
       <p>Ikke valgt i kombinert uttrekksgrunnlag: {pageRanges(outcome.coverage.economy.omittedPages) || 'Ingen'}.</p>
       <p>Uleste fysiske sider: {pageRanges(outcome.pages.filter(page => !['readable', 'blank'].includes(page.status) || page.rasterUnprocessed).map(page => page.pdfPage)) || 'Ingen'}.</p>
       <details><summary>Lesbarhet for alle {outcome.pageCount} fysiske sider</summary><ol>{outcome.pages.map(page => <li key={page.pdfPage}>PDF-side {page.pdfPage}: {pageLabels[page.status]}{page.rasterUnprocessed ? "; rasterinnhold er ikke lest" : ''}{page.reason ? ` — ${page.reason}` : ''}</li>)}</ol></details>
@@ -104,7 +115,7 @@ export function ImportCoverageControl({ session, dispatch }: { session: SessionS
     {p.report.outcome && <IdentityEvidence outcome={p.report.outcome} onView={showSource} />}
     {outcome.sections.map((section, index) => <EvidenceList key={index} label={`rapportgrense ${index + 1}`} sources={section.basis} onView={showSource} />)}
     {view && selected && <><button type="button" onClick={() => setView(null)}>Lukk kontrollkilde</button><PdfViewer selected={selected} pageNumber={view.page} zoom={view.zoom} sourceIssue={null} onPage={page => setView({ ...view, page })} onZoom={zoom => setView({ ...view, zoom })} /></>}
-    {outcome.coverage.technical.reasons.map(reason => <p key={reason}>{reason}</p>)}
+    {uniqueCoverageReasons(outcome.coverage.technical.reasons).map(reason => <p key={reason}>{reason}</p>)}
     {identity === 'conflict' && <p className="field-issue">Kjent eiendomsmotstrid. Denne rapporten kan ikke brukes. Last opp rapporten som tilhører salgsoppgaven.</p>}
     <p>Kontroller tilhørighet mot salgsoppgaven og rapportoriginalen. Uklar grense, flere rapporter, manglende sider eller ulest rapportinnhold krever en komplett separat rapport.</p>
     <label><input id="import-identity-check" type="checkbox" disabled={identity === 'conflict'} checked={p.identityChecked} onChange={event => dispatch({ type: 'import-identity', checked: event.target.checked })} />Jeg har kontrollert at rapporten tilhører objektet mot begge originalene (eller rapport og salgsoppgave i samme fil).</label>
@@ -122,6 +133,26 @@ function pageRanges(pages: number[]) {
   }
   return groups.join(', ')
 }
+
+function semanticStopReason(code: string) {
+  if (code.includes('local-tokenizer-unavailable')) return 'Kostnaden kan ikke verifiseres uten en lokal modelltilpasset tokenteller. Ingen modellforespørsel er startet.'
+  const messages: Record<string, string> = {
+    'analysis-budget-exceeded': 'Hele det nødvendige grunnlaget får ikke plass innen gjenværende analyseramme på USD 0,20. Analysen er stoppet; ingen tekst eller funn er utelatt for å redusere prisen.',
+    'input-token-limit': 'Det nødvendige tekstgrunnlaget overskrider grensen på 40 000 inputtokens. Analysen er stoppet uten avkorting.',
+    'output-token-limit': 'Svarbudsjettet er utenfor den tillatte grensen. Ingen modellforespørsel er startet.',
+    'unknown-price': 'Et verifisert prisgrunnlag mangler. Ingen modellforespørsel er startet.',
+    'budget-history-unavailable': 'Tidligere forbruk og reservasjoner kan ikke verifiseres. Ingen ny modellforespørsel er startet.',
+    'document-already-attempted': 'Dokumentet er allerede forsøkt i denne analysen. Ingen ny modellforespørsel er startet.',
+  }
+  return messages[code] ?? 'Semantisk behandling kunne ikke fullføres og valideres. Grunnlaget er ufullstendig; ingen automatisk ny forespørsel er startet.'
+}
+function coverageReason(reason: string) {
+  if (reason.startsWith('Uløst tekstblokk:')) return 'Tekst krever semantisk tolkning før rapporten kan bekreftes.'
+  if (reason.startsWith('Uavklart TG-kandidat:')) return 'En TG2/TG3-kandidat må avklares mot originalen.'
+  if (reason.startsWith('Semantisk behandling sperret: ')) return semanticStopReason(reason.slice('Semantisk behandling sperret: '.length))
+  return reason
+}
+function uniqueCoverageReasons(reasons: string[]) { return [...new Set(reasons.map(coverageReason))] }
 
 function EvidenceList({ label, sources, onView }: { label: string; sources: PdfSource[]; onView: (source: PdfSource) => void }) {
   return <div>{sources.map((source, index) => <p key={index}><q>{source.quote}</q> · {source.documentName}, fysisk PDF-side {source.pdfPage} <button type="button" className="secondary-action" onClick={() => onView(source)}>Vis kilde for {label} ({index + 1})</button></p>)}</div>

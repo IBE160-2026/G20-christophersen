@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { validatePdf } from '../documents/validate-pdf.ts'
 import { extractImport, ImportFailure } from '../documents/extract-import.ts'
+import { createCodeFirstImport } from '../import/semantic-adapter.ts'
 import { createOfflineImport } from '../import/offline-adapter.ts'
 import type { ImportRole } from '../../contracts/document-import.ts'
 import { IMPORT_MAX_RESPONSE_BYTES } from '../../contracts/document-import.ts'
@@ -16,8 +17,13 @@ process.once('message', async (input: { bytes: Uint8Array; documentName: string;
     const permitted = new Promise<void>(resolve => process.once('message', () => resolve()))
     await send({ kind: 'adapter-ready', hash })
     await permitted
-    const outcome = await createOfflineImport({ hash, name: input.documentName, requestId: input.requestId, role: input.role, parentHash: input.parentHash,
-      attachmentId: input.attachmentId, pages: extracted.pages, attachments: extracted.attachments })
+    const basis = { hash, name: input.documentName, requestId: input.requestId, role: input.role, parentHash: input.parentHash,
+      attachmentId: input.attachmentId, pages: extracted.pages, attachments: extracted.attachments }
+    let outcome
+    try { outcome = await createOfflineImport(basis) } catch (error) {
+      if (!(error instanceof ImportFailure) || error.code !== 'unsupported-synthetic') throw error
+      outcome = await createCodeFirstImport(basis)
+    }
     if (Buffer.byteLength(JSON.stringify(outcome)) > IMPORT_MAX_RESPONSE_BYTES) throw new ImportFailure('response-limit')
     await send({ kind: 'outcome', outcome })
   } catch (error) { await send({ kind: 'rejected', code: error instanceof ImportFailure ? error.code : 'processing-failure' }).catch(() => undefined) }

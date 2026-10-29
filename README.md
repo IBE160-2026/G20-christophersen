@@ -1,5 +1,10 @@
 # Property Acquisition Agent — IBE160, G20
 
+> **Code-first salgsoppgave, 29. oktober 2026:** Generell lokal PDF-analyse supplerer
+> den tidligere syntetiske demoen. Eksplisitte felt og funn trekkes ut lokalt;
+> uløst rapporttekst sperrer bekreftelse mens live-porten er stengt.
+> [Design og kostnadsramme](.docs/planning-artifacts/salgsoppgave-code-first-design-2026-10-29.md).
+>
 > **Salgsoppgave først, 28. oktober 2026:** Den godkjente offline-flyten er implementert.
 > Last opp en syntetisk salgsoppgave før tallbekreftelse, kontroller dokumentøkonomi
 > og finansiering, og kontroller integrert eller separat rapport før screening.
@@ -42,7 +47,8 @@ Oppskriften er egenprøvd på macOS 26.6.2 arm64; andre plattformer er ikke egen
 ## Prøv salgsoppgave fra opplasting til resultat
 
 Bruk [syntetiske salgsoppgaver](tests/fixtures/sales-prospectus/README.md).
-Faktiske kundedokumenter har ingen lagret demo og skal ikke legges i repoet.
+Ukjente PDF-er går gjennom generell lokal analyse; de har ingen lagret
+AI-analyse. Kundedokumenter skal ikke legges i repoet.
 Importen bruker en egen versjonert grense på **200 fysiske sider**, **50 MiB per fil
 og samlet beholdt salgsoppgave + separat rapport**. Den gamle manuelle rapportruten
 beholder **30 sider**. Dokumentnavn og trykt sidetall erstatter aldri fysisk PDF-side.
@@ -91,6 +97,37 @@ eller live-fallback inngår. Lokal frist er 60 s; tekstgrensene er 128 KiB/side 
 forelderen stopper ved målt RSS over 512 MiB. RSS er best effort, ingen hard
 OS-garanti mot korte native topper. Hele prosessen stenges før behandlingslåsen
 frigis. Ingen tokenbasert live-kapasitet eller reell kildekvalitet er validert.
+
+### Code-first analyse av ukjente PDF-er
+
+Samme opplasting leser alle sider lokalt med PDF.js og bygger et manifest over
+originale tekstintervaller. Kode finner rapportgrenser, identitetskandidater,
+eksplisitte økonomifelter og TG2/TG3 i støttede tekstmønstre. Tall og funn er
+ubekreftet og beholder hash, fysisk side og ordrett kilde. Uklar rapportgrense,
+identitet, raster eller ubehandlede vedlegg gir synlige mangler.
+
+All uløst tekst i det sikre rapportområdet beholdes til semantisk behandling,
+også avsnitt uten TG-nøkkelord. AI-grensen bruker én kompakt strict request per
+dokument og returnerer referanser til originaltekst. Kode avstemmer hver
+blokk og TG-kandidat; manglende eller ufullstendig svar sperrer bekreftelse.
+Manifestet hindrer tap ved filtrering, men beviser ikke modellens semantiske
+treffrate. Eksisterende originalkontroll, finans og screening gjelder fortsatt.
+
+Godkjent modell er **GPT-6.1 Sol**, reasoning low og Standard. Samlet ramme er
+**USD 0,20 per analyse**, inklusive separat rapport, med opptil 40 000
+inputtokens og 8 000 outputtokens inklusive reasoning per request. Hele
+requesten skal telles før reservasjon. USD 0,04–0,08 er regneeksempler for
+10–20k input og 2–4k output, ikke målt gjennomsnitt. Budsjettbrudd gir stopp,
+aldri avkorting eller automatisk nytt kall.
+
+**Ny live-import er fortsatt stengt.** Det finnes ingen verifisert lokal
+modelltilpasset teller for hele requestens framing. Ukjent teller/pris eller
+manglende forbrukshistorikk sperrer transport. SDK-grensen testes bare med
+injisert offline-transport og tydelig merket testteller; den oppretter ingen
+produksjonsklient i opplastingsruten. Lokale uttrekk koster ingen modellbruk.
+Når semantikk er nødvendig, viser appen restgrunnlaget og manglende estimat,
+og tillater ikke rapportbekreftelse. `ANALYSIS_MODE=live` åpner ikke denne
+porten. Første live-test krever ny godkjenning og underbygget preflight.
 
 ## Prøv F1–F4 fra start til resultat
 

@@ -1,0 +1,13 @@
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+tests/unit/code-first-import.test.ts(169,64): error TS2322: Type 'string' is not assignable to type 'never'.

@@ -108,12 +108,17 @@ describe('SO-AC13: foreldrefrist, RSS og terminalcleanup',()=>{
     expect(events.at(-1)).toBe('closed')
   })
 })
-it('ukjent originalhash får trygg eksplisitt utilgjengelig demo, ingen fallback',async()=>{
+it('ukjent originalhash får generell lokal plan med stengt semantisk port',async()=>{
   const app=await server()
   try{
     const bytes=await readFile(new URL('../fixtures/sales-prospectus/mixed-12.pdf',import.meta.url)),body=new FormData();body.append('file',new Blob([bytes,Buffer.from('\n%unknown fixture')]),'synthetic-other.pdf')
     const response=await fetch(`${app.url}/api/document-import`,{method:'POST',body,headers:{'X-Session-Id':'other','X-Request-Id':'other','X-Analysis-Generation':'0','X-Document-Role':'prospectus'}})
-    expect(await response.json()).toEqual({kind:'rejected',code:'unsupported-synthetic'})
+    const parsed=ImportHttpResponseSchema.parse(await response.json())
+    expect(parsed.kind).toBe('document-import')
+    if(parsed.kind!=='document-import')throw new Error('generic import')
+    expect(parsed.outcome.model).toBe('gpt-6.1-sol');expect(parsed.outcome.manifest?.blocks.length).toBeGreaterThan(0)
+    expect(parsed.outcome.cost?.status).toBe('blocked');expect(parsed.outcome.coverage.technical.status).not.toBe('complete')
+    expect(parsed.outcome.economy.fields.find(field=>field.id==='price')?.amount).toBe('3000000')
     expect(createHash('sha256').update(bytes).digest('hex')).toHaveLength(64)
   }finally{await app.close()}
 })

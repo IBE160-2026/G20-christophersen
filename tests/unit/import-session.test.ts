@@ -248,3 +248,23 @@ it.each(['correlation-session','correlation-request','correlation-generation','h
   expect(state.prospectus.report.error).toBe('metadata-mismatch');expect(state.prospectus.report.outcome).toBeNull()
   expect(state.financial).toBe(financial);expect(state.report.outcome).toBeNull();expect(state.report.findingControls).toEqual([])
 })
+
+it('code-first klient og reducer gjenbruker samme hash, også under nytt filnavn, uten ny POST eller tap av manuelle verdier',async()=>{
+  const {codeFirstBasis,sdkStub}=await import('../helpers/code-first.ts')
+  const {createCodeFirstImport}=await import('../../src/backend/import/semantic-adapter.ts')
+  const basis=codeFirstBasis(),outcome=await createCodeFirstImport(basis,sdkStub())
+  const file=new File(['independent-code-first'],basis.name)
+  let state=createInitialSession(),calls=0
+  const client=new ImportClient(action=>{state=sessionReducer(state,action)},{id:()=>`id-${calls}`,hash:async()=>basis.hash,fetch:async(_url,init)=>{
+    calls++;const headers=init?.headers as Record<string,string>,correlation={sessionId:headers['X-Session-Id'],requestId:headers['X-Request-Id'],generation:Number(headers['X-Analysis-Generation'])}
+    return Response.json({kind:'document-import',correlation,outcome:{...outcome,requestId:correlation.requestId}})
+  }})
+  await client.select(file,state.prospectus,'prospectus')
+  expect(calls).toBe(1);expect(state.prospectus.prospectus.outcome?.model).toBe('gpt-6.1-sol')
+  state=sessionReducer(state,{type:'register-value',field:'L',rawValue:'123456'})
+  const financial=state.financial,report=state.report
+  await client.select(new File(['independent-code-first'],'renamed.pdf'),state.prospectus,'prospectus')
+  expect(calls).toBe(1);expect(state.prospectus.prospectus.error).toBeNull();expect(state.prospectus.prospectus.status).toBe('imported')
+  expect(state.prospectus.prospectus.selected?.file.name).toBe(basis.name);expect(state.financial).toBe(financial);expect(state.report).toBe(report)
+  expect(state.financial.L.rawValue).toBe('123456')
+})

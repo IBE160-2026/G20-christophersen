@@ -8,12 +8,15 @@ export const IMPORT_VERSION = 'document-import-1' as const
 export const IMPORT_EXTRACTION_VERSION = 'bounded-pdf-text-1' as const
 export const IMPORT_PROMPT_VERSION = 'economy-tg-1' as const
 export const IMPORT_MODEL = 'offline-synthetic-1' as const
+export const CODE_FIRST_PROMPT_VERSION = 'semantic-spans-1' as const
+export const CODE_FIRST_PLAN_VERSION = 'local-plan-1' as const
+export const CODE_FIRST_MODEL = 'gpt-6.1-sol' as const
 export const IMPORT_MAX_PDF_BYTES = 50 * 1024 * 1024
 export const IMPORT_MAX_RESPONSE_BYTES = 8 * 1024 * 1024
 export const ImportRoleSchema = z.enum(['prospectus', 'report'])
 export const ImportContextSchema = z.strictObject({
   contractVersion: z.literal(IMPORT_VERSION), extractionVersion: z.literal(IMPORT_EXTRACTION_VERSION),
-  promptVersion: z.literal(IMPORT_PROMPT_VERSION), model: z.literal(IMPORT_MODEL), mode: z.literal('demo'),
+  promptVersion: z.enum([IMPORT_PROMPT_VERSION, CODE_FIRST_PROMPT_VERSION]), model: z.enum([IMPORT_MODEL, CODE_FIRST_MODEL]), mode: z.literal('demo'),
   requestId: z.string().min(1).max(100), reportHash: ReportHashSchema, documentName: z.string().min(1).max(255),
   role: ImportRoleSchema, pageCount: z.number().int().min(1).max(200), inputDigest: ReportHashSchema,
 })
@@ -48,7 +51,42 @@ export const ImportFindingSchema = CheckableFindingSchema.extend({
   component: z.string().min(1).max(200), conditionId: z.string().min(1).max(200), sources: z.array(PdfSourceSchema).min(1).max(12),
 })
 export const ImportPageSchema = DocumentPageSchema.safeExtend({ rasterUnprocessed: z.boolean().default(false) })
+/** Whitespace-only search normalization; every normalized UTF-16 unit maps back to the original. */
+export function normalizeImportText(text: string) {
+  const offsets: number[] = [], characters: string[] = []
+  for (let index = 0; index < text.length; index++) {
+    if (/\s/u.test(text[index]!)) continue
+    const character = text[index]!.toUpperCase()
+    characters.push(character)
+    for (let unit = 0; unit < character.length; unit++) offsets.push(index)
+  }
+  return { text: characters.join(''), offsets }
+}
+export function collectTgCandidates(text: string) {
+  const normalized = normalizeImportText(text)
+  return [...normalized.text.matchAll(/(?:TILSTANDSGRAD:?|TG)([23])/g)].map(match => ({ start: normalized.offsets[match.index]!, end: normalized.offsets[match.index + match[0].length - 1]! + 1, grade: `TG${match[1]}` as 'TG2' | 'TG3' }))
+}
+export const ImportSpanSchema = z.strictObject({ id: z.string().min(1), pdfPage: z.number().int().positive(), start: z.number().int().nonnegative(), end: z.number().int().nonnegative() })
+export const IMPORT_MAX_MANIFEST_ITEMS = 4000
+// One residual per block/candidate, two overflow diagnostics per fixed economy field
+// and ten other diagnostic categories per physical page, plus attachments/terminal diagnostics.
+// Adapter deduplicates identical page/reason entries; no original interval is removed.
+export const IMPORT_MAX_RESIDUAL_ENTRIES = 2 * IMPORT_MAX_MANIFEST_ITEMS + 200 * (2 * ListingKeySchema.options.length + 10) + 44
+export const ImportManifestSchema = z.strictObject({
+  version: z.literal(CODE_FIRST_PLAN_VERSION),
+  blocks: z.array(ImportSpanSchema.extend({ result: z.enum(['local-blank', 'local-explicit', 'semantic', 'unresolved']), sent: z.boolean() })).max(IMPORT_MAX_MANIFEST_ITEMS),
+  candidates: z.array(ImportSpanSchema.extend({ grade: z.enum(['TG2', 'TG3']), disposition: z.enum(['finding', 'duplicate', 'not-finding', 'unresolved']), findingId: z.string().nullable(), evidence: z.array(PdfSourceSchema).max(12), reason: z.string().nullable() })).max(IMPORT_MAX_MANIFEST_ITEMS),
+  residual: z.array(z.strictObject({ pdfPage: z.number().int().positive(), reason: z.string().min(1) })).max(IMPORT_MAX_RESIDUAL_ENTRIES),
+})
+export const ImportCostSchema = z.strictObject({
+  analysisId: z.string().min(1), requestDigest: ReportHashSchema, model: z.literal(CODE_FIRST_MODEL),
+  tokenizer: z.enum(['unavailable', 'test-only', 'verified-local-model-and-request-framing']), priceVersion: z.string().nullable(),
+  inputTokens: z.number().int().nonnegative().nullable(), outputTokens: z.number().int().positive(),
+  estimatedUsd: z.string().nullable(), reservedUsd: z.string(), remainingUsd: z.string(), actualUsd: z.string().nullable(),
+  status: z.enum(['blocked', 'reserved', 'completed', 'uncertain']), reason: z.string().nullable(),
+})
 export const DocumentImportSchema = ImportContextSchema.extend({
+  manifest: ImportManifestSchema.optional(), cost: ImportCostSchema.optional(),
   status: z.literal('imported'), documents: z.array(ImportDocumentSchema).length(1), pages: z.array(ImportPageSchema).min(1).max(200),
   attachments: z.array(z.strictObject({ id: z.string().max(1024), name: z.string().max(1024), isPdf: z.boolean() })).max(40),
   propertyIdentity: z.array(PropertyCandidateSchema).max(20), sections: z.array(ImportSectionSchema).max(10),
@@ -97,6 +135,37 @@ export const DocumentImportSchema = ImportContextSchema.extend({
       || finding.original.source?.reportHash !== value.reportHash || finding.original.source?.documentName !== value.documentName || finding.original.source?.pdfPage !== source.pdfPage
       || finding.original.uncertainties.length > 0) fail('TG-original og kilde må samsvare.')
   }
+  if (value.model === CODE_FIRST_MODEL) {
+    if (value.promptVersion !== CODE_FIRST_PROMPT_VERSION || !value.manifest || !value.cost || value.cost.requestDigest !== value.inputDigest) fail('Code-first kontekst krever bundet manifest og kostnad.')
+  } else if (value.promptVersion !== IMPORT_PROMPT_VERSION || value.manifest || value.cost) fail('Uforenlig adapterkontekst.')
+  if (value.manifest) {
+    const manifest = value.manifest
+    const spanIds = new Set<string>()
+    const expectedCandidates = value.pages.flatMap(page => collectTgCandidates(page.text).map(candidate => ({ ...candidate, pdfPage: page.pdfPage })))
+    if (expectedCandidates.length !== manifest.candidates.length || expectedCandidates.some(expected => !manifest.candidates.some(candidate => candidate.pdfPage === expected.pdfPage && candidate.start === expected.start && candidate.end === expected.end && candidate.grade === expected.grade))) fail('Alle originale TG-kandidater må bevares i manifestet.')
+    for (const page of value.pages) {
+      const blocks = manifest.blocks.filter(block => block.pdfPage === page.pdfPage).sort((a, b) => a.start - b.start)
+      let end = 0
+      for (const block of blocks) {
+        if (spanIds.has(block.id) || block.start !== end || block.end < block.start || block.end > page.text.length) fail('Manifestet har hull, overlapp eller feil originaloffset.')
+        spanIds.add(block.id); end = block.end
+        if (block.result === 'local-blank' && page.text.slice(block.start, block.end).trim()) fail('Bare blanktekst kan avsluttes lokalt i rapportmanifestet.')
+        if (block.result === 'local-explicit' && ![...value.propertyIdentity.map(item => item.source), ...value.sections.flatMap(item => item.basis), ...value.economy.ownershipSources, ...value.economy.fields.flatMap(field => field.sources), ...value.technical.findings.flatMap(finding => finding.sources)].some(source => source.pdfPage === block.pdfPage && source.start <= block.start && source.end >= block.end)) fail('Lokalt behandlet blokk krever eksplisitt felt- eller funnkilde.')
+        if (block.result === 'semantic' && !block.sent) fail('Semantisk blokk må være sendt og validert.')
+      }
+      if (!blocks.length || end !== page.text.length) fail('Manifestet må bevare hele originalteksten.')
+    }
+    if (manifest.blocks.some(block => block.pdfPage > value.pageCount) || manifest.candidates.some(candidate => candidate.pdfPage > value.pageCount || candidate.end <= candidate.start || candidate.end > value.pages[candidate.pdfPage - 1]!.text.length)) fail('Manifestkilde ligger utenfor dokumentet.')
+    if (new Set(manifest.candidates.map(candidate => candidate.id)).size !== manifest.candidates.length) fail('Duplisert TG-kandidat.')
+    for (const candidate of manifest.candidates) {
+      if (candidate.evidence.some(source => !sourceValid(source))) fail('Kandidatbelegg må være ordrett originalkilde.')
+      const finding = value.technical.findings.find(item => item.findingId === candidate.findingId)
+      if (['finding', 'duplicate'].includes(candidate.disposition) && (!finding || finding.grade !== candidate.grade || !candidate.evidence.some(source => source.pdfPage === candidate.pdfPage && source.start <= candidate.start && source.end >= candidate.end))) fail('TG-disposisjon mangler samsvarende funn og belegg.')
+      if (candidate.disposition === 'not-finding' && (!candidate.reason || !candidate.evidence.length)) fail('Avvist TG-kandidat krever kildebelegg.')
+    }
+    if (value.coverage.technical.status === 'complete' && (manifest.residual.length || manifest.candidates.some(candidate => ['unresolved', 'not-finding'].includes(candidate.disposition))
+      || manifest.blocks.some(block => value.sections.some(section => block.pdfPage >= section.startPage && block.pdfPage <= section.endPage) && block.result === 'unresolved'))) fail('Ubehandlet tekst eller TG-kandidat sperrer bekreftelse.')
+  }
   const section = value.sections[0]
   const complete = value.coverage.technical.status === 'complete'
   if (complete && (value.sections.length !== 1 || section?.certainty !== 'certain' || value.technical.uncertainties.length > 0
@@ -119,3 +188,12 @@ export type ImportRole = z.infer<typeof ImportRoleSchema>
 export type ImportControlOutcome = (Omit<Extract<AnalysisOutcome, { status: 'completed' }>, 'contractVersion' | 'extractionVersion'> | Omit<Extract<AnalysisOutcome, { status: 'failed' }>, 'contractVersion' | 'extractionVersion'>) & { contractVersion: typeof IMPORT_VERSION; extractionVersion: typeof IMPORT_EXTRACTION_VERSION }
 export type ControlAnalysisOutcome = AnalysisOutcome | ImportControlOutcome
 export type ImportControlGate = { hash: string; requestId: string; revision: number; coverageComplete: boolean; identityChecked: boolean; areaChecked: boolean; identityConflict: boolean }
+
+export type ImportManifest = z.infer<typeof ImportManifestSchema>
+export type ImportCost = z.infer<typeof ImportCostSchema>
+
+/** Same-hash reuse requires the exact current adapter context, not just the file hash. */
+export function currentImportContext(context: DocumentImport | null | undefined, role: ImportRole): boolean {
+  return Boolean(context && context.contractVersion === IMPORT_VERSION && context.extractionVersion === IMPORT_EXTRACTION_VERSION && context.mode === 'demo' && context.role === role
+    && (context.promptVersion === IMPORT_PROMPT_VERSION && context.model === IMPORT_MODEL || context.promptVersion === CODE_FIRST_PROMPT_VERSION && context.model === CODE_FIRST_MODEL && context.manifest?.version === CODE_FIRST_PLAN_VERSION && context.cost?.requestDigest === context.inputDigest))
+}

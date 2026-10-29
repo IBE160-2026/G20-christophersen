@@ -40,7 +40,7 @@ function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
       <a className="skip-link" href={`#${session.currentStep}`}>Hopp til arbeidsinnhold</a>
       <header className="app-header">
         <p className="product-name">Property Acquisition Agent</p>
-        <p className="meta">{analysisModeLabel(session.report.mode)}</p>
+        <p className="meta">{session.report.mode === 'demo' && (session.prospectus.prospectus.outcome?.manifest || session.prospectus.report.outcome?.manifest) ? 'Offline · lokalt dokumentuttrekk' : analysisModeLabel(session.report.mode)}</p>
       </header>
       <nav className="step-navigation" aria-label="Vurderingens fire trinn">
         <ol className="stepper">

@@ -44,5 +44,5 @@ export function importControlOutcome(outcome: DocumentImport): ImportControlOutc
 }
 export function importGate(outcome: DocumentImport, revision: number, identityChecked: boolean, areaChecked: boolean, identityConflict: boolean): ImportControlGate {
   return { hash: outcome.reportHash, requestId: outcome.requestId, revision,
-    coverageComplete: outcome.coverage.technical.status === 'complete' && outcome.technical.status === 'complete', identityChecked, areaChecked, identityConflict }
+    coverageComplete: outcome.coverage.technical.status === 'complete' && outcome.technical.status === 'complete' && (!outcome.manifest || outcome.manifest.residual.length === 0) && (!outcome.cost || outcome.cost.status === 'completed'), identityChecked, areaChecked, identityConflict }
 }

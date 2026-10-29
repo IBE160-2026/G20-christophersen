@@ -1,0 +1,19 @@
+{
+  "authoredBeforeStubs": "2026-10-29: manual source-text oracle; semantic stubs are created only after this file",
+  "pages": [
+    "SALGSOPPGAVE\nAdresse: Fasitveien 4, 0001 Testby\nEierform: eierseksjon\nPrisantydning: 3 000 000 kr\nFellesgjeld: 200 000 kr\nOmkostninger: 75 000 kr\nFelleskostnader: 5 000 kr per måned i 2026.\nHerav renter og avdrag fellesgjeld: 1 000 kr per måned, inkludert i felleskostnader.\n",
+    "TILSTANDSRAPPORT - START\nAdresse: Fasitveien 4, 0001 Testby\nBad øst: T G\n2\nSlitt gulv i bad.\n",
+    "Bad vest\nTilstandsgrad: TG2\nBygningsdel: bad vest\nSlitt gulv i bad.\n",
+    "Fortsettelse fra bad øst: Fukt ved sluket. Dette avsnittet har ingen gradmarkør.\nBygningsdel | Grad\nTak | TG3\n",
+    "Vann kommer inn ved takfoten. Fortsettelsen gjelder taket på forrige side.\nTILSTANDSRAPPORT - SLUTT\n"
+  ],
+  "reportPages": [2, 3, 4, 5],
+  "findings": [
+    {"component":"bad øst", "grade":"TG2", "description":"Slitt gulv og fukt ved sluket i bad øst", "pages":[2,4]},
+    {"component":"bad vest", "grade":"TG2", "description":"Slitt gulv i bad.", "pages":[3]},
+    {"component":"tak", "grade":"TG3", "description":"Vann kommer inn ved takfoten", "pages":[4,5]}
+  ],
+  "localAmounts": {"price":"3000000", "sharedDebt":"200000", "purchaseCosts":"75000", "commonCosts":"5000"},
+  "negativeCases": ["missing-block", "missing-candidate", "wrong-offset", "wrong-page", "wrong-block-id", "wrong-hash", "unknown-report-end", "identity-conflict", "raster", "outside-unique-tg", "refusal", "incomplete-output", "oversized-output", "unknown-usage", "timeout"],
+  "budget": {"inputMax":40000,"outputMax":8000,"capUsd":"0.20","maximumReservationUsd":"0.19800000"}
+}

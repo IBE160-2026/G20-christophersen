@@ -1,5 +1,5 @@
 import { FinancialFieldSchema } from '../../contracts/financial-input.ts'
-import { ImportHttpResponseSchema, IMPORT_VERSION, IMPORT_EXTRACTION_VERSION, IMPORT_PROMPT_VERSION, IMPORT_MODEL } from '../../contracts/document-import.ts'
+import { ImportHttpResponseSchema, currentImportContext } from '../../contracts/document-import.ts'
 import type { DocumentImport } from '../../contracts/document-import.ts'
 import { propertyIdentityStatus, importControlOutcome, importEconomyDraft, importGate } from '../../domain/document-import.ts'
 import { economyFinancingSuggestion, economySuggestions, effectiveEconomyFields } from '../../domain/source-economy.ts'
@@ -74,7 +74,7 @@ export function reduceImportSession(state: SessionState, action: ProspectusActio
     if (action.generation !== p.generation || p[action.role].status !== 'selecting') return state
     const slot = p[action.role]
     const context = slot.outcome
-    const compatible = context?.contractVersion === IMPORT_VERSION && context.extractionVersion === IMPORT_EXTRACTION_VERSION && context.promptVersion === IMPORT_PROMPT_VERSION && context.model === IMPORT_MODEL && context.mode === 'demo' && context.role === action.role
+    const compatible = currentImportContext(context, action.role)
     if (slot.selected?.hash === action.selected.hash && compatible) return { ...state, prospectus: { ...p, [action.role]: { ...slot, status: 'imported', active: null, error: null } } }
     if (slot.selected?.hash === action.selected.hash && context && !compatible) return { ...state, prospectus: { ...p, [action.role]: { ...slot, status: 'failed', active: null, error: 'incompatible-context' } } }
     if (action.role === 'prospectus') {
@@ -120,7 +120,8 @@ export function reduceImportSession(state: SessionState, action: ProspectusActio
     prospectus: p.prospectus.status === 'loading' || p.prospectus.status === 'selecting' ? { ...p.prospectus, status: 'failed', active: null, error: 'interrupted' } : p.prospectus,
     report: p.report.status === 'loading' || p.report.status === 'selecting' ? { ...p.report, status: 'failed', active: null, error: 'interrupted' } : p.report } }
   if (action.type === 'import-identity' || action.type === 'import-area') {
-    if (!technicalImport(p)) return state
+    const current = technicalImport(p)
+    if (!current || action.checked && action.type === 'import-area' && current.coverage.technical.status !== 'complete' || action.checked && action.type === 'import-identity' && p.prospectus.outcome && propertyIdentityStatus(p.prospectus.outcome, p.report.outcome) === 'conflict') return state
     const key = action.type === 'import-identity' ? 'identityChecked' : 'areaChecked'
     if (p[key] === action.checked) return state
     return bindReport({ ...state, prospectus: { ...p, [key]: action.checked, coverageRevision: p.coverageRevision + 1 },

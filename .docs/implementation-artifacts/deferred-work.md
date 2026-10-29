@@ -410,3 +410,28 @@ godkjenning av design og foreslått USD 0,20-tak. Dagens syntetiske adapter
 er ikke generell dokumentanalyse; modelltilpasset lokal requestteller mangler.
 Ingen produktkode, betalt kall, live-aktivering eller push er utført.
 Ny bestilling autoriserer ikke første live-test. Tidligere bevis/status beholdes.
+
+**PAA-SO2, godkjent code-first bygg 2026-10-29 — Status: Åpen.**
+Mads har godkjent arbeidsplan/AC, GPT-6.1 Sol og USD 0,20 for samlet analyse,
+inklusive separat rapport. Generell lokal PDF-/økonomi-/TG-plan, komplett
+tekstmanifest, semantisk SDK-grense med offline-transport, kostnadsreservasjon
+og synlig rest/sperrer er implementert. Se
+[verifikasjon, AC-spor og gjenværende live-grense](salgsoppgave-code-first-2026-10-29/verifikasjon.md)
+og [uavhengig BMAD-review/triage](salgsoppgave-code-first-2026-10-29/review.md).
+Reviewrettinger og sluttverifikasjon føres der før lokal løsningscommit.
+Historisk designcheckpoint over bevares; det beskriver tidspunktet før denne
+godkjenningen. PAA-SO2 lukkes ikke av offline-arbeidet: ingen verifisert lokal
+modell-/requestteller, reell modellkvalitet eller første live-test er dokumentert.
+Ingen betalte API-kall, live-aktivering eller push er utført.
+
+**PAA-SO2, offline-sluttakseptanse 2026-10-29 — Status: fortsatt Åpen for live/kvalitet.**
+Det godkjente code-first offline-scope er implementert og akseptert etter
+1384 unit/integrasjon, 218 bygget + 3 dev, 37 komponent og separat 11 berørte
+E2E etter siste presentasjonsretting. Endelig bygg/typekontroll og lint består.
+Alle 20 registrerte reviewfunn er rettet; tre siste uavhengige nykontroller
+er uten restfunn. [Fullt AC-/test-/reviewbevis og leveringsgrense](salgsoppgave-code-first-2026-10-29/verifikasjon.md).
+Kostnadstaket er USD 0,20 for samlet analyse med separat rapport. Ingen
+verifisert lokal requestteller, produksjonstransport eller reell modellkvalitet
+utledes av offline-prøvene. Ingen første live-test eller push er utført.
+Tidligere oppføringer og historikk er bevart; denne akseptansen lukker ikke
+PAA-SO2 eller historiske S5/S6-porter.

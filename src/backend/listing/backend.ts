@@ -9,7 +9,7 @@ type Environment = Readonly<{ FINN_IMPORT_ENABLED?: unknown; FINN_IMPORT_ACCESS_
 type Dependencies = { environment?: Environment; fetch?: ClientOptions['fetch']; createClient?: (options: ClientOptions) => Pick<OpenAI, 'responses'>; timeoutMs?: number }
 
 /** Bound SDK success/error reads while retaining ownership of real body cancellation. */
-function boundedFetch(fetch: typeof globalThis.fetch) {
+export function boundedFetch(fetch: typeof globalThis.fetch, maximumBytes = MAX_LISTING_RESPONSE_BYTES) {
   const bodies = new Set<Promise<void>>()
   return {
     async settled() { await Promise.all(bodies); bodies.clear() },
@@ -35,7 +35,7 @@ function boundedFetch(fetch: typeof globalThis.fetch) {
               controller.close(); return
             }
             bytes += chunk.value.byteLength
-            if (bytes > MAX_LISTING_RESPONSE_BYTES) throw new Error('Response size limit')
+            if (bytes > maximumBytes) throw new Error('Response size limit')
             controller.enqueue(chunk.value)
           } catch {
             void cancel()

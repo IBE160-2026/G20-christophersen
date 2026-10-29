@@ -13,7 +13,7 @@ export function createImportRouter(options: ImportPipelineOptions & { lock?: Pro
   const router = Router(), lock = options.lock ?? createProcessingLock()
   const markers = new Set<string>(), active = new Map<Request, AbortController>(), pending = new Set<Promise<void>>()
   let stopping = false
-  router.get('/document-import-config', (_request, response) => { response.setHeader('Cache-Control', 'no-store'); response.json({ mode: 'demo', liveEnabled: false, maxPages: 200, maxBytes: IMPORT_MAX_PDF_BYTES }) })
+  router.get('/document-import-config', (_request, response) => { response.setHeader('Cache-Control', 'no-store'); response.json({ mode: 'demo', liveEnabled: false, codeFirst: true, semanticBudgetUsd: '0.20', maxPages: 200, maxBytes: IMPORT_MAX_PDF_BYTES }) })
   router.post('/document-import', async (request, response) => {
     response.setHeader('Cache-Control', 'no-store')
     const reject = (code: string, status: number) => {

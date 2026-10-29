@@ -1,6 +1,9 @@
 # PAA-SO2: forslag til code-first analyse
 
-Dato: 2026-10-29. **Designforslag, ikke godkjent eller implementert.**
+Dato: 2026-10-29. Opprinnelig designforslag. **Mads godkjente arbeidsplanen,
+GPT-6.1 Sol og USD 0,20 samlet analyseramme samme dato.** Implementering og
+offline-verifikasjon følger arbeidsplanen; første live-test krever egen
+godkjenning. Forslagene nedenfor bevares som beslutningsgrunnlag.
 Utgangspunkt: `15402fc307726e0528c1ae0a068b36ab3dee5845` og
 [lukket offline-leveranse](../implementation-artifacts/spec-salgsoppgave-offline-build.md).
 [Arbeidsplan og godkjenningsport](../implementation-artifacts/spec-salgsoppgave-code-first.md).

@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-29",
+  "baseline": "15402fc307726e0528c1ae0a068b36ab3dee5845",
+  "finalReviews": {
+    "blind-hunter": [],
+    "edge-case-hunter": [],
+    "verification-gap": []
+  },
+  "originalFindings": 17,
+  "rootFinding": 1,
+  "followupFindings": 2,
+  "deferredFindings": 0,
+  "sourceAndTestSha256": {
+    "src/backend/http/import-child.ts": "76a3d4308283b648727e6273b2200197fc3033071df0763aa400671980ad75d0",
+    "src/backend/http/import-route.ts": "c240c9efe56c9dae34a8f40c28acc065d6f72eafa7b3646ed570fac74c975aea",
+    "src/backend/import/budget.ts": "15dd33a08c19ff68ff51e3d11ebf2f49fb8612e8dfdb1f725e978c6550241601",
+    "src/backend/import/local-plan.ts": "183dcbf2cc1260619e57e1121fe2c46a7791860288d56320bf4b868c1c731675",
+    "src/backend/import/offline-sdk-transport.ts": "1b3f70a5eb27e68212059e30eeede420aad5af3c3f005cecf0f82bc963049018",
+    "src/backend/import/semantic-adapter.ts": "121a674100a067b7a0c85c857b0220910de540e31f428643e4ea854ffe329a58",
+    "src/backend/import/semantic-request.ts": "615ef0c47b530d466ccab4c408f2b395a1d2ba0e78683488f882c197fd38a9e7",
+    "src/backend/listing/backend.ts": "ef199682941b5d83d7215789304a0d6cc7d3243c7a461f3ee4c023da3e36f256",
+    "src/contracts/document-import.ts": "277a2c1c67c6eff430eb991245ab94b72942a646eae89da56db60ccdf7abc802",
+    "src/domain/document-import.ts": "212fbe6c01088521df80913792ab4942a57ecf96037e2905eee1a30927752e35",
+    "src/frontend/analysis/import-client.ts": "dbcaeb1d5874b833343565c290d0466598eef830152f0f836b36e2d31393a4ab",
+    "src/frontend/screens/ProspectusImport.tsx": "bf8dd653cd42a2b045d30a400670c9efa4e2deb631c5187705e54ec6b1a00704",
+    "src/frontend/state/import-session.ts": "699310b993e26402be5e4c1fbf276a6b460c8ee4789f3cee1d1155478a38b581",
+    "tests/e2e/prospectus-import.spec.ts": "0af5e164cda63a20e17b58642945ba1d2881359a2c7b5c6c98818da8c9170dc2",
+    "tests/fixtures/sales-prospectus/code-first-oracle.json": "ff71556fa19b50262dc7d2b107045329d55bb08182c07252d036223cd3041bb1",
+    "tests/helpers/code-first-pdf.ts": "14c4a82cd76900275a9e75a402c2097bdde5d03ed71c45ef00c429847cd33bfc",
+    "tests/helpers/code-first.ts": "56a69238de725686e1a4a3b68e40b2708bedd66ca4a731161201438fd38cef15",
+    "tests/integration/code-first-pdf.test.ts": "d4d0eca937d3ee897a86ac9a73996e7e0d9301cdbde8eb304793ef5cc4c63e97",
+    "tests/integration/document-import.test.ts": "aad68575cea97d5a86ab014fcddd7cf205805c0a93796f8eb9a8dd9173efbad7",
+    "tests/unit/code-first-budget.test.ts": "cc0c3cf86ac29bc15151c44ff670b379a4b4e3e3613e1af1f982fa6bf03972c2",
+    "tests/unit/code-first-import.test.ts": "2ac471d0a267a4849fab8623e022d9665200ba3ec72ccc4f45913d61b37b8cb0",
+    "tests/unit/import-review-ui.test.tsx": "81349f9b9690d28d217269840f9cbee3251555b900323ca71a751096b962fd63",
+    "tests/unit/import-session.test.ts": "266382354bf1570548514c4d0ced86de4034315f71cea77edc111ff7351dfae2"
+  },
+  "postReviewTypeOnlyChanges": {
+    "changes": [
+      {
+        "path": "tests/helpers/code-first.ts",
+        "before": "56a69238de725686e1a4a3b68e40b2708bedd66ca4a731161201438fd38cef15",
+        "after": "4575144b73308b1e0387828706d2bfa6c2e232b04ddbe201d06094e043a4cf22"
+      }
+    ],
+    "description": "Explicit string[] for empty test uncertainties/limitations; runtime and expectations unchanged. Verification-gap reviewer rechecked with no remaining findings.",
+    "targetedEvidence": "type-only-recheck.txt",
+    "targetedPassed": 58
+  },
+  "finalSourceAndTestSha256": {
+    "src/backend/http/import-child.ts": "76a3d4308283b648727e6273b2200197fc3033071df0763aa400671980ad75d0",
+    "src/backend/http/import-route.ts": "c240c9efe56c9dae34a8f40c28acc065d6f72eafa7b3646ed570fac74c975aea",
+    "src/backend/import/budget.ts": "15dd33a08c19ff68ff51e3d11ebf2f49fb8612e8dfdb1f725e978c6550241601",
+    "src/backend/import/local-plan.ts": "183dcbf2cc1260619e57e1121fe2c46a7791860288d56320bf4b868c1c731675",
+    "src/backend/import/offline-sdk-transport.ts": "1b3f70a5eb27e68212059e30eeede420aad5af3c3f005cecf0f82bc963049018",
+    "src/backend/import/semantic-adapter.ts": "121a674100a067b7a0c85c857b0220910de540e31f428643e4ea854ffe329a58",
+    "src/backend/import/semantic-request.ts": "615ef0c47b530d466ccab4c408f2b395a1d2ba0e78683488f882c197fd38a9e7",
+    "src/backend/listing/backend.ts": "ef199682941b5d83d7215789304a0d6cc7d3243c7a461f3ee4c023da3e36f256",
+    "src/contracts/document-import.ts": "277a2c1c67c6eff430eb991245ab94b72942a646eae89da56db60ccdf7abc802",
+    "src/domain/document-import.ts": "212fbe6c01088521df80913792ab4942a57ecf96037e2905eee1a30927752e35",
+    "src/frontend/App.tsx": "393e7ce53586ea385b683ff1b3b906467556db83ca9704fa369f668e404c41b1",
+    "src/frontend/analysis/import-client.ts": "dbcaeb1d5874b833343565c290d0466598eef830152f0f836b36e2d31393a4ab",
+    "src/frontend/screens/ProspectusImport.tsx": "eb5aae3cbedeefe3efb9c8cb2679aec4a870262d9b3731f0e94862a4915c88c4",
+    "src/frontend/state/import-session.ts": "699310b993e26402be5e4c1fbf276a6b460c8ee4789f3cee1d1155478a38b581",
+    "tests/e2e/prospectus-import.spec.ts": "330000ba1669e111b0b8c41b8ad02be867c91d13bcb3f9da253812689ae9bb4f",
+    "tests/fixtures/sales-prospectus/code-first-oracle.json": "ff71556fa19b50262dc7d2b107045329d55bb08182c07252d036223cd3041bb1",
+    "tests/helpers/code-first-pdf.ts": "14c4a82cd76900275a9e75a402c2097bdde5d03ed71c45ef00c429847cd33bfc",
+    "tests/helpers/code-first.ts": "4575144b73308b1e0387828706d2bfa6c2e232b04ddbe201d06094e043a4cf22",
+    "tests/integration/code-first-pdf.test.ts": "d4d0eca937d3ee897a86ac9a73996e7e0d9301cdbde8eb304793ef5cc4c63e97",
+    "tests/integration/document-import.test.ts": "aad68575cea97d5a86ab014fcddd7cf205805c0a93796f8eb9a8dd9173efbad7",
+    "tests/unit/code-first-budget.test.ts": "cc0c3cf86ac29bc15151c44ff670b379a4b4e3e3613e1af1f982fa6bf03972c2",
+    "tests/unit/code-first-import.test.ts": "2ac471d0a267a4849fab8623e022d9665200ba3ec72ccc4f45913d61b37b8cb0",
+    "tests/unit/import-review-ui.test.tsx": "81349f9b9690d28d217269840f9cbee3251555b900323ca71a751096b962fd63",
+    "tests/unit/import-session.test.ts": "266382354bf1570548514c4d0ced86de4034315f71cea77edc111ff7351dfae2"
+  },
+  "postReviewPresentationChanges": {
+    "reviewer": "verification-gap",
+    "findings": [],
+    "changedPaths": [
+      "src/frontend/App.tsx",
+      "src/frontend/screens/ProspectusImport.tsx",
+      "tests/e2e/prospectus-import.spec.ts"
+    ],
+    "description": "Accurate local offline header and deduplicated formatted main messages; complete physical residual list retained.",
+    "runtimeEvidence": "final-ui-runtime-recheck.txt",
+    "runtimePassed": 58,
+    "browserEvidence": "final-presentation-e2e.txt",
+    "browserPassed": 11
+  }
+}

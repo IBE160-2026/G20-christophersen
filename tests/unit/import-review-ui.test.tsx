@@ -43,3 +43,15 @@ it('review: separat kontroll viser begge originalers belegg og lokal gjenopprett
   const upload=renderToStaticMarkup(createElement(ProspectusImport,{session:state,dispatch:()=>{},client,role:'report'}))
   expect(upload).toContain('Bruk integrert rapport igjen')
 })
+
+it('code-first kostnadsstopp forklarer samlet budsjett, tokenstatus og fysisk rest uten rå blokk-ID-er',async()=>{
+  const {codeFirstBasis}=await import('../helpers/code-first.ts')
+  const {createCodeFirstImport}=await import('../../src/backend/import/semantic-adapter.ts')
+  const outcome=await createCodeFirstImport(codeFirstBasis())
+  Object.assign(outcome.cost!,{reason:'analysis-budget-exceeded',inputTokens:40000,tokenizer:'test-only'})
+  const markup=renderToStaticMarkup(createElement(ProspectusImport,{session:sessionFor({...fixture,outcome}),client,dispatch:()=>{},role:'prospectus'}))
+  expect(markup).toContain('Hele det nødvendige grunnlaget får ikke plass innen gjenværende analyseramme på USD 0,20')
+  expect(markup).toContain('Inputtokens: 40000');expect(markup).toContain('8000 tokens inklusive reasoning')
+  expect(markup).toContain('testteller');expect(markup).toContain('Fysisk PDF-side')
+  expect(markup).not.toContain('Uløst tekstblokk:');expect(markup).not.toContain('analysis-budget-exceeded')
+})

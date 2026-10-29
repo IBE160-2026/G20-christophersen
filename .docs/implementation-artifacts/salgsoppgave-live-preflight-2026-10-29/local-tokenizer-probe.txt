@@ -1,0 +1,10 @@
+WARN `--no-project` was provided, but no project was found
+Installed 7 packages in 6ms
+{
+  "package": "tiktoken",
+  "version": "0.14.0",
+  "model": "gpt-6.1-sol",
+  "exactMapping": null,
+  "matchingPrefixes": {}
+}
+{"status": "blocked", "reason": "official-package-has-no-model-mapping", "detail": "'Could not automatically map gpt-6.1-sol to a tokeniser. Please use `tiktoken.get_encoding` to explicitly get the tokeniser you expect.'"}

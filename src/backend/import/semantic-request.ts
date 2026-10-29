@@ -17,6 +17,9 @@ export const SEMANTIC_PROMPT = `Semantisk rest ${CODE_FIRST_PROMPT_VERSION}. Kod
 export function semanticContextBlocks(plan: LocalPlan) {
   return plan.manifest.blocks.filter(block => block.result === 'local-explicit' && (plan.findings.some(finding => finding.sources.some(source => source.pdfPage === block.pdfPage && source.start <= block.start && source.end >= block.end)) || plan.selected.some(selected => selected.pdfPage === block.pdfPage)))
 }
+export function semanticTextConfiguration() {
+  return { format: { type: 'json_schema', name: 'semantic_spans_1', strict: true, schema: z.toJSONSchema(SemanticOutputSchema) } } as const
+}
 export function createSemanticRequest(plan: LocalPlan) {
   const context = semanticContextBlocks(plan)
   const blockData = (block: LocalPlan['manifest']['blocks'][number]) => ({ id: block.id, pdfPage: block.pdfPage, start: block.start, end: block.end, text: plan.basis.pages[block.pdfPage - 1]!.text.slice(block.start, block.end), previousId: plan.manifest.blocks[plan.manifest.blocks.indexOf(block) - 1]?.id ?? null, nextId: plan.manifest.blocks[plan.manifest.blocks.indexOf(block) + 1]?.id ?? null })
@@ -24,13 +27,13 @@ export function createSemanticRequest(plan: LocalPlan) {
     model: LIVE_ANALYSIS_SETTINGS.model, reasoning: LIVE_ANALYSIS_SETTINGS.reasoning, service_tier: LIVE_ANALYSIS_SETTINGS.service_tier,
     stream: false, store: false, truncation: 'disabled', max_output_tokens: SEMANTIC_LIMITS.outputTokens,
     instructions: SEMANTIC_PROMPT,
-    input: [{ role: 'user', content: [{ type: 'input_text', text: canonicalJson({ version: plan.manifest.version, document: { name: plan.basis.name, hash: plan.basis.hash, role: plan.basis.role }, sections: plan.sections,
+    input: [{ role: 'user', content: [{ type: 'input_text', text: canonicalJson({ version: plan.manifest.version, document: { name: plan.basis.name, hash: plan.basis.hash, role: plan.basis.role, parentHash: plan.basis.parentHash }, sections: plan.sections,
       blocks: plan.selected.map(blockData), contextBlocks: context.map(blockData),
       localFields: plan.fields.map(({ id, amount, period, year, includedIn, debtPart }) => ({ id, amount, period, year, includedIn, debtPart })),
       localFindings: plan.findings.map(({ findingId, conditionId, component, grade, description }) => ({ findingId, conditionId, component, grade, description, reconciliationRequired: plan.reconciliationIds.has(findingId) })),
       candidates: plan.manifest.candidates.filter(candidate => candidate.disposition === 'unresolved' && plan.selected.some(block => block.pdfPage === candidate.pdfPage && candidate.start < block.end && candidate.end > block.start)).map(({ id, pdfPage, start, end, grade }) => ({ id, pdfPage, start, end, grade })),
     }) }] }],
-    text: { format: { type: 'json_schema', name: 'semantic_spans_1', strict: true, schema: z.toJSONSchema(SemanticOutputSchema) } },
+    text: semanticTextConfiguration(),
   } as const
 }
 export function canonicalJson(value: unknown): string {
@@ -40,3 +43,13 @@ export function canonicalJson(value: unknown): string {
 }
 export type SemanticRequest = ReturnType<typeof createSemanticRequest>
 export function semanticDigest(request: SemanticRequest) { return createHash('sha256').update(canonicalJson(request)).digest('hex') }
+/** A report belongs to its parent's analysis; a prospectus owns its own analysis. */
+export function semanticDocumentBinding(request: SemanticRequest, documentHash: string) {
+  try {
+    const { document } = JSON.parse(request.input[0].content[0].text) as { document?: { hash?: unknown; role?: unknown; parentHash?: unknown } }
+    if (!document || document.hash !== documentHash || !/^[a-f0-9]{64}$/.test(documentHash)) return null
+    if (document.role === 'prospectus' && document.parentHash === null) return documentHash
+    if (document.role === 'report' && typeof document.parentHash === 'string' && /^[a-f0-9]{64}$/.test(document.parentHash) && document.parentHash !== documentHash) return document.parentHash
+    return null
+  } catch { return null }
+}

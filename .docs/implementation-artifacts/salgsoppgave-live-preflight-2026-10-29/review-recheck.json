@@ -1,0 +1,20 @@
+{
+  "baseline": "27b5ac2635300881832ec93ab8f22955e9c4b9e8",
+  "date": "2026-10-29",
+  "scope": "Uavhengig nykontroll av reviewrettingene; ingen modell-API",
+  "blind": {
+    "remainingFindings": [],
+    "verifiedResolved": ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10"],
+    "evidence": "Reproduserte rettet sammenligning/preflight/oppgjør og kontrollerte pending-beskyttelse, krasjavstemming og faktisk SDK-versjon. Ingen påvist ny regresjon i scope."
+  },
+  "edgeCase": {
+    "remainingFindings": [],
+    "verifiedResolved": ["E1", "E2"],
+    "evidence": "Tegnsetting og eierformkilde har regresjoner. Feil dokument/journalrot og foreldreløs rapport sperres; rett foreldrejournal godtas. 34 fokuserte tester besto."
+  },
+  "verificationGap": {
+    "remainingFindings": [],
+    "verifiedResolved": ["V1", "V2"],
+    "evidence": "Isolerte schema-gyldige mutasjoner avviser incomplete-analysis/cost/limitations og feil kilder. Oppgjørsfeil bevarer reservert varig post og lås, gir synlig uncertain, med ett transportkall og ett settle-forsøk. Rot/schema-tester treffer konkrete vakter."
+  }
+}

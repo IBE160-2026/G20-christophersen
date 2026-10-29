@@ -1,0 +1,40 @@
+{
+  "sha256": "7c250de09eed71cefe4a6e4418ead8080b2f5b34b4371af2bed822699c1dae53",
+  "pages": [
+    {
+      "pdfPage": 1,
+      "text": "SALGSOPPGAVE\nAdresse: Fasitveien 4, 0001 Testby\nEierform: eierseksjon\nPrisantydning: 3 000 000 kr\nFellesgjeld: 200 000 kr\nOmkostninger: 75 000 kr\nFelleskostnader: 5 000 kr per måned i 2026.\nHerav renter og avdrag fellesgjeld: 1 000 kr per måned, inkludert i felleskostnader.",
+      "status": "readable",
+      "reason": null,
+      "rasterUnprocessed": false
+    },
+    {
+      "pdfPage": 2,
+      "text": "TILSTANDSRAPPORT - START\nAdresse: Fasitveien 4, 0001 Testby\nBad øst: T G\n2\nSlitt gulv i bad.",
+      "status": "readable",
+      "reason": null,
+      "rasterUnprocessed": false
+    },
+    {
+      "pdfPage": 3,
+      "text": "Bad vest\nTilstandsgrad: TG2\nBygningsdel: bad vest\nSlitt gulv i bad.",
+      "status": "readable",
+      "reason": null,
+      "rasterUnprocessed": false
+    },
+    {
+      "pdfPage": 4,
+      "text": "Fortsettelse fra bad øst: Fukt ved sluket. Dette avsnittet har ingen gradmarkør.\nBygningsdel | Grad\nTak | TG3",
+      "status": "readable",
+      "reason": null,
+      "rasterUnprocessed": false
+    },
+    {
+      "pdfPage": 5,
+      "text": "Vann kommer inn ved takfoten. Fortsettelsen gjelder taket på forrige side.\nTILSTANDSRAPPORT - SLUTT",
+      "status": "readable",
+      "reason": null,
+      "rasterUnprocessed": false
+    }
+  ]
+}

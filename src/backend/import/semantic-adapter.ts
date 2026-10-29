@@ -127,6 +127,7 @@ export async function createCodeFirstImport(basis: ImportBasis, dependencies: Se
         const controller = new AbortController(), abort = () => controller.abort()
         dependencies.signal?.addEventListener('abort', abort, { once: true })
         let timer: ReturnType<typeof setTimeout> | undefined
+        let settlementAttempted = false
         try {
           const timeout = Math.min(dependencies.deadlineMs ?? SEMANTIC_LIMITS.deadlineMs, SEMANTIC_LIMITS.deadlineMs)
           const timedOut = new Promise<never>((_, reject) => {
@@ -142,6 +143,7 @@ export async function createCodeFirstImport(basis: ImportBasis, dependencies: Se
           const input = usage?.input_tokens, output = usage?.output_tokens
           if (!Number.isSafeInteger(input) || !Number.isSafeInteger(output) || (input as number) < 0 || (output as number) < 0) throw new SemanticFailure('unknown-usage')
           const actual = costOf(input as number, output as number, dependencies.price!)
+          settlementAttempted = true
           ledger.settle(digest, actual); cost = { ...cost, actualUsd: actual, status: 'completed' }
           if ((input as number) > cost.inputTokens! || (output as number) > cost.outputTokens) throw new SemanticFailure('usage-exceeds-reservation')
           checkCombinedResponse(raw.status, Buffer.byteLength(raw.output_text))
@@ -151,8 +153,11 @@ export async function createCodeFirstImport(basis: ImportBasis, dependencies: Se
           plan.manifest.residual = plan.manifest.residual.filter(item => !item.reason.startsWith('TG-kandidat utenfor') || plan.manifest.candidates.some(candidate => candidate.pdfPage === item.pdfPage && candidate.disposition !== 'duplicate'))
           for (const block of plan.selected) { block.sent = true; block.result = 'semantic' }
         } catch (error) {
-          const reason = error instanceof SemanticFailure || error instanceof CombinedBudgetFailure ? error.code : error instanceof z.ZodError ? 'invalid-semantic-schema' : error instanceof SyntaxError ? 'invalid-semantic-json' : 'semantic-failure'
-          if (cost.actualUsd === null) ledger.settle(digest, null)
+          let reason = error instanceof SemanticFailure || error instanceof CombinedBudgetFailure ? error.code : error instanceof z.ZodError ? 'invalid-semantic-schema' : error instanceof SyntaxError ? 'invalid-semantic-json' : error instanceof Error && error.message === 'budget-history-write-failed' ? error.message : 'semantic-failure'
+          if (cost.actualUsd === null && !settlementAttempted) {
+            settlementAttempted = true
+            try { ledger.settle(digest, null) } catch { reason = 'budget-history-write-failed' }
+          }
           cost = { ...cost, status: cost.actualUsd === null ? 'uncertain' : 'blocked', reason }
           uncertainties.push('Semantisk svar kunne ikke valideres. Ingen automatisk ny forespørsel.')
         } finally { if (timer) clearTimeout(timer); dependencies.signal?.removeEventListener('abort', abort) }

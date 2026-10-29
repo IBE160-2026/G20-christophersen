@@ -1,13 +1,37 @@
 import Big from 'big.js'
 import { CODE_FIRST_MODEL } from '../../contracts/document-import.ts'
 import type { ImportCost } from '../../contracts/document-import.ts'
-import { SEMANTIC_LIMITS, semanticDigest } from './semantic-request.ts'
+import { SEMANTIC_LIMITS, semanticDigest, SEMANTIC_PROMPT, semanticTextConfiguration, canonicalJson } from './semantic-request.ts'
 import type { SemanticRequest } from './semantic-request.ts'
 
 export type SemanticTokenizer = { model: typeof CODE_FIRST_MODEL; verification: ImportCost['tokenizer']; countRequest(request: SemanticRequest): number }
 export type SemanticPrice = { version: string; model: typeof CODE_FIRST_MODEL; verified: boolean; inputPerMillion: string; outputPerMillion: string; maximumInputPerMillion: string; maximumOutputPerMillion: string; surchargeMultiplier: string }
 /** Dated reference, not approved account/region maximum rates; production must remain blocked. */
 export const REFERENCE_PRICE: SemanticPrice = Object.freeze({ version: 'sol-standard-reference-2026-10-29', model: CODE_FIRST_MODEL, verified: false, inputPerMillion: '2', outputPerMillion: '10', maximumInputPerMillion: '2.50', maximumOutputPerMillion: '10', surchargeMultiplier: '1.10' })
+/** Independently checked 2026-10-29 for the fixed GLOBAL Responses endpoint, default
+ * Standard tier and default 30m caching only. Cache writes replace ordinary input;
+ * no discount or invented regional/safety multiplier is assumed.
+ */
+export const GLOBAL_STANDARD_PRICE: SemanticPrice = Object.freeze({ version: 'sol-global-standard-default-30m-2026-10-29', model: CODE_FIRST_MODEL, verified: true, inputPerMillion: '2', outputPerMillion: '10', maximumInputPerMillion: '2.50', maximumOutputPerMillion: '10', surchargeMultiplier: '1' })
+export const GLOBAL_STANDARD_PRICE_EVIDENCE = Object.freeze({ verifiedOn: '2026-10-29', endpoint: 'https://api.openai.com/v1/responses', serviceTier: 'default', promptCacheRetention: 'default-30m',
+  sources: ['https://developers.openai.com/api/docs/models/gpt-6.1-sol', 'https://developers.openai.com/api/docs/guides/prompt-caching', 'https://developers.openai.com/api/docs/guides/reasoning'],
+  maximumInputTokens: 40_000, maximumOutputTokensIncludingReasoning: 8_000,
+  exclusions: ['tools', 'files', 'images', 'history', 'conversation', 'previous_response_id', 'cache overrides', 'regional/FedRAMP endpoint', 'tier overrides'],
+})
+export function isGlobalStandardPrice(price?: SemanticPrice) {
+  return Boolean(price && (Object.keys(GLOBAL_STANDARD_PRICE) as (keyof SemanticPrice)[]).every(key => price[key] === GLOBAL_STANDARD_PRICE[key]))
+}
+/** Runtime guard: typed request objects can still be mutated or arrive from untyped callers. */
+export function compatibleStandardRequest(request: SemanticRequest) {
+  const allowed = ['model', 'reasoning', 'service_tier', 'stream', 'store', 'truncation', 'max_output_tokens', 'instructions', 'input', 'text']
+  return Object.keys(request).length === allowed.length && Object.keys(request).every(key => allowed.includes(key))
+    && request.model === CODE_FIRST_MODEL && request.reasoning?.effort === 'low' && Object.keys(request.reasoning).length === 1
+    && request.service_tier === 'default' && request.stream === false && request.store === false && request.truncation === 'disabled'
+    && request.instructions === SEMANTIC_PROMPT && canonicalJson(request.text) === canonicalJson(semanticTextConfiguration())
+    && request.input?.length === 1 && request.input[0]?.role === 'user' && Object.keys(request.input[0]).length === 2
+    && request.input[0].content?.length === 1 && request.input[0].content[0]?.type === 'input_text' && typeof request.input[0].content[0].text === 'string'
+    && Object.keys(request.input[0].content[0]).length === 2
+}
 export type BudgetEntry = { documentHash: string; requestDigest: string; reservedUsd: string; actualUsd: string | null; state: 'reserved' | 'completed' | 'uncertain' }
 /** Owned by the logical analysis, shared with a separate report. A missing restored history never authorizes live transport. */
 export class AnalysisBudget {
@@ -22,11 +46,13 @@ export class AnalysisBudget {
   snapshot() { return structuredClone(this.reservations) }
   remaining() { return Big(SEMANTIC_LIMITS.usd).minus(this.reservations.reduce((sum, item) => sum.plus(item.reservedUsd), Big(0))).toFixed(8) }
   reserve(documentHash: string, requestDigest: string, amount: string) {
+    if (!/^[a-f0-9]{64}$/.test(documentHash) || !/^[a-f0-9]{64}$/.test(requestDigest)) throw new Error('invalid-reservation')
     if (this.reservations.some(entry => entry.documentHash === documentHash || entry.requestDigest === requestDigest)) throw new Error('document-already-attempted')
     if (!validMoney(amount) || Big(amount).gt(this.remaining())) throw new Error('analysis-budget-exceeded')
     this.reservations.push({ documentHash, requestDigest, reservedUsd: amount, actualUsd: null, state: 'reserved' })
   }
   settle(requestDigest: string, actualUsd: string | null) {
+    if (actualUsd !== null && !validMoney(actualUsd)) throw new Error('invalid-actual-cost')
     const entry = this.reservations.find(item => item.requestDigest === requestDigest)
     if (!entry) throw new Error('missing-reservation')
     // Keep the conservative reservation even after usage is known; no automatic new quota.
@@ -44,6 +70,7 @@ export function preflightSemantic(request: SemanticRequest, documentHash: string
     inputTokens: null, outputTokens: request.max_output_tokens, estimatedUsd: null, reservedUsd: '0.00000000', remainingUsd: ledger.remaining(), actualUsd: null, status: 'blocked', reason: null }
   const fail = (reason: string) => ({ ...cost, reason })
   if (request.model !== CODE_FIRST_MODEL) return fail('unknown-model')
+  if (!compatibleStandardRequest(request)) return fail('incompatible-standard-request')
   if (!tokenizer || tokenizer.model !== request.model || !(tokenizer.verification === 'verified-local-model-and-request-framing' || options.offlineTest && tokenizer.verification === 'test-only')) return fail('local-tokenizer-unavailable')
   let tokens: number
   try { tokens = tokenizer.countRequest(request) } catch { return fail('local-tokenizer-unavailable') }

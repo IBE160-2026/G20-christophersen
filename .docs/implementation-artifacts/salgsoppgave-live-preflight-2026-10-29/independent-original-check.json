@@ -1,0 +1,89 @@
+{
+  "reader": "pypdf",
+  "sha256": "7c250de09eed71cefe4a6e4418ead8080b2f5b34b4371af2bed822699c1dae53",
+  "physicalPageCount": 5,
+  "allQuotesPresent": true,
+  "checks": [
+    {
+      "subject": "bad øst",
+      "pdfPage": 2,
+      "quote": "Bad øst: T G\n2\nSlitt gulv i bad.",
+      "present": true
+    },
+    {
+      "subject": "bad øst",
+      "pdfPage": 4,
+      "quote": "Fortsettelse fra bad øst: Fukt ved sluket.",
+      "present": true
+    },
+    {
+      "subject": "bad vest",
+      "pdfPage": 3,
+      "quote": "Tilstandsgrad: TG2\nBygningsdel: bad vest\nSlitt gulv i bad.",
+      "present": true
+    },
+    {
+      "subject": "tak",
+      "pdfPage": 4,
+      "quote": "Tak | TG3",
+      "present": true
+    },
+    {
+      "subject": "tak",
+      "pdfPage": 5,
+      "quote": "Vann kommer inn ved takfoten.",
+      "present": true
+    },
+    {
+      "subject": "ownership",
+      "pdfPage": 1,
+      "quote": "Eierform: eierseksjon",
+      "present": true
+    },
+    {
+      "subject": "price",
+      "pdfPage": 1,
+      "quote": "Prisantydning: 3 000 000 kr",
+      "present": true
+    },
+    {
+      "subject": "sharedDebt",
+      "pdfPage": 1,
+      "quote": "Fellesgjeld: 200 000 kr",
+      "present": true
+    },
+    {
+      "subject": "purchaseCosts",
+      "pdfPage": 1,
+      "quote": "Omkostninger: 75 000 kr",
+      "present": true
+    },
+    {
+      "subject": "commonCosts",
+      "pdfPage": 1,
+      "quote": "Felleskostnader: 5 000 kr per måned i 2026.",
+      "present": true
+    },
+    {
+      "subject": "commonCosts-relation",
+      "pdfPage": 1,
+      "quote": "Herav renter og avdrag fellesgjeld: 1 000 kr per måned, inkludert i felleskostnader.",
+      "present": true
+    },
+    {
+      "subject": "sharedDebtPayment",
+      "pdfPage": 1,
+      "quote": "Herav renter og avdrag fellesgjeld: 1 000 kr per måned, inkludert i felleskostnader.",
+      "present": true
+    }
+  ],
+  "text": [
+    "SALGSOPPGAVE\nAdresse: Fasitveien 4, 0001 Testby\nEierform: eierseksjon\nPrisantydning: 3 000 000 kr\nFellesgjeld: 200 000 kr\nOmkostninger: 75 000 kr\nFelleskostnader: 5 000 kr per måned i 2026.\nHerav renter og avdrag fellesgjeld: 1 000 kr per måned, inkludert i felleskostnader.\n",
+    "TILSTANDSRAPPORT - START\nAdresse: Fasitveien 4, 0001 Testby\nBad øst: T G\n2\nSlitt gulv i bad.\n",
+    "Bad vest\nTilstandsgrad: TG2\nBygningsdel: bad vest\nSlitt gulv i bad.\n",
+    "Fortsettelse fra bad øst: Fukt ved sluket. Dette avsnittet har ingen gradmarkør.\nBygningsdel | Grad\nTak | TG3\n",
+    "Vann kommer inn ved takfoten. Fortsettelsen gjelder taket på forrige side.\nTILSTANDSRAPPORT - SLUTT\n"
+  ],
+  "productionBenchmark": false,
+  "apiCalls": 0
+}

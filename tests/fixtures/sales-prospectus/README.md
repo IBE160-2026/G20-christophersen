@@ -80,8 +80,27 @@ De opprinnelige 13 PDF-ene, `expected.json` og `sha256.json` er bevart.
   på fysisk 1 og 5 sperrer teknisk bruk, men bevarer økonomi.
 
 Ny import bruker disse originalhashene og versjonene, aldri filnavnet som
-oppslagsnøkkel. Ukjent original er utilgjengelig demo uten nett/fallback.
+oppslagsnøkkel. Dette beskriver den opprinnelige offline-leveransen;
+ukjente originaler får nå generell lokal code-first analyse uten live-fallback.
 Fasiten for finansieringsflyten bygger på eksplisitt 0 % rente:
 3075000/300 = 10250/mnd, ×12 = 123000/år, pluss fellesgjeld 12000 = J135000.
 Visuell kontroll av de nye relevante sidene er dokumentert i
 [leveringsbeviset](../../../.docs/implementation-artifacts/salgsoppgave-implementation-2026-10-28/verifikasjon.md).
+
+## Frossen teknisk code-first prøve 2026-10-29
+
+`code-first-live-original.pdf` er en femsiders syntetisk original med to TG2
+og ett TG3, tabell, linjedelt grad og fortsettelse over fysisk sidegrense.
+`code-first-live-pages.json` binder PDF.js-tekst til originalhashen.
+`code-first-live-oracle.json` er separat håndskrevet fasit for økonomi,
+ukjente felt, inkludering/gjeldsdel og funnenes fysiske kildeutdrag. Fasiten
+ble avstemt uavhengig mot alle originalsidene før sammenligningsprøvene;
+den opprinnelige `code-first-oracle.json` er uendret. Ingen modellretur er brukt.
+
+`npm run prepare:live-test` lager en offline SDK-/requestpakke. Kommandoen
+gjennomfører ingen live-test og returnerer fortsatt `ready: false` uten
+verifisert lokal Sol-telling. Sammenligneren godtar ikke modell-ID som fasit;
+den kontrollerer forhold, grad, kildeintervaller og økonomirelasjoner før
+menneskelig retting. Ulik ordlyd mot fasit gir konservativt avvik og krever
+manuell kontroll; dette er ingen automatisk semantisk evaluator.
+Prøven dokumenterer tekniske grenser, ikke representativ produksjonskvalitet.

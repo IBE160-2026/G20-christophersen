@@ -129,6 +129,20 @@ Når semantikk er nødvendig, viser appen restgrunnlaget og manglende estimat,
 og tillater ikke rapportbekreftelse. `ANALYSIS_MODE=live` åpner ikke denne
 porten. Første live-test krever ny godkjenning og underbygget preflight.
 
+Offline klargjøring kjøres fra reporoten med `npm run prepare:live-test`.
+Den lagrer eksakt SDK-request og kontrollpakke i ignorert
+`private/salgsoppgave-live-preflight/`, uten nøkkellesing eller eksterne kall.
+Eksisterende budsjettjournal under `private/analysis-budgets/` må være
+initialisert én gang for den nye analysen; kommandoen initialiserer eller
+nullstiller aldri historikk. Manglende/korrupt historikk og ukjent lokal
+tokenteller gir `ready: false`. Reservasjoner beholdes ved omstart og deles
+med separat rapport. Krasjlåser krever manuell avstemming, aldri automatisk
+ny kvote. Det finnes ingen live-bryter i klargjøringskommandoen.
+
+Den frosne femsiders originalen har separat økonomi-/TG-fasit og negative
+sammenligningstester. Den er en syntetisk teknisk prøve, ingen representativ
+produksjonsbenchmark. [Klargjøring og gjenværende porter](.docs/implementation-artifacts/salgsoppgave-live-preflight-2026-10-29/verifikasjon.md).
+
 ## Prøv F1–F4 fra start til resultat
 
 For en enkel offline-prøve etter installasjon: installer også Chromium først hvis testene skal kjøres, slå deretter av Wi-Fi/koble fra Ethernet og behold localhost tilgjengelig. Registrer hvordan nett ble sperret i et faktisk S6-forsøk. Installasjonens nettbehov er ikke en del av offline-demoen.

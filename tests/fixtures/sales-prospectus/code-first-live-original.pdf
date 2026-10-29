@@ -1,0 +1,103 @@
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 5 /Kids [4 0 R 6 0 R 8 0 R 10 0 R 12 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 375 >>
+stream
+BT /F1 8 Tf 20 780 Td 12 TL
+(SALGSOPPGAVE) Tj T*
+(Adresse: Fasitveien 4, 0001 Testby) Tj T*
+(Eierform: eierseksjon) Tj T*
+(Prisantydning: 3 000 000 kr) Tj T*
+(Fellesgjeld: 200 000 kr) Tj T*
+(Omkostninger: 75 000 kr) Tj T*
+(Felleskostnader: 5 000 kr per m\345ned i 2026.) Tj T*
+(Herav renter og avdrag fellesgjeld: 1 000 kr per m\345ned, inkludert i felleskostnader.) Tj T*
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 166 >>
+stream
+BT /F1 8 Tf 20 780 Td 12 TL
+(TILSTANDSRAPPORT - START) Tj T*
+(Adresse: Fasitveien 4, 0001 Testby) Tj T*
+(Bad \370st: T G) Tj T*
+(2) Tj T*
+(Slitt gulv i bad.) Tj T*
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << /Font << /F1 3 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 130 >>
+stream
+BT /F1 8 Tf 20 780 Td 12 TL
+(Bad vest) Tj T*
+(Tilstandsgrad: TG2) Tj T*
+(Bygningsdel: bad vest) Tj T*
+(Slitt gulv i bad.) Tj T*
+ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
+endobj
+11 0 obj
+<< /Length 170 >>
+stream
+BT /F1 8 Tf 20 780 Td 12 TL
+(Fortsettelse fra bad \370st: Fukt ved sluket. Dette avsnittet har ingen gradmark\370r.) Tj T*
+(Bygningsdel | Grad) Tj T*
+(Tak | TG3) Tj T*
+ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << /Font << /F1 3 0 R >> >> /Contents 13 0 R >>
+endobj
+13 0 obj
+<< /Length 149 >>
+stream
+BT /F1 8 Tf 20 780 Td 12 TL
+(Vann kommer inn ved takfoten. Fortsettelsen gjelder taket p\345 forrige side.) Tj T*
+(TILSTANDSRAPPORT - SLUTT) Tj T*
+ET
+endstream
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000141 00000 n 
+0000000238 00000 n 
+0000000364 00000 n 
+0000000790 00000 n 
+0000000916 00000 n 
+0000001133 00000 n 
+0000001259 00000 n 
+0000001440 00000 n 
+0000001568 00000 n 
+0000001790 00000 n 
+0000001918 00000 n 
+trailer
+<< /Size 14 /Root 1 0 R >>
+startxref
+2119
+%%EOF

@@ -439,3 +439,20 @@ PAA-SO2 eller historiske S5/S6-porter.
 Lokal offline-løsningscommit med aktiv promptlogg og godkjent review/testbevis:
 `16125bf0b617136c3c0c5507bc8ffdb0edfd13dd`. **PAA-SO2 er fortsatt Åpen** for
 den dokumenterte live-/kvalitetsgrensen; ingen aktivering eller betalt prøve.
+
+**PAA-SO2, klargjøringscheckpoint før første live-test 2026-10-29 — Status: Åpen.**
+Bestilt offline klargjøring viderefører USD 0,20 samlet, inklusive separat
+rapport. Eksakt SDK-wire, varig eksklusiv budsjettjournal og frosset syntetisk
+original med uavhengig økonomi-/TG-fasit er klargjort og gjennomgår dokumentert
+[test-/reviewverifikasjon](salgsoppgave-live-preflight-2026-10-29/verifikasjon.md).
+Ingen betalte modell-/token-count-kall eller push er utført.
+
+Porten er fortsatt stengt: tiktoken 0.14.0 har ingen Sol-mapping, og fullt
+lokalt request-format er ikke verifisert. Ingen eldre encoding eller testteller
+erstatter dette. Serverbasert telling er ikke kalt eller antatt gratis.
+Femsidersprøven er teknisk/syntetisk; representativ produksjonsoriginal med
+separat menneskelig økonomi-/TG-fasit er heller ikke etablert. Neste handling
+er dokumentert lokal teller/framing eller særskilt avklart/autoriserbar
+serverkalibrering, samt valg og frysing av representativt prøvegrunnlag.
+Betalt transport er ikke aktivert; konkret live-opplegg må godkjennes før
+første kall. Denne oppføringen lukker ingen tidligere port eller avvik.

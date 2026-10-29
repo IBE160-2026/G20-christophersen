@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "kind": "synthetic-technical-trial-not-production-benchmark",
+  "authoredBeforeComparison": "2026-10-29: hand-written economy, relation and TG expectations frozen before comparison code and new controlled stubs",
+  "original": {
+    "file": "code-first-live-original.pdf",
+    "sha256": "7c250de09eed71cefe4a6e4418ead8080b2f5b34b4371af2bed822699c1dae53",
+    "pageCount": 5,
+    "pagesSha256": "45a395efaef1b77d9991aac2b0d2ddce61c5c8cf232764a2e7730840fb5bccda"
+  },
+  "reportPages": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "findings": [
+    {
+      "component": "bad øst",
+      "grade": "TG2",
+      "description": "Slitt gulv og fukt ved sluket i bad øst",
+      "sources": [
+        {
+          "pdfPage": 2,
+          "quote": "Bad øst: T G\n2\nSlitt gulv i bad."
+        },
+        {
+          "pdfPage": 4,
+          "quote": "Fortsettelse fra bad øst: Fukt ved sluket."
+        }
+      ]
+    },
+    {
+      "component": "bad vest",
+      "grade": "TG2",
+      "description": "Slitt gulv i bad.",
+      "sources": [
+        {
+          "pdfPage": 3,
+          "quote": "Tilstandsgrad: TG2\nBygningsdel: bad vest\nSlitt gulv i bad."
+        }
+      ]
+    },
+    {
+      "component": "tak",
+      "grade": "TG3",
+      "description": "Vann kommer inn ved takfoten",
+      "sources": [
+        {
+          "pdfPage": 4,
+          "quote": "Tak | TG3"
+        },
+        {
+          "pdfPage": 5,
+          "quote": "Vann kommer inn ved takfoten."
+        }
+      ]
+    }
+  ],
+  "economy": {
+    "ownership": "eierseksjon",
+    "fields": [
+      {
+        "id": "price",
+        "amount": "3000000",
+        "period": "once",
+        "year": null,
+        "includedIn": null,
+        "debtPart": null,
+        "source": {
+          "pdfPage": 1,
+          "quote": "Prisantydning: 3 000 000 kr"
+        }
+      },
+      {
+        "id": "sharedDebt",
+        "amount": "200000",
+        "period": "once",
+        "year": null,
+        "includedIn": null,
+        "debtPart": null,
+        "source": {
+          "pdfPage": 1,
+          "quote": "Fellesgjeld: 200 000 kr"
+        }
+      },
+      {
+        "id": "purchaseCosts",
+        "amount": "75000",
+        "period": "once",
+        "year": null,
+        "includedIn": null,
+        "debtPart": null,
+        "source": {
+          "pdfPage": 1,
+          "quote": "Omkostninger: 75 000 kr"
+        }
+      },
+      {
+        "id": "commonCosts",
+        "amount": "5000",
+        "period": "month",
+        "year": "2026",
+        "includedIn": null,
+        "debtPart": "1000",
+        "source": {
+          "pdfPage": 1,
+          "quote": "Felleskostnader: 5 000 kr per måned i 2026."
+        },
+        "relationSources": [
+          {
+            "pdfPage": 1,
+            "quote": "Herav renter og avdrag fellesgjeld: 1 000 kr per måned, inkludert i felleskostnader."
+          }
+        ]
+      },
+      {
+        "id": "sharedDebtPayment",
+        "amount": "1000",
+        "period": "month",
+        "year": null,
+        "includedIn": "commonCosts",
+        "debtPart": "1000",
+        "source": {
+          "pdfPage": 1,
+          "quote": "Herav renter og avdrag fellesgjeld: 1 000 kr per måned, inkludert i felleskostnader."
+        },
+        "allowedYears": [
+          null,
+          "2026"
+        ]
+      }
+    ],
+    "unknownFields": [
+      {
+        "id": "totalPrice",
+        "status": "missing",
+        "amount": null,
+        "period": "once",
+        "year": null,
+        "nature": "unknown",
+        "includedIn": null,
+        "debtPart": null,
+        "sources": [],
+        "alternatives": []
+      },
+      {
+        "id": "documentTax",
+        "status": "missing",
+        "amount": null,
+        "period": "once",
+        "year": null,
+        "nature": "unknown",
+        "includedIn": null,
+        "debtPart": null,
+        "sources": [],
+        "alternatives": []
+      },
+      {
+        "id": "propertyTax",
+        "status": "missing",
+        "amount": null,
+        "period": "unknown",
+        "year": null,
+        "nature": "unknown",
+        "includedIn": null,
+        "debtPart": null,
+        "sources": [],
+        "alternatives": []
+      },
+      {
+        "id": "municipalFees",
+        "status": "missing",
+        "amount": null,
+        "period": "unknown",
+        "year": null,
+        "nature": "unknown",
+        "includedIn": null,
+        "debtPart": null,
+        "sources": [],
+        "alternatives": []
+      }
+    ],
+    "ownershipSources": [
+      {
+        "pdfPage": 1,
+        "quote": "Eierform: eierseksjon"
+      }
+    ]
+  },
+  "independentAudit": "2026-10-29: root-agent independent pypdf/source audit before comparison tests or any model output: entire explicitly named renter+avdrag amount is debtPart1000. Linked commonCosts2026 permits year2026 or conservative unknown. Absent fixed fields explicitly remain unknown. Review follow-up: original page1 ownership line and explicit renter+avdrag inclusion line frozen as required ownership/debtPart relation anchors; expected values unchanged."
+}

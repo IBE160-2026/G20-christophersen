@@ -1,0 +1,14 @@
+{
+  "sdkVersion": "6.9.1",
+  "bytes": 13274,
+  "bodySha256": "9f1777da3d0af5db6ccd58044ff4fc2efe10f92a8121ffb2158982dba98ff369",
+  "requestDigest": "cacb1b039e863a07fd39928832eaddf5f5b633bd5e7bf0432166ed060277f200",
+  "bodyMatches": true,
+  "jsonMatches": true,
+  "budgetUnchanged": true,
+  "ready": false,
+  "blockers": [
+    "local-tokenizer-unavailable"
+  ],
+  "externalCalls": 0
+}

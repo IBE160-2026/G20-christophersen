@@ -32,6 +32,8 @@ it('teller hele SDK-bodyen inklusive schema, med dobbel bytegrense og framingmar
   expect(p.budget.inputBudgetTokens).toBe(Buffer.byteLength(p.wire.body) * 2 + 4096)
   expect(p.budget.exactTokenCount).toBe(false)
   expect(p.wire.body).toContain('json_schema')
+  expect(JSON.parse(p.wire.body).text.format.name).toBe('economy_compact_3')
+  expect(p.wire.body).toContain('valueId')
   expect(p.budget.policyMaximumUsd).toBe('0.15000000')
   expect(p.budget.reservedUsd).toBe('0.15')
   expect(JSON.parse(p.wire.body).max_output_tokens).toBe(6000)
@@ -92,7 +94,7 @@ it('stopper før fetch hvis tidligere analyse/rapport bruker sikkerhetsmarginen'
 it('aksepterer 6000 output og bevarer kildevalidering og uavklart kandidat', async () => {
   const p = await plan(), h = history(); let calls = 0
   const basis = packet()
-  const output = { fields: basis.proposedOracle.fields.map(({ id, status, amount, period, year, nature }) => ({ id, status, amount, period, year, nature, sourceIds: [], alternatives: [], reason: null })), observations: [], limitations: [], processedSourceIds: createEconomySourceCatalogue(basis.basis, basis.selectedPages).map(source => source.id) }
+  const output = { fields: basis.proposedOracle.fields.map(({ id, status, period, year, nature }) => ({ id, status, valueId: null, period, year, nature, sourceIds: [], alternatives: [], reason: null })), observations: [], limitations: [], processedSourceIds: createEconomySourceCatalogue(basis.basis, basis.selectedPages).map(source => source.id) }
   try {
     const result = await runLocalEconomyCall(p, approval(p), h.ledger, { apiKey: 'offline-only', fetch: async () => {
       calls++

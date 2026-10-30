@@ -104,3 +104,20 @@ faktisk usage. Tre av 11 fasitpunkter er korrekte, syv har tallnormaliserings-
 feil, ett mangler. Kilde-ID/posisjon/metadata er kodekorrekt, men en generell
 begrensning har for bredt/ikke dokumentert belegg. Kandidaten ble trygt avvist.
 Ingen ekstrakall, automatisk forsøk, ny retting eller push. Historikk beholdes.
+
+
+Brukeren bestilte årsaksretting etter 3/11, med eksisterende respons/fasit og
+uten nye API-kall. Privat radvis audit bekrefter syv feil i rå modellbeløp,
+ingen lokal korrumpering og ett semantisk utelatt leiepunkt. Promptens
+ordrett-/desimalkonflikt og for smalt lokaluttrekk er erstattet av kodeeid
+tallkatalog og compact-3-beløpsreferanser. Kode bevarer eksakte øre, råbeløp,
+kilder, kvalifikasjoner og begrensningsutdrag; modellens semantikk må fortsatt
+prøves. [Leveranse og kontrollbevis](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/deterministiske-belop.md)
+dokumenterer alle elleve fasitpunkter, åtte eksakte numeriske punkter og tre
+begrensninger lokalt. Ingen gammel rårespons er reparert til en AI-bestått.
+89 målrettede tester/typecheck/lint og tre uavhengige reviewlag består etter
+rettinger, inkludert nykontroll av setningspunktum før numerisk neste linje.
+Hele nye SDK-body passer uendret budsjett: USD 0,149735 maksimum ved 6000
+output inkl. reasoning og minst USD 0,05 margin. Privat paidCallApproval er
+null; ingen ny journal, transport, betalt kall eller push. Aktiv automatisk
+promptlogg tas med i lokal commit, tidligere logger bevares.

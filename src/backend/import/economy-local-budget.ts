@@ -8,7 +8,7 @@ import { captureSemanticWire, verifySemanticWire } from './live-preflight.ts'
 import { canonicalJson, semanticDigest } from './semantic-request.ts'
 import type { SemanticRequest } from './semantic-request.ts'
 import { verifyEconomyTrial } from './economy-trial.ts'
-import { validateCompactEconomyOutput } from './economy-compact.ts'
+import { validateReferencedEconomyOutput } from './economy-compact.ts'
 import type { EconomyTrial } from './economy-trial.ts'
 import { boundedFetch } from '../listing/backend.ts'
 import { abortableFetch } from '../analysis/abortable-fetch.ts'
@@ -88,7 +88,7 @@ export async function runLocalEconomyCall(plan: LocalEconomyCall, approval: Paid
     const usage = response.usage
     if (!usage || !Number.isSafeInteger(usage.input_tokens) || usage.input_tokens < 0 || usage.input_tokens > budget.inputBudgetTokens
       || !Number.isSafeInteger(usage.output_tokens) || usage.output_tokens < 0 || usage.output_tokens > LOCAL_ECONOMY_LIMITS.maximumOutputTokensIncludingReasoning) throw new Error('local-economy-usage-outside-budget')
-    const result = validateCompactEconomyOutput(JSON.parse(response.output_text), stored.packet)
+    const result = validateReferencedEconomyOutput(JSON.parse(response.output_text), stored.packet)
     ledger.settle(semanticDigest(stored.request), costOf(usage.input_tokens, usage.output_tokens, GLOBAL_STANDARD_PRICE, true), 'provider-usage-upper-bound')
     return { result, usage, requiresApprovedReferenceComparison: true as const, technicalCoverage: 'unresolved' as const }
   } catch (error) {

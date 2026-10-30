@@ -563,3 +563,17 @@ kildeposisjoner/metadata virker, men dokumenterte begrensninger mangler og
 en generisk pipelineopplysning mangler spesifikt dokumentbelegg. Kostnad fra
 faktisk usage USD 0,031396; ingen ekstrakall eller push. Norsk talltolkning og
 semantisk begrensningsdekning gjenstår; PAA-SO2 lukkes ikke.
+
+
+**PAA-SO2, deterministiske beløp etter tredje live-test 2026-10-30 — Status: fortsatt Åpen.**
+[Årsaksanalyse, alle 11 fasitpunkter og kontrollbevis](salgsoppgave-economy-trial-2026-10-30/deterministiske-belop.md):
+syv gale beløp var feil allerede i rå modellrespons, ingen lokal
+datakonverteringskorrupsjon. Ny compact-3 lar AI velge kodeeide beløps-ID-er;
+originalbeløp/øre/kilder, mva-/periodekvalifikasjoner og begrensningsutdrag
+bevares deterministisk. Åtte numeriske punkter gjenfunnet eksakt lokalt, alle
+elleve regnskapsført; dette er ikke en ny bestått AI-test. 89 målrettede tester,
+typecheck/lint og tre uavhengige reviewlag med retting/nykontroll består.
+Ny avgrenset request passer lokal kostnadsport (USD 0,149735 maksimum,
+6000 output inkl. reasoning, minst USD 0,05 margin). Ingen betalte kall, ny
+journal, privat Git-innhold eller push. Ny live-godkjenning kreves fortsatt;
+semantisk/TG-kvalitet er ikke ferdigverifisert og PAA-SO2 lukkes ikke.

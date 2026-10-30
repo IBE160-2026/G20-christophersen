@@ -163,3 +163,10 @@ it('delt leksikalsk beløpskontroll avviser Unicode-minus som positiv verdi', ()
   expect(quoteContainsAmount('Prisantydning: - 125 000 kr', '125000')).toBe(false)
   expect(quoteContainsAmount('Prisantydning: 125 000 kr', '125000')).toBe(true)
 })
+
+it('godtar bare eksplisitt komma-en-dash som helt-kroner-suffiks', () => {
+  expect(quoteContainsAmount('Beløp 12.345,– eks.mva', '12345')).toBe(true)
+  expect(quoteContainsAmount('Beløp 12.345,–5', '12345')).toBe(false)
+  expect(quoteContainsAmount('Beløp 12.345,–.50', '12345')).toBe(false)
+  for (const sign of ['−', '-', '‑', '–', '—']) expect(quoteContainsAmount('Beløp ' + sign + '12.345,–', '12345')).toBe(false)
+})

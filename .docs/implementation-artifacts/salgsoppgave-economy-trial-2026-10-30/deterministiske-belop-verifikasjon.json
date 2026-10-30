@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-30",
+  "baseline": "6e3f31ad67db4ce82094d75ffe6c49a9914fcb09",
+  "runtime": "Node24.21.0/npm11.19.0",
+  "environment": {
+    "ANALYSIS_MODE": "demo",
+    "OPENAI_API_KEY": "empty"
+  },
+  "targetedTests": {
+    "files": 8,
+    "passed": 89,
+    "failed": 0,
+    "exitCode": 0
+  },
+  "typecheckExitCode": 0,
+  "lintExitCode": 0,
+  "review": {
+    "blind": "all7originalFindingsResolvedPlusPunctuationRecheck",
+    "edge": "all4findingsResolvedNoRemaining",
+    "verification": "serializedPayloadGapResolvedNoRemaining"
+  },
+  "offlineRealReference": {
+    "all11RowsAccountedFor": true,
+    "exactNumericRows": 8,
+    "documentLimitationsPreserved": 3,
+    "originalRawResponseStillRejected": true,
+    "newModelResponseTested": false,
+    "independentHumanVerificationFabricated": false
+  },
+  "budget": {
+    "requestUtf8Bytes": 15899,
+    "conservativeInputBudgetTokens": 35894,
+    "exactTokenCount": false,
+    "maxOutputTokensIncludingReasoning": 6000,
+    "calculatedMaximumUsd": "0.14973500",
+    "reservationUsd": "0.15",
+    "minimumMarginUsd": "0.05",
+    "capUsd": "0.20"
+  },
+  "preservation": {
+    "protectedRoots": [
+      "src/domain",
+      "src/contracts"
+    ],
+    "protectedFileCount": 28,
+    "allProtectedFilesUnchanged": true,
+    "activePromptPrefixPreserved": true,
+    "privatePdfAndReferenceUnchanged": true,
+    "rawPaidResponseUnchanged": true,
+    "privateTrackedFiles": [],
+    "privateInputsIgnored": true
+  },
+  "paidCallsThisChange": 0,
+  "newBudgetInitialized": false,
+  "paidApproval": null,
+  "technicalCoverage": "unresolved",
+  "pushes": 0
+}

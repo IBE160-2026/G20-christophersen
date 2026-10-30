@@ -49,7 +49,7 @@ export function quoteContainsAmount(quote: string, amount: string) {
   // Consume the entire punctuated token first; unsupported forms must not match a numeric prefix/suffix.
   const numbers = quote.matchAll(/(?<![\d.,])\d+(?:(?:[.,]\d+)|(?:[ \u00a0\u202f]\d{3}(?!\d)))*(?!\d|[.,]\d)/gu)
   for (const number of numbers) {
-    if (/[-\u2212]\s*$/.test(quote.slice(0, number.index))) continue
+    if (/[-\u2212\u2011\u2013\u2014]\s*$/.test(quote.slice(0, number.index))) continue
     const token = number[0]
     let decimal: string | null = null
     if (/^\d+(?:[.,]\d{1,2})?$/.test(token)) decimal = token.replace(',', '.')
@@ -58,7 +58,7 @@ export function quoteContainsAmount(quote: string, amount: string) {
     else if (/^\d{1,3}(?:\.\d{3}){2,}(?:,\d{1,2})?$/.test(token) || /^\d{1,3}\.\d{3},\d{1,2}$/.test(token)) decimal = token.replace(/\./g, '').replace(',', '.')
     // Explicit Norwegian whole-kroner suffix disambiguates a single dot group;
     // bare 3.000 stays ambiguous. The suffix must not prefix another number.
-    else if (/^\d{1,3}(?:\.\d{3})+$/.test(token) && /^,[-\u2011](?![\d.,])/.test(quote.slice(number.index + token.length))) decimal = token.replace(/\./g, '')
+    else if (/^\d{1,3}(?:\.\d{3})+$/.test(token) && /^,[-\u2011\u2013](?![\d.,])/.test(quote.slice(number.index + token.length))) decimal = token.replace(/\./g, '')
     if (decimal !== null && canonicalDecimal(decimal) === canonicalDecimal(amount)) return true
   }
   return false

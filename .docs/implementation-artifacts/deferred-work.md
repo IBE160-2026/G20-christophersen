@@ -590,3 +590,28 @@ er korrekte. 5074 input/2282 output, herav 64 reasoning; usage-avledet
 USD 0,03550350. Den avgrensede økonomi-/begrensningsprøven bestod som samlet
 pipeline; dette lukker ikke full live-/TG-/produksjonskvalitet. Kandidaten er
 ubekreftet, tidligere journaler beholdes, ingen ekstrakall eller push.
+
+**PAA-SO2, ny ekte salgsoppgave etter Konsept A-kobling 2026-10-30 — Status: fortsatt Åpen.**
+[Playwright-kontroll av nye dokumenter og isolasjon](../process/arbeidsokter/2026-10-30-nye-dokumenter-isolasjon.md)
+tester en annen ekte PDF fra brukeren, både i tom økt og etter den tidligere
+analyserte originalen under samme filnavn. 135 sider leses/kartlegges; ingen
+gamle tall, kildeutdrag, dokumenthash eller egne forutsetninger gjenbrukes.
+Den nye ekte PDF-en gir **null økonomiske beløpsfelt** fra dagens smale lokale
+grammatikk og to adresse-/identitetsbelegg. Videre KI-analyse er ikke startet.
+5/5 Playwright-tester består med forventet isolasjon og synlige mangler; det
+godkjenner ikke generell økonomianalyse av nye dokumenter. Ingen betalte kall,
+private originaler i git eller push. Tidligere 11/11 gjelder fortsatt kun
+den særskilte avgrensede analysen; PAA-SO2 lukkes ikke.
+
+**PAA-SO3 — Status: Åpen. Oppdaget 2026-10-30.**
+Lokal adresseparser feiltolker tomme adressefelt i vedlagte skjemaer som
+eiendomsadresser. På fysisk side 134 i den nye private originalen tar
+`Adresse:`-regexens `\s*` med neste skjemafeltetikett over linjeskift.
+To skjematekster returneres som ulike adressekandidater; korrekt kildehash
+og offset beviser ikke korrekt identitetssemantikk. UI viser konflikt og
+ingen bekreftet identitet, men kandidatene er likevel feil. Kodegrunnlag:
+`d9fd4701025ddcd54a7aa14fe72abd419e4888e0`,
+`src/backend/import/local-plan.ts`, adresseuttrekksløkken.
+[Reproduksjon, privat bevis og Playwright-kontroll](../process/arbeidsokter/2026-10-30-nye-dokumenter-isolasjon.md).
+Ingen retting eller lukking i denne kontrolløkten. Før lukking kreves relevant
+retting/test/review, dato, commit og verifikasjonslenker etter prosjektregelen.

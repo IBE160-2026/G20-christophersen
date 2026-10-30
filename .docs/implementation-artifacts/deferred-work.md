@@ -577,3 +577,16 @@ Ny avgrenset request passer lokal kostnadsport (USD 0,149735 maksimum,
 6000 output inkl. reasoning, minst USD 0,05 margin). Ingen betalte kall, ny
 journal, privat Git-innhold eller push. Ny live-godkjenning kreves fortsatt;
 semantisk/TG-kvalitet er ikke ferdigverifisert og PAA-SO2 lukkes ikke.
+
+
+**PAA-SO2, fjerde faktiske økonomiprøve 2026-10-30 — Status: fortsatt Åpen for øvrig live-/TG-kvalitet.**
+Brukeren godkjente ett nytt Responses-kall med compact-3/deterministiske
+beløps-ID-er. [Fullt prøveresultat og eksplisitte grenser](salgsoppgave-economy-trial-2026-10-30/live-resultat-4.md):
+HTTP 200/completed, PAA samlet 11/11 fasitpunkter og åtte av åtte korrekte
+beløpspunkter. Modellen alene 10/11; kode bevarte leieopplysning og tre
+dokumentbegrensninger som modellen utelot. Generelle AI-forbehold har fortsatt
+svake kilder og brukes kun som ubekreftet tolkning. Kildeposisjoner/metadata
+er korrekte. 5074 input/2282 output, herav 64 reasoning; usage-avledet
+USD 0,03550350. Den avgrensede økonomi-/begrensningsprøven bestod som samlet
+pipeline; dette lukker ikke full live-/TG-/produksjonskvalitet. Kandidaten er
+ubekreftet, tidligere journaler beholdes, ingen ekstrakall eller push.

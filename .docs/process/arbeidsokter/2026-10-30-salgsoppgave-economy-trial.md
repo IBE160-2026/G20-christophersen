@@ -121,3 +121,18 @@ Hele nye SDK-body passer uendret budsjett: USD 0,149735 maksimum ved 6000
 output inkl. reasoning og minst USD 0,05 margin. Privat paidCallApproval er
 null; ingen ny journal, transport, betalt kall eller push. Aktiv automatisk
 promptlogg tas med i lokal commit, tidligere logger bevares.
+
+
+Brukeren godkjente deretter ett nytt betalt kall til navngitt OpenAI-mottaker
+med samme fem siders tekst, USD 0,20 og 6000 output. Hele faktiske compact-3-
+requesten og strict schema ble kontrollert lokalt før nøyaktig ett kall.
+[Fjerde resultat og alle elleve fasitpunkter](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/live-resultat-4.md)
+viser HTTP 200/completed og validert kandidat: PAA samlet 11/11, modellen alene
+10/11, ingen feilbeløp. Deterministiske originalutdrag bevarte leieopplysningen
+og tre begrensninger som modellen utelot. Svakt kildebelagte generelle
+AI-forbehold forblir ubekreftet tolkning. Faktisk usage er 5074 input og 2282
+output inklusive 64 reasoning, usage-avledet USD 0,03550350. Journalen beholder
+reservasjon, alle tidligere forsøk bevares. Privat sammenligningsskript bruker
+kanonisk objektlikhet for kildeobjekter; JSON-nøkkelrekkefølge er ikke en
+metadatafeil. Ingen respons er rettet, ingen ny menneskelig attestasjon, ingen
+ekstrakall, omfattende testkjøring eller push. Teknisk/TG-dekning er uavklart.

@@ -198,12 +198,23 @@ bevares; ingen årsomregning eller finans-/screeningendring utføres. Privat
 fasitforslag er ikke en menneskelig attestasjon. Fullstendig TG-prøve følger
 fortsatt den strengere prosedyren over.
 
-Preflight bruker bare lokale SDK-stubber, oppretter ingen budsjettjournal og
+Den generiske `prepareEconomyPreflight` bruker bare lokale SDK-stubber, oppretter ingen budsjettjournal og
 gir `ready: false`. Faktisk count-kvittering, verifisert countpris, varig
 fellesbudsjett og særskilt betalt testgodkjenning mangler fortsatt. Maksimal
 modellreserve ved 40k input / 8k output inklusive reasoning er USD 0,18;
 ukjent tellegebyr kan ikke antas dekket av resten av USD 0,20.
 [Verifikasjon og godkjenningsgrense](.docs/implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/verifikasjon.md).
+
+For den særskilt avgrensede økonomitesten har brukeren senere godkjent lokal
+konservativ kontroll uten obligatorisk count-tjeneste. `prepareLocalEconomyCall`
+i `economy-local-budget.ts` klargjør en requestbundet pakke uten nettverk eller
+journalinit. `runLocalEconomyCall` krever ny eksplisitt betalt godkjenning og
+varig reservasjon før sitt ene API-kall; den er ikke automatisk aktivert i UI.
+Responsen er nå kompakt: økonomiverdier, korte kilde-ID-er og begrunnelser.
+Koden gjenoppbygger sitater, UTF-16-posisjoner og metadata fra originalen og
+beholder tidligere kontroller. 6000 output inklusive reasoning og høyst 36000
+konservative inputbudsjetttokens gir maksimum USD 0,15, med USD 0,05 margin.
+Ufullstendig svar avvises uten retry. [Kompakt leveranse og gjeldende prøveport](.docs/implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/compact-resultat.md).
 
 ## Prøv F1–F4 fra start til resultat
 

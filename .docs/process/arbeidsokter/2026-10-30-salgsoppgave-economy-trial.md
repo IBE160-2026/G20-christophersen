@@ -85,3 +85,14 @@ reasoning. Faktisk usage og cache-write gir USD 0,051231 i prisbasert kostnad;
 faktura ikke separat verifisert. Delvis fasitkontroll viser riktige tilgjengelige
 beløp, men manglende ferdig analyse og kildekontraktfeil. Testen bestod ikke.
 Ingen ekstrakall/push; private bevis og historiske reservasjoner beholdes.
+
+Etter brukerens bestilling om kompakt respons ble økonomiresponsen endret til
+verdier, korte kilde-ID-er og begrunnelser. Koden eier sitat/posisjon/metadata,
+bevarer hele valgte tekstgrunnlaget og kjente lokale kvalifikasjoner, og kjører
+hydrert resultat gjennom eksisterende kontroller. [Leveranse, kostnad og review](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/compact-resultat.md)
+har 69 målrettede tester/typecheck/lint og tre uavhengige BMAD-reviewlag med
+rettede funn og nykontroll. Ny request har 6000 output inklusive reasoning,
+beregnet maksimum USD 0,14989 og minst USD 0,05 margin. Privat offline-eksempel
+fra samme godkjente fasit passerer, men er ikke modelloutput eller ny menneskelig
+fasit. Ingen betalte kall, ny budsjettjournal eller push i denne endringen.
+Neste live-test er klar til ny uttrykkelig godkjenning; TG forblir uavklart.

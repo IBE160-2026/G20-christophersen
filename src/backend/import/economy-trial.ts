@@ -6,7 +6,7 @@ import type { PdfSource } from '../../contracts/document-import.ts'
 import { createLocalPlan, sourceFor } from './local-plan.ts'
 import type { ImportBasis } from './local-plan.ts'
 import { canonicalJson, semanticDigest } from './semantic-request.ts'
-import { createEconomyRequest, EconomyTrialOutputSchema } from './economy-request.ts'
+import { createCompactEconomyPayload, createEconomyRequest, EconomyTrialOutputSchema } from './economy-request.ts'
 import { assessLivePreflight, captureSemanticWire } from './live-preflight.ts'
 import type { SdkWire } from './live-preflight.ts'
 import { captureTokenCountWire, createTokenCountRequest, COUNT_PRICE_EVIDENCE } from './token-count.ts'
@@ -29,8 +29,7 @@ export function prepareEconomyTrial(bytes: Uint8Array, originalBasis: ImportBasi
     const text = basis.pages[pdfPage - 1]!.text
     return Array.from({ length: Math.ceil(text.length / 2000) }, (_, i) => sourceFor(basis, pdfPage, i * 2000, Math.min(text.length, (i + 1) * 2000)))
   })
-  const request = createEconomyRequest({ scope: 'selected-economy-only', document: { hash: basis.hash, name: basis.name, role: basis.role, parentHash: basis.parentHash }, selectedPages: selected,
-    pages: selected.map(pdfPage => ({ pdfPage, text: basis.pages[pdfPage - 1]!.text })), sourceAnchors: sources.map(({ pdfPage, start, end }) => ({ pdfPage, start, end })), localFields: local.fields.map(field => ({ ...field, sources: field.sources.map(({ pdfPage, start, end }) => ({ pdfPage, start, end })), alternatives: field.alternatives.map(item => ({ amount: item.amount, source: { pdfPage: item.source.pdfPage, start: item.source.start, end: item.source.end } })), originalText: '' })) })
+  const request = createEconomyRequest(createCompactEconomyPayload(basis, selected, local.fields))
   const packet = { version: 1, purpose: 'selected-economy-only', basis, selectedPages: selected, originalSha256: basis.hash,
     pagesDigest: hash(canonicalJson(basis.pages)), request, requestDigest: semanticDigest(request),
     ledger: basis.pages.map(page => ({ pdfPage: page.pdfPage, status: page.status, rasterUnprocessed: page.rasterUnprocessed ?? false, sent: selected.includes(page.pdfPage), reason: selected.includes(page.pdfPage) ? 'Valgt lesbart tekstlag; raster er ikke behandlet.' : 'Eksplisitt utelatt fra økonomiprøven.' })),

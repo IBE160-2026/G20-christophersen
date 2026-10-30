@@ -56,6 +56,9 @@ export function quoteContainsAmount(quote: string, amount: string) {
     else if (/^\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?:[.,]\d{1,2})?$/.test(token)) decimal = token.replace(/[ \u00a0\u202f]/g, '').replace(',', '.')
     // Multiple dot groups, or dot grouping followed by an explicit comma fraction, are unambiguous.
     else if (/^\d{1,3}(?:\.\d{3}){2,}(?:,\d{1,2})?$/.test(token) || /^\d{1,3}\.\d{3},\d{1,2}$/.test(token)) decimal = token.replace(/\./g, '').replace(',', '.')
+    // Explicit Norwegian whole-kroner suffix disambiguates a single dot group;
+    // bare 3.000 stays ambiguous. The suffix must not prefix another number.
+    else if (/^\d{1,3}(?:\.\d{3})+$/.test(token) && /^,[-\u2011](?![\d.,])/.test(quote.slice(number.index + token.length))) decimal = token.replace(/\./g, '')
     if (decimal !== null && canonicalDecimal(decimal) === canonicalDecimal(amount)) return true
   }
   return false

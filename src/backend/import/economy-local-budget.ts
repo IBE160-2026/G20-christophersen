@@ -7,7 +7,8 @@ import { AnalysisBudgetStore } from './analysis-budget-store.ts'
 import { captureSemanticWire, verifySemanticWire } from './live-preflight.ts'
 import { canonicalJson, semanticDigest } from './semantic-request.ts'
 import type { SemanticRequest } from './semantic-request.ts'
-import { verifyEconomyTrial, validateEconomyTrialOutput } from './economy-trial.ts'
+import { verifyEconomyTrial } from './economy-trial.ts'
+import { validateCompactEconomyOutput } from './economy-compact.ts'
 import type { EconomyTrial } from './economy-trial.ts'
 import { boundedFetch } from '../listing/backend.ts'
 import { abortableFetch } from '../analysis/abortable-fetch.ts'
@@ -17,8 +18,8 @@ import { abortableFetch } from '../analysis/abortable-fetch.ts'
  * 4096 til skjult framing er et bevisst romslig lokalt budsjettestimat.
  * Ingen count-endepunkt, verktøy, cache-/tier-overstyring eller automatisk rapport.
  */
-export const LOCAL_ECONOMY_LIMITS = Object.freeze({ maximumInputBudgetTokens: 40_000,
-  maximumOutputTokensIncludingReasoning: 4_000, maximumSelectedTextBytes: 12_000,
+export const LOCAL_ECONOMY_LIMITS = Object.freeze({ maximumInputBudgetTokens: 36_000,
+  maximumOutputTokensIncludingReasoning: 6_000, maximumSelectedTextBytes: 12_000,
   maximumSelectedPages: 5, framingAllowance: 4096, tokensPerByte: 2,
   reservationUsd: '0.15', analysisCapUsd: '0.20', deadlineMs: 120_000 })
 const sha = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex')
@@ -31,7 +32,7 @@ export function assessLocalEconomyBudget(request: SemanticRequest, wireBody: str
   return { provenance: 'conservative-local-byte-budget' as const, exactTokenCount: false,
     requestUtf8Bytes, inputBudgetTokens, outputBudgetTokensIncludingReasoning: request.max_output_tokens,
     calculatedMaximumUsd: costOf(inputBudgetTokens, request.max_output_tokens, GLOBAL_STANDARD_PRICE, true),
-    policyMaximumUsd: costOf(40_000, 4_000, GLOBAL_STANDARD_PRICE, true), reservedUsd: LOCAL_ECONOMY_LIMITS.reservationUsd,
+    policyMaximumUsd: costOf(LOCAL_ECONOMY_LIMITS.maximumInputBudgetTokens, LOCAL_ECONOMY_LIMITS.maximumOutputTokensIncludingReasoning, GLOBAL_STANDARD_PRICE, true), reservedUsd: LOCAL_ECONOMY_LIMITS.reservationUsd,
     minimumUnallocatedMarginUsd: '0.05', analysisCapUsd: LOCAL_ECONOMY_LIMITS.analysisCapUsd }
 }
 type ReferenceApproval = { approvedReferenceProposalDigest: string; doesNotApprovePaidCalls: true; originalSha256: string; approvedPacketDigest: string }
@@ -86,8 +87,8 @@ export async function runLocalEconomyCall(plan: LocalEconomyCall, approval: Paid
     if (response.status !== 'completed') throw new Error('local-economy-incomplete-response')
     const usage = response.usage
     if (!usage || !Number.isSafeInteger(usage.input_tokens) || usage.input_tokens < 0 || usage.input_tokens > budget.inputBudgetTokens
-      || !Number.isSafeInteger(usage.output_tokens) || usage.output_tokens < 0 || usage.output_tokens > 4000) throw new Error('local-economy-usage-outside-budget')
-    const result = validateEconomyTrialOutput(JSON.parse(response.output_text), stored.packet)
+      || !Number.isSafeInteger(usage.output_tokens) || usage.output_tokens < 0 || usage.output_tokens > LOCAL_ECONOMY_LIMITS.maximumOutputTokensIncludingReasoning) throw new Error('local-economy-usage-outside-budget')
+    const result = validateCompactEconomyOutput(JSON.parse(response.output_text), stored.packet)
     ledger.settle(semanticDigest(stored.request), costOf(usage.input_tokens, usage.output_tokens, GLOBAL_STANDARD_PRICE, true), 'provider-usage-upper-bound')
     return { result, usage, requiresApprovedReferenceComparison: true as const, technicalCoverage: 'unresolved' as const }
   } catch (error) {

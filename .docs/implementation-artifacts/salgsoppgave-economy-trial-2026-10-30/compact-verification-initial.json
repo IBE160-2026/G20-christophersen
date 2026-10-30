@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-30",
+  "apiKeyForcedEmpty": true,
+  "mode": "demo",
+  "paidCalls": 0,
+  "results": [
+    {
+      "command": [
+        "node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "stdout": "v24.21.0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/unit/economy-compact.test.ts",
+        "tests/unit/economy-local-budget.test.ts",
+        "tests/unit/economy-schema.test.ts",
+        "tests/unit/economy-trial.test.ts",
+        "tests/unit/representative-oracle.test.ts",
+        "tests/unit/code-first-budget.test.ts"
+      ],
+      "exitCode": 0,
+      "stdout": "\n RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen\n\n\n Test Files  6 passed (6)\n      Tests  69 passed (69)\n   Start at  09:28:07\n   Duration  1.92s (tests 52%, import 38%, transform 10%)\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exitCode": 2,
+      "stdout": "\n> property-acquisition-agent@0.0.0 typecheck\n> tsc -b\n\ntests/unit/economy-compact.test.ts(175,47): error TS2322: Type '\"vat\"' is not assignable to type '\"period\"'.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "npx",
+        "oxlint",
+        "--deny-warnings",
+        "src/backend/import/economy-compact.ts",
+        "src/backend/import/economy-request.ts",
+        "src/backend/import/economy-trial.ts",
+        "src/backend/import/economy-local-budget.ts",
+        "src/backend/import/representative-oracle.ts",
+        "tests/unit/economy-compact.test.ts",
+        "tests/unit/economy-local-budget.test.ts",
+        "tests/unit/economy-schema.test.ts"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

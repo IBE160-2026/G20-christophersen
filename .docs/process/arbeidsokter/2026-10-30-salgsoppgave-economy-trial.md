@@ -67,3 +67,11 @@ navngivning av OpenAI API som mottaker av private utdrag. [Avvisning og lokal
 null-kallskontroll](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/live-forsok-avvist.md)
 er dokumentert. Ingen omgåelse eller nytt forsøk, ingen API-kostnad eller
 modellresultat. Avventer kun den konkrete mottakergodkjenningen.
+
+Brukeren ga deretter uttrykkelig mottaker-/modell-/side-/ettkallsgodkjenning.
+Ett faktisk Responses-kall ble utført med kun valgt tekst, og API-et returnerte
+HTTP 400 `invalid_json_schema` for arvet lookahead i felt-ID-regexen. Ingen
+modellrespons eller usage kom tilbake. [Faktisk resultat, kostnadsusikkerhet,
+beholdt reservasjon og lokal schema-retting](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/live-resultat-1.md)
+er dokumentert. Ingen ekstrakall, journalnullstilling eller push. Modellen er
+ikke kvalitetsvurdert og PAA bestod ikke denne integrasjonstesten.

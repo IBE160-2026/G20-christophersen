@@ -526,3 +526,12 @@ implementert med konservativt helt requestbudsjett og bevart totalramme.
 Første prøve er klar til betalt godkjenning; ingen betalt prøve er kjørt.
 Generell count-/TG-preflight er uendret, og reell modellkvalitet/full TG-dekning
 er fortsatt uverifisert. Tidligere prisundersøkelse bevares som historikk.
+
+**PAA-SO2, første faktiske API-forsøk 2026-10-30 — Status: fortsatt Åpen.**
+Etter eksplisitt overføringsgodkjenning ble ett Responses-kall gjort. API-et
+avviste arvet ID-regex med HTTP 400 `invalid_json_schema`; ingen modellrespons
+eller usage foreligger. [Resultat og målrettet lokal retting](salgsoppgave-economy-trial-2026-10-30/live-resultat-1.md)
+er dokumentert. Modellkvalitet/kilder kan ikke vurderes. ID-schema er rettet
+til eksisterende fastfelt-enum; 8 målrettede tester/typecheck/lint består, men
+rettet schema er ikke testet live. Fakturert kostnad er uverifisert, USD 0,15-
+reservasjonen beholdes og ingen ekstrakall er gjort. PAA-SO2 lukkes ikke.

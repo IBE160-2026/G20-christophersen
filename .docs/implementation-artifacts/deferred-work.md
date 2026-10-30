@@ -535,3 +535,13 @@ er dokumentert. Modellkvalitet/kilder kan ikke vurderes. ID-schema er rettet
 til eksisterende fastfelt-enum; 8 målrettede tester/typecheck/lint består, men
 rettet schema er ikke testet live. Fakturert kostnad er uverifisert, USD 0,15-
 reservasjonen beholdes og ingen ekstrakall er gjort. PAA-SO2 lukkes ikke.
+
+**PAA-SO2, andre godkjente API-forsøk 2026-10-30 — Status: fortsatt Åpen.**
+Rettet schema ble godtatt, men det ene nye godkjente kallet nådde 4000 output-
+tokens og ga ufullstendig resultat. [Faktisk usage, kostnad og delvis fasit-/
+kildekontroll](salgsoppgave-economy-trial-2026-10-30/live-resultat-2.md) viser
+USD 0,051231 fra faktisk tokenbruk, ingen komplett kandidat og kildekontrakt-
+avvik. PAA bestod ikke testen. Lang gjentatt originalText/kildetekst må reduseres
+og kildeobjekter bør eies av kode før en ny godkjent testrunde. Dette er
+supporterende funn under samme åpne sak, ikke en parallell ny issue-liste.
+Ingen ekstrakall eller push. Historisk første forsøk/journal er bevart.

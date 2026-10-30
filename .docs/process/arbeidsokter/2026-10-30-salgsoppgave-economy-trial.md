@@ -75,3 +75,13 @@ modellrespons eller usage kom tilbake. [Faktisk resultat, kostnadsusikkerhet,
 beholdt reservasjon og lokal schema-retting](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/live-resultat-1.md)
 er dokumentert. Ingen ekstrakall, journalnullstilling eller push. Modellen er
 ikke kvalitetsvurdert og PAA bestod ikke denne integrasjonstesten.
+
+Brukeren godkjente ett nytt kall med rettet schema. Hele nye requesten ble
+kontrollert lokalt, valgt tekst/fasit ble bevart, og nøyaktig ett nytt kall
+ble utført innen den nye uttrykkelig godkjente testrundens egen ramme.
+Forrige journal ble ikke nullstilt. [Andre faktiske resultat](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/live-resultat-2.md)
+har HTTP 200, men outputtak nådd: 4493 input, 4000 output inklusive 1034
+reasoning. Faktisk usage og cache-write gir USD 0,051231 i prisbasert kostnad;
+faktura ikke separat verifisert. Delvis fasitkontroll viser riktige tilgjengelige
+beløp, men manglende ferdig analyse og kildekontraktfeil. Testen bestod ikke.
+Ingen ekstrakall/push; private bevis og historiske reservasjoner beholdes.

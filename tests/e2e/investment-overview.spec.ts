@@ -6,6 +6,11 @@ async function load(page: Page) {
   await page.goto('/')
   await page.locator('#import-file-prospectus').setInputFiles(fixture('mixed-12.pdf'))
   await expect(page.locator('.hero')).toContainText('Dokumentuttrekk klart.')
+  const economics = page.getByRole('region', { name: 'Beløp og kildegrunnlag.' })
+  await expect(economics).toBeVisible()
+  await expect(economics).toContainText('Lokalt dokumentuttrekk')
+  await expect(economics.locator('.document-economy-fields > div').filter({ has: page.locator('dt', { hasText: /^Prisantydning/ }) })).toContainText('3 000 000,00 kr')
+  await expect(page.locator('.hero').getByRole('link', { name: 'Se dokumentets økonomifelt og kilder ↓' })).toHaveAttribute('href', '#document-economy-title')
 }
 async function assumptions(page: Page) {
   await page.getByRole('button', { name: 'Juster leie og drift ↗' }).click()

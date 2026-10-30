@@ -17,7 +17,8 @@ import { selectProperty } from './property.ts'
 import { PropertyImage } from './PropertyImage.tsx'
 import { ScenarioFinancing } from './ScenarioFinancing.tsx'
 import { ScenarioChart } from './ScenarioChart.tsx'
-import { importErrorMessage } from '../analysis/import-messages.ts'
+import { DocumentEconomy } from './DocumentEconomy.tsx'
+import { ImportProgress } from './ImportProgress.tsx'
 import { ListingImport } from '../screens/ListingImport.tsx'
 import { PdfViewer } from '../pdf/PdfViewer.tsx'
 import { formatFinancialDecimal } from '../../presentation/finance.ts'
@@ -63,7 +64,7 @@ export function InvestmentOverview({ session, dispatch, importClient, listingCli
     <a className="skip-link" href="#investment-title">Hopp til arbeidsinnhold</a>
     <header className="investment-header"><button className="brand quiet-button" ref={overviewRef} type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}><span className="brand-mark">PAA<span>↗</span></span><span>Property Acquisition Agent</span></button>
       <nav className="investment-nav" aria-label="Investeringsoversikt"><a href="#investment">Investering</a><button type="button" onClick={() => show('risk')}>Eiendommen</button><button type="button" onClick={() => show('sources')}>Dokumentasjon</button></nav>
-      <div><span className="mode-label">{property.outcome ? 'Offline · lokalt dokumentuttrekk' : session.report.mode === 'demo' ? 'Demo · lagret KI-uttrekk' : 'Live · operatørstyrt analyse'}</span><button type="button" className="primary-action" onClick={upload}>{property.outcome ? 'Bytt salgsoppgave ↗' : 'Last opp salgsoppgave ↗'}</button></div>
+      <div><span className="mode-label">{property.outcome ? property.outcome.economy.analysis?.provenance === 'saved-same-document' ? 'Lagret analyse · samme dokument' : 'Offline · lokalt dokumentuttrekk' : session.report.mode === 'demo' ? 'Demo · lagret KI-uttrekk' : 'Live · operatørstyrt analyse'}</span><button type="button" className="primary-action" onClick={upload}>{property.outcome ? 'Bytt salgsoppgave ↗' : 'Last opp salgsoppgave ↗'}</button></div>
     </header>
     <main className="investment-main">
       <section className="hero" aria-labelledby="investment-title"><div className="hero-copy"><p className="eyebrow">EIENDOM / INVESTERING</p><h1 id="investment-title" className="hero-title" tabIndex={-1}>{property.title}</h1>
@@ -72,7 +73,8 @@ export function InvestmentOverview({ session, dispatch, importClient, listingCli
         <div className="property-prices"><div><span>Prisantydning</span><strong>{number(property.price)}{property.price !== null && <small> kr</small>}</strong><p>{property.price !== null ? `${property.priceOrigin} · ubekreftet` : property.priceStatus}</p></div><div><span>Pris inkl. fellesgjeld</span><strong>{number(basis.P)}{basis.P !== null && <small> kr</small>}</strong><p>Uten kjøpsomkostninger</p></div><div><span>Kontantbehov</span><strong>{number(basis.cashRequired)}{basis.cashRequired !== null && <small> kr</small>}</strong><p>Kjøpesum og omkostninger</p></div></div>
         <div className="hero-upload"><label htmlFor="import-file-prospectus">{property.outcome ? 'Velg ny salgsoppgave (PDF)' : 'Velg salgsoppgave (PDF)'}</label><input id="import-file-prospectus" ref={fileInput} type="file" accept="application/pdf,.pdf" onChange={e => { setDetail(null); void importClient.select(e.currentTarget.files?.[0] ?? null, session.prospectus, 'prospectus') }} />
           <p className="metric-caption">PDF med tekstlag · inntil 200 sider / samlet 50 MiB · ingen OCR</p>
-          <p role="status" aria-live="polite">{busy ? 'Leser dokument og analyserer lokalt …' : slot.status === 'imported' ? 'Dokumentuttrekk klart. Kontroller mangler og opphav.' : slot.error ? importErrorMessage(slot.error) : 'Import starter når du velger fil.'}</p>
+          <ImportProgress slot={slot} />
+          {property.outcome && <a href="#document-economy-title">Se dokumentets økonomifelt og kilder ↓</a>}
           {busy && <button className="quiet-button" type="button" onClick={() => { importClient.abort(); dispatch({ type: 'import-abandon' }) }}>Avbryt dokumentimport</button>}
           <details className="finn-alternative"><summary>FINN-lenke · alternativ inngang</summary><ListingImport session={session} dispatch={dispatch} client={listingClient} /></details>
         </div></div><div className="hero-visual"><PropertyImage selected={property.selected} onOpen={page => showOriginal(page)} /></div></section>
@@ -83,6 +85,7 @@ export function InvestmentOverview({ session, dispatch, importClient, listingCli
           <details className="scenario-basis"><summary>Forutsetninger og mangler</summary><dl className="source-summary">{(['P', 'L', 'D', 'cashRequired', 'sharedAnnualPayment'] as const).map(field => <div key={field}><dt>{{ P: 'Pris inkl. fellesgjeld', L: 'Årlig leie', D: 'Årlig eierbetalt drift', cashRequired: 'Kontantbehov', sharedAnnualPayment: 'Årlig fellesgjeldbetaling' }[field]}</dt><dd>{number(basis[field])} kr · {basis.provenance[field]}</dd></div>)}</dl><ul>{[...new Set([...basis.issues, ...scenario.issues])].map(issue => <li key={issue}>{issue}</li>)}</ul><button type="button" className="quiet-button" onClick={() => onOpen('basis')}>Rediger økonomigrunnlag ↗</button></details>
         </div></div>
       </section>
+      {property.outcome && <DocumentEconomy outcome={property.outcome} onSource={page => showOriginal(page)} />}
       <section className="investment-details" aria-label="Fordypning"><button type="button" className="detail-link" onClick={() => show('risk')}><span className="eyebrow">01 / EIENDOMMEN</span><strong>Forhold å ta stilling til ↗</strong><span>Teknisk tilstand og konkrete mangler</span></button><button type="button" className="detail-link" data-testid="open-financial-basis" onClick={() => onOpen('basis')}><span className="eyebrow">02 / ØKONOMIEN</span><strong>Bak tallene ↗</strong><span>Leie, drift og egne forutsetninger</span></button><button type="button" className="detail-link" onClick={() => show('sources')}><span className="eyebrow">03 / DOKUMENTASJON</span><strong>Etterprøv grunnlaget ↗</strong><span>Originalkilder og kontrollstatus</span></button></section>
     </main><footer className="investment-footer"><span>Property Acquisition Agent</span><span>Lokal økt · dokumenterte kilder og egne forutsetninger</span></footer>
     <dialog ref={dialog} className="investment-dialog" aria-labelledby="detail-title" onClose={() => setDetail(null)}><div className="dialog-heading"><h2 id="detail-title">{detail === 'risk' ? 'Et nærmere blikk.' : detail === 'assumptions' ? 'Dine økonomiske forutsetninger.' : 'Kildene bak eiendommen.'}</h2><button type="button" className="quiet-button" aria-label="Lukk fordypning" onClick={() => setDetail(null)}>Lukk ×</button></div>

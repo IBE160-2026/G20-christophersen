@@ -86,13 +86,20 @@ export const ImportCostSchema = z.strictObject({
   estimatedUsd: z.string().nullable(), reservedUsd: z.string(), remainingUsd: z.string(), actualUsd: z.string().nullable(),
   status: z.enum(['blocked', 'reserved', 'completed', 'uncertain']), reason: z.string().nullable(),
 })
+export const EconomyAnalysisSchema = z.strictObject({
+  provenance: z.enum(['saved-same-document', 'local-only']),
+  reason: z.string().min(1).max(1000), requestDigest: ReportHashSchema.nullable(),
+  selectedPages: z.array(z.number().int().positive()).max(200),
+  observations: z.array(z.strictObject({ kind: z.string().min(1).max(80), raw: z.string().min(1).max(2000), sources: z.array(PdfSourceSchema).min(1).max(12) })).max(1000),
+  limitations: z.array(z.strictObject({ text: z.string().min(1).max(2000), sources: z.array(PdfSourceSchema).min(1).max(12) })).max(100),
+})
 export const DocumentImportSchema = ImportContextSchema.extend({
   manifest: ImportManifestSchema.optional(), cost: ImportCostSchema.optional(),
   status: z.literal('imported'), documents: z.array(ImportDocumentSchema).length(1), pages: z.array(ImportPageSchema).min(1).max(200),
   attachments: z.array(z.strictObject({ id: z.string().max(1024), name: z.string().max(1024), isPdf: z.boolean() })).max(40),
   propertyIdentity: z.array(PropertyCandidateSchema).max(20), sections: z.array(ImportSectionSchema).max(10),
   coverage: z.strictObject({ economy: CoverageSchema, technical: CoverageSchema }),
-  economy: z.strictObject({ status: z.enum(['complete', 'partial', 'unavailable']), ownership: z.enum(['eierseksjon', 'borettslag', 'unknown']), ownershipSources: z.array(PdfSourceSchema).max(10), fields: z.array(EconomyFieldSchema).max(40) }),
+  economy: z.strictObject({ status: z.enum(['complete', 'partial', 'unavailable']), ownership: z.enum(['eierseksjon', 'borettslag', 'unknown']), ownershipSources: z.array(PdfSourceSchema).max(10), fields: z.array(EconomyFieldSchema).max(40), analysis: EconomyAnalysisSchema.optional() }),
   technical: z.strictObject({ status: z.enum(['complete', 'blocked']), findings: z.array(ImportFindingSchema).max(200), uncertainties: z.array(z.string().min(1)).max(100), limitations: z.array(z.string().min(1)).max(100) }),
 }).superRefine((value, ctx) => {
   const fail = (message: string) => ctx.addIssue({ code: 'custom', message })
@@ -106,8 +113,17 @@ export const DocumentImportSchema = ImportContextSchema.extend({
       && page.text.slice(source.start, source.end) === source.quote
   }
   const sources = [...value.propertyIdentity.map(item => item.source), ...value.sections.flatMap(item => item.basis), ...value.economy.ownershipSources,
-    ...value.economy.fields.flatMap(field => [...field.sources, ...field.alternatives.map(item => item.source)]), ...value.technical.findings.flatMap(item => item.sources)]
+    ...value.economy.fields.flatMap(field => [...field.sources, ...field.alternatives.map(item => item.source)]),
+    ...(value.economy.analysis?.observations.flatMap(item => item.sources) ?? []), ...(value.economy.analysis?.limitations.flatMap(item => item.sources) ?? []), ...value.technical.findings.flatMap(item => item.sources)]
   if (sources.some(source => !sourceValid(source))) fail('Kildefeil: hash, fysisk side, lesbarhet eller ordrett tekstområde avviker.')
+  const analysis = value.economy.analysis
+  if (analysis) {
+    if (new Set(analysis.selectedPages).size !== analysis.selectedPages.length || analysis.selectedPages.some(page => page > value.pageCount)) fail('Økonomianalysen har ugyldige fysiske sider.')
+    if (analysis.observations.some(item => !item.sources.some(source => source.quote.includes(item.raw)))) fail('Observasjonen må bevare originaltekst.')
+    if (analysis.provenance === 'saved-same-document' && (!analysis.requestDigest || !analysis.selectedPages.length)) fail('Lagret analyse krever forespørsel og sider.')
+    if (analysis.provenance === 'local-only' && (analysis.requestDigest !== null || analysis.selectedPages.length || analysis.observations.length || analysis.limitations.length)) fail('Lokalt uttrekk kan ikke utgi seg for lagret analyse.')
+    if (analysis.provenance === 'saved-same-document' && [...analysis.observations.flatMap(item => item.sources), ...analysis.limitations.flatMap(item => item.sources)].some(source => !analysis.selectedPages.includes(source.pdfPage))) fail('Økonomikilde er utenfor analyserte sider.')
+  }
   if (value.sections.some(section => section.documentHash !== value.reportHash || section.endPage > value.pageCount)) fail('Rapportområde ligger utenfor dokumentet.')
   if (new Set(value.economy.fields.map(field => field.id)).size !== value.economy.fields.length || ListingKeySchema.options.some(id => !value.economy.fields.some(field => field.id === id))) fail('Faste økonomifelt og unike identiteter kreves.')
   for (const field of value.economy.fields) {

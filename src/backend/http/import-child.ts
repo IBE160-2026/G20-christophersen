@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { validatePdf } from '../documents/validate-pdf.ts'
 import { extractImport, ImportFailure } from '../documents/extract-import.ts'
 import { createCodeFirstImport } from '../import/semantic-adapter.ts'
+import { attachSavedEconomy } from '../import/saved-economy.ts'
 import { createOfflineImport } from '../import/offline-adapter.ts'
 import type { ImportRole } from '../../contracts/document-import.ts'
 import { IMPORT_MAX_RESPONSE_BYTES } from '../../contracts/document-import.ts'
@@ -11,7 +12,7 @@ process.once('message', async (input: { bytes: Uint8Array; documentName: string;
   try {
     const hash = createHash('sha256').update(bytes).digest('hex')
     const format = await validatePdf(bytes, input.documentName, { maxPages: 200 })
-    bytes = undefined; input.bytes = new Uint8Array()
+    input.bytes = new Uint8Array()
     if (format.status !== 'format-validated') throw new ImportFailure(format.error.code === 'page-limit' ? 'page-limit' : 'invalid-format')
     const extracted = await extractImport(format)
     const permitted = new Promise<void>(resolve => process.once('message', () => resolve()))
@@ -23,6 +24,7 @@ process.once('message', async (input: { bytes: Uint8Array; documentName: string;
     try { outcome = await createOfflineImport(basis) } catch (error) {
       if (!(error instanceof ImportFailure) || error.code !== 'unsupported-synthetic') throw error
       outcome = await createCodeFirstImport(basis)
+      if (basis.role === 'prospectus') outcome = await attachSavedEconomy(outcome, bytes!, basis)
     }
     if (Buffer.byteLength(JSON.stringify(outcome)) > IMPORT_MAX_RESPONSE_BYTES) throw new ImportFailure('response-limit')
     await send({ kind: 'outcome', outcome })

@@ -421,3 +421,15 @@
 }
 .investment-shell .investment-header .primary-action { margin: 0; }
 .investment-shell .chart-inspector input[type='range'] { accent-color: var(--investment-accent); }
+
+.investment-shell .document-economy { padding-block: 48px; border-top: 1px solid var(--investment-line); overflow-wrap: anywhere; }
+.investment-shell .document-economy h2 { font-size: clamp(28px, 4vw, 46px); font-weight: 500; }
+.investment-shell .document-economy-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 24px; padding-block: 24px; }
+.investment-shell .document-economy-fields > div { border-top: 1px solid var(--investment-line); padding-top: 16px; }
+.investment-shell .document-economy-fields dt { font-weight: 600; margin-bottom: 10px; }
+.investment-shell .document-economy-fields dd { margin: 0; font-size: 14px; line-height: 1.7; }
+.investment-shell .document-economy details { margin-block: 16px; }
+.investment-shell .document-economy summary { cursor: pointer; }
+.investment-shell .document-economy-source { padding: 12px 0; font-size: 13px; white-space: pre-wrap; }
+.investment-shell .document-economy-source q { display: block; }
+.investment-shell .document-economy-source p { color: var(--investment-muted); }

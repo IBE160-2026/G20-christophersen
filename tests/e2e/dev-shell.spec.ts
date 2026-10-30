@@ -13,7 +13,7 @@ test('AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettles
     })
   })
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'Registrer finansverdier' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Se eiendommens potensial.' })).toBeVisible()
   expect(new URL(await connected).origin).toBe('ws://127.0.0.1:3000')
   expect(errors).toEqual([])
 })

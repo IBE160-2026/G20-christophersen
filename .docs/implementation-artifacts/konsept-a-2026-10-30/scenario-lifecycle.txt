@@ -1,0 +1,12 @@
+
+Running 3 tests using 2 workers
+
+(node:65302) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65303) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 tests/components/scenario-lifecycle.spec.ts:44:1 › sen workerrespons etter ny input og unmount kan ikke gjeninnføre gammelt scenario (781ms)
+  ✓  1 tests/components/scenario-lifecycle.spec.ts:65:1 › hengende renteworker termineres etter30sek og workerfeil blir synlig (779ms)
+  ✓  3 tests/components/scenario-lifecycle.spec.ts:59:1 › hengende hovedworker termineres etter15sek; ingen gammel graf eller kontantstrøm vises (363ms)
+
+  3 passed (2.0s)

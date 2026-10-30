@@ -1,0 +1,34 @@
+{
+  "syntheticDocumentOnly": true,
+  "documentName": "paa-syntetisk-foto.pdf",
+  "checks": [
+    {
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "theme": {
+    "font": "Georgia, \"Times New Roman\", serif",
+    "paper": "rgb(247, 248, 245)"
+  },
+  "imageKind": "image",
+  "cashFlow": "51 092 kr"
+}

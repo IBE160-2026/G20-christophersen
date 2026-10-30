@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import oracle from '../fixtures/sales-prospectus/extended-expected.json' with { type: 'json' }
 const fixture=(name:string)=>fileURLToPath(new URL(`../fixtures/sales-prospectus/${name}`,import.meta.url))
 async function importProspectus(page:Page,name='mixed-12.pdf'){
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await expect(page.locator('#value-L')).toHaveValue('')
   await page.locator('#import-file-prospectus').setInputFiles(fixture(name))
   await expect(page.locator('#value-P')).toHaveValue('3200000')
@@ -119,7 +119,7 @@ test('SO-AC9/11: kontrollert dokumentøkonomi og delt slider/finansiering fyller
 })
 
 test('salgsoppgavens hovedinngang og selektivt 200-sidersgrunnlag er synlig uten intern kildeinformasjon i hovedtekst',async({page},info)=>{
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.screenshot({path:info.outputPath('salgsoppgave-hovedinngang.png'),fullPage:true})
   await page.locator('#import-file-prospectus').setInputFiles(fixture('bounded-200.pdf'))
   await expect(page.locator('#value-P')).toHaveValue('3200000')
@@ -152,7 +152,7 @@ test('code-first: ukjent PDF gir lokal økonomi, synlig rest/kostnad og uoversty
   const {default:codeFirstOracle}=await import('../fixtures/sales-prospectus/code-first-oracle.json',{with:{type:'json'}})
   const buffer=codeFirstPdf(codeFirstOracle.pages)
   let posts=0;page.on('request',request=>{if(request.method()==='POST'&&request.url().endsWith('/api/document-import'))posts++})
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#import-file-prospectus').setInputFiles({name:'independent-code-first.pdf',mimeType:'application/pdf',buffer})
   await expect(page.locator('.app-header .meta')).toHaveText('Offline · lokalt dokumentuttrekk')
   await expect(page.locator('#value-P')).toHaveValue('3200000')
@@ -165,5 +165,5 @@ test('code-first: ukjent PDF gir lokal økonomi, synlig rest/kostnad og uoversty
   await values(page,'go')
   await expect(page.locator('#import-area-check')).toBeDisabled()
   await expect(page.getByText('Rapportdekning: Ufullstendig.',{exact:false}).first()).toBeVisible()
-  await info.attach('code-first-generic-blocked',{body:await page.screenshot({path:'.docs/implementation-artifacts/salgsoppgave-code-first-2026-10-29/code-first-generic-blocked.png',fullPage:true}),contentType:'image/png'})
+  await info.attach('code-first-generic-blocked',{body:await page.screenshot({path:info.outputPath('code-first-generic-blocked.png'),fullPage:true}),contentType:'image/png'})
 })

@@ -31,7 +31,7 @@ test.beforeAll(async () => {
 })
 test.afterAll(async () => { await close?.() })
 async function controlled(page: Page, caseId: 'F1' | 'F2' | 'F4', rejectUncertain = false) {
-  await page.goto(modeUrl)
+  await page.goto(modeUrl); await page.getByTestId('open-financial-basis').click()
   for (const [field, value] of Object.entries({ P: '16000000', L: caseId === 'F2' ? '1400000' : '1900000', D: '400000', J: '800000', Ymin: '7' })) {
     await page.locator(`#value-${field}`).fill(value)
     await page.locator(`#source-kind-${field}`).selectOption('assumption')

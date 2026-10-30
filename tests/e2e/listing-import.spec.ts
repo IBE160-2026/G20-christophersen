@@ -9,7 +9,7 @@ import { completeDraft, listingFixture, listingUrl } from '../fixtures/listing/f
 test('FI-1: deaktivert FINN viser manuell reserveflyt og beholder fire trinn', async ({ page, baseURL }) => {
   const external: string[] = []
   page.on('request', request => { if (new URL(request.url()).origin !== new URL(baseURL!).origin) external.push(request.url()) })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#listing-alternative-toggle').click()
   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(listingUrl)
   await page.getByRole('button', { name: 'Hent FINN-grunnlag' }).click()
@@ -24,7 +24,7 @@ test('FI-2–FI-6: kildeutkast, retting, kontroll, finansiering og nytt objekt',
     const request = route.request().postDataJSON() as { correlation: unknown }
     await route.fulfill({ json: { kind: 'listing', correlation: request.correlation, listing: listingFixture() } })
   })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#listing-alternative-toggle').click()
   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(listingUrl)
   await page.getByRole('button', { name: 'Hent FINN-grunnlag' }).click()
@@ -88,7 +88,7 @@ test('review: årsvilkår, entydige felt-ID-er og sperret oppfrisking', async ({
     const { correlation } = route.request().postDataJSON() as { correlation: unknown }
     await route.fulfill({ json: { kind: 'listing', correlation, listing } })
   })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#listing-alternative-toggle').click()
   await expect(page.getByText('FINN-import krever operatørens tilgangs- og kostnadsgodkjenning', { exact: false })).toBeVisible()
   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(listingUrl)
@@ -139,7 +139,7 @@ test('FINN-2: asynchronous import and controlled apply preserve manual P/D/J', a
     const { correlation } = route.request().postDataJSON() as { correlation: unknown }
     await route.fulfill({ json: { kind: 'listing', correlation, listing: listingFixture() } })
   })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#listing-alternative-toggle').click()
   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(listingUrl)
   await page.getByRole('button', { name: 'Hent FINN-grunnlag' }).click()
@@ -165,7 +165,7 @@ test('FINN-2: asynchronous import and controlled apply preserve manual P/D/J', a
 for (const [code, text] of [['configuration', 'mangler godkjent backendoppsett'], ['busy', 'Et FINN-oppslag pågår'], ['already-attempted', 'Nytt forsøk krever serveromstart']] as const) {
   test(`FINN-2: ${code} has a safe gate message and manual fallback`, async ({ page }) => {
     await page.route('**/api/listing', route => route.fulfill({ status: code === 'configuration' ? 503 : 409, json: { kind: 'rejected', code } }))
-    await page.goto('/')
+    await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#listing-alternative-toggle').click()
     await page.getByLabel('FINN-boliglenke', { exact: true }).fill(listingUrl)
     await page.getByRole('button', { name: 'Hent FINN-grunnlag' }).click()
@@ -182,7 +182,7 @@ test('FINN-2: an unknown-price draft uses neutral ready wording', async ({ page 
     const { correlation } = route.request().postDataJSON() as { correlation: unknown }
     return route.fulfill({ json: { kind: 'listing', correlation, listing } })
   })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#listing-alternative-toggle').click()
   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(listingUrl)
   await page.getByRole('button', { name: 'Hent FINN-grunnlag' }).click()
@@ -198,7 +198,7 @@ test('opptak 476576649: gammel råkontrakt avvises uten oppdiktet utfylling', as
     await expect(adapter.import(recordedUrl)).rejects.toMatchObject({ code: 'unavailable' })
     await route.fulfill({ status: 502, json: { kind: 'rejected', code: 'unavailable' } })
   })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#listing-alternative-toggle').click()
   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(recordedUrl)
   await page.getByRole('button', { name: 'Hent FINN-grunnlag', exact: true }).click()
@@ -232,7 +232,7 @@ test('opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF
     expect(url).toBe(recordedUrl)
     await route.fulfill({ json: { kind: 'listing', correlation, listing: await adapter.import(url) } })
   })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#listing-alternative-toggle').click()
   await expect(page.locator('.app-header')).toContainText('Demo · lagret KI-uttrekk')
   await page.getByLabel('FINN-boliglenke', { exact: true }).fill(recordedUrl)
@@ -339,4 +339,23 @@ test('opptak 476576649: merket konvertering, kontroll, finansiering, separat PDF
   await page.screenshot({ path: testInfo.outputPath('02-resultat.png'), fullPage: true })
   expect(imports).toBe(1); expect(analyses).toBe(1); expect(external).toEqual([])
   expect(createHash('sha256').update(readFileSync(new URL('../../.docs/process/arbeidsokter/finn-open-page-2026-10-28/response.json', import.meta.url))).digest('hex')).toBe(originalHash)
+})
+
+test('A review: pågående FINN-forespørsel overlever navigasjon til kontroll', async ({ page }) => {
+  let release!: () => void
+  const held = new Promise<void>(resolve => { release = resolve })
+  await page.route('**/api/listing', async route => {
+    const { correlation } = route.request().postDataJSON() as { correlation: unknown }
+    await held; await route.fulfill({ json: { kind: 'listing', correlation, listing: listingFixture() } })
+  })
+  await page.goto('/')
+  await page.locator('.finn-alternative > summary').click(); await page.locator('#listing-url').fill(listingUrl)
+  await page.locator('#listing-fetch').click(); await expect(page.locator('#listing-fetch')).toHaveText('Henter annonse …')
+  await page.getByTestId('open-financial-basis').click(); release()
+  await page.locator('#listing-alternative-toggle').click()
+  await expect(page.locator('#value-P')).toHaveValue('3200000')
+  await expect(page.locator('.financial-input .listing-import')).toContainText('Importutkast klart.')
+  await page.locator('#listing-equity').fill('1500000'); await page.locator('#listing-finance-annualInterest').fill('5'); await page.locator('#listing-finance-months').fill('300')
+  await page.getByRole('button', { name: '← Tilbake til investeringsoversikten' }).click()
+  await expect(page.locator('#scenario-equity')).toHaveValue('1500000'); await expect(page.locator('#scenario-rate')).toHaveValue('5'); await expect(page.locator('#scenario-years')).toHaveValue('25')
 })

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 const fields = ['P', 'L', 'D', 'J', 'Ymin'] as const
 
 test('1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplisitt periode/år', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   for (const field of fields) {
     const input = page.locator(`#value-${field}`)
     await expect(input).toHaveValue('')
@@ -24,7 +24,7 @@ test('1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplis
 test('1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjengelig retur', async ({ page }) => {
   const analysisRequests: string[] = []
   page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api') && new URL(request.url()).pathname !== '/api/analysis-config') analysisRequests.push(request.url()) })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   for (const [field, value] of Object.entries({ P: '16000000', L: '1900000', D: '400000', J: '800000', Ymin: '7' })) {
     await page.locator(`#value-${field}`).fill(value)
     await expect(page.locator(`#status-${field}`)).toHaveText('Registrert · Ubekreftet')
@@ -61,7 +61,7 @@ test('1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjenge
   await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()
   expect(analysisRequests).toEqual([])
   await page.locator('#value-P').fill('16000000')
-  await page.reload()
+  await page.reload(); await page.getByTestId('open-financial-basis').click()
   for (const field of fields) await expect(page.locator(`#value-${field}`)).toHaveValue('')
   for (const field of ['L', 'D', 'J']) {
     await expect(page.getByLabel(`Periode for ${field}`, { exact: true })).toHaveValue('')
@@ -72,7 +72,7 @@ test('1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjenge
 for (const viewport of [{ width: 1440, height: 900 }, { width: 720, height: 450 }, { width: 360, height: 225 }, { width: 360, height: 160 }, { width: 320, height: 160 }]) {
   test(`1.3 UX: feltrekkefølge, fokus og ombryting ved ${viewport.width}×${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport)
-    await page.goto('/')
+    await page.goto('/'); await page.getByTestId('open-financial-basis').click()
     const navigation = page.getByRole('navigation')
     const navBox = await navigation.boundingBox()
     const legacyOrder = [
@@ -128,7 +128,7 @@ test('1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflik
     else await route.continue()
   })
   page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api') && new URL(request.url()).pathname !== '/api/analysis-config') apiRequests.push(request.url()) })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   for (const field of fields) {
     await page.locator(`#source-kind-${field}`).selectOption('assumption')
     await page.locator(`#source-${field}`).fill(`Egen forutsetning ${field}`)
@@ -160,12 +160,12 @@ test('1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflik
   await expect(page.locator('#value-L')).toHaveValue('1400000')
   await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()
   expect(apiRequests).toEqual([])
-  await page.reload()
+  await page.reload(); await page.getByTestId('open-financial-basis').click()
   for (const field of fields) await expect(page.locator(`#source-${field}`)).toHaveValue('')
 })
 
 test('1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholder brukeropphav etter retting', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await page.locator('#value-L').fill('1900000')
   await page.locator('#source-kind-L').selectOption('assumption')
   await page.locator('#source-L').fill('Eget leieanslag')
@@ -188,7 +188,7 @@ test('1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholde
 })
 
 test('1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og bevarte D/J-totaler', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   for (const [field, value] of [['D', '400000'], ['J', '800000']]) {
     await page.locator(`#value-${field}`).fill(value!)
     await page.locator(`#period-${field}`).selectOption('year')
@@ -227,7 +227,7 @@ test('1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og be
 for (const viewport of [{ width: 1440, height: 900 }, { width: 360, height: 225 }, { width: 320, height: 160 }]) {
   test(`1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved ${viewport.width}×${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport)
-    await page.goto('/')
+    await page.goto('/'); await page.getByTestId('open-financial-basis').click()
     await page.locator('#conflict-add-L').click()
     await page.locator('#conflict-value-L').fill('1400000')
     await page.locator('#conflict-source-L').fill('Leiekontrakt')
@@ -266,7 +266,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 360, height: 225 
 for (const viewport of [{ width: 1440, height: 900 }, { width: 320, height: 160 }]) {
   test(`1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved ${viewport.width}×${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport)
-    await page.goto('/')
+    await page.goto('/'); await page.getByTestId('open-financial-basis').click()
     for (const index of [1, 2]) {
       await page.locator('#cost-add').click()
       await page.locator(`#cost-${index}-label`).fill('Forsikring'.repeat(60))
@@ -297,7 +297,7 @@ async function registerF1(page: import('@playwright/test').Page) {
 test('1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret retur, retting og øktslutt', async ({ page }) => {
   const api: string[] = []
   page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api') && new URL(request.url()).pathname !== '/api/analysis-config') api.push(request.url()) })
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await registerF1(page)
   await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()
   await expect(page.locator('#normalization-L')).toHaveText('Registrert 1900000 NOK × 1 = 1900000 NOK/år · 2026.')
@@ -323,7 +323,7 @@ test('1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret ret
   await page.getByRole('button', { name: /Trinn 2/ }).click()
   await expect(page.getByRole('heading', { name: 'Tilstandsrapport', exact: true })).toBeFocused()
   expect(api).toEqual([])
-  await page.reload()
+  await page.reload(); await page.getByTestId('open-financial-basis').click()
   await expect(page.locator('#value-P')).toHaveValue('')
   await expect(page.getByText('Ubekreftet tallgrunnlag', { exact: true })).toBeVisible()
 })
@@ -334,7 +334,7 @@ for (const scenario of [
   { name: 'ulike år', control: 'year-J', value: '2025', focus: 'year-L', error: /Verdiene gjelder ulike år/ },
 ]) {
   test(`1.7 AC2/AC6: ${scenario.name} viser lokale feil, første berørte felt og krever retting`, async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/'); await page.getByTestId('open-financial-basis').click()
     await registerF1(page)
     await page.locator(`#${scenario.control}`).fill(scenario.value)
     await page.locator('#confirm-financial').click()
@@ -352,7 +352,7 @@ for (const scenario of [
 }
 
 test('1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await registerF1(page)
   await page.locator('#value-J').fill('0')
   await page.locator('#confirm-financial').click()
@@ -385,7 +385,7 @@ test('1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes', as
 })
 
 test('1.7 AC2: L-konflikt består gjennom forsøk; opphav og ny kontroll må rettes eksplisitt', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await registerF1(page)
   await page.locator('#conflict-add-L').click()
   await page.locator('#conflict-value-L').fill('1400000')
@@ -405,7 +405,7 @@ test('1.7 AC2: L-konflikt består gjennom forsøk; opphav og ny kontroll må ret
 for (const viewport of [{ width: 1440, height: 900 }, { width: 1280, height: 800 }, { width: 720, height: 450 }, { width: 320, height: 200 }]) {
   test(`1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved ${viewport.width}×${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport)
-    await page.goto('/')
+    await page.goto('/'); await page.getByTestId('open-financial-basis').click()
     await registerF1(page)
     await page.locator('#value-J').fill('0')
     await page.locator('#confirm-financial').focus()
@@ -439,7 +439,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 1280, height: 800
 }
 
 test('1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast', async ({ page }, testInfo) => {
-  await page.goto('/')
+  await page.goto('/'); await page.getByTestId('open-financial-basis').click()
   await registerF1(page)
   await page.locator('#value-L').fill('150000')
   await page.locator('#period-L').selectOption('month')
@@ -486,7 +486,7 @@ for (const scenario of [
   { name: 'inkludering', amount: '120000', debt: '20000', focus: 'cost-2-included' },
 ]) {
   test(`1.7 AC2: kostnadsfeil i ${scenario.name} fokuserer kontrollen som må rettes`, async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/'); await page.getByTestId('open-financial-basis').click()
     await registerF1(page)
     await page.locator('#cost-add').click()
     await page.locator('#cost-1-label').fill('Felleskostnader')

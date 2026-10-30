@@ -1,3 +1,4 @@
+import { importErrorMessage } from '../analysis/import-messages.ts'
 import { useState } from 'react'
 import type { Dispatch } from 'react'
 import type { ListingCorrection } from '../../contracts/listing.ts'
@@ -18,16 +19,6 @@ export function ProspectusImport({ session, dispatch, client, role }: { session:
   const checked = draft ? economySuggestions(draft, { sourceLabel: 'Dokument' }) : null
   const taxRelevance = outcome ? documentTaxRelevance(outcome, p.corrections) : null
   const financing = draft ? economyFinancingSuggestion(draft, p.financing, session.listing.manualFields.includes('P') ? session.financial.P.rawValue : undefined, 'Dokument') : null
-  const errorMessages: Record<string, string> = {
-    'missing-file': 'Velg en PDF for å starte importen.', 'payload-too-large': 'Filbudsjettet er overskredet. Velg mindre filer; salgsoppgave og separat rapport kan samlet være høyst 50 MiB.',
-    'page-limit': 'PDF-en har mer enn 200 fysiske sider. Velg en fil innen støtteprofilen.', 'unsupported-synthetic': 'Denne originalen har ikke et lagret demosvar. Bruk en av de oppgitte syntetiske PDF-ene.',
-    'analysis-active': 'En dokumentbehandling pågår. Vent til den er avsluttet før du velger filen på nytt.', 'duplicate-analysis': 'Dokumentet er allerede forsøkt i denne økten. Ingen ny analyse er startet. Behold kontrollgrunnlaget eller start en ny vurdering.',
-    'invalid-format': 'PDF-en kunne ikke kontrolleres. Velg en intakt tekstbasert PDF.', 'text-limit': 'Dokumentets tekstgrunnlag er for stort for denne støtteprofilen. Velg en mindre tekstbasert PDF.',
-    'response-limit': 'Uttrekkssvaret overskred ressursgrensen. Analysen er stoppet; velg et annet støttet dokument.', 'memory-limit': 'Dokumentbehandlingen overskred minnegrensen og er stoppet. Velg en enklere tekstbasert PDF.',
-    'processing-timeout': 'Dokumentbehandlingen overskred tidsfristen og er stoppet. Velg et annet støttet dokument.', 'live-disabled': 'Live-import er stengt. Lokale eksplisitte uttrekk kan kontrolleres, men uløst tekst sperrer rapportbekreftelse.',
-    'interrupted': 'Importen er avbrutt. Ingen fullføring er bekreftet.', 'transport-failure': 'Forbindelsen til den lokale serveren ble avbrutt. Kontroller at serveren kjører; grunnlaget er ufullført.',
-    'incompatible-context': 'Det bevarte uttrekket har en annen analysekontekst. Start en ny vurdering med gjeldende versjon.',
-  }
   const coverageLabels = { complete: 'Fullstendig', incomplete: 'Ufullstendig', missing: 'Mangler', ambiguous: 'Uklart', unreadable: 'Uleselig' }
   const statusLabels = { available: 'Oppgitt', missing: 'Mangler', unavailable: 'Utilgjengelig', conflict: 'Motstrid' }
   const natureLabels = { fact: 'Oppgitt fakta', 'stated-estimate': 'Oppgitt estimat', unknown: 'Ukjent opphav' }
@@ -38,7 +29,7 @@ export function ProspectusImport({ session, dispatch, client, role }: { session:
     <p>Lokal dokumentanalyse og syntetisk demo · PDF med tekstlag, høyst 200 fysiske sider. 50 MiB per fil og samlet for salgsoppgave og separat rapport. Ingen OCR. Live-import er stengt.</p>
     <label htmlFor={`import-file-${role}`}>{role === 'prospectus' ? 'Velg salgsoppgave (PDF)' : 'Velg separat rapport (PDF)'}</label>
     <input id={`import-file-${role}`} type="file" accept="application/pdf,.pdf" onChange={event => { setView(null); void client.select(event.currentTarget.files?.[0] ?? null, p, role) }} />
-    <p role="status">{slot.status === 'loading' ? 'Leser dokument og forbereder økonomi og rapport …' : slot.status === 'selecting' ? 'Kontrollerer dokumentets hash …' : slot.status === 'imported' ? 'Dokumentuttrekk klart. Import er ubekreftet; kontroller mot originalen.' : slot.error ? errorMessages[slot.error] ?? 'Dokumentimporten kunne ikke fullføres. Velg en tekstbasert PDF og kontroller det nye grunnlaget.' : 'Import starter når du velger fil. Ingen finansverdier kreves først.'}</p>
+    <p role="status">{slot.status === 'loading' ? 'Leser dokument og forbereder økonomi og rapport …' : slot.status === 'selecting' ? 'Kontrollerer dokumentets hash …' : slot.status === 'imported' ? 'Dokumentuttrekk klart. Import er ubekreftet; kontroller mot originalen.' : slot.error ? importErrorMessage(slot.error) : 'Import starter når du velger fil. Ingen finansverdier kreves først.'}</p>
     {slot.error && <details><summary>Teknisk feilkode</summary><p>{slot.error}</p></details>}
     {['loading', 'selecting'].includes(slot.status) && <button type="button" className="secondary-action" onClick={() => { client.abort(); dispatch({ type: 'import-abandon' }) }}>Avbryt dokumentimport</button>}
     {role === 'report' && selected && p.prospectus.outcome && <button type="button" className="secondary-action" onClick={() => { client.abort(); setView(null); dispatch({ type: 'import-restore-integrated' }) }}>Bruk integrert rapport igjen</button>}

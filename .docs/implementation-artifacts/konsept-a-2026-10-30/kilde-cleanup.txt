@@ -1,0 +1,8 @@
+
+Running 1 test using 1 worker
+
+(node:96938) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/investment-overview.spec.ts:66:1 › A: ukjent leie og uriktig input viser mangler; kilde/risikodialog fungerer med tastatur (1.7s)
+
+  1 passed (2.3s)

@@ -51,7 +51,7 @@ test.beforeAll(async ({ baseURL }) => {
 })
 test.afterAll(async () => { await close?.() })
 async function enter(page: Page, address = url) {
-  await page.goto(address)
+  await page.goto(address); await page.getByTestId('open-financial-basis').click()
   await expect(page.locator('.app-header')).toContainText(mode === 'live' ? 'Live analyse' : 'Demo · lagret KI-uttrekk')
   for (const [field, value] of Object.entries({ P: '16000000', L: '1900000', D: '400000', J: '800000', Ymin: '7' })) {
     await page.locator(`#value-${field}`).fill(value)

@@ -6,11 +6,12 @@ import { FinancingControls } from '../components/FinancingControls.tsx'
 import { ListingClient } from '../analysis/listing-client.ts'
 import type { SessionAction, SessionState } from '../state/session.ts'
 
-export function ListingImport({ session, dispatch }: { session: SessionState; dispatch: Dispatch<SessionAction> }) {
+export function ListingImport({ session, dispatch, client: sharedClient }: { session: SessionState; dispatch: Dispatch<SessionAction>; client?: ListingClient }) {
   const state = session.listing
-  const [client] = useState(() => new ListingClient(dispatch))
-  useEffect(() => { client.abort() }, [state.generation, client])
-  useEffect(() => () => client.abort(), [client])
+  const [localClient] = useState(() => new ListingClient(dispatch))
+  const client = sharedClient ?? localClient
+  useEffect(() => { if (!sharedClient) client.abort() }, [state.generation, client, sharedClient])
+  useEffect(() => () => { if (!sharedClient) client.abort() }, [client, sharedClient])
   const draft = state.draft
   const suggested = draft ? listingSuggestions(draft) : null
   const financing = draft ? listingFinancingSuggestion(draft, state.financing, state.manualFields.includes('P') ? session.financial.P.rawValue : undefined) : null

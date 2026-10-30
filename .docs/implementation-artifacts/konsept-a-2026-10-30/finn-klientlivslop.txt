@@ -1,0 +1,10 @@
+[WebServer] (node:95810) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:95831) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/listing-import.spec.ts:344:1 › A review: pågående FINN-forespørsel overlever navigasjon til kontroll (584ms)
+
+  1 passed (2.1s)

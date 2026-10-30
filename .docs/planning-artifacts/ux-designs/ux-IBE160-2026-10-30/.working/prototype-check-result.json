@@ -1,0 +1,33 @@
+{
+  "scope": "Offline HTML-prototype revision 2 only; not production acceptance",
+  "checks": 25,
+  "passed": [
+    "base",
+    "more-equity",
+    "higher-rate",
+    "shorter",
+    "zero-rate",
+    "all-equity",
+    "negative",
+    "range-sync",
+    "invalid-equity-",
+    "invalid-equity-3075001",
+    "invalid-interest--1",
+    "invalid-interest-101",
+    "invalid-years-0",
+    "invalid-years-25.5",
+    "missing-rent",
+    "missing-debt",
+    "missing-property",
+    "apply-is-prototype-only",
+    "source-focus-escape-return",
+    "file-name-only",
+    "all-views-width-320",
+    "all-views-width-390",
+    "all-views-width-768",
+    "all-views-width-1024",
+    "all-views-width-1440"
+  ],
+  "pageErrors": [],
+  "networkRequests": []
+}

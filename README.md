@@ -1,5 +1,8 @@
 # Property Acquisition Agent — IBE160, G20
 
+> **Godkjent konsept A, 30. oktober 2026:** Appen åpner nå med en lys eiendoms- og investeringsoversikt: faktisk dokumentbilde, kildebundet identitet/pris, store nøkkeltall og interaktiv finansiering. PDF er hovedinngangen. **Bak tallene** åpner den bevarte kontrollflyten. Scenarier er atskilt fra kontrollert screening. [Implementering og verifikasjon](.docs/implementation-artifacts/konsept-a-verifikasjon.md).
+
+
 > **Code-first salgsoppgave, 29. oktober 2026:** Generell lokal PDF-analyse supplerer
 > den tidligere syntetiske demoen. Eksplisitte felt og funn trekkes ut lokalt;
 > uløst rapporttekst sperrer bekreftelse mens live-porten er stengt.
@@ -38,11 +41,21 @@ npm run build
 ANALYSIS_MODE=demo npm run demo
 ```
 
-De to første kommandoene skal vise `v24.21.0` og `11.19.0`. `npm ci` installerer nøyaktig fra låsfilen og erstatter eksisterende `node_modules`. Installasjon kan kreve nett til npm-registeret. Åpne **http://127.0.0.1:3000** i en moderne nettleser. Du skal se Tallgrunnlag og **Demo · lagret KI-uttrekk**. Én Express-prosess serverer bygget `dist/`, API og PDF-/worker-/fontressurser lokalt. Etter installasjon kan build og hele demoen kjøres med eksternt nett sperret; behold tilgang til lokal loopback.
+De to første kommandoene skal vise `v24.21.0` og `11.19.0`. `npm ci` installerer nøyaktig fra låsfilen og erstatter eksisterende `node_modules`. Installasjon kan kreve nett til npm-registeret. Åpne **http://127.0.0.1:3000** i en moderne nettleser. Du skal se investeringsoversikten med **Last opp salgsoppgave**, ukjente verdier og **Demo · lagret KI-uttrekk**. Én Express-prosess serverer bygget `dist/`, API og PDF-/worker-/fontressurser lokalt. Etter installasjon kan build og hele demoen kjøres med eksternt nett sperret; behold tilgang til lokal loopback.
 
 Stopp med **Ctrl+C** i serverterminalen. Port 3000 må være ledig; serveren velger ikke en annen port. Ved «Bygget app mangler» kjører du `npm run build`. Ved opptatt port stopper du din tidligere demo/dev/testserver før ny oppstart. Ikke kjør dem samtidig. Oppdatering/lukking av siden avslutter den midlertidige økten, inklusive tall, rapport, kontroll og resultat; ingen brukerdata lagres.
 
 Oppskriften er egenprøvd på macOS 26.6.2 arm64; andre plattformer er ikke egenprøvd. npm kan varsle om det valgfrie installasjonsscriptet til `fsevents@2.3.3` på macOS. Vite kan varsle om stor chunk; faktisk exitstatus og testresultat må fortsatt kontrolleres.
+
+## Investeringsoversikten
+
+Last opp din salgsoppgave. Analyse starter lokalt uten innledende finansverdier. Ukjent adresse, areal, byggeår og økonomi vises eksplisitt; ingen eksempeleiendom eller illustrasjonsverdier fyller hullene. Et stort raster fra de første tre originalsider vises når visningsgrensene tillater det, ellers første originalside eller en tydelig utilgjengelig visning. Fil og fysisk side følger bildet. Motivet er ikke automatisk identifisert som eiendommen, og synlig raster betyr ikke at det er analysert.
+
+**Juster leie og drift** registrerer egne årsforutsetninger med et uttrykkelig oppgitt år. Disse erstatter bare feltene du fyller ut og blir ubekreftet. **Egenkapital**, **rente** og **nedbetalingstid** oppdaterer et separat scenario. Presis løpetid kan oppgis i hele måneder. Kontantbehov, totalpris og betaling av fellesgjeld beholder eksisterende avstemmingskrav; en kjent driftssubtotal blir ikke full drift. Rente påvirker kontantstrøm, ikke yield.
+
+Grafene viser akkumulert konstant kontantstrøm, restgjeld på privat lån og årlig kontantstrøm ved ulike renter. Kontantstrømgrafen inkluderer ikke innskutt egenkapital, salg, skatt eller verdiendring og er ikke totalavkastning. Alle grafdata finnes i tabell. Velg faner med piltaster/Home/End og utforsk punkter med grafens slider. Beregning skjer i lokale, avbrytbare workere; krevende beregninger stoppes etter 15 sekunder for hovedscenario og 30 sekunder for rentegraf, med en synlig melding.
+
+**Forhold å ta stilling til** viser risiko, TG-status og mangler. **Bak tallene** åpner registrering, kildebelegg og bekreftelse; **Etterprøv grunnlaget** åpner dokumentasjon og original-PDF. Rapportkontroll, separate TG3-avklaringer og kodebestemt anbefaling følger samme krav som før. Scenarioslidere endrer ingen bekreftelse eller tidligere kontrollert vurdering. FINN-feltet finnes fortsatt under alternativ inngang og bruker uendret backendport. Hele den lokale økten avsluttes ved sidelasting.
 
 ## Prøv salgsoppgave fra opplasting til resultat
 
@@ -53,7 +66,7 @@ Importen bruker en egen versjonert grense på **200 fysiske sider**, **50 MiB pe
 og samlet beholdt salgsoppgave + separat rapport**. Den gamle manuelle rapportruten
 beholder **30 sider**. Dokumentnavn og trykt sidetall erstatter aldri fysisk PDF-side.
 
-1. Velg `mixed-12.pdf` i **Last opp salgsoppgave** øverst i Tallgrunnlag.
+1. Velg `mixed-12.pdf` i **Last opp salgsoppgave** i investeringsoversikten. Åpne deretter **Bak tallene** for detaljkontroll.
    Lesingen starter uten P/L/D/J/Ymin. P=3200000 fylles automatisk **ubekreftet**.
    Kontantbehovet er 3075000; dokumentavgiften inngår allerede i omkostningene.
    Kjent driftssubtotal er 60000/år og fellesgjeldsbetaling 12000/år, men full D

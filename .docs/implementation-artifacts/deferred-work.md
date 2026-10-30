@@ -554,3 +554,12 @@ review/nykontroll og kostnadsbevis](salgsoppgave-economy-trial-2026-10-30/compac
 består. 6000 output gir maksimalt USD 0,15 og beholdt USD 0,05-margin. Ny
 live-test er klar til godkjenning, men ikke kjørt. PAA-SO2 lukkes ikke før ny
 reell modellprøve og relevante kvalitets-/dekningsporter faktisk er verifisert.
+
+**PAA-SO2, kompakt live-test 2026-10-30 — Status: fortsatt Åpen.**
+Det ene nye godkjente kallet ga fullført kompakt JSON, men kontroll avviste
+feil tallnormalisering. [Fullt resultat, tokenbruk og fasitteller](salgsoppgave-economy-trial-2026-10-30/live-resultat-3.md):
+3/11 korrekte fasitpunkter, syv tallfeil og ett manglende punkt. Kodeeide
+kildeposisjoner/metadata virker, men dokumenterte begrensninger mangler og
+en generisk pipelineopplysning mangler spesifikt dokumentbelegg. Kostnad fra
+faktisk usage USD 0,031396; ingen ekstrakall eller push. Norsk talltolkning og
+semantisk begrensningsdekning gjenstår; PAA-SO2 lukkes ikke.

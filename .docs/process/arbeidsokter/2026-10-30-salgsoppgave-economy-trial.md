@@ -96,3 +96,11 @@ beregnet maksimum USD 0,14989 og minst USD 0,05 margin. Privat offline-eksempel
 fra samme godkjente fasit passerer, men er ikke modelloutput eller ny menneskelig
 fasit. Ingen betalte kall, ny budsjettjournal eller push i denne endringen.
 Neste live-test er klar til ny uttrykkelig godkjenning; TG forblir uavklart.
+
+Brukeren godkjente deretter ett nytt kompakt kall med 6000 output/USD 0,20 og
+navngitt OpenAI-mottaker. [Tredje faktiske resultat og full fasitsammenligning](../../implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/live-resultat-3.md)
+har fullført JSON, 4523 input/2009 output (88 reasoning), USD 0,031396 fra
+faktisk usage. Tre av 11 fasitpunkter er korrekte, syv har tallnormaliserings-
+feil, ett mangler. Kilde-ID/posisjon/metadata er kodekorrekt, men en generell
+begrensning har for bredt/ikke dokumentert belegg. Kandidaten ble trygt avvist.
+Ingen ekstrakall, automatisk forsøk, ny retting eller push. Historikk beholdes.

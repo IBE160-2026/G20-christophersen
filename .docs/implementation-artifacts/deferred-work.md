@@ -633,3 +633,14 @@ faktisk gatenavn/husnummer på samme etikettlinje. De falske kandidatene på sid
 134 finnes ikke i nytt resultat. [Review/testaksept](nye-salgsoppgaver-2026-10-31/review.md)
 og [23/23 Playwright-bevis](nye-salgsoppgaver-2026-10-31/playwright.txt)
 dokumenterer retting og relevant godkjent kontroll. Original oppføring og historikk beholdes.
+
+**PAA-SO3 — Status: Lukket 2026-10-31.**
+Løsning: samme-linje-adresse med eksplisitt gatenavn/husnummer i
+`src/backend/import/local-plan.ts`; tomme skjemafelt forblir uten kandidat.
+Relevant rettingsrevisjon: `0b439811f3cd5f93fef210fe9e86179be4553cf4`.
+Hovedagentens relevante kode-/testreview er godkjent i
+[review/triage](nye-salgsoppgaver-2026-10-31/review.md).
+[1626/1626 automatiserte tester](nye-salgsoppgaver-2026-10-31/tests.txt)
+og [23/23 Playwright-tester](nye-salgsoppgaver-2026-10-31/playwright.txt),
+inklusive ekte side 134 og historisk isolasjon, dokumenterer verifikasjonen.
+Dette lukker adressefeilen, ikke PAA-SO2 eller manglende generell teknisk analyse.

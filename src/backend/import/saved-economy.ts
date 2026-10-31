@@ -49,7 +49,7 @@ export function validateSavedEconomy(archive: SavedEconomyArchive, bytes: Uint8A
   // Validate historical interpretation against the complete original request first.
   validateReferencedEconomyOutput(archive.output, packet)
   // Rebuild sources for this upload without trusting cached names or offsets.
-  const current = prepareEconomyTrial(bytes, basis, packet.selectedPages)
+  const current = prepareEconomyTrial(bytes, basis, packet.selectedPages, packet.localExtractionVersion ?? 'local-economy-1')
   return { packet: current, result: validateReferencedEconomyOutput(archive.output, current) }
 }
 export async function attachSavedEconomy(outcome: DocumentImport, bytes: Uint8Array, basis: ImportBasis, load: () => Promise<SavedEconomyArchive> = async () => ({
@@ -62,7 +62,15 @@ export async function attachSavedEconomy(outcome: DocumentImport, bytes: Uint8Ar
     const { packet, result } = validateSavedEconomy(await load(), bytes, basis)
     const rebind = (source: PdfSource) => sourceFor(basis, source.pdfPage, source.start, source.end)
     const observations = [...result.observations, ...result.deterministicEvidence.excerpts.map(item => ({ kind: item.kind, raw: item.raw, sources: [rebind(item.source)] }))]
-    return DocumentImportSchema.parse({ ...outcome, economy: { ...outcome.economy,
+    // The archived interpretation may cite a different exact span than the new
+    // local parser. Keep every original manifest interval, but never claim an
+    // interval is locally resolved after its supporting field source is replaced.
+    const retainedSources = [...outcome.propertyIdentity.map(item => item.source), ...outcome.sections.flatMap(item => item.basis),
+      ...outcome.economy.ownershipSources, ...result.fields.flatMap(field => field.sources), ...outcome.technical.findings.flatMap(finding => finding.sources)]
+    const manifest = outcome.manifest ? { ...outcome.manifest, blocks: outcome.manifest.blocks.map(block =>
+      block.result === 'local-explicit' && !retainedSources.some(source => source.pdfPage === block.pdfPage && source.start <= block.start && source.end >= block.end)
+        ? { ...block, result: 'unresolved' as const } : block) } : outcome.manifest
+    return DocumentImportSchema.parse({ ...outcome, manifest, economy: { ...outcome.economy,
       status: result.fields.some(field => field.amount !== null) ? 'partial' : 'unavailable', fields: result.fields,
       analysis: { provenance: 'saved-same-document', reason: 'Lagret analyse av samme dokument. Original PDF, tekst, forespørsel, beløp og kilder er kontrollert. Menneskelig kildekontroll og semantisk dekning gjenstår. Ingen ny KI-analyse er kjørt.',
         requestDigest: packet.requestDigest, selectedPages: packet.selectedPages, observations, limitations: result.limitations },

@@ -83,3 +83,22 @@ it('bevarer historisk ekstraksjonsmarkør mens ferske sider og hash fortsatt kon
   expect(validateSavedEconomy(archive, bytes, { ...basis, name: 'fresh.pdf', requestId: 'fresh' }).result.fields.find(field => field.id === 'price')?.amount).toBe('1234.56')
   expect(() => validateSavedEconomy(archive, bytes, { ...basis, pages: [{ ...basis.pages[0]!, text: 'Changed fresh text' }] })).toThrow('saved-analysis-package-mismatch')
 })
+
+it('bevarer historiske kilder og markerer nye lokale spenn som uløst når arkivet siterer et annet sted', async () => {
+  const { basis } = fixture()
+  basis.pages[0]!.text = 'PRISANTYDNING Kr 1 234,56\n' + basis.pages[0]!.text
+  const packet = prepareEconomyTrial(bytes, basis, [1], 'local-economy-1')
+  const catalogue = createEconomySourceCatalogue(basis, [1], true)
+  const value = createEconomyMoneyCatalogue(basis, [1]).find(item => item.amount === '1234.56' && item.source.start > basis.pages[0]!.text.indexOf('\n'))!
+  const output = { fields: packet.proposedOracle.fields.map(field => ({ id: field.id, status: field.status, valueId: null as string | null, period: field.period, year: field.year, nature: field.nature, sourceIds: [] as string[], alternatives: [], reason: null })), observations: [], limitations: [], processedSourceIds: catalogue.map(item => item.id) }
+  Object.assign(output.fields.find(field => field.id === 'price')!, { status: 'available', valueId: value.id, nature: 'stated-estimate', sourceIds: catalogue.filter(segment => segment.start <= value.source.start && segment.end >= value.source.end).map(segment => segment.id) })
+  const response = { status: 'completed', model: packet.request.model, output: [{ type: 'message', content: [{ type: 'output_text', text: JSON.stringify(output) }] }] }
+  const local = await createCodeFirstImport(basis)
+  expect(local.manifest?.blocks.some(block => block.result === 'local-explicit')).toBe(true)
+  const attached = await attachSavedEconomy(local, bytes, basis, async () => ({ packet, output, response }))
+  expect(attached.economy.analysis?.provenance).toBe('saved-same-document')
+  expect(attached.economy.fields.find(field => field.id === 'price')?.sources[0]?.start).toBeGreaterThan(basis.pages[0]!.text.indexOf('\n'))
+  expect(attached.manifest?.blocks.filter(block => block.result === 'local-explicit')).toEqual([])
+  expect(attached.manifest?.blocks.map(({ id, start, end }) => ({ id, start, end }))).toEqual(local.manifest?.blocks.map(({ id, start, end }) => ({ id, start, end })))
+  expect(attached.technical.status).toBe('blocked')
+})

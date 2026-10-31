@@ -2,31 +2,10 @@ import { sourceFor } from './local-plan.ts'
 import type { ImportBasis } from './local-plan.ts'
 import type { PdfSource } from '../../contracts/document-import.ts'
 
-export type NorwegianMoney = { amount: string | null; minorUnits: string | null; ambiguity: string | null }
-const unresolved = (ambiguity: string): NorwegianMoney => ({ amount: null, minorUnits: null, ambiguity })
-/** Ren transkripsjon av norsk tallsyntaks. Ingen flyttall, avrunding eller avgiftsberegning. */
-export function parseNorwegianMoney(raw: string): NorwegianMoney {
-  if (!raw || raw !== raw.trim()) return unresolved('unsupported-syntax')
-  if (/^[+\-\u2212\u2011\u2013\u2014]/u.test(raw)) return unresolved('signed-unsupported')
-  if (/[%‰]/u.test(raw)) return unresolved('percentage-not-money')
-  const wholeSuffix = /,[-\u2011\u2013]$/u.test(raw)
-  const token = wholeSuffix ? raw.slice(0, -2) : raw
-  if (/[/:\u2013\u2014]/u.test(token) || /^\d{1,2}\.\d{1,2}\.\d{2,4}$/u.test(raw) || /^\d{4}-\d{2}-\d{2}$/u.test(raw)) return unresolved('date-or-range-not-money')
-  if (/[eE]/u.test(raw)) return unresolved('scientific-notation-unsupported')
-  const ungrouped = /^\d+(?:,\d{1,2})?$/u.test(token)
-  const spaceGrouped = /^\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?:,\d{1,2})?$/u.test(token)
-  const dotGrouped = /^\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?$/u.test(token)
-  if (!ungrouped && !spaceGrouped && !dotGrouped) return unresolved('unsupported-syntax')
-  if (wholeSuffix && token.includes(',')) return unresolved('unsupported-syntax')
-  if (dotGrouped && !wholeSuffix && !token.includes(',') && token.split('.').length === 2) return unresolved('ambiguous-single-dot-group')
-  const normalized = token.replace(/[. \u00a0\u202f]/gu, '')
-  const [integer = '', fraction = ''] = normalized.split(',')
-  if (integer.length > 78) return unresolved('amount-too-long')
-  const minorUnits = BigInt(integer) * 100n + BigInt(fraction.padEnd(2, '0'))
-  const kronor = minorUnits / 100n, cents = minorUnits % 100n
-  const amount = cents === 0n ? kronor.toString() : `${kronor}.${cents.toString().padStart(2, '0').replace(/0$/u, '')}`
-  return { amount, minorUnits: minorUnits.toString(), ambiguity: null }
-}
+import { parseNorwegianMoney } from './norwegian-money.ts'
+export { parseNorwegianMoney } from './norwegian-money.ts'
+export type { NorwegianMoney } from './norwegian-money.ts'
+import type { NorwegianMoney } from './norwegian-money.ts'
 
 export type EconomyQualifier = { kind: 'vat-included' | 'vat-excluded' | 'vat' | 'quarter' | 'month' | 'year' | 'term' | 'date-range'; raw: string; source: PdfSource }
 /** Bevarer eksplisitte kvalifikasjoner som egne kildespenn. De bindes ikke til et beløp ved gjetting. */
@@ -79,7 +58,7 @@ export function createEconomyMoneyCatalogue(basis: ImportBasis, selectedPages: n
         || /^[ \u00a0\u202f]*(?:kr\b|NOK\b)/iu.test(page.text.slice(match.index + raw.length))
       const isYear = /^(?:19|20)\d{2}$/u.test(raw) && !currencyAdjacent
       const malformedGroup = malformedGroups.some(group => match.index >= group.index && match.index < group.index + group[0].length)
-      const parsed = raw.length > 2000 ? unresolved('amount-too-long') : malformedGroup ? unresolved('malformed-currency-group') : isYear ? unresolved('possible-year-not-money') : parseNorwegianMoney(raw)
+      const parsed = raw.length > 2000 ? { amount: null, minorUnits: null, ambiguity: 'amount-too-long' } : malformedGroup ? { amount: null, minorUnits: null, ambiguity: 'malformed-currency-group' } : isYear ? { amount: null, minorUnits: null, ambiguity: 'possible-year-not-money' } : parseNorwegianMoney(raw)
       if (raw.length > 2000) throw new Error('economy-numeric-token-too-long')
       candidates.push({ id: `v${candidates.length.toString(36)}`, raw, ...parsed, source: sourceFor(basis, pdfPage, match.index, match.index + raw.length), kind: 'numeric-candidate' })
     }

@@ -18,6 +18,7 @@ export type ProspectusAction =
   | { type: 'import-start'; role: ImportRole; correlation: AnalysisHttpCorrelation }
   | { type: 'import-response'; role: ImportRole; correlation: AnalysisHttpCorrelation; body: unknown; ok: boolean }
   | { type: 'import-error'; role: ImportRole; generation: number; code: string }
+  | { type: 'import-economy-result'; generation: number; documentHash: string; requestDigest: string; outcome: unknown }
   | { type: 'import-abandon' }
   | { type: 'import-restore-integrated' }
   | { type: 'import-correction'; id: string; correction: ListingCorrection }

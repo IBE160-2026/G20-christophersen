@@ -12,7 +12,8 @@
 > Last opp en syntetisk salgsoppgave før tallbekreftelse, kontroller dokumentøkonomi
 > og finansiering, og kontroller integrert eller separat rapport før screening.
 > [Krav, nye bevis og begrensninger](.docs/implementation-artifacts/salgsoppgave-implementation-2026-10-28/verifikasjon.md).
-> Ny dokumentimport er alltid offline; `ANALYSIS_MODE=live` åpner den ikke.
+> Selve opplastingen er lokal. Videre økonomianalyse krever separat godkjenning
+> av kostnad og overføring av de viste utdragene.
 > FINN beholdes som utsatt alternativ. Historisk S5/S6 gjelder sine opprinnelige versjoner.
 
 Lokal førstevurdering av **ett boligutleieobjekt**, laget for investorens tidlige sortering. Brukeren registrerer og kontrollerer økonomiske forutsetninger, leser tilstandsrapportens original, kontrollerer TG2/TG3-funn og får en kodebestemt anbefaling: **Gå videre**, **Forkast** eller **Innhent mer informasjon**. Beregningene er bruttoyield, NOI, nettoyield og kontantstrøm før skatt. Investoren tar beslutningen; dette er ingen teknisk godkjenning eller komplett investeringsanalyse.
@@ -133,17 +134,57 @@ requesten skal telles før reservasjon. USD 0,04–0,08 er regneeksempler for
 10–20k input og 2–4k output, ikke målt gjennomsnitt. Budsjettbrudd gir stopp,
 aldri avkorting eller automatisk nytt kall.
 
-**Ny live-import er fortsatt stengt.** Presis inputtelling er implementert via
+**Generisk teknisk live-import er fortsatt stengt.** Presis inputtelling er implementert via
 Responses `inputTokens.count` i låst SDK 6.9.1, inklusive prompt, schema og
 reasoning-konfigurasjon. Hele genereringsrequesten bindes til tellegrunnlaget.
 Dette er serverbasert telling; offline SDK-stub er bare serialiseringsbevis.
 Count-endepunktets pris er ikke verifisert eller etablert som gratis i de
 kontrollerte kildene, så serverfabrikken stopper før nettverk. Ukjent teller,
 pris eller forbrukshistorikk sperrer transport. Ingen produksjonsklient
-opprettes i opplastingsruten. Lokale uttrekk koster ingen modellbruk.
+opprettes av selve opplastingen. Den separate økonomiruten beskrevet nedenfor
+kan starte ett uttrykkelig godkjent kall. Lokale uttrekk koster ingen modellbruk.
 Når semantikk er nødvendig, viser appen restgrunnlaget og manglende estimat,
 og tillater ikke rapportbekreftelse. `ANALYSIS_MODE=live` åpner ikke denne
 porten. Første live-test krever ny godkjenning og underbygget preflight.
+
+### Nye dokumenter: lokal økonomi og godkjent KI-tolkning
+
+Last opp PDF-en i investeringsoversikten. Kode leser tekstlaget på alle fysiske
+sider og henter sikre beløp i støttede formater, med nøyaktige originale kilder.
+Ukjente beløp betyr at uttrekket ikke har etablert en verdi; det beviser ikke
+at opplysningen mangler i dokumentet. Tomme adressefelt i skjemaer kan ikke
+bruke neste feltnavn som adresse.
+
+**Forbered KI-analyse** kjører lokalt og viser hele de valgte økonomisidenes
+tekst, fysiske sidetall, eventuelle relevante sider som utelates og kostnadsramme.
+Forberedelsen gjør ingen eksterne kall eller reservasjoner. Den velger opptil
+fem hele lesbare sider som passer tekst- og requestbudsjettet; den påstår ikke
+full dokumentdekning. Brukeren må godkjenne både overføring til OpenAI og
+kostnad før **Start godkjent KI-analyse** blir tilgjengelig. Dette kallet krever
+`OPENAI_API_KEY` på lokal backend. Ingen nøkkel skal legges i frontend.
+
+AI velger referanser til beløp som kode allerede har lest fra originalen.
+Kode kontrollerer beløp, kilder, perioder og konflikter; lokale sikre verdier
+fra usendte sider beholdes. Alle AI-tolkninger er ubekreftet. Ingen manglende
+leie, full drift eller fellesgjeld erstattes med 0. Finansreglene er uendret.
+Et vellykket svar lagres privat under `private/uploaded-analysis/`. Ved ny
+opplasting av identisk PDF regenereres requestgrunnlaget og beløps-/kildereferanser
+valideres på nytt, også når filnavnet er endret. En annen PDF kan aldri bruke
+resultatet. Lagringsfeil vises; ingen ny kvote opprettes for å gjenta kallet.
+
+Økonomikallet bruker eksisterende GPT-6.1 Sol/low/Standard og et konservativt
+lokalt bytebudsjett, **ikke presis tokentelling** og ingen ekstern token-count.
+Maksimal reservasjon er **USD 0,15** innen dokumentets varige **USD 0,20**-ramme.
+Reservasjonen lagres før transport. Ett forsøk, ingen automatisk retry, og
+samme dokument får ingen ny kvote etter reload eller omstart. Ukjent belastning
+beholder reservasjonen. Ugyldig svar gir ingen nye økonomitall.
+
+**Teknisk analyse av vilkårlige integrerte rapporter er fortsatt ufullstendig.**
+Økonomikallet analyserer ikke bilder, avgjør ikke ukjente rapportgrenser og
+bekrefter ikke TG-dekning. For den nye ekte PDF-en på 135 sider er seks sikre
+økonomifelter verifisert, mens teknisk grunnlag fortsatt sperrer bekreftelse.
+Ingen betalt live-analyse av denne PDF-en er gjennomført i implementeringsøkten.
+[Test- og diagnosebevis](.docs/process/arbeidsokter/2026-10-31-nye-salgsoppgaver-analyse.md).
 
 Offline klargjøring kjøres fra reporoten med `npm run prepare:live-test`.
 Den lagrer eksakt SDK-request og kontrollpakke i ignorert
@@ -285,7 +326,7 @@ Etter installasjon, med demo stoppet:
 ANALYSIS_MODE=demo npm run dev
 ```
 
-Åpne **http://127.0.0.1:3000**. Dev bruker Vite-middleware/HMR i samme Express-prosess. Backendendringer krever stopp/start. Avslutt med Ctrl+C før demo/test.
+Åpne **http://127.0.0.1:3000**. Dev bruker Vite-middleware/HMR i samme Express-prosess. Backendendringer krever stopp/start. Valgfri `PAA_PORT` velger en annen lokal port (standard 3000). Avslutt med Ctrl+C før demo/test.
 
 Installer prosjektets Chromium mens nett er tilgjengelig. Playwright kjører browseren lokalt; ingen global Playwright trengs. På Linux kan browserens systembiblioteker måtte forberedes med `npx playwright install --with-deps chromium` (kan kreve administratorrettigheter); Linux-oppskriften er ikke egenprøvd her. Vanlig installasjon:
 
@@ -306,7 +347,7 @@ Ved Playwright-feil ligger beholdte spor og skjermbilder i `test-results/`. Åpn
 
 ## Valgfri live-kjøring
 
-Demooppskriften ovenfor er komplett alene. Live krever egen OpenAI API-tilgang og kan koste penger. Valgt modell er **gpt-6.1-sol**, Responses API og reasoning `low`. Ett leverandørkall sendes per godkjent analyseforsøk, uten automatisk retry; et nytt forsøk i en ny økt kan koste på nytt selv for samme rapport. Kontroller modelltilgang og godkjent restbudsjett før du starter analyse; [R1](.docs/planning-artifacts/r1-live-ki-semester-v1.md) og [de faktiske forsøkene](.docs/implementation-artifacts/story-4-4-b2-sluttkontroll-2026-10-27.md) dokumenterer datert kostnadsgrunnlag, ikke et løfte om dagens pris eller kontosaldo.
+Demooppskriften ovenfor er komplett alene. Live krever egen OpenAI API-tilgang og kan koste penger. Valgt modell er **gpt-6.1-sol**, Responses API og reasoning `low`. Den eldre separate rapportflyten sender ett leverandørkall per godkjent analyseforsøk, uten automatisk retry; et nytt forsøk i en ny økt kan koste på nytt selv for samme rapport. Den nye salgsoppgaveøkonomien har i stedet varig engangsreservasjon og gjenoppretting for samme dokument som beskrevet over. Kontroller modelltilgang og godkjent restbudsjett før du starter analyse; [R1](.docs/planning-artifacts/r1-live-ki-semester-v1.md) og [de faktiske forsøkene](.docs/implementation-artifacts/story-4-4-b2-sluttkontroll-2026-10-27.md) dokumenterer datert kostnadsgrunnlag, ikke et løfte om dagens pris eller kontosaldo.
 
 Stopp demo/dev/testserveren. Kopier den hemmelighetsfrie eksempelfilen:
 

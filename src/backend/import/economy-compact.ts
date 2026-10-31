@@ -18,7 +18,7 @@ type ReferenceEvidence = {
 export function validateCompactEconomyOutput(raw: unknown, packet: EconomyTrial, alternativeSources = new Map<string, PdfSource>(), valueAnchors = new Map<string, PdfSource>(), referenceEvidence?: ReferenceEvidence) {
   const compact = CompactEconomyOutputSchema.parse(raw)
   if (new Set(compact.fields.map(field => field.id)).size !== compact.fields.length) throw new Error('economy-duplicate-field')
-  const catalogue = createEconomySourceCatalogue(packet.basis, packet.selectedPages)
+  const catalogue = createEconomySourceCatalogue(packet.basis, packet.selectedPages, !packet.localExtractionVersion || packet.localExtractionVersion === 'local-economy-1')
   const byId = new Map(catalogue.map(segment => [segment.id, segment]))
   const processed = new Set(compact.processedSourceIds)
   if (processed.size !== compact.processedSourceIds.length || processed.size !== catalogue.length || [...processed].some(id => !byId.has(id))) throw new Error('economy-processed-source-coverage-mismatch')
@@ -119,7 +119,7 @@ export function validateCompactEconomyOutput(raw: unknown, packet: EconomyTrial,
  * compact-2 is retained above exclusively for historical response replay. */
 export function validateReferencedEconomyOutput(raw: unknown, packet: EconomyTrial) {
   const compact = ReferencedEconomyOutputSchema.parse(raw)
-  const catalogue = createEconomySourceCatalogue(packet.basis, packet.selectedPages)
+  const catalogue = createEconomySourceCatalogue(packet.basis, packet.selectedPages, !packet.localExtractionVersion || packet.localExtractionVersion === 'local-economy-1')
   const money = new Map(createEconomyMoneyCatalogue(packet.basis, packet.selectedPages).map(value => [value.id, value]))
   const selected = (ids: string[]) => {
     if (new Set(ids).size !== ids.length) throw new Error('economy-duplicate-source-id')

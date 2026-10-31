@@ -615,3 +615,21 @@ ingen bekreftet identitet, men kandidatene er likevel feil. Kodegrunnlag:
 [Reproduksjon, privat bevis og Playwright-kontroll](../process/arbeidsokter/2026-10-30-nye-dokumenter-isolasjon.md).
 Ingen retting eller lukking i denne kontrolløkten. Før lukking kreves relevant
 retting/test/review, dato, commit og verifikasjonslenker etter prosjektregelen.
+
+**PAA-SO2, nye dokumenter fra UI 2026-10-31 — Status: fortsatt Åpen.**
+Den nye ekte PDF-en på 135 sider gir nå seks sikre økonomifelter og ni
+originale kildebelegg. Nulluttaket var en formatbegrensning i kode, ikke
+manglende dokumenttall. Generell økonomi-AI er koblet til gratis forberedelse,
+konkrete utdrag, to uttrykkelige samtykker, varig kostnadsramme og validert
+lagring/gjenoppretting for identisk dokument. Første eiendoms resultater brukes
+aldri for en annen hash. [Diagnose og faktisk leveringsgrense](../process/arbeidsokter/2026-10-31-nye-salgsoppgaver-analyse.md),
+[sluttverifikasjon og review](nye-salgsoppgaver-2026-10-31/review.md).
+Full generell teknisk analyse av integrerte rapporter og reell modellkvalitet
+på den nye PDF-en gjenstår. Ingen betalte kall i denne økten; oppføringen lukkes ikke.
+
+**PAA-SO3, rettingsbevis 2026-10-31 — Status: fortsatt Åpen inntil lokal revisjon er registrert.**
+Adresseparseren krysser ikke lenger linjeskift fra tomme adressefelt og krever
+faktisk gatenavn/husnummer på samme etikettlinje. De falske kandidatene på side
+134 finnes ikke i nytt resultat. [Review/testaksept](nye-salgsoppgaver-2026-10-31/review.md)
+og [23/23 Playwright-bevis](nye-salgsoppgaver-2026-10-31/playwright.txt)
+dokumenterer retting og relevant godkjent kontroll. Original oppføring og historikk beholdes.

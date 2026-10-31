@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { CODE_FIRST_PLAN_VERSION, normalizeImportText, collectTgCandidates } from '../../contracts/document-import.ts'
+import { parseNorwegianMoney } from './norwegian-money.ts'
 import { ListingKeySchema } from '../../contracts/listing.ts'
 import type { DocumentImport, EconomyField, ImportManifest, ImportRole, PdfSource } from '../../contracts/document-import.ts'
 
@@ -19,7 +20,7 @@ const labels = {
   commonCosts: 'Felleskostnader', propertyTax: 'Eiendomsskatt', municipalFees: 'Kommunale avgifter', sharedDebtPayment: 'Betaling av fellesgjeld',
 } as const
 const economyPattern = /prisantydning|totalpris|omkostninger|dokumentavgift|fellesgjeld|felleskostnader|eiendomsskatt|kommunale avgifter/i
-export function createLocalPlan(basis: ImportBasis) {
+export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: boolean } = {}) {
   const manifest: ImportManifest = { version: CODE_FIRST_PLAN_VERSION, blocks: [], candidates: [], residual: [] }
   const findings: DocumentImport['technical']['findings'] = []
   const sections: DocumentImport['sections'] = [], propertyIdentity: DocumentImport['propertyIdentity'] = []
@@ -50,8 +51,11 @@ export function createLocalPlan(basis: ImportBasis) {
       const origin = { documentName: basis.name, reportHash: basis.hash, pdfPage: page.pdfPage }
       findings.push({ kind: 'checkable', findingId, conditionId: findingId, grade, description, component, source: origin, sources: [source], original: { findingId, grade, description, source: origin, uncertainties: [] } })
     }
-    for (const match of page.text.matchAll(/^\s*Adresse\s*:\s*([^\n]+)$/gim)) {
+    for (const match of page.text.matchAll(/^[ \t]*Adresse[ \t]*:[ \t]*([^\r\n]+)$/gim)) {
       const value = match[1]!.trim()
+      // A blank form label must never consume the next line. Only an explicit
+      // street/name plus house number is a local address; other identity stays unresolved.
+      if (!/^[\p{L}][\p{L} .’'-]*[ \t]+\d+[ \t]*[\p{L}]?(?:[ \t]*,[ \t]*\d{4}[ \t]+[\p{L} .’'-]+)?$/u.test(value)) continue
       if (match[0].length > 2000 || value.length > 300) { residual(page.pdfPage, 'Lang identitetskilde er uavklart.'); continue }
       const source = sourceFor(basis, page.pdfPage, match.index, match.index + match[0].length)
       if (propertyIdentity.some(item => item.value === value && repeatedEvidence(item.source, source))) continue
@@ -66,17 +70,45 @@ export function createLocalPlan(basis: ImportBasis) {
       ownershipSources.push(source)
     }
     if (economyPattern.test(page.text)) economyPages.add(page.pdfPage)
-    // Deliberately small grammar: a complete labelled line, explicit NOK and optional period/year. Ambiguous prose stays semantic.
+    // Only complete labelled entries are local facts. A currency prefix, a
+    // heading/value line pair, or an exact parenthesized ledger label is safe;
+    // optional insurance alternatives and prose remain semantic.
     for (const field of fields) {
-      const expression = new RegExp(`^\\s*${labels[field.id as keyof typeof labels]}\\s*:\\s*(\\d{1,3}(?:[ \\u00a0]\\d{3})+|\\d+)(?:,00)?\\s*(?:kr|NOK)(?:\\s+per\\s+(måned|år))?(?:\\s+i\\s+(\\d{4}))?\\.?\\s*$`, 'gim')
-      for (const match of page.text.matchAll(expression)) {
-        const amount = match[1]!.replace(/[ \u00a0]/g, '')
+      const aliases: Partial<Record<EconomyField['id'], string>> = {
+        price: '(?:Prisantydning|Total prisantydning eksklusiv omkostninger)',
+        totalPrice: '(?:Totalpris|Total ink\\. omk\\.)',
+      }
+      const label = aliases[field.id] ?? labels[field.id as keyof typeof labels]
+      const number = '(\\d[\\d. \\u00a0\\u202f]*(?:,\\d{1,2}|,[-\\u2011\\u2013])?)'
+      const gap = '[ \\t\\u00a0\\u202f]*'
+      const separator = `${gap}:?${gap}(?:\\r?\\n${gap})?`
+      const lineGap = `${gap}(?:\\r?\\n${gap})?`
+      const qualifier = `(?:${lineGap}(?:per|pr\\.?)${gap}(måned|år)|${lineGap}for${gap}år${gap}(\\d{4}))?(?:${lineGap}i${gap}(\\d{4}))?`
+      const expressions = [
+        new RegExp(`^${gap}${label}${separator}(?:kr|NOK)${gap}${number}${qualifier}\\.?${gap}$`, 'gim'),
+        new RegExp(`^${gap}${label}${separator}${number}${gap}(?:kr|NOK)${qualifier}\\.?${gap}$`, 'gim'),
+      ]
+      const ledgerLabels: Partial<Record<EconomyField['id'], string>> = {
+        documentTax: 'Dokumentavgift(?: \\(\\d+(?:,\\d+)? %\\))?',
+        purchaseCosts: 'Omkostninger totalt',
+        totalPrice: 'Totalpris\\. inkl\\. omkostninger',
+      }
+      if (ledgerLabels[field.id]) expressions.push(new RegExp(`^${gap}(?:kr|NOK)${gap}${number}${gap}\\(${ledgerLabels[field.id]}\\)${gap}$`, 'gim'))
+      if (options.legacyEconomy) {
+        // Historical request regeneration only: preserve the original grammar,
+        // whitespace spans and integral-only behaviour for integrity-pinned replay.
+        expressions.splice(0, expressions.length, new RegExp(`^\\s*${labels[field.id as keyof typeof labels]}\\s*:\\s*(\\d{1,3}(?:[ \\u00a0]\\d{3})+|\\d+)(?:,00)?\\s*(?:kr|NOK)(?:\\s+per\\s+(måned|år))?(?:\\s+i\\s+(\\d{4}))?\\.?\\s*$`, 'gim'))
+      }
+      for (const expression of expressions) for (const match of page.text.matchAll(expression)) {
+        const amount = parseNorwegianMoney(match[1]!.trim()).amount
+        if (amount === null) continue
         if (match[0].length > 2000 || amount.length > 80) { residual(page.pdfPage, 'Langt økonomibelegg er uavklart.'); continue }
         const source = sourceFor(basis, page.pdfPage, match.index, match.index + match[0].length)
         if (field.sources.some(item => repeatedEvidence(item, source))) continue
-        const period = match[2] === 'måned' ? 'month' : match[2] === 'år' ? 'year' : field.category === 'recurring' ? 'unknown' : 'once'
-        if (field.amount === null) Object.assign(field, { amount, period, year: match[3] ?? null, status: 'available', nature: 'fact', originalText: source.quote })
-        else if (field.amount !== amount || field.period !== period || field.year !== (match[3] ?? null)) {
+        const period = match[2] === 'måned' ? 'month' : match[2] === 'år' || !options.legacyEconomy && match[3] ? 'year' : field.category === 'recurring' ? 'unknown' : 'once'
+        const year = match[3] ?? match[4] ?? null
+        if (field.amount === null) Object.assign(field, { amount, period, year, status: 'available', nature: 'fact', originalText: source.quote })
+        else if (field.amount !== amount || field.period !== period || field.year !== year) {
           if (!field.alternatives.some(item => item.amount === amount && repeatedEvidence(item.source, source))) {
             if (field.alternatives.length < 10) { field.status = 'conflict'; field.alternatives.push({ amount, source }) }
             else residual(page.pdfPage, `Alternativgrensen for ${field.id} er nådd; ytterligere belegg er uavklart.`)

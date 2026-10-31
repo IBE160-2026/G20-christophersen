@@ -44,6 +44,17 @@ export async function prepareLocalEconomyCall(packet: EconomyTrial, bytes: Uint8
   const referenceDigest = sha(referenceBytes)
   if (referenceApproval.approvedReferenceProposalDigest !== referenceDigest || referenceApproval.doesNotApprovePaidCalls !== true
     || referenceApproval.originalSha256 !== packet.originalSha256 || referenceApproval.approvedPacketDigest !== sha(canonicalJson(packet))) throw new Error('local-economy-reference-approval-required')
+  return prepareEconomyPackage(packet, referenceDigest)
+}
+
+/** UI-opplasting: pakken er ubekreftet. Kildekontroll skjer etter modellsvaret;
+ * godkjenning av kostnad og overføring kreves separat før transport. */
+export async function prepareUploadedEconomyCall(packet: EconomyTrial, bytes: Uint8Array) {
+  if (!verifyEconomyTrial(packet, bytes, packet.basis) || packet.basis.role !== 'prospectus' || packet.basis.parentHash !== null) throw new Error('local-economy-package-mismatch')
+  if (packet.selectedPages.length > LOCAL_ECONOMY_LIMITS.maximumSelectedPages || Buffer.byteLength(packet.selectedPages.map(n => packet.basis.pages[n - 1]!.text).join(''), 'utf8') > LOCAL_ECONOMY_LIMITS.maximumSelectedTextBytes) throw new Error('local-economy-text-limit')
+  return prepareEconomyPackage(packet, sha(canonicalJson(packet)))
+}
+async function prepareEconomyPackage(packet: EconomyTrial, referenceDigest: string) {
   const request = structuredClone(packet.request)
   request.max_output_tokens = LOCAL_ECONOMY_LIMITS.maximumOutputTokensIncludingReasoning
   const wire = await captureSemanticWire(request)
@@ -88,9 +99,10 @@ export async function runLocalEconomyCall(plan: LocalEconomyCall, approval: Paid
     const usage = response.usage
     if (!usage || !Number.isSafeInteger(usage.input_tokens) || usage.input_tokens < 0 || usage.input_tokens > budget.inputBudgetTokens
       || !Number.isSafeInteger(usage.output_tokens) || usage.output_tokens < 0 || usage.output_tokens > LOCAL_ECONOMY_LIMITS.maximumOutputTokensIncludingReasoning) throw new Error('local-economy-usage-outside-budget')
-    const result = validateReferencedEconomyOutput(JSON.parse(response.output_text), stored.packet)
+    const referencedOutput: unknown = JSON.parse(response.output_text)
+    const result = validateReferencedEconomyOutput(referencedOutput, stored.packet)
     ledger.settle(semanticDigest(stored.request), costOf(usage.input_tokens, usage.output_tokens, GLOBAL_STANDARD_PRICE, true), 'provider-usage-upper-bound')
-    return { result, usage, requiresApprovedReferenceComparison: true as const, technicalCoverage: 'unresolved' as const }
+    return { result, referencedOutput, usage, requiresApprovedReferenceComparison: true as const, technicalCoverage: 'unresolved' as const }
   } catch (error) {
     ledger.settle(semanticDigest(stored.request), null)
     throw error

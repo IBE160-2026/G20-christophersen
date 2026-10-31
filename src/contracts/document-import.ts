@@ -80,14 +80,14 @@ export const ImportManifestSchema = z.strictObject({
 })
 export const ImportCostSchema = z.strictObject({
   analysisId: z.string().min(1), requestDigest: ReportHashSchema, model: z.literal(CODE_FIRST_MODEL),
-  tokenizer: z.enum(['unavailable', 'test-only', 'verified-local-model-and-request-framing', 'verified-server-input-tokens', 'offline-sdk-stub']), priceVersion: z.string().nullable(),
+  tokenizer: z.enum(['unavailable', 'test-only', 'verified-local-model-and-request-framing', 'verified-server-input-tokens', 'offline-sdk-stub', 'conservative-local-byte-budget']), priceVersion: z.string().nullable(),
   usageCostBasis: z.enum(['provider-usage-upper-bound', 'provider-usage-exact']).optional(),
   inputTokens: z.number().int().nonnegative().nullable(), outputTokens: z.number().int().positive(),
   estimatedUsd: z.string().nullable(), reservedUsd: z.string(), remainingUsd: z.string(), actualUsd: z.string().nullable(),
   status: z.enum(['blocked', 'reserved', 'completed', 'uncertain']), reason: z.string().nullable(),
 })
 export const EconomyAnalysisSchema = z.strictObject({
-  provenance: z.enum(['saved-same-document', 'local-only']),
+  provenance: z.enum(['saved-same-document', 'live-document', 'local-only']),
   reason: z.string().min(1).max(1000), requestDigest: ReportHashSchema.nullable(),
   selectedPages: z.array(z.number().int().positive()).max(200),
   observations: z.array(z.strictObject({ kind: z.string().min(1).max(80), raw: z.string().min(1).max(2000), sources: z.array(PdfSourceSchema).min(1).max(12) })).max(1000),
@@ -120,9 +120,9 @@ export const DocumentImportSchema = ImportContextSchema.extend({
   if (analysis) {
     if (new Set(analysis.selectedPages).size !== analysis.selectedPages.length || analysis.selectedPages.some(page => page > value.pageCount)) fail('Økonomianalysen har ugyldige fysiske sider.')
     if (analysis.observations.some(item => !item.sources.some(source => source.quote.includes(item.raw)))) fail('Observasjonen må bevare originaltekst.')
-    if (analysis.provenance === 'saved-same-document' && (!analysis.requestDigest || !analysis.selectedPages.length)) fail('Lagret analyse krever forespørsel og sider.')
+    if (analysis.provenance !== 'local-only' && (!analysis.requestDigest || !analysis.selectedPages.length)) fail('Lagret analyse krever forespørsel og sider.')
     if (analysis.provenance === 'local-only' && (analysis.requestDigest !== null || analysis.selectedPages.length || analysis.observations.length || analysis.limitations.length)) fail('Lokalt uttrekk kan ikke utgi seg for lagret analyse.')
-    if (analysis.provenance === 'saved-same-document' && [...analysis.observations.flatMap(item => item.sources), ...analysis.limitations.flatMap(item => item.sources)].some(source => !analysis.selectedPages.includes(source.pdfPage))) fail('Økonomikilde er utenfor analyserte sider.')
+    if (analysis.provenance !== 'local-only' && [...analysis.observations.flatMap(item => item.sources), ...analysis.limitations.flatMap(item => item.sources)].some(source => !analysis.selectedPages.includes(source.pdfPage))) fail('Økonomikilde er utenfor analyserte sider.')
   }
   if (value.sections.some(section => section.documentHash !== value.reportHash || section.endPage > value.pageCount)) fail('Rapportområde ligger utenfor dokumentet.')
   if (new Set(value.economy.fields.map(field => field.id)).size !== value.economy.fields.length || ListingKeySchema.options.some(id => !value.economy.fields.some(field => field.id === id))) fail('Faste økonomifelt og unike identiteter kreves.')

@@ -1,0 +1,34 @@
+[WebServer] (node:29444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 23 tests using 1 worker
+
+(node:29644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/e2e/investment-overview.spec.ts:22:1 › A: faktisk lokal PDF, egne forutsetninger og interaktiv økonomi uten autoritativ bekreftelse (20.4s)
+  ✓   2 tests/e2e/investment-overview.spec.ts:71:1 › A: ukjent leie og uriktig input viser mangler; kilde/risikodialog fungerer med tastatur (2.4s)
+  ✓   3 tests/e2e/investment-overview.spec.ts:88:1 › A: scenario endrer aldri kontrollert vurdering, TG3 eller resultatets snapshot (4.0s)
+  ✓   4 tests/e2e/investment-overview.spec.ts:123:1 › A: ugyldig år overskriver ikke egne verdier (2.3s)
+  ✓   5 tests/e2e/new-document-import.spec.ts:64:1 › ny ukjent PDF i tom økt henter bare eksplisitte kodefelt og åpner nye originalkilder (1.7s)
+  ✓   6 tests/e2e/new-document-import.spec.ts:85:1 › ny ukjent fritekst-PDF får ukjente beløp og eksplisitt sperret KI, ingen oppdiktet erstatning (1.6s)
+  ✓   7 tests/e2e/new-document-import.spec.ts:95:1 › ny PDF med samme filnavn erstatter forrige ekte dokument uten tall-, kilde- eller forutsetningslekkasje (8.5s)
+Privat ny PDF: 135 sider, 6 beløpsfelt, 9 kildebelegg, KI sperret, ingen ekstern trafikk
+  ✓   8 tests/e2e/new-document-import.spec.ts:131:46 › ny ekte salgsoppgave: tom økt (8.7s)
+Privat ny PDF: 135 sider, 6 beløpsfelt, 9 kildebelegg, KI sperret, ingen ekstern trafikk
+  ✓   9 tests/e2e/new-document-import.spec.ts:131:46 › ny ekte salgsoppgave: erstatter tidligere ekte dokument (10.2s)
+  ✓  10 tests/e2e/new-document-import.spec.ts:181:1 › 135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI-forberedelse (9.0s)
+  ✓  11 tests/e2e/new-document-import.spec.ts:239:1 › KI-knappen krever begge uttrykkelige samtykker og ny PDF nullstiller godkjenningen (2.0s)
+  ✓  12 tests/e2e/new-document-import.spec.ts:267:1 › godkjent KI-svar oppdaterer gjeldende eiendom med nye kildebundne tall (2.1s)
+  ✓  13 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Gå videre (2.1s)
+  ✓  14 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Forkast (2.0s)
+  ✓  15 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Innhent mer informasjon (2.0s)
+  ✓  16 tests/e2e/prospectus-import.spec.ts:48:1 › SO-AC5/6: økonomikilde og fysisk10/trykt6 åpnes i riktig original; to bad og ett tak består (1.9s)
+  ✓  17 tests/e2e/prospectus-import.spec.ts:64:1 › SO-AC4/12: faktisk PDF-vedlegg ber om separat fil; rapportbytte bevarer økonomi og åpner separat fysisk3 (2.5s)
+  ✓  18 tests/e2e/prospectus-import.spec.ts:77:1 › SO-AC3/4: raster med digital bunntekst og uklare rapporter kan ikke få komplett kontroll (1.4s)
+  ✓  19 tests/e2e/prospectus-import.spec.ts:82:1 › SO-AC12: sammehash gjenbruk og nyhash tømmer manuell økonomi/finansiering (2.0s)
+  ✓  20 tests/e2e/prospectus-import.spec.ts:92:1 › SO-AC9/11: kontrollert dokumentøkonomi og delt slider/finansiering fyller P/D/J uten manuell overføring (2.9s)
+  ✓  21 tests/e2e/prospectus-import.spec.ts:121:1 › salgsoppgavens hovedinngang og selektivt 200-sidersgrunnlag er synlig uten intern kildeinformasjon i hovedtekst (1.9s)
+  ✓  22 tests/e2e/prospectus-import.spec.ts:129:1 › review: kontrollbelegg åpner riktig original og separat rapport kan gjenopprettes lokalt uten ny POST (3.8s)
+  ✓  23 tests/e2e/prospectus-import.spec.ts:150:1 › code-first: ukjent PDF gir lokal økonomi, synlig rest/kostnad og uoverstyrbar rapportport; samme hash gjenbrukes (1.8s)
+
+  23 passed (1.7m)

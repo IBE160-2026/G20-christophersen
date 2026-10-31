@@ -16,7 +16,8 @@ import { GLOBAL_STANDARD_PRICE, costOf } from './budget.ts'
 
 const hash = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex')
 /** Caller retains the private bytes and all physical pages; this module writes no files. */
-export function prepareEconomyTrial(bytes: Uint8Array, originalBasis: ImportBasis, selectedPages: number[]) {
+export function prepareEconomyTrial(bytes: Uint8Array, originalBasis: ImportBasis, selectedPages: number[], localExtractionVersion: 'local-economy-1' | 'local-economy-2' = 'local-economy-2') {
+  if (!['local-economy-1', 'local-economy-2'].includes(localExtractionVersion)) throw new Error('economy-local-extraction-version')
   const basis = structuredClone(originalBasis)
   if (hash(bytes) !== basis.hash) throw new Error('economy-original-mismatch')
   if (!basis.pages.length || basis.pages.length > 200 || basis.pages.some((page, i) => !ImportPageSchema.safeParse(page).success || page.pdfPage !== i + 1)) throw new Error('economy-physical-ledger-invalid')
@@ -24,13 +25,14 @@ export function prepareEconomyTrial(bytes: Uint8Array, originalBasis: ImportBasi
   const selected = [...selectedPages].sort((a, b) => a - b)
   // Keep original page positions when proposing local fields; omitted text is never inspected.
   const localBasis = { ...basis, pages: basis.pages.map(page => selected.includes(page.pdfPage) ? page : { ...page, text: '', status: 'unknown' as const, reason: 'Utelatt fra økonomiprøven.' }) }
-  const local = createLocalPlan(localBasis)
+  const legacyEconomy = localExtractionVersion === 'local-economy-1'
+  const local = createLocalPlan(localBasis, { legacyEconomy })
   const sources = selected.flatMap(pdfPage => {
     const text = basis.pages[pdfPage - 1]!.text
     return Array.from({ length: Math.ceil(text.length / 2000) }, (_, i) => sourceFor(basis, pdfPage, i * 2000, Math.min(text.length, (i + 1) * 2000)))
   })
-  const request = createEconomyRequest(createCompactEconomyPayload(basis, selected, local.fields))
-  const packet = { version: 1, purpose: 'selected-economy-only', basis, selectedPages: selected, originalSha256: basis.hash,
+  const request = createEconomyRequest(createCompactEconomyPayload(basis, selected, local.fields, legacyEconomy))
+  const packet = { ...(legacyEconomy ? {} : { localExtractionVersion: localExtractionVersion as 'local-economy-1' | 'local-economy-2' }), version: 1, purpose: 'selected-economy-only', basis, selectedPages: selected, originalSha256: basis.hash,
     pagesDigest: hash(canonicalJson(basis.pages)), request, requestDigest: semanticDigest(request),
     ledger: basis.pages.map(page => ({ pdfPage: page.pdfPage, status: page.status, rasterUnprocessed: page.rasterUnprocessed ?? false, sent: selected.includes(page.pdfPage), reason: selected.includes(page.pdfPage) ? 'Valgt lesbart tekstlag; raster er ikke behandlet.' : 'Eksplisitt utelatt fra økonomiprøven.' })),
     technical: { status: 'unresolved', coverageComplete: false },
@@ -40,7 +42,7 @@ export function prepareEconomyTrial(bytes: Uint8Array, originalBasis: ImportBasi
 }
 export type EconomyTrial = ReturnType<typeof prepareEconomyTrial>
 export function verifyEconomyTrial(packet: EconomyTrial, bytes: Uint8Array, basis: ImportBasis) {
-  try { return canonicalJson(packet) === canonicalJson(prepareEconomyTrial(bytes, basis, packet.selectedPages)) } catch { return false }
+  try { return canonicalJson(packet) === canonicalJson(prepareEconomyTrial(bytes, basis, packet.selectedPages, packet.localExtractionVersion ?? 'local-economy-1')) } catch { return false }
 }
 export function validateEconomyTrialOutput(raw: unknown, packet: EconomyTrial) {
   const output = EconomyTrialOutputSchema.parse(raw)
@@ -64,7 +66,7 @@ export function validateEconomyTrialOutput(raw: unknown, packet: EconomyTrial) {
     if (field.period === 'once' && (field.category === 'recurring' || quarter)
       || quarter && field.period !== 'unknown'
       || field.period === 'month' && !field.sources.some(source => /(?:\bper|\bpr\.?|\/)\s*(?:måned|mnd)\b|\bmånedlig\b/iu.test(source.quote))
-      || field.period === 'year' && !field.sources.some(source => /(?:\bper|\bpr\.?|\/)\s*år\b|(?<!\p{L})årlig(?!\p{L})/iu.test(source.quote))) throw new Error('economy-unsupported-period')
+      || field.period === 'year' && !field.sources.some(source => /(?:\bper|\bpr\.?|\bfor|\/)\s*år\b|(?<!\p{L})årlig(?!\p{L})/iu.test(source.quote))) throw new Error('economy-unsupported-period')
     if (local.amount !== null && (field.amount !== local.amount || local.status === 'conflict')) {
       const evidence = [{ amount: field.amount, sources: field.sources }, ...field.alternatives.map(item => ({ amount: item.amount, sources: [item.source] }))]
       if (field.status !== 'conflict' || [local.amount, ...local.alternatives.map(item => item.amount)].some(amount => !evidence.some(item => item.amount === amount && item.sources.some(source => quoteContainsAmount(source.quote, amount!))))) throw new Error('economy-local-explicit-mismatch')

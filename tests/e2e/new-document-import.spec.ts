@@ -12,7 +12,7 @@ function fresh(explicit = true) {
   const token = randomUUID()
   return newProspectusPdf([
     'SYNTETISK SALGSOPPGAVE - kun isolasjonstest, ingen virkelig eiendom', `Testidentitet: ${token}`,
-    `Adresse: Nytestveien ${token.slice(0, 8)}, Testby`, 'Eierform: eierseksjon',
+    'Adresse: Nytestveien 42', 'Eierform: eierseksjon',
     ...(explicit ? [
       'Prisantydning: 4 242 000 kr', 'Fellesgjeld: 123 000 kr', 'Omkostninger: 81 000 kr',
       'Kommunale avgifter: 11 000 kr per år i 2026', 'Eiendomsskatt: 7 000 kr per år i 2026',
@@ -175,4 +175,135 @@ for (const replacePrevious of [false, true]) test(`ny ekte salgsoppgave: ${repla
   expect(recorded.apis.filter(path => path === '/api/document-import')).toHaveLength(replacePrevious ? 2 : 1)
   expect(recorded.apis.filter(path => path === '/api/analysis')).toHaveLength(0)
   console.log(`Privat ny PDF: ${outcome.pageCount} sider, ${outcome.economy.fields.filter(field => field.amount !== null).length} beløpsfelt, ${sources.length} kildebelegg, KI sperret, ingen ekstern trafikk`)
+})
+
+// Private real-document acceptance: no generation transport is authorized here.
+test('135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI-forberedelse', async ({ page }, info) => {
+  const path = process.env.PAA_UNSEEN_PDF
+  test.skip(!path, 'Sett PAA_UNSEEN_PDF til den nye private salgsoppgaven.')
+  const bytes = await readFile(path!), recorded = audit(page)
+  await recorded.install(); await page.goto('/')
+  const outcome = await upload(page, bytes)
+  expect(outcome.pageCount).toBe(135)
+  const expected = { price: '13990000', totalPrice: '14341140', purchaseCosts: '351140', documentTax: '349750', municipalFees: '26072', propertyTax: '9699' }
+  for (const [id, amount] of Object.entries(expected)) {
+    const field = outcome.economy.fields.find(item => item.id === id)!
+    expect(field.amount).toBe(amount)
+    expect(field.sources.length).toBeGreaterThan(0)
+    expect(field.sources.every(source => [4, 49].includes(source.pdfPage) && source.documentHash === sha(bytes)
+      && outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end) === source.quote)).toBe(true)
+  }
+  for (const id of ['municipalFees', 'propertyTax']) expect(outcome.economy.fields.find(item => item.id === id)).toMatchObject({ period: 'year', year: '2026' })
+  expect(outcome.propertyIdentity.map(item => item.value)).not.toContain('Oppdragsnummer:')
+  expect(outcome.propertyIdentity.map(item => item.value)).not.toContain('Postnr.: Sted:')
+  await expect(page.locator('.hero')).toContainText('13 990 000')
+  for (const id of ['scenario-gross', 'scenario-net', 'scenario-cash']) await expect(page.getByTestId(id)).toContainText('—')
+  const prepared = page.waitForResponse(response => new URL(response.url()).pathname === '/api/document-economy/prepare')
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  const response = await prepared
+  expect(response.status()).toBe(200)
+  const plan = await response.json()
+  expect(plan.documentHash).toBe(sha(bytes))
+  expect(plan.selectedPages).toContain(49)
+  expect(plan.selectedPages.length).toBeLessThanOrEqual(5)
+  expect(plan.excerpts.length).toBe(plan.selectedPages.length)
+  for (const excerpt of plan.excerpts) expect(excerpt.text).toBe(outcome.pages[excerpt.pdfPage - 1]!.text)
+  await expect(page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })).toBeDisabled()
+  await page.getByText(/^Se tekstutdrag som overføres/).click()
+  await expect(page.locator('.economy-ai-plan')).toContainText('26 072')
+  await expect(page.locator('.economy-ai-plan')).toContainText('USD 0.15')
+  await expect(page.locator('.economy-ai-plan')).toContainText('USD 0.20')
+  await expect(page.locator('.economy-ai-control')).toContainText('Teknisk rapportanalyse og bilder inngår ikke')
+  await info.attach('private-real-ai-plan', { body: JSON.stringify(plan, null, 2), contentType: 'application/json' })
+  await info.attach('private-real-economy', { body: await page.screenshot({ path: 'private/incoming/analysis-ui-real-economy.png', fullPage: true }), contentType: 'image/png' })
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(0)
+  // The real PDF and real preparation are used throughout. Only the paid
+  // provider result is replaced by a clearly labelled browser transport stub.
+  expect(plan.readyForApproval).toBe(true)
+  const interpreted = structuredClone(outcome)
+  interpreted.economy.analysis = { provenance: 'live-document', reason: 'Teststub: ny dokumentbundet KI-tolkning; ingen modell er kalt. Kildekontroll gjenstår.', requestDigest: plan.requestDigest, selectedPages: plan.selectedPages, observations: [], limitations: [] }
+  interpreted.inputDigest = plan.requestDigest
+  if (interpreted.cost) interpreted.cost.requestDigest = plan.requestDigest
+  await page.route('**/api/document-economy/run', route => route.fulfill({ json: { outcome: interpreted } }))
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ }).check()
+  await expect(page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })).toBeDisabled()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
+  await page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true }).click()
+  await expect(page.locator('.document-economy')).toContainText('Teststub: ny dokumentbundet KI-tolkning')
+  await expect(page.locator('.hero')).toContainText('13 990 000')
+  await expect(page.locator('.document-economy')).toContainText('ufullstendig')
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(1)
+  expect(recorded.errors).toEqual([]); expect(recorded.external).toEqual([])
+})
+
+test('KI-knappen krever begge uttrykkelige samtykker og ny PDF nullstiller godkjenningen', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  const bytes = fresh(), outcome = await upload(page, bytes)
+  const digest = 'a'.repeat(64)
+  await page.route('**/api/document-economy/prepare', route => route.fulfill({ json: {
+    planId: randomUUID(), documentHash: sha(bytes), documentName: 'salgsoppgave.pdf', requestDigest: digest,
+    selectedPages: [1], excerpts: [{ pdfPage: 1, text: outcome.pages[0]!.text }], omittedRelevantPages: [],
+    reservedUsd: '0.15', analysisCapUsd: '0.20', blockers: [], readyForApproval: true,
+  } }))
+  // This browser stub never reaches the server or an external provider.
+  await page.route('**/api/document-economy/run', route => route.fulfill({ json: { error: 'invalid-response' } }))
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  const start = page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })
+  await expect(start).toBeDisabled()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ }).check()
+  await expect(start).toBeDisabled()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
+  await expect(start).toBeEnabled()
+  await start.click()
+  await expect(page.locator('.economy-ai-control [role="alert"]')).toContainText('kunne ikke valideres')
+  await expect(start).toBeDisabled()
+  await upload(page, fresh())
+  await expect(page.getByRole('button', { name: 'Forbered KI-analyse', exact: true })).toBeEnabled()
+  await expect(start).toHaveCount(0)
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(1)
+  expect(recorded.errors).toEqual([]); expect(recorded.external).toEqual([])
+})
+
+test('godkjent KI-svar oppdaterer gjeldende eiendom med nye kildebundne tall', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  const bytes = fresh(false), outcome = await upload(page, bytes), digest = 'b'.repeat(64)
+  const quote = 'Prisen er antydet til kr 5 678 901,- for denne eiendommen.'
+  const start = outcome.pages[0]!.text.indexOf(quote)
+  expect(start).toBeGreaterThanOrEqual(0)
+  const result = structuredClone(outcome), price = result.economy.fields.find(field => field.id === 'price')!
+  Object.assign(price, { amount: '5678901', status: 'available', nature: 'fact', originalText: quote,
+    sources: [{ documentHash: result.reportHash, documentName: result.documentName, pdfPage: 1, start, end: start + quote.length, quote, method: 'pdf-text', printedPage: null }] })
+  result.economy.status = 'partial'
+  result.economy.analysis = { provenance: 'live-document', reason: 'Ny KI-analyse av dette dokumentet. Kildekontroll gjenstår.', requestDigest: digest, selectedPages: [1], observations: [], limitations: [] }
+  result.inputDigest = digest
+  if (result.cost) result.cost.requestDigest = digest
+  await page.route('**/api/document-economy/prepare', route => route.fulfill({ json: {
+    planId: randomUUID(), documentHash: sha(bytes), documentName: 'salgsoppgave.pdf', requestDigest: digest,
+    selectedPages: [1], excerpts: [{ pdfPage: 1, text: outcome.pages[0]!.text }], omittedRelevantPages: [],
+    reservedUsd: '0.15', analysisCapUsd: '0.20', blockers: [], readyForApproval: true,
+  } }))
+  let attempts = 0
+  await page.route('**/api/document-economy/run', route => ++attempts === 1
+    ? route.fulfill({ status: 409, json: { error: 'analysis-active' } })
+    : route.fulfill({ json: { outcome: result } }))
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ }).check()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
+  await page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true }).click()
+  await expect(page.locator('.economy-ai-control [role="alert"]')).toContainText('En annen analyse pågår')
+  await expect(page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })).toBeEnabled()
+  await page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true }).click()
+  await expect(page.locator('.hero')).toContainText('5 678 901')
+  await expect(page.locator('.document-economy')).toContainText('Ny KI-analyse av dette dokumentet')
+  await expect(page.locator('.document-economy')).toContainText('ufullstendig')
+  await page.locator('.document-economy details').first().locator('summary').click()
+  await expect(page.locator('.document-economy')).toContainText(quote)
+  await upload(page, fresh())
+  await expect(page.locator('.hero')).toContainText('4 242 000')
+  await expect(page.locator('.hero')).not.toContainText('5 678 901')
+  await expect(page.getByRole('button', { name: 'Forbered KI-analyse', exact: true })).toBeEnabled()
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(2)
+  expect(recorded.errors).toHaveLength(1)
+  expect(recorded.errors[0]).toMatch(/Failed to load resource.*409/)
+  expect(recorded.external).toEqual([])
 })

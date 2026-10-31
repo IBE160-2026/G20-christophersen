@@ -38,8 +38,8 @@ export const ReferencedEconomyOutputSchema = z.strictObject({
 })
 /** Complete, nonoverlapping original UTF-16 partition. Local anchor boundaries
  * permit exact reassembly without repeating any selected text in the request. */
-export function createEconomySourceCatalogue(basis: ImportBasis, selectedPages: number[]) {
-  const local = createLocalPlan({ ...basis, pages: basis.pages.map(page => selectedPages.includes(page.pdfPage) ? page : { ...page, text: '', status: 'unknown', reason: 'Utelatt.' }) })
+export function createEconomySourceCatalogue(basis: ImportBasis, selectedPages: number[], legacyEconomy = false) {
+  const local = createLocalPlan({ ...basis, pages: basis.pages.map(page => selectedPages.includes(page.pdfPage) ? page : { ...page, text: '', status: 'unknown', reason: 'Utelatt.' }) }, { legacyEconomy })
   const anchors = local.fields.flatMap(field => [...field.sources, ...field.alternatives.map(item => item.source)])
   const catalogue = [...selectedPages].sort((a, b) => a - b).flatMap(pdfPage => {
     const page = basis.pages[pdfPage - 1]
@@ -68,8 +68,8 @@ export function createEconomySourceCatalogue(basis: ImportBasis, selectedPages: 
   // packet; only this deterministic catalogue owns their original offsets.
   return catalogue.map((segment, index) => ({ ...segment, id: index.toString(36) }))
 }
-export function createCompactEconomyPayload(basis: ImportBasis, selectedPages: number[], fields: z.infer<typeof EconomyFieldSchema>[]) {
-  const catalogue = createEconomySourceCatalogue(basis, selectedPages)
+export function createCompactEconomyPayload(basis: ImportBasis, selectedPages: number[], fields: z.infer<typeof EconomyFieldSchema>[], legacyEconomy = false) {
+  const catalogue = createEconomySourceCatalogue(basis, selectedPages, legacyEconomy)
   const idsFor = (source: { pdfPage: number; start: number; end: number }) => catalogue.filter(segment => segment.pdfPage === source.pdfPage && segment.start >= source.start && segment.end <= source.end).map(segment => segment.id)
   const money = createEconomyMoneyCatalogue(basis, selectedPages)
   const moneySegments = catalogue.flatMap(segment => {

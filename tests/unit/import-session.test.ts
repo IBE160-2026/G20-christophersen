@@ -268,3 +268,44 @@ it('code-first klient og reducer gjenbruker samme hash, også under nytt filnavn
   expect(state.prospectus.prospectus.selected?.file.name).toBe(basis.name);expect(state.financial).toBe(financial);expect(state.report).toBe(report)
   expect(state.financial.L.rawValue).toBe('123456')
 })
+
+describe('ny dokumentbundet KI-økonomianalyse', () => {
+  function liveOutcome() {
+    return DocumentImportSchema.parse({ ...fixture.outcome, economy: { ...fixture.outcome.economy, analysis: {
+      provenance: 'live-document', reason: 'Ny KI-analyse; krever originalkontroll.', requestDigest: 'a'.repeat(64),
+      selectedPages: [1], observations: [], limitations: [],
+    } } })
+  }
+  it('tar bare imot validert KI-svar for gjeldende dokument, generasjon og forespørsel', () => {
+    const state = load(createInitialSession()), outcome = liveOutcome()
+    const action = { type: 'import-economy-result' as const, generation: state.prospectus.generation,
+      documentHash: fixture.selected.hash, requestDigest: 'a'.repeat(64), outcome }
+    expect(sessionReducer(state, { ...action, generation: action.generation - 1 })).toBe(state)
+    expect(sessionReducer(state, { ...action, documentHash: 'b'.repeat(64) })).toBe(state)
+    expect(sessionReducer(state, { ...action, requestDigest: 'b'.repeat(64) })).toBe(state)
+    expect(sessionReducer(state, { ...action, outcome: fixture.outcome })).toBe(state)
+    expect(sessionReducer(state, { ...action, outcome: { ...outcome, role: 'report' } })).toBe(state)
+    const next = sessionReducer(state, action)
+    expect(next.prospectus.prospectus.outcome?.economy.analysis?.provenance).toBe('live-document')
+    expect(Object.values(next.financial).every(field => !field.confirmed)).toBe(true)
+    expect(next.prospectus.identityChecked).toBe(false)
+    expect(next.prospectus.areaChecked).toBe(false)
+  })
+  it('bevarer manuelle verdier og rettingsnotater, men krever ny kontroll', () => {
+    let state = load(createInitialSession())
+    state = sessionReducer(state, { type: 'register-value', field: 'P', rawValue: '9876543' })
+    state = sessionReducer(state, { type: 'import-correction', id: 'price', correction: {
+      rawAmount: '9876543', period: 'once', year: '', includedIn: null, rawDebtPart: '', note: 'Manuell originalkontroll', reviewed: true,
+    } })
+    const next = sessionReducer(state, { type: 'import-economy-result', generation: state.prospectus.generation,
+      documentHash: fixture.selected.hash, requestDigest: 'a'.repeat(64), outcome: liveOutcome() })
+    expect(next.financial.P.rawValue).toBe('9876543')
+    expect(next.prospectus.corrections.price?.note).toBe('Manuell originalkontroll')
+    expect(next.prospectus.corrections.price?.reviewed).toBe(false)
+  })
+  it('avviser falsk live-proveniens uten request eller sider', () => {
+    const outcome = liveOutcome()
+    expect(DocumentImportSchema.safeParse({ ...outcome, economy: { ...outcome.economy,
+      analysis: { ...outcome.economy.analysis!, requestDigest: null, selectedPages: [] } } }).success).toBe(false)
+  })
+})

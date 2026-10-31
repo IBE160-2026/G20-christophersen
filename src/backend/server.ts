@@ -1,6 +1,7 @@
 import express, { type ErrorRequestHandler } from 'express'
 import { createListingBackend } from './listing/backend.ts'
 import { createListingRouter } from './http/listing-route.ts'
+import { createEconomyRouter } from './http/economy-route.ts'
 import { createImportRouter } from './http/import-route.ts'
 import { createProcessingLock } from './http/processing-lock.ts'
 import { createAnalysisRouter } from './http/analysis-route.ts'
@@ -9,7 +10,8 @@ import { createServer } from 'node:http'
 import { fileURLToPath } from 'node:url'
 
 const host = '127.0.0.1'
-const port = 3000
+const port = Number(process.env.PAA_PORT ?? '3000')
+if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Ugyldig lokal port')
 const address = `http://${host}:${port}`
 const development = process.argv.includes('--dev')
 const root = new URL('../../', import.meta.url)
@@ -39,6 +41,8 @@ async function start() {
   const lock = createProcessingLock()
   const analysis = createAnalysisRouter({ mode, lock })
   const documentImport = createImportRouter({ lock })
+  const economy = createEconomyRouter({ lock })
+  app.use('/api', economy)
   app.use('/api', documentImport)
   app.use('/api', analysis)
   app.use('/api', createListingRouter(createListingBackend()))
@@ -94,7 +98,7 @@ async function start() {
   async function stop() {
     const closed = new Promise<void>(resolve => server.close(() => resolve()))
     server.closeAllConnections()
-    await Promise.all([analysis.stop(), documentImport.stop()])
+    await Promise.all([analysis.stop(), documentImport.stop(), economy.stop()])
     await vite?.close()
     await closed
     process.exit(0)

@@ -1,5 +1,5 @@
 import { FinancialFieldSchema } from '../../contracts/financial-input.ts'
-import { ImportHttpResponseSchema, currentImportContext } from '../../contracts/document-import.ts'
+import { DocumentImportSchema, ImportHttpResponseSchema, currentImportContext } from '../../contracts/document-import.ts'
 import type { DocumentImport } from '../../contracts/document-import.ts'
 import { propertyIdentityStatus, importControlOutcome, importEconomyDraft, importGate } from '../../domain/document-import.ts'
 import { economyFinancingSuggestion, economySuggestions, effectiveEconomyFields } from '../../domain/source-economy.ts'
@@ -65,6 +65,19 @@ function invalidateImported(state: SessionState, financingOnly = false): Session
 }
 export function reduceImportSession(state: SessionState, action: ProspectusAction): SessionState {
   const p = state.prospectus
+  if (action.type === 'import-economy-result') {
+    const slot = p.prospectus
+    if (action.generation !== p.generation || slot.status !== 'imported' || slot.selected?.hash !== action.documentHash || slot.outcome?.reportHash !== action.documentHash) return state
+    const parsed = DocumentImportSchema.safeParse(action.outcome)
+    if (!parsed.success) return state
+    const outcome = parsed.data
+    if (outcome.role !== 'prospectus' || outcome.reportHash !== action.documentHash || outcome.documentName !== slot.selected.file.name.trim()
+      || outcome.economy.analysis?.provenance !== 'live-document' || outcome.economy.analysis.requestDigest !== action.requestDigest) return state
+    const next = { ...state, resultSnapshot: null, resultChanges: [], prospectus: { ...p,
+      prospectus: { ...slot, outcome }, corrections: Object.fromEntries(Object.entries(p.corrections).map(([id, correction]) => [id, { ...correction, reviewed: false }])), completeOperatingCosts: false,
+      coverageRevision: p.coverageRevision + 1, identityChecked: false, areaChecked: false } }
+    return invalidateImported(bindReport(next))
+  }
   if (action.type === 'import-selecting') {
     if (action.generation <= p.generation) return state
     // Selection invalidates in-flight requests immediately; same-hash completion restores existing assessment.

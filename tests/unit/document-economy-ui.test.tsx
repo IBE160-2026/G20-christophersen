@@ -45,3 +45,11 @@ it('skjuler ventetid for hjelpemidler og holder statusmeldingen fri for sekunder
   expect(markup).toContain('<p role="status" aria-live="polite">Venter på lokal dokumentbehandling. Ingen nye KI-kall er startet.</p>')
   expect(markup).toContain('<p aria-hidden="true">Ventetid: 0 s</p>')
 })
+
+it('bruker ikke hovedbeløpets periode og år som kvalifikatorer for et motstridende alternativ', async () => {
+  const outcome = await createCodeFirstImport(codeFirstBasis(['Kommunale avgifter: 4 000 kr per år i 2026\nKommunale avgifter: 4 000 kr per måned i 2027']))
+  const markup = renderToStaticMarkup(createElement(DocumentEconomy, { outcome, onSource: () => {} })).replaceAll('\u00a0', ' ')
+  expect(markup).toContain('Alternativt belegg: 4 000,00 kr · periode ukjent · år ukjent')
+  expect(markup).not.toContain('Alternativt belegg: 4 000,00 kr · per år · 2026')
+  expect(markup).toContain('4 000 kr per måned i 2027')
+})

@@ -27,15 +27,15 @@ test('Konsept A: PDF først, ukjente verdier og bevart kontrollport', async ({ p
   expect(errors).toEqual([])
 })
 
-test('Konsept A: alle ressurser lokalt uten ekstern transport', async ({ context, page }) => {
+test('Konsept A: alle ressurser lokalt uten ekstern transport', async ({ context, page, baseURL }) => {
   const external: string[] = []
-  await context.route('**/*', route => { const url = new URL(route.request().url()); if (url.origin === 'http://127.0.0.1:3000') return route.continue(); external.push(url.href); return route.abort() })
+  await context.route('**/*', route => { const url = new URL(route.request().url()); if (url.origin === new URL(baseURL!).origin) return route.continue(); external.push(url.href); return route.abort() })
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Se eiendommens potensial.' })).toBeVisible()
   expect(external).toEqual([])
 })
 
-test('AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter', async ({ request }) => {
+test('AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter', async ({ request, baseURL }) => {
   const root = await request.get('/')
   expect(root.status()).toBe(200)
   const html = await root.text()
@@ -68,14 +68,19 @@ test('AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente A
   ]) {
     const response = await request.get(path)
     expect(response.status(), path).toBe(404)
-    expect(response.headers()['content-type']).toContain('text/plain')
-    expect(await response.text()).toBe(path.startsWith('/api')
-      ? 'API-ruten er ikke tilgjengelig.' : 'Fant ikke ressursen.')
+    if (path.startsWith('/api')) {
+      expect(response.headers()['content-type']).toContain('application/json')
+      expect(await response.json()).toEqual({ error: 'api-route-unavailable' })
+    } else {
+      expect(response.headers()['content-type']).toContain('text/plain')
+      expect(await response.text()).toBe('Fant ikke ressursen.')
+    }
   }
   // node:http beholder request-target; nettleser/APIRequestContext normaliserer /%2e%2e/.
   for (const path of ['/../package.json', '/%2e%2e/package.json', '/assets/%2e%2e/%2e%2e/.env']) {
     const response = await new Promise<{ status: number | undefined, body: string }>((resolve, reject) => {
-      get({ hostname: '127.0.0.1', port: 3000, path }, (response) => {
+      const target = new URL(baseURL!)
+      get({ hostname: target.hostname, port: target.port, path }, (response) => {
         let body = ''
         response.setEncoding('utf8')
         response.on('data', (chunk: string) => { body += chunk })

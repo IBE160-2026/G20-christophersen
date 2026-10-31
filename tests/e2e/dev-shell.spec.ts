@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { relative, resolve } from 'node:path'
 
-test('AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil', async ({ page }) => {
+test('AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettleserfeil', async ({ page, baseURL }) => {
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   const connected = new Promise<string>((resolve) => {
@@ -14,7 +14,8 @@ test('AC2: dev laster skallet og kobler HMR til samme lokale origin uten nettles
   })
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Se eiendommens potensial.' })).toBeVisible()
-  expect(new URL(await connected).origin).toBe('ws://127.0.0.1:3000')
+  const websocketOrigin = new URL(baseURL!); websocketOrigin.protocol = 'ws:'
+  expect(new URL(await connected).origin).toBe(websocketOrigin.origin)
   expect(errors).toEqual([])
 })
 

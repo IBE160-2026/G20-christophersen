@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { CODE_FIRST_PLAN_VERSION, normalizeImportText, collectTgCandidates } from '../../contracts/document-import.ts'
 import { parseNorwegianMoney } from './norwegian-money.ts'
 import { ListingKeySchema } from '../../contracts/listing.ts'
+import { deviationStatus, extractExplicitTechnicalFindings } from './technical-risk.ts'
 import type { DocumentImport, EconomyField, ImportManifest, ImportRole, PdfSource } from '../../contracts/document-import.ts'
 
 export type ImportBasis = { hash: string; name: string; role: ImportRole; requestId: string; pages: DocumentImport['pages']; attachments: DocumentImport['attachments']; parentHash: string | null; attachmentId: string | null }
@@ -44,6 +45,7 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
     }
     for (const match of page.text.matchAll(/Tilstandsgrad\s*:\s*T\s*G\s*([23])\s*\nBygningsdel\s*:\s*([^\n]+)\n([^\n]+)(?:\n|$)/gi)) {
       const quote = match[0]
+      if (deviationStatus(match[3]!.trim()) !== 'documented') continue
       if (quote.length > 2000 || match[2]!.trim().length > 200 || match[3]!.trim().length > 2000 || findings.length >= 200) { if (findings.length >= 200) residual(page.pdfPage, 'Lokal funngrense nådd; resten må avklares.'); continue }
       const source = sourceFor(basis, page.pdfPage, match.index, match.index + quote.length)
       const findingId = 'local-' + hash(`${basis.hash}:${page.pdfPage}:${match.index}`).slice(0, 24)
@@ -118,6 +120,13 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
         else residual(page.pdfPage, `Kildegrensen for ${field.id} er nådd; ytterligere belegg er uavklart.`)
       }
     }
+  }
+  // Additional formats still require a named component and explicit grade.
+  // Existing findings keep their IDs for pinned replay and human controls.
+  if (!options.legacyEconomy) for (const finding of extractExplicitTechnicalFindings(basis)) {
+    if (findings.some(existing => existing.sources.some(left => finding.sources.some(right => left.pdfPage === right.pdfPage && left.start <= right.start && left.end >= right.end)))) continue
+    if (findings.length < 200) findings.push(finding)
+    else residual(finding.source.pdfPage, 'Lokal funngrense nådd; resten må avklares.')
   }
   const starts = headings.filter(item => !item.closing), ends = headings.filter(item => item.closing)
   if (starts.length === 1 && ends.length <= 1 && (ends[0]?.page ?? basis.pages.length) >= starts[0]!.page) {

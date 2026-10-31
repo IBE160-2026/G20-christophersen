@@ -1,0 +1,12 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  84 passed (84)
+      Tests  1693 passed (1693)
+   Start at  04:29:41
+   Duration  85.29s (tests 94%, import 5%)

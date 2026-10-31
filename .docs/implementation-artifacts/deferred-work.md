@@ -652,3 +652,14 @@ Dette lukker adressefeilen, ikke PAA-SO2 eller manglende generell teknisk analys
 - source_spec: `spec-ai-analyse-status.md`
 - summary: Avstem faktisk leverandørmottak og eventuell betaling for det første UI-forsøket på den nye 135-siders PDF-en.
 - evidence: Backendjournalen ble avsluttet som uncertain kl. 03:50:13 med én USD 0,15-reservasjon og actualUsd null. Detaljert leverandørfeil/request-ID ble ikke bevart, og lokalt resultat mangler. [Undersøkelse](../process/arbeidsokter/2026-10-31-ai-forsok-uten-synlig-status.md). Mottak og fakturering krever leverandørens historikk eller annet faktisk betalingsbevis; ingen ny betalt prøve er godkjent. Reservasjonen og sperren beholdes. UI/statusrettingen lukker ikke denne avstemmingen.
+
+**PAA-SO2, lokal eiendomsrisiko 2026-10-31 — Status: fortsatt Åpen for generell TG-/fullstendighetskvalitet.**
+[Implementasjon, kontrollcase og review](../process/arbeidsokter/2026-10-31-eiendomsrisiko.md)
+leverer lokale juridiske/praktiske risikofunn og tekniske kandidater i Konsept A,
+med etterprøvbar kilde og fysisk PDF-side. Øvre Blekeveien 8 side 58 er verifisert
+lokalt og åpnet i nettleseren. Integrerte/separate rapporter og bevart tekst fra
+usikre sider støttes, men grafiske TG-grader gjettes ikke. Usikker tekst gir kun
+mulige forhold uten fastslått grad; komplett rapportdekning er fortsatt sperret.
+Dette lukker ingen tidligere live-/semantikkport og dokumenterer ikke universell
+TG-recall eller full juridisk undersøkelse. Ingen betalte API-kall eller private
+PDF-er i Git i denne leveransen. [Spesifikasjon og individuell reviewtriage](spec-eiendomsrisiko-og-dokumentanalyse.md).

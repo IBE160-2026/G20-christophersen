@@ -7,6 +7,7 @@ import { AnalysisBudget, costOf, preflightSemantic } from './budget.ts'
 import type { SemanticPrice, SemanticTokenizer } from './budget.ts'
 import { createSemanticRequest, semanticDigest, SemanticOutputSchema, SEMANTIC_LIMITS, semanticContextBlocks } from './semantic-request.ts'
 import { z } from 'zod'
+import { analyzePropertyRisk } from './property-risk.ts'
 import type { SemanticRequest } from './semantic-request.ts'
 import type { SemanticTokenCount } from './token-count.ts'
 
@@ -189,5 +190,5 @@ export async function createCodeFirstImport(basis: ImportBasis, dependencies: Se
     propertyIdentity: plan.propertyIdentity, sections: plan.sections,
     economy: { status: plan.fields.some(field => field.status === 'available') ? 'partial' : 'unavailable', ownership: plan.ownership, ownershipSources: plan.ownershipSources, fields: plan.fields },
     coverage: { economy: { status: 'incomplete', reasons: ['Kun entydige eksplisitte beløp er tolket lokalt. Uklar periode, inkludering, gjeldsandel og fullstendig drift krever egen kontroll.'], omittedPages: [], unreadPages, unprocessedAttachments }, technical: technicalCoverage },
-    technical: { status: complete ? 'complete' : 'blocked', findings, uncertainties, limitations } })
+    technical: { status: complete ? 'complete' : 'blocked', findings, uncertainties, limitations }, propertyRisk: analyzePropertyRisk(basis) })
 }

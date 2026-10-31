@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises'
 import { DocumentImportSchema, IMPORT_VERSION, IMPORT_EXTRACTION_VERSION, IMPORT_PROMPT_VERSION, IMPORT_MODEL } from '../../contracts/document-import.ts'
 import type { DocumentImport, EconomyField, ImportRole, PdfSource } from '../../contracts/document-import.ts'
 import { ImportFailure } from '../documents/extract-import.ts'
+import { analyzePropertyRisk } from './property-risk.ts'
 
 type Basis = { hash: string; name: string; role: ImportRole; requestId: string; pages: DocumentImport['pages']; attachments: DocumentImport['attachments']; parentHash: string | null; attachmentId: string | null }
 const versions = { contractVersion: IMPORT_VERSION, extractionVersion: IMPORT_EXTRACTION_VERSION, promptVersion: IMPORT_PROMPT_VERSION, model: IMPORT_MODEL, mode: 'demo' as const }
@@ -86,6 +87,7 @@ export async function createOfflineImport(basis: Basis): Promise<DocumentImport>
     economy: { status: hasEconomy ? 'partial' : 'unavailable', ownership: hasEconomy ? fixture === 'conflict-12.pdf' ? 'borettslag' : 'eierseksjon' : 'unknown',
       ownershipSources: hasEconomy ? [source(1, fixture === 'conflict-12.pdf' ? 'Eierform: borettslag' : 'Eierform: eierseksjon')] : [], fields },
     technical: { status: technicalStatus === 'complete' ? 'complete' : 'blocked', findings, uncertainties: [], limitations: [] },
+    propertyRisk: analyzePropertyRisk(basis),
   })
   checkCombinedResponse('completed', Buffer.byteLength(JSON.stringify(outcome)))
   return outcome

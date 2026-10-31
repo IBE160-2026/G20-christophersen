@@ -3,6 +3,11 @@ import { CheckableFindingSchema, DocumentPageSchema, ReportHashSchema } from './
 import { ListingFieldSchema, ListingKeySchema } from './listing.ts'
 import type { AnalysisOutcome } from './document-analysis.ts'
 import { AnalysisHttpCorrelationSchema } from './analysis-http.ts'
+import { PdfSourceSchema } from './pdf-source.ts'
+import type { PdfSource } from './pdf-source.ts'
+import { PropertyRiskSchema } from './property-risk.ts'
+export { PdfSourceSchema } from './pdf-source.ts'
+export type { PdfSource } from './pdf-source.ts'
 
 export const IMPORT_VERSION = 'document-import-1' as const
 export const IMPORT_EXTRACTION_VERSION = 'bounded-pdf-text-1' as const
@@ -24,11 +29,6 @@ export const ImportDocumentSchema = z.strictObject({
   hash: ReportHashSchema, name: z.string().min(1).max(255), pageCount: z.number().int().min(1).max(200), role: ImportRoleSchema,
   parentHash: ReportHashSchema.nullable(), attachmentId: z.string().max(1024).nullable(),
 })
-export const PdfSourceSchema = z.strictObject({
-  documentHash: ReportHashSchema, documentName: z.string().min(1).max(255), pdfPage: z.number().int().min(1).max(200),
-  quote: z.string().min(1).max(2000), start: z.number().int().nonnegative(), end: z.number().int().positive(),
-  method: z.literal('pdf-text'), printedPage: z.string().max(80).nullable(),
-}).refine(source => source.end > source.start, 'Kildens tekstområde må være positivt.')
 export const EconomyFieldSchema = ListingFieldSchema.omit({ source: true, alternatives: true }).extend({
   nature: z.enum(['fact', 'stated-estimate', 'unknown']), originalText: z.string().max(4000),
   sources: z.array(PdfSourceSchema).max(12),
@@ -95,6 +95,7 @@ export const EconomyAnalysisSchema = z.strictObject({
 })
 export const DocumentImportSchema = ImportContextSchema.extend({
   manifest: ImportManifestSchema.optional(), cost: ImportCostSchema.optional(),
+  propertyRisk: PropertyRiskSchema.optional(),
   status: z.literal('imported'), documents: z.array(ImportDocumentSchema).length(1), pages: z.array(ImportPageSchema).min(1).max(200),
   attachments: z.array(z.strictObject({ id: z.string().max(1024), name: z.string().max(1024), isPdf: z.boolean() })).max(40),
   propertyIdentity: z.array(PropertyCandidateSchema).max(20), sections: z.array(ImportSectionSchema).max(10),
@@ -106,9 +107,10 @@ export const DocumentImportSchema = ImportContextSchema.extend({
   const document = value.documents[0]!
   if (document.hash !== value.reportHash || document.name !== value.documentName || document.role !== value.role || document.pageCount !== value.pageCount) fail('Dokumentidentitet stemmer ikke.')
   if (value.pages.length !== value.pageCount || value.pages.some((page, index) => page.pdfPage !== index + 1)) fail('Alle fysiske sider kreves i rekkefølge.')
-  const sourceValid = (source: PdfSource) => {
+  const sourceValid = (source: PdfSource, partialText = false) => {
     const page = value.pages[source.pdfPage - 1]
-    return source.documentHash === value.reportHash && source.documentName === value.documentName && page?.status === 'readable'
+    return source.documentHash === value.reportHash && source.documentName === value.documentName && (page?.status === 'readable'
+      || partialText && (page?.status === 'unknown' || page?.status === 'incomplete'))
       && source.start < page.text.length && source.end <= page.text.length && source.end - source.start === source.quote.length
       && page.text.slice(source.start, source.end) === source.quote
   }
@@ -116,6 +118,29 @@ export const DocumentImportSchema = ImportContextSchema.extend({
     ...value.economy.fields.flatMap(field => [...field.sources, ...field.alternatives.map(item => item.source)]),
     ...(value.economy.analysis?.observations.flatMap(item => item.sources) ?? []), ...(value.economy.analysis?.limitations.flatMap(item => item.sources) ?? []), ...value.technical.findings.flatMap(item => item.sources)]
   if (sources.some(source => !sourceValid(source))) fail('Kildefeil: hash, fysisk side, lesbarhet eller ordrett tekstområde avviker.')
+  if (value.propertyRisk) {
+    for (const domain of ['legal', 'technical'] as const) {
+      const risk = value.propertyRisk[domain]
+      for (const pages of [risk.examinedPages, risk.unreadPages]) {
+        if (new Set(pages).size !== pages.length || pages.some(page => page > value.pageCount)) fail('Risikoanalysen har ugyldig sideoversikt.')
+      }
+      if (risk.examinedPages.some(page => {
+        const basis = value.pages[page - 1]
+        return basis?.status !== 'readable' && !(domain === 'technical' && basis?.text.trim() && ['unknown', 'incomplete'].includes(basis.status))
+      })) fail('Undersøkte risikosider må ha tilgjengelig tekstgrunnlag.')
+      if (new Set(risk.findings.map(item => item.id)).size !== risk.findings.length) fail('Risikoanalysen har dupliserte funn.')
+      if (risk.findings.some(item => item.domain !== domain || (item.category === 'technical') !== (domain === 'technical')
+        || domain === 'legal' && item.grade !== null || item.sources.some(source => !risk.examinedPages.includes(source.pdfPage)))) fail('Risikofunn må ha riktig fagområde og undersøkt originalkilde.')
+      for (const item of risk.findings) {
+        const partialText = item.sourceQuality === 'partial-text'
+        if (partialText && (domain !== 'technical' || item.status !== 'possible' || item.grade !== null)) fail('Ufullstendig tekst kan bare gi mulige tekniske forhold uten fastslått grad.')
+        if (item.sources.some(source => !sourceValid(source, partialText))) fail('Risikoens tekstbelegg må samsvare ordrett med originalens dokument, side og offset.')
+        if (item.sources.some(source => value.pages[source.pdfPage - 1]?.status !== 'readable'
+          && !risk.unreadPages.includes(source.pdfPage))) fail('Ufullstendig risikokilde må bevares i oversikten over uleste sider.')
+      }
+      if (risk.coverage === 'unavailable' && risk.findings.length > 0) fail('Utilgjengelig risikoanalyse kan ikke inneholde funn.')
+    }
+  }
   const analysis = value.economy.analysis
   if (analysis) {
     if (new Set(analysis.selectedPages).size !== analysis.selectedPages.length || analysis.selectedPages.some(page => page > value.pageCount)) fail('Økonomianalysen har ugyldige fysiske sider.')
@@ -196,7 +221,6 @@ export const ImportHttpResponseSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('rejected'), code: z.enum(['invalid-request', 'payload-too-large', 'unsupported-media-type', 'analysis-active', 'duplicate-analysis', 'processing-failure', 'processing-timeout', 'page-limit', 'invalid-format', 'text-limit', 'response-limit', 'memory-limit', 'live-disabled', 'unsupported-synthetic']) }),
 ])
 export type DocumentImport = z.infer<typeof DocumentImportSchema>
-export type PdfSource = z.infer<typeof PdfSourceSchema>
 export type EconomyField = z.infer<typeof EconomyFieldSchema>
 export type ImportSection = z.infer<typeof ImportSectionSchema>
 export type ImportRole = z.infer<typeof ImportRoleSchema>

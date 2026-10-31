@@ -121,10 +121,10 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 720, height: 450 
   })
 }
 
-test('1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflikt uten automatisk valg', async ({ page }) => {
+test('1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflikt uten automatisk valg', async ({ page, baseURL }) => {
   const apiRequests: string[] = []
   await page.route('**/*', async (route) => {
-    if (!route.request().url().startsWith('http://127.0.0.1:3000/')) await route.abort()
+    if (new URL(route.request().url()).origin !== new URL(baseURL!).origin) await route.abort()
     else await route.continue()
   })
   page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api') && new URL(request.url()).pathname !== '/api/analysis-config') apiRequests.push(request.url()) })

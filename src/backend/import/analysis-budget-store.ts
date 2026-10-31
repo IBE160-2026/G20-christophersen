@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { closeSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, renameSync, rmdirSync, unlinkSync, writeFileSync } from 'node:fs'
+import { closeSync, constants, fstatSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, renameSync, rmdirSync, unlinkSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { z } from 'zod'
 import Big from 'big.js'
@@ -28,6 +28,19 @@ function durableWrite(directory: string, destination: string, temporary: string,
   const parent = openSync(directory, 'r')
   try { fsyncSync(parent) } finally { closeSync(parent) }
 }
+function readHistory(path: string, rootDocumentHash: string) {
+  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK)
+  try {
+    const stat = fstatSync(fd)
+    if (!stat.isFile() || stat.size > 64 * 1024) throw new Error('invalid-history')
+    const history = historySchema.parse(JSON.parse(readFileSync(fd, 'utf8')))
+    if (history.analysisId !== rootDocumentHash || new Set(history.entries.map(entry => entry.requestDigest)).size !== history.entries.length
+      || new Set(history.entries.map(entry => entry.documentHash)).size !== history.entries.length
+      || history.entries.some(entry => (entry.state === 'completed') !== (entry.actualUsd !== null)
+        || entry.actualUsd !== null && Big(entry.actualUsd).gt(entry.reservedUsd))) throw new Error('invalid-history')
+    return history
+  } finally { closeSync(fd) }
+}
 
 /** One root document hash is the logical analysis ID for prospectus AND attached/separate report.
  * Locks survive a process crash: unknown ownership/history is a stop, never an empty allowance.
@@ -40,6 +53,23 @@ export class AnalysisBudgetStore extends AnalysisBudget {
   private poisoned = false
   private constructor(directory: string, analysisId: string, entries: z.infer<typeof historySchema>['entries']) {
     super(analysisId, { historyRestored: true, entries }); this.directory = directory; this.files = paths(directory, analysisId)
+  }
+  /** Read-only status: never creates a directory/lock, changes quota or repairs history. */
+  static inspect(directory: string, rootDocumentHash: string): { kind: 'missing' | 'available' | 'unavailable'; entries: BudgetEntry[] } {
+    const files = paths(directory, rootDocumentHash)
+    try {
+      try { safeDirectory(directory) }
+      catch (error) {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') return { kind: 'missing', entries: [] }
+        throw error
+      }
+      if (hasPendingEvidence(files.lock) || hasPendingEvidence(files.temporary)) return { kind: 'unavailable', entries: [] }
+      if (!hasPendingEvidence(files.history)) return { kind: 'missing', entries: [] }
+      const history = readHistory(files.history, rootDocumentHash)
+      // Recheck evidence around the read to avoid reporting idle during a writer's reservation.
+      if (hasPendingEvidence(files.lock) || hasPendingEvidence(files.temporary)) return { kind: 'unavailable', entries: [] }
+      return { kind: 'available', entries: history.entries }
+    } catch { return { kind: 'unavailable', entries: [] } }
   }
   /** Explicit one-time operation for a known new analysis; preparation never calls this. */
   static initialize(directory: string, rootDocumentHash: string) {
@@ -63,9 +93,7 @@ export class AnalysisBudgetStore extends AnalysisBudget {
     try { mkdirSync(files.lock, { mode: 0o700 }) } catch { throw new Error('budget-history-locked') }
     try {
       if (hasPendingEvidence(files.temporary)) throw new Error('pending-history-write')
-      if (!lstatSync(files.history).isFile() || lstatSync(files.history).isSymbolicLink()) throw new Error('invalid-history')
-      const history = historySchema.parse(JSON.parse(readFileSync(files.history, 'utf8')))
-      if (history.analysisId !== rootDocumentHash || new Set(history.entries.map(entry => entry.requestDigest)).size !== history.entries.length || history.entries.some(entry => (entry.state === 'completed') !== (entry.actualUsd !== null) || entry.actualUsd !== null && Big(entry.actualUsd).gt(entry.reservedUsd))) throw new Error('invalid-history')
+      const history = readHistory(files.history, rootDocumentHash)
       return new AnalysisBudgetStore(directory, rootDocumentHash, history.entries)
     } catch {
       rmdirSync(files.lock)

@@ -183,6 +183,11 @@ test('135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI
   test.skip(!path, 'Sett PAA_UNSEEN_PDF til den nye private salgsoppgaven.')
   const bytes = await readFile(path!), recorded = audit(page)
   await recorded.install(); await page.goto('/')
+  // Isolert godkjenningskontroll: ekte tidligere betalingsjournal endres aldri.
+  // En egen test nedenfor kontrollerer den faktiske sperrede journalen.
+  await page.route('**/api/document-economy/status/*', route => route.fulfill({ json: {
+    state: 'idle', requestDigest: null, reservedUsd: null, actualUsd: null, error: null, retryAllowed: true,
+  } }))
   const outcome = await upload(page, bytes)
   expect(outcome.pageCount).toBe(135)
   const expected = { price: '13990000', totalPrice: '14341140', purchaseCosts: '351140', documentTax: '349750', municipalFees: '26072', propertyTax: '9699' }
@@ -237,10 +242,185 @@ test('135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI
   await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
   await page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true }).click()
   await expect(page.locator('.document-economy')).toContainText('Teststub: ny dokumentbundet KI-tolkning')
+  await expect(page.getByRole('status').filter({ hasText: 'AI-analyse fullført' })).toBeInViewport()
   await expect(page.locator('.hero')).toContainText('13 990 000')
   await expect(page.locator('.document-economy')).toContainText('ufullstendig')
   expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(1)
   expect(recorded.errors).toEqual([]); expect(recorded.external).toEqual([])
+})
+
+test('ekte135: usikkert tidligere forsøk vises fra journal uten nytt betalt kall', async ({ page }) => {
+  const path = process.env.PAA_UNSEEN_PDF
+  const expectedHash = process.env.PAA_UNCERTAIN_DOCUMENT_SHA256
+  test.skip(!path || !expectedHash, 'Krever eksplisitt PAA_UNCERTAIN_DOCUMENT_SHA256 og den tilhørende private usikre journalen.')
+  expect(sha(await readFile(path!))).toBe(expectedHash)
+  const history = await page.request.get(`/api/document-economy/status/${expectedHash}`)
+  expect(await history.json()).toMatchObject({ state: 'failed', reservedUsd: '0.15', actualUsd: null, error: 'economy-previous-uncertain', retryAllowed: false })
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  await upload(page, await readFile(path!))
+  const alert = page.locator('.economy-ai-control [role="alert"]')
+  await expect(alert).toContainText('Forrige AI-forsøk feilet eller ble avbrutt')
+  await expect(alert).toBeInViewport()
+  await expect(page.locator('.economy-ai-status')).toContainText('USD 0.15')
+  await expect(page.locator('.economy-ai-status')).toContainText('Faktisk kostnad er ukjent')
+  await expect(page.getByRole('button', { name: 'Forbered KI-analyse', exact: true })).toHaveCount(0)
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(0)
+  expect(recorded.external).toEqual([])
+})
+
+test('ekte135: synlig fremdrift og feil ved knappen under lange utdrag, høyst ett kall', async ({ page }) => {
+  const path = process.env.PAA_UNSEEN_PDF
+  test.skip(!path, 'Privat dokument kreves.')
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  await page.route('**/api/document-economy/status/*', route => route.fulfill({ json: {
+    state: 'idle', requestDigest: null, reservedUsd: null, actualUsd: null, error: null, retryAllowed: true,
+  } }))
+  await upload(page, await readFile(path!))
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  await page.getByText(/^Se tekstutdrag som overføres/).click()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ }).check()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
+  let release!: () => void
+  const held = new Promise<void>(resolve => { release = resolve })
+  let calls = 0
+  await page.route('**/api/document-economy/run', async route => {
+    calls++; await held
+    await route.fulfill({ status: 422, json: { error: 'economy-provider-connection', retryAllowed: false } })
+  })
+  try {
+    const start = page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })
+    await start.click()
+    const progress = page.locator('.economy-ai-status [role="status"]')
+    await expect(progress).toContainText('Analyserer godkjente økonomiutdrag')
+    await expect(progress).toBeInViewport()
+    await expect(start).toBeDisabled()
+    await start.evaluate((button: HTMLButtonElement) => { button.click(); button.click() })
+    expect(calls).toBe(1)
+    release()
+    const alert = page.locator('.economy-ai-status [role="alert"]')
+    await expect(alert).toContainText('forbindelsen til OpenAI ble brutt')
+    await expect(alert).toBeInViewport()
+    await expect(start).toBeDisabled()
+    await start.evaluate((button: HTMLButtonElement) => button.click())
+    expect(calls).toBe(1); expect(recorded.external).toEqual([])
+  } finally { release() }
+})
+
+test('hengende HTTP-svar får synlig klientfrist uten automatisk nytt kall', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  await upload(page, fresh())
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ }).check()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
+  let release!: () => void
+  const held = new Promise<void>(resolve => { release = resolve })
+  let calls = 0
+  await page.route('**/api/document-economy/run', async route => {
+    calls++; await held
+    await route.abort().catch(() => {})
+  })
+  try {
+    await page.clock.install()
+    const start = page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })
+    await start.click()
+    await expect(page.locator('.economy-ai-status')).toContainText('Analyserer godkjente')
+    await page.clock.fastForward(135_001)
+    const alert = page.locator('.economy-ai-status [role="alert"]')
+    await expect(alert).toContainText('kunne ikke bekreftes innen tidsfristen')
+    await expect(alert).toBeInViewport(); await expect(start).toBeDisabled()
+    await page.getByRole('button', { name: 'Kontroller status lokalt (gratis)', exact: true }).click()
+    await expect(page.getByRole('button', { name: 'Kontroller status lokalt (gratis)', exact: true })).toBeEnabled()
+    await expect(start).toBeDisabled()
+    expect(calls).toBe(1); expect(recorded.external).toEqual([])
+  } finally { release() }
+})
+
+test('status etter ny sidelasting følges lokalt fra analyserer til feilet', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  let checks = 0
+  await page.route('**/api/document-economy/status/*', route => route.fulfill({ json: {
+    state: ++checks === 1 ? 'running' : 'failed', requestDigest: 'a'.repeat(64), reservedUsd: '0.15', actualUsd: null,
+    error: checks === 1 ? null : 'economy-previous-uncertain', retryAllowed: false,
+  } }))
+  await upload(page, fresh())
+  await expect(page.locator('.economy-ai-status [role="status"]')).toContainText('Analyserer godkjente')
+  await expect(page.locator('.economy-ai-status [role="alert"]')).toContainText('Forrige AI-forsøk feilet')
+  expect(checks).toBeGreaterThanOrEqual(2)
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(0)
+  expect(recorded.external).toEqual([])
+})
+
+test('klientfrist avstemmes lokalt til fullført uten ny betalt forespørsel', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  let state = 'idle'
+  await page.route('**/api/document-economy/status/*', route => route.fulfill({ json: {
+    state, requestDigest: state === 'idle' ? null : 'a'.repeat(64), reservedUsd: state === 'idle' ? null : '0.15',
+    actualUsd: state === 'completed' ? '0.01' : null, error: null, retryAllowed: state === 'idle', usageCostBasis: null,
+  } }))
+  await upload(page, fresh())
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ }).check()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
+  let release!: () => void
+  const held = new Promise<void>(resolve => { release = resolve })
+  let calls = 0
+  await page.route('**/api/document-economy/run', async route => { calls++; await held; await route.abort().catch(() => {}) })
+  try {
+    await page.clock.install()
+    await page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true }).click()
+    state = 'running'
+    await page.clock.fastForward(135_001)
+    await expect(page.locator('.economy-ai-status [role="status"]')).toContainText('Analyserer godkjente')
+    state = 'completed'
+    await page.clock.fastForward(1001)
+    await expect(page.locator('.economy-ai-status [role="status"]')).toContainText('AI-kall fullført')
+    await expect(page.locator('.economy-ai-status')).toContainText('Kostnadsgrunnlaget er ukjent')
+    await expect(page.locator('.economy-ai-status')).not.toContainText('fra leverandørens brukstall')
+    await expect(page.locator('.economy-ai-status [role="alert"]')).toHaveCount(0)
+    expect(calls).toBe(1); expect(recorded.external).toEqual([])
+  } finally { release() }
+})
+
+test('feilet statuspoll avslutter analyserer og gratis statuskontroll kan gjenopprette', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  let checks = 0
+  await page.route('**/api/document-economy/status/*', route => ++checks === 2
+    ? route.fulfill({ status: 503, json: { error: 'unavailable' } })
+    : route.fulfill({ json: { state: checks === 1 ? 'running' : 'failed', requestDigest: 'a'.repeat(64), reservedUsd: '0.15',
+      actualUsd: null, error: checks === 1 ? null : 'economy-previous-uncertain', retryAllowed: false } }))
+  await upload(page, fresh())
+  await expect(page.locator('.economy-ai-status [role="alert"]')).toContainText('Status for tidligere AI-forsøk kunne ikke kontrolleres')
+  await expect(page.locator('.economy-ai-status')).toHaveAttribute('aria-busy', 'false')
+  await expect(page.locator('.economy-ai-status')).not.toContainText('Analyserer godkjente')
+  await page.getByRole('button', { name: 'Kontroller status lokalt (gratis)', exact: true }).click()
+  await expect(page.locator('.economy-ai-status [role="alert"]')).toContainText('Forrige AI-forsøk feilet')
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(0)
+  expect(recorded.external).toEqual([])
+})
+
+test('gammel backend uten statusrute gir konkret omstartshjelp og sperrer betaling', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  await page.route('**/api/document-economy/status/*', route => route.fulfill({ status: 404, contentType: 'text/plain', body: 'API-ruten er ikke tilgjengelig.' }))
+  await upload(page, fresh())
+  await expect(page.locator('.economy-ai-status [role="alert"]')).toContainText('Stopp PAA-serveren')
+  await expect(page.getByRole('button', { name: 'Forbered KI-analyse', exact: true })).toHaveCount(0)
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(0)
+  expect(recorded.external).toEqual([])
+})
+
+test('gratis kontroll kan gjenopprette idle etter statusfeil før noe betalt forsøk', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  let checks = 0
+  await page.route('**/api/document-economy/status/*', route => ++checks === 1
+    ? route.fulfill({ status: 503, json: { error: 'unavailable' } })
+    : route.fulfill({ json: { state: 'idle', requestDigest: null, reservedUsd: null, actualUsd: null, error: null, retryAllowed: true } }))
+  await upload(page, fresh())
+  await expect(page.locator('.economy-ai-status [role="alert"]')).toContainText('Status for tidligere AI-forsøk')
+  await page.getByRole('button', { name: 'Kontroller status lokalt (gratis)', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Forbered KI-analyse', exact: true })).toBeEnabled()
+  await expect(page.locator('.economy-ai-status [role="alert"]')).toHaveCount(0)
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(0)
+  expect(recorded.external).toEqual([])
 })
 
 test('gammel backend med tekstlig 404 viser omstartshjelp og kan forberedes på nytt', async ({ page }) => {

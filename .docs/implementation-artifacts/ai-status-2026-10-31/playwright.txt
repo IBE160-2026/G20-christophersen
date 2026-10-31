@@ -1,0 +1,28 @@
+[WebServer] (node:53029) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 17 tests using 1 worker
+
+(node:53030) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/e2e/new-document-import.spec.ts:64:1 › ny ukjent PDF i tom økt henter bare eksplisitte kodefelt og åpner nye originalkilder (1.5s)
+  ✓   2 tests/e2e/new-document-import.spec.ts:85:1 › ny ukjent fritekst-PDF får ukjente beløp og eksplisitt sperret KI, ingen oppdiktet erstatning (998ms)
+  ✓   3 tests/e2e/new-document-import.spec.ts:95:1 › ny PDF med samme filnavn erstatter forrige ekte dokument uten tall-, kilde- eller forutsetningslekkasje (5.7s)
+Privat ny PDF: 135 sider, 6 beløpsfelt, 9 kildebelegg, KI sperret, ingen ekstern trafikk
+  ✓   4 tests/e2e/new-document-import.spec.ts:131:46 › ny ekte salgsoppgave: tom økt (4.8s)
+Privat ny PDF: 135 sider, 6 beløpsfelt, 9 kildebelegg, KI sperret, ingen ekstern trafikk
+  ✓   5 tests/e2e/new-document-import.spec.ts:131:46 › ny ekte salgsoppgave: erstatter tidligere ekte dokument (8.9s)
+  ✓   6 tests/e2e/new-document-import.spec.ts:181:1 › 135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI-forberedelse (7.9s)
+  ✓   7 tests/e2e/new-document-import.spec.ts:252:1 › ekte135: usikkert tidligere forsøk vises fra journal uten nytt betalt kall (4.1s)
+  ✓   8 tests/e2e/new-document-import.spec.ts:271:1 › ekte135: synlig fremdrift og feil ved knappen under lange utdrag, høyst ett kall (7.4s)
+  ✓   9 tests/e2e/new-document-import.spec.ts:309:1 › hengende HTTP-svar får synlig klientfrist uten automatisk nytt kall (2.1s)
+  ✓  10 tests/e2e/new-document-import.spec.ts:338:1 › status etter ny sidelasting følges lokalt fra analyserer til feilet (2.4s)
+  ✓  11 tests/e2e/new-document-import.spec.ts:353:1 › klientfrist avstemmes lokalt til fullført uten ny betalt forespørsel (2.0s)
+  ✓  12 tests/e2e/new-document-import.spec.ts:384:1 › feilet statuspoll avslutter analyserer og gratis statuskontroll kan gjenopprette (2.4s)
+  ✓  13 tests/e2e/new-document-import.spec.ts:401:1 › gammel backend uten statusrute gir konkret omstartshjelp og sperrer betaling (1.1s)
+  ✓  14 tests/e2e/new-document-import.spec.ts:411:1 › gratis kontroll kan gjenopprette idle etter statusfeil før noe betalt forsøk (1.1s)
+  ✓  15 tests/e2e/new-document-import.spec.ts:426:1 › gammel backend med tekstlig 404 viser omstartshjelp og kan forberedes på nytt (3.0s)
+  ✓  16 tests/e2e/new-document-import.spec.ts:462:1 › KI-knappen krever begge uttrykkelige samtykker og ny PDF nullstiller godkjenningen (1.9s)
+  ✓  17 tests/e2e/new-document-import.spec.ts:490:1 › godkjent KI-svar oppdaterer gjeldende eiendom med nye kildebundne tall (2.0s)
+
+  17 passed (1.0m)

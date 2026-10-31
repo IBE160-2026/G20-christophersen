@@ -19,6 +19,7 @@ import { GLOBAL_STANDARD_PRICE } from '../import/budget.ts'
 import { saveUploadedEconomy } from '../import/uploaded-economy-cache.ts'
 import { mergeUploadedEconomy } from '../import/merge-uploaded-economy.ts'
 import { existsSync } from 'node:fs'
+import OpenAI from 'openai'
 
 const consentSchema = z.strictObject({ planId: z.string().uuid(), documentHash: z.string().regex(/^[a-f0-9]{64}$/), requestDigest: z.string().regex(/^[a-f0-9]{64}$/), approveCost: z.literal(true), approveTransfer: z.literal(true) })
 const labels = /prisantydning|totalpris|omkostning|dokumentavgift|fellesgjeld|felleskostnad|eiendomsskatt|kommunale avgift/giu
@@ -32,13 +33,27 @@ export function selectEconomyPages(pages: DocumentImport['pages']) {
     omittedRelevantPages: relevant.slice(LOCAL_ECONOMY_LIMITS.maximumSelectedPages).map(item => item.page).sort((a, b) => a - b) }
 }
 function safeRunError(error: unknown) {
+  if (error instanceof OpenAI.APIConnectionTimeoutError) return 'economy-provider-timeout'
+  if (error instanceof OpenAI.APIConnectionError) return 'economy-provider-connection'
+  if (error instanceof OpenAI.APIError) {
+    if (error.status === 401 || error.status === 403) return 'economy-provider-authentication'
+    if (error.status === 429) return 'economy-provider-rate-limit'
+    return 'economy-provider-rejected'
+  }
+  if (error instanceof SyntaxError || error instanceof z.ZodError) return 'economy-invalid-output'
   const code = error instanceof Error ? error.message : ''
   return /^(?:local-economy|budget-history|analysis-budget|document-already|invalid-history|pending-history|economy)-[a-z-]+$/.test(code) ? code : 'economy-analysis-failed'
 }
+type EconomyStatus = { state: 'idle' | 'running' | 'completed' | 'failed' | 'unknown'; requestDigest: string | null; reservedUsd: string | null; actualUsd: string | null; usageCostBasis: 'provider-usage-upper-bound' | 'provider-usage-exact' | null; error: string | null; retryAllowed: boolean }
 type Stored = { call: LocalEconomyCall; packet: EconomyTrial; outcome: DocumentImport; expires: number; sessionId: string }
 type Options = { prepareDeadlineMs?: number; lock?: ProcessingLock; cacheDirectory?: string; budgetDirectory?: string; credentials?: () => { apiKey: string; fetch: typeof globalThis.fetch } | null }
 export function createEconomyRouter(options: Options = {}) {
   const router = Router(), lock = options.lock ?? createProcessingLock(), plans = new Map<string, Stored>()
+  const activeRuns = new Map<string, { requestDigest: string; ledger: AnalysisBudgetStore }>(), terminalErrors = new Map<string, { requestDigest: string; error: string }>()
+  const budgetDirectory = options.budgetDirectory ?? resolve('private/analysis-budgets')
+  const audit = (event: string, documentHash: string, requestDigest: string, extra: { status?: number; providerRequestId?: string; error?: string } = {}) => {
+    console.info(JSON.stringify({ event, at: new Date().toISOString(), documentHash, requestDigest, ...extra }))
+  }
   let stopping = false
   const controllers = new Set<AbortController>(), pending = new Set<Promise<void>>()
   const track = () => {
@@ -47,6 +62,31 @@ export function createEconomyRouter(options: Options = {}) {
     return () => { pending.delete(completion); finish() }
   }
   const credentials = options.credentials ?? (() => process.env.OPENAI_API_KEY ? { apiKey: process.env.OPENAI_API_KEY, fetch: globalThis.fetch } : null)
+  router.get('/document-economy/status/:documentHash', (request, response) => {
+    response.setHeader('Cache-Control', 'no-store')
+    const hash = request.params.documentHash
+    if (!/^[a-f0-9]{64}$/.test(hash)) { response.status(400).json({ error: 'invalid-request' }); return }
+    const active = activeRuns.get(hash)
+    let status: EconomyStatus
+    if (active) {
+      const entry = active.ledger.snapshot().find(item => item.requestDigest === active.requestDigest)
+      status = { state: 'running', requestDigest: active.requestDigest, reservedUsd: entry?.reservedUsd ?? null, actualUsd: entry?.actualUsd ?? null, usageCostBasis: entry?.usageCostBasis ?? null, error: null, retryAllowed: false }
+    }
+    else {
+      const history = AnalysisBudgetStore.inspect(budgetDirectory, hash)
+      const entry = history.entries.find(item => item.documentHash === hash)
+      if (history.kind === 'unavailable') status = { state: 'unknown', requestDigest: null, reservedUsd: null, actualUsd: null, usageCostBasis: null, error: 'budget-history-unavailable', retryAllowed: false }
+      else if (!entry && history.entries.length === 0) status = { state: 'idle', requestDigest: null, reservedUsd: null, actualUsd: null, usageCostBasis: null, error: null, retryAllowed: true }
+      else if (!entry) status = { state: 'unknown', requestDigest: null, reservedUsd: null, actualUsd: null, usageCostBasis: null, error: 'budget-history-unavailable', retryAllowed: false }
+      else {
+        const failure = terminalErrors.get(hash)
+        const error = failure?.requestDigest === entry.requestDigest ? failure.error : entry.state === 'uncertain' ? 'economy-previous-uncertain' : null
+        status = { state: error ? 'failed' : entry.state === 'completed' ? 'completed' : 'unknown', requestDigest: entry.requestDigest,
+          reservedUsd: entry.reservedUsd, actualUsd: entry.actualUsd, usageCostBasis: entry.usageCostBasis ?? null, error, retryAllowed: false }
+      }
+    }
+    response.json(status)
+  })
   router.post('/document-economy/prepare', async (request, response) => {
     response.setHeader('Cache-Control', 'no-store')
     const rawGeneration = request.get('X-Analysis-Generation')
@@ -131,7 +171,7 @@ export function createEconomyRouter(options: Options = {}) {
       if (!auth?.apiKey) { response.status(503).json({ error: 'economy-api-key-unavailable' }); return }
       // Pakken brukes bare én gang, også ved ukjent transportutfall.
       plans.delete(consent.data.planId)
-      const directory = options.budgetDirectory ?? resolve('private/analysis-budgets')
+      const directory = budgetDirectory
       // Kun uttrykkelig godkjent ny analyse får opprette tom historikk.
       if (!existsSync(directory)) AnalysisBudgetStore.initialize(directory, stored.packet.originalSha256)
       else {
@@ -142,7 +182,18 @@ export function createEconomyRouter(options: Options = {}) {
         }
       }
       ledger ??= AnalysisBudgetStore.open(directory, stored.packet.originalSha256)
-      const executed = await runLocalEconomyCall(stored.call, { requestDigest: stored.call.requestDigest, referenceDigest: stored.call.referenceDigest, maximumAnalysisUsd: '0.20' }, ledger, auth)
+      const hash = stored.packet.originalSha256, digest = stored.call.requestDigest
+      activeRuns.set(hash, { requestDigest: digest, ledger })
+      audit('economy-run-started', hash, digest)
+      const observedAuth = { apiKey: auth.apiKey, fetch: (async (url, init) => {
+        audit('economy-provider-attempted', hash, digest)
+        const provider = await auth.fetch(url, init)
+        const requestId = provider.headers.get('x-request-id')
+        audit('economy-provider-responded', hash, digest, { status: provider.status,
+          ...requestId && /^req_[a-zA-Z0-9_-]{1,128}$/.test(requestId) ? { providerRequestId: requestId } : {} })
+        return provider
+      }) as typeof globalThis.fetch }
+      const executed = await runLocalEconomyCall(stored.call, { requestDigest: digest, referenceDigest: stored.call.referenceDigest, maximumAnalysisUsd: '0.20' }, ledger, observedAuth)
       const result = executed.result
       const fields = mergeUploadedEconomy(stored.outcome.economy.fields, result.fields)
       const observations = [...result.observations, ...result.deterministicEvidence.excerpts.map(item => ({ kind: item.kind, raw: item.raw, sources: [item.source] }))]
@@ -156,8 +207,15 @@ export function createEconomyRouter(options: Options = {}) {
       try { await saveUploadedEconomy(stored.packet, executed.referencedOutput, outcome, options.cacheDirectory ?? (options.budgetDirectory ? resolve(options.budgetDirectory, 'results') : undefined)) }
       catch { outcome.economy.analysis!.reason += ' Lokal lagring mislyktes. Behold denne økten; resultatet kan ikke gjenopprettes etter reload, og et nytt betalt kall er sperret.' }
       response.json({ outcome })
-    } catch (error) { response.status(422).json({ error: safeRunError(error), retryAllowed: false }) }
-    finally { ledger?.close(); lock.release(); finished() }
+      audit('economy-run-completed', stored.packet.originalSha256, stored.call.requestDigest)
+    } catch (error) {
+      const code = safeRunError(error)
+      terminalErrors.set(stored.packet.originalSha256, { requestDigest: stored.call.requestDigest, error: code })
+      if (terminalErrors.size > 32) terminalErrors.delete(terminalErrors.keys().next().value!)
+      audit('economy-run-failed', stored.packet.originalSha256, stored.call.requestDigest, { error: code })
+      response.status(422).json({ error: code, retryAllowed: false })
+    }
+    finally { try { ledger?.close() } finally { activeRuns.delete(stored.packet.originalSha256); lock.release(); finished() } }
   })
   return Object.assign(router, { async stop() { stopping = true; plans.clear(); for (const controller of controllers) controller.abort(); await Promise.allSettled([...pending]) } })
 }

@@ -179,6 +179,16 @@ Reservasjonen lagres før transport. Ett forsøk, ingen automatisk retry, og
 samme dokument får ingen ny kvote etter reload eller omstart. Ukjent belastning
 beholder reservasjonen. Ugyldig svar gir ingen nye økonomitall.
 
+Status ved startknappen viser analyserer, fullført eller feilet og blir synlig
+også når dokumentutdragene er åpne. Serveren har 120 sekunders frist; ved manglende
+HTTP-svar viser nettleseren et uavklart utfall etter 135 sekunder. Lokal statuslesing
+kan bekrefte senere avslutning uten et nytt AI-kall. Etter sidelasting leses
+tidligere forsøksstatus fra journalen; usikker belastning sperrer ny betaling.
+**Kontroller status lokalt (gratis)** leser bare lokal status og endrer ingen kvote.
+Trygg serverlogging inneholder tidspunkt, dokumenthash, requestdigest, HTTP-status
+og feilkategori, aldri API-nøkkel eller dokumentutdrag. En reservasjon er ikke
+bevis på fakturering; manglende kostnadsgrunnlag merkes ukjent.
+
 **Teknisk analyse av vilkårlige integrerte rapporter er fortsatt ufullstendig.**
 Økonomikallet analyserer ikke bilder, avgjør ikke ukjente rapportgrenser og
 bekrefter ikke TG-dekning. For den nye ekte PDF-en på 135 sider er seks sikre
@@ -339,7 +349,7 @@ npm run test:components
 npm run test:e2e
 ```
 
-Kjør sekvensielt fra reporoten med port 3000 ledig. `npm run test:e2e` bygger automatisk, starter/stopper først bygget demo og deretter dev. Vitest bruker lokale moduler, ekte fiktive PDF-er og HTTP-integrasjon. Komponenttester viser faktiske React-resultatkomponenter i Chromium. E2E dekker hovedflyt, kontrollporter, feil/retur, originalvisning, nøkkeltall, anbefalinger og fokus/responsivitet. Enkelte spesialutfall bruker en **kontrolladapter ved produktets adaptergrense** eller kontrollerte HTTP-svar; dette er testinnganger, ikke live-KI. Playwright-serverne tvinger `ANALYSIS_MODE=demo` og tom `OPENAI_API_KEY`, også når terminalen har arvet live-miljø. Bygg-/oppstartskontrollen bruker eksplisitt demo og en fiktiv nøkkelsentinel for lekkasjekontroll. Hele testoppskriften krever ingen betalt KI-tjeneste eller nøkkel. Browserforberedelsen krever vanligvis nedlasting; på Linux må nødvendige systembiblioteker også være installert før nettfri testkjøring.
+Kjør sekvensielt fra reporoten med port 3000 ledig. For isolert kjøring mens brukerens server kjører: `PAA_E2E_PORT=3001 npx playwright test`; valgt port brukes av testens nettleser, backend og oppstartskontroll. Privat kontroll av en eksisterende usikker journal krever både `PAA_UNSEEN_PDF` og eksplisitt `PAA_UNCERTAIN_DOCUMENT_SHA256`; vanlige tester oppretter sine egne isolerte journaler. `npm run test:e2e` bygger automatisk, starter/stopper først bygget demo og deretter dev. Vitest bruker lokale moduler, ekte fiktive PDF-er og HTTP-integrasjon. Komponenttester viser faktiske React-resultatkomponenter i Chromium. E2E dekker hovedflyt, kontrollporter, feil/retur, originalvisning, nøkkeltall, anbefalinger og fokus/responsivitet. Enkelte spesialutfall bruker en **kontrolladapter ved produktets adaptergrense** eller kontrollerte HTTP-svar; dette er testinnganger, ikke live-KI. Playwright-serverne tvinger `ANALYSIS_MODE=demo` og tom `OPENAI_API_KEY`, også når terminalen har arvet live-miljø. Bygg-/oppstartskontrollen bruker eksplisitt demo og en fiktiv nøkkelsentinel for lekkasjekontroll. Hele testoppskriften krever ingen betalt KI-tjeneste eller nøkkel. Browserforberedelsen krever vanligvis nedlasting; på Linux må nødvendige systembiblioteker også være installert før nettfri testkjøring.
 
 Testene kontrollerer også sentral finans-/terskellogikk og blank/null/feiltilstander mot uavhengig fasit. De beviser ikke manuell lesbarhet, alle hjelpemidler eller live-uttrekkskvalitet. Se [samlet automatisk verifikasjon 5.1](.docs/implementation-artifacts/story-5-1-verifikasjon.md), [manuell UX-kontroll 5.2](.docs/implementation-artifacts/story-5-2-manuell-kontroll.md) og [egen README-gjennomkjøring 5.3](.docs/implementation-artifacts/story-5-3-verifikasjon.md). Egen gjennomkjøring er forberedelse; **annen person i rent miljø/S6 (5.4) er ennå ikke gjennomført**.
 

@@ -1,0 +1,53 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run --reporter=dot
+
+
+ RUN  v5.0.4 <project-root>
+
+···················································································································································stdout | tests/integration/uploaded-economy-http.test.ts > forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+{"event":"economy-run-started","at":"2026-10-31T03:02:16.752Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+stdout | tests/integration/uploaded-economy-http.test.ts > forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+{"event":"economy-provider-attempted","at":"2026-10-31T03:02:16.762Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+stdout | tests/integration/uploaded-economy-http.test.ts > forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+{"event":"economy-provider-responded","at":"2026-10-31T03:02:16.762Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805","status":200}
+
+stdout | tests/integration/uploaded-economy-http.test.ts > forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+{"event":"economy-run-completed","at":"2026-10-31T03:02:16.794Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+····stdout | tests/integration/uploaded-economy-http.test.ts > forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+{"event":"economy-run-started","at":"2026-10-31T03:02:17.769Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+stdout | tests/integration/uploaded-economy-http.test.ts > forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+{"event":"economy-run-failed","at":"2026-10-31T03:02:17.772Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805","error":"local-economy-budget-margin"}
+
+····stdout | tests/integration/uploaded-economy-http.test.ts > ukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst
+{"event":"economy-run-started","at":"2026-10-31T03:02:18.652Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+stdout | tests/integration/uploaded-economy-http.test.ts > ukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst
+{"event":"economy-provider-attempted","at":"2026-10-31T03:02:18.663Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+stdout | tests/integration/uploaded-economy-http.test.ts > ukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst
+{"event":"economy-run-failed","at":"2026-10-31T03:02:18.673Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805","error":"economy-provider-connection"}
+
+································································stdout | tests/integration/uploaded-economy-http.test.ts > stenging venter på pågående transport og journalavslutning
+{"event":"economy-run-started","at":"2026-10-31T03:02:26.792Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+·stdout | tests/integration/uploaded-economy-http.test.ts > stenging venter på pågående transport og journalavslutning
+{"event":"economy-provider-attempted","at":"2026-10-31T03:02:26.805Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+stdout | tests/integration/uploaded-economy-http.test.ts > stenging venter på pågående transport og journalavslutning
+{"event":"economy-run-failed","at":"2026-10-31T03:02:26.824Z","documentHash":"2f591a9172d57bcc67f07a8f8fc62e4d8767bc887b95672acb91e8d7252856d5","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805","error":"economy-provider-connection"}
+
+·············································stderr | tests/unit/import-review-ui.test.tsx
+Warning: Please use the `legacy` build in Node.js environments.
+
+··························································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································
+
+ Test Files  80 passed (80)
+      Tests  1635 passed (1635)
+   Start at  04:01:50
+   Duration  87.16s (tests 95%, import 4%)
+

@@ -1,0 +1,26 @@
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 182 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                    0.53 kB │ gzip:   0.35 kB
+dist/assets/property-image-worker-B1hmoWbW.js      1.71 kB
+dist/assets/scenario-worker-Cwjt9Kgr.js           96.16 kB
+dist/assets/pdf.worker.min-CjEcRF4W.mjs        1,264.34 kB
+dist/assets/index-ZTxBjK8D.css                    55.67 kB │ gzip:   9.53 kB
+dist/assets/index-D2FeNzZ2.js                  1,005.38 kB │ gzip: 298.73 kB
+
+✓ built in 239ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

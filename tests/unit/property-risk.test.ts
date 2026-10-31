@@ -95,4 +95,38 @@ describe('Risikooversiktens aktuelle og etterprøvbare grunnlag', () => {
     state.report = { ...state.report, selected, outcome: importControlOutcome(outcome), documentImport: outcome, status: 'completed' }
     expect(selectPropertyRisks(state).documented).toContainEqual(expect.objectContaining({ category: 'rental-approval', sources: [expect.objectContaining({ documentName: basis.name })] }))
   })
+  it('teller unike forhold og holder bakgrunn og dekningsmetadata separat uten å endre uttrekket', async () => {
+    const basis = codeFirstBasis([
+      'Kjelleretasjen har en utleieenhet som ikke er godkjent.',
+      'Utleid leilighet er ikke godkjent som egen bruksenhet.',
+      'Etter husleieloven gjelder at fremleie krever styrets samtykke.',
+    ])
+    const outcome = await createCodeFirstImport(basis), state = createInitialSession()
+    const original = structuredClone(outcome)
+    const selected = { hash: basis.hash, file: new File([], basis.name), bytes: new Uint8Array() }
+    state.prospectus.prospectus = { selected, outcome, status: 'imported', active: null, error: null }
+    const risks = selectPropertyRisks(state)
+    expect(risks.documented).toHaveLength(1)
+    expect(risks.documented[0]?.sources.map(source => source.pdfPage)).toEqual([1, 2])
+    expect(risks.background).toHaveLength(1)
+    expect(risks.gaps.length).toBeGreaterThan(0)
+    expect(outcome).toEqual(original)
+    state.prospectus.prospectus.status = 'selecting'
+    expect(selectPropertyRisks(state).documented).toEqual([])
+    expect(selectPropertyRisks(state).background).toEqual([])
+  })
+  it('viser alvorlig TG3 og utleiegodkjenning før andre godkjenningsspørsmål og TG2', async () => {
+    const state = await fixture(), legal = state.prospectus.prospectus.outcome!.propertyRisk!.legal
+    const source = state.prospectus.prospectus.outcome!.economy.fields.flatMap(field => field.sources)[0]!
+    const common = { domain: 'legal' as const, status: 'documented' as const, grade: null, consequence: 'Avklar bruk.', action: 'Se original.', sources: [source] }
+    legal.findings = [
+      { ...common, id: 'a-other', category: 'use-approval', title: 'Godkjenning må kontrolleres', description: 'Et konkret lovlighetsforhold.' },
+      { ...common, id: 'z-rental', category: 'rental-approval', title: 'Utleieenhet er ikke godkjent', description: 'Utleieenhet er ikke godkjent.' },
+    ]
+    const order = selectPropertyRisks(state).documented
+    expect(order[0]?.grade).toBe('TG3')
+    expect(order[1]?.category).toBe('rental-approval')
+    expect(order[2]?.category).toBe('use-approval')
+    expect(order.slice(3).map(item => item.grade)).toEqual(['TG2', 'TG2'])
+  })
 })

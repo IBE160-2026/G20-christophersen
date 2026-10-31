@@ -1,0 +1,18 @@
+[WebServer] (node:91007) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:91015) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/investment-overview.spec.ts:22:1 › A: faktisk lokal PDF, egne forutsetninger og interaktiv økonomi uten autoritativ bekreftelse (17.5s)
+  ✓  2 tests/e2e/investment-overview.spec.ts:71:1 › A: ukjent leie og uriktig input viser mangler; kilde/risikodialog fungerer med tastatur (1.4s)
+  ✓  3 tests/e2e/investment-overview.spec.ts:88:1 › A: scenario endrer aldri kontrollert vurdering, TG3 eller resultatets snapshot (2.3s)
+  ✓  4 tests/e2e/investment-overview.spec.ts:123:1 › A: ugyldig år overskriver ikke egne verdier (1.3s)
+  ✓  5 tests/e2e/investment-overview.spec.ts:132:1 › A: risiko vises på hovedsiden med separate undersøkelsesgrupper og riktig originalside (1.3s)
+  ✓  6 tests/e2e/investment-overview.spec.ts:151:1 › A: separat rapport importeres direkte fra risikooversikten og kan erstattes med integrert rapport (2.2s)
+  ✓  7 tests/e2e/property-risk.spec.ts:10:1 › juridisk risiko fra ny lokal PDF vises med ordrett originalside uten KI-kall (1.7s)
+  ✓  8 tests/e2e/property-risk.spec.ts:55:1 › privat Øvre Blekeveien: side 58 og ufullstendig integrert rapport åpnes i originalen (4.2s)
+  ✓  9 tests/e2e/property-risk.spec.ts:99:1 › samme PDF-bytehash med to filnavn åpner den separate rapportens original (2.1s)
+
+  9 passed (35.6s)

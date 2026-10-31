@@ -5,11 +5,13 @@ import { currentFinding } from '../state/report.ts'
 import { validateTg3Resolution } from '../../domain/tg3-resolution.ts'
 import { propertyIdentityStatus } from '../../domain/document-import.ts'
 import { selectProperty } from './property.ts'
+import { groupPropertyRisks, isRiskBackground } from './risk-grouping.ts'
 
 export type RiskSource = { documentHash: string; documentName: string; pdfPage: number; quote?: string; start?: number; end?: number }
-export type PropertyRiskItem = Omit<RiskFinding, 'sources'> & { sources: RiskSource[]; controlNote?: string }
+export type PropertyRiskItem = Omit<RiskFinding, 'sources'> & { sources: RiskSource[]; controlNote?: string; members?: PropertyRiskItem[]; displaySubject?: string }
 export interface PropertyRiskOverview {
   documented: PropertyRiskItem[]; possible: PropertyRiskItem[]; unexamined: PropertyRiskItem[]
+  background: PropertyRiskItem[]
   gaps: string[]; limitations: string[]; technicalCoverage: string
 }
 
@@ -77,9 +79,12 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
     ...(extraction?.limitations ?? []), ...(technical?.coverage.technical.reasons ?? []), ...(technical?.technical.uncertainties ?? []),
   ])]
   const order = (a: PropertyRiskItem, b: PropertyRiskItem) => {
-    const priority = (item: PropertyRiskItem) => item.grade === 'TG3' ? 0 : item.category === 'rental-approval' || item.category === 'use-approval' ? 1 : item.grade === 'TG2' ? 2 : 3
+    const priority = (item: PropertyRiskItem) => item.grade === 'TG3' ? 0 : item.category === 'rental-approval' ? 1 : item.category === 'use-approval' ? 2 : item.grade === 'TG2' ? 3 : 4
     return priority(a) - priority(b)
   }
-  return { documented: items.filter(item => item.status === 'documented').sort(order), possible: items.filter(item => item.status === 'possible').sort(order),
-    unexamined: items.filter(item => item.status === 'not-investigated').sort(order), gaps: [...new Set(gaps)], limitations, technicalCoverage }
+  const documents = [property.outcome, technical].filter((document): document is DocumentImport => Boolean(document))
+  const grouped = groupPropertyRisks(items.filter(item => !isRiskBackground(item)), documents)
+  return { documented: grouped.filter(item => item.status === 'documented').sort(order), possible: grouped.filter(item => item.status === 'possible').sort(order),
+    unexamined: grouped.filter(item => item.status === 'not-investigated').sort(order), background: groupPropertyRisks(items.filter(isRiskBackground), documents),
+    gaps: [...new Set(gaps)], limitations, technicalCoverage }
 }

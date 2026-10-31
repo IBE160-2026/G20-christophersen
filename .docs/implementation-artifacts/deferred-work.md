@@ -663,3 +663,10 @@ mulige forhold uten fastslått grad; komplett rapportdekning er fortsatt sperret
 Dette lukker ingen tidligere live-/semantikkport og dokumenterer ikke universell
 TG-recall eller full juridisk undersøkelse. Ingen betalte API-kall eller private
 PDF-er i Git i denne leveransen. [Spesifikasjon og individuell reviewtriage](spec-eiendomsrisiko-og-dokumentanalyse.md).
+
+**PAA-SO2, unike risikoforhold 2026-10-31 — Status: fortsatt Åpen for full dokument-/TG-kvalitet.**
+[Gruppert risikooversikt og verifikasjon](../process/arbeidsokter/2026-10-31-unike-risikoforhold.md)
+samler sikre gjentakelser med alle originalkilder, skiller generelle juridiske
+forklaringer og holder ulike/usikre subjekter adskilt. Øvre Blekeveien 8 side
+28 og 58 vises som ett utleieforhold. Dette endrer ingen dokumentdekning,
+kontrollport eller tidligere live-/semantikkakseptanse; det lukker ikke PAA-SO2.

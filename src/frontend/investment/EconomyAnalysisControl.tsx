@@ -5,6 +5,7 @@ import { DocumentImportSchema } from '../../contracts/document-import.ts'
 import type { DocumentImport } from '../../contracts/document-import.ts'
 import type { SessionAction } from '../state/session.ts'
 import type { SelectedReport } from '../state/report.ts'
+import { readEconomyResponse } from './economy-api-response.ts'
 
 const PlanSchema = z.object({
   planId: z.string().min(1), documentHash: z.string().regex(/^[a-f0-9]{64}$/), documentName: z.string(),
@@ -15,6 +16,11 @@ const PlanSchema = z.object({
 })
 type Plan = z.infer<typeof PlanSchema>
 const reason = (code: string) => ({
+  'economy-route-unavailable': 'Den lokale serveren mangler API-ruten for KI-analyse (HTTP 404). Stopp PAA-serveren, start den på nytt fra prosjektmappen og last siden på nytt.',
+  'economy-response-not-json': 'Den lokale serveren ga ikke et gyldig JSON-svar. Kontroller at riktig PAA-server kjører, og last siden på nytt.',
+  'invalid-request': 'Serveren avviste forespørselen. Last siden på nytt og forbered analysen igjen.',
+  'api-request-failed': 'Den lokale serveren kunne ikke behandle forespørselen. Kontroller serveren. Ingen automatisk gjentakelse.',
+  'request-too-large': 'Forespørselen er større enn serveren tillater. Last siden på nytt og forbered analysen igjen.',
   'economy-api-key-unavailable': 'API-nøkkel er ikke konfigurert på den lokale serveren. Ingen betalt analyse er startet.',
   'economy-plan-mismatch-or-expired': 'Godkjenningen er utløpt eller gjelder et annet dokument. Forbered analysen på nytt.',
   'economy-relevant-text-not-found': 'Ingen lesbar økonomitekst ble funnet. Kontroller originalen.',
@@ -47,7 +53,7 @@ export function EconomyAnalysisControl({ outcome, selected, generation, dispatch
       const body = new FormData(); body.append('file', selected.file)
       const response = await fetch('/api/document-economy/prepare', { method: 'POST', body, signal: controller.signal,
         headers: { 'X-Session-Id': sessionId.current, 'X-Request-Id': crypto.randomUUID(), 'X-Analysis-Generation': String(generation) } })
-      const json = await response.json()
+      const json = await readEconomyResponse(response)
       if (!response.ok) throw new Error(typeof json?.error === 'string' ? json.error : 'invalid-response')
       const parsed = PlanSchema.parse(json)
       if (parsed.readyForApproval && (!parsed.requestDigest || parsed.blockers.length > 0)) throw new Error('invalid-response')
@@ -68,7 +74,7 @@ export function EconomyAnalysisControl({ outcome, selected, generation, dispatch
       const response = await fetch('/api/document-economy/run', { method: 'POST', signal: controller.signal,
         headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ planId: plan.planId, documentHash: plan.documentHash,
           requestDigest: plan.requestDigest, approveCost: true, approveTransfer: true }) })
-      const json = await response.json()
+      const json = await readEconomyResponse(response)
       if (!response.ok) {
         const code = typeof json?.error === 'string' ? json.error : 'invalid-response'
         if (['economy-api-key-unavailable', 'analysis-active', 'economy-plan-mismatch-or-expired', 'economy-explicit-consent-required'].includes(code)) setAttempted(false)
@@ -79,7 +85,13 @@ export function EconomyAnalysisControl({ outcome, selected, generation, dispatch
       if (!result.success || result.data.reportHash !== selected.hash || result.data.economy.analysis?.requestDigest !== plan.requestDigest) throw new Error('invalid-response')
       if (!controller.signal.aborted) dispatch({ type: 'import-economy-result', generation, documentHash: selected.hash, requestDigest: plan.requestDigest, outcome: result.data })
     } catch (caught) {
-      if (!controller.signal.aborted) setError(reason(caught instanceof Error ? caught.message : 'transport-failure'))
+      if (!controller.signal.aborted) {
+        const code = caught instanceof Error ? caught.message : 'transport-failure'
+        if (code === 'economy-route-unavailable') {
+          setAttempted(false); setPlan(null); setCostApproved(false); setTransferApproved(false)
+        }
+        setError(reason(code))
+      }
     } finally { if (!controller.signal.aborted) setBusy(null) }
   }
   if (outcome.economy.analysis && outcome.economy.analysis.provenance !== 'local-only') return <p role="status">KI-økonomianalyse er gjennomført eller gjenopprettet for dette dokumentet. Kontroller alle tolkninger mot originalen.</p>

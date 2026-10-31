@@ -35,6 +35,23 @@ for (const mode of [undefined, 'live', 'unknown'] as const) {
       clearTimeout(timer)
       const metadata = await fetch(address + '/api/analysis-config')
       expect(await metadata.json()).toEqual({ mode: mode ?? 'demo' })
+      const missing = await fetch(address + '/api/unknown', { method: 'POST' })
+      expect(missing.status).toBe(404)
+      expect(missing.headers.get('content-type')).toContain('application/json')
+      expect(await missing.json()).toEqual({ error: 'api-route-unavailable' })
+      // Ruten må være montert i selve serveren, ikke bare i en isolert routertest.
+      const prepare = await fetch(address + '/api/document-economy/prepare', { method: 'POST' })
+      expect(prepare.status).toBe(400)
+      expect(await prepare.json()).toEqual({ error: 'invalid-request' })
+      const malformed = await fetch(address + '/api/document-economy/run', { method: 'POST',
+        headers: { 'Content-Type': 'application/json' }, body: '{' })
+      expect(malformed.status).toBe(400)
+      expect(malformed.headers.get('content-type')).toContain('application/json')
+      expect(await malformed.json()).toEqual({ error: 'invalid-request' })
+      const oversized = await fetch(address + '/api/document-economy/run', { method: 'POST',
+        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: 'x'.repeat(4096) }) })
+      expect(oversized.status).toBe(413)
+      expect(await oversized.json()).toEqual({ error: 'request-too-large' })
       const bytes = await readFile(new URL('../fixtures/property-cases/F1-tilstandsrapport.pdf', import.meta.url))
       const body = new FormData()
       body.append('file', new Blob([bytes]), 'F1-tilstandsrapport.pdf')

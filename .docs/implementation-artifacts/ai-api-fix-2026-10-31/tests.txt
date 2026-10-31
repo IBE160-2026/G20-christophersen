@@ -1,0 +1,13 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/economy-api-response.test.ts tests/integration/server-mode.test.ts tests/integration/uploaded-economy-http.test.ts
+
+
+ RUN  v5.0.4 <project-root>
+
+
+ Test Files  3 passed (3)
+      Tests  11 passed (11)
+   Start at  03:26:57
+   Duration  8.60s (tests 96%, import 3%, transform 1%)
+

@@ -49,7 +49,7 @@ async function start() {
 
   // Andre API-er er ikke tilgjengelige i semester-v1.
   app.use('/api', (_request, response) => {
-    response.status(404).type('text').send('API-ruten er ikke tilgjengelig.')
+    response.status(404).json({ error: 'api-route-unavailable' })
   })
 
   const vite = development
@@ -79,7 +79,7 @@ async function start() {
     response.status(404).type('text').send('Fant ikke ressursen.')
   })
 
-  const safeError: ErrorRequestHandler = (error: unknown, _request, response, _next) => {
+  const safeError: ErrorRequestHandler = (error: unknown, request, response, _next) => {
     if (response.headersSent) {
       response.destroy()
       return
@@ -88,6 +88,12 @@ async function start() {
       ? error.status : undefined
     const code = status === 400 || status === 412 || status === 416
       ? status : status === 403 || status === 404 ? 404 : 500
+    if (request.path === '/api' || request.path.startsWith('/api/')) {
+      const apiStatus = status === 413 ? 413 : code
+      response.status(apiStatus).json({ error: apiStatus === 413 ? 'request-too-large' : code === 400 ? 'invalid-request'
+        : code === 404 ? 'api-route-unavailable' : 'api-request-failed' })
+      return
+    }
     response.status(code).type('text').send(code === 500
       ? 'Arbeidsflaten kunne ikke lastes. Last siden på nytt.'
       : code === 412 || code === 416 ? 'Ressursen kan ikke leveres med de angitte forespørselsvilkårene.'

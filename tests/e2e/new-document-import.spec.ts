@@ -202,6 +202,8 @@ test('135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI
   await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
   const response = await prepared
   expect(response.status()).toBe(200)
+  expect(new URL(response.url()).pathname).toBe('/api/document-economy/prepare')
+  expect(response.headers()['content-type']).toContain('application/json')
   const plan = await response.json()
   expect(plan.documentHash).toBe(sha(bytes))
   expect(plan.selectedPages).toContain(49)
@@ -224,7 +226,12 @@ test('135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI
   interpreted.economy.analysis = { provenance: 'live-document', reason: 'Teststub: ny dokumentbundet KI-tolkning; ingen modell er kalt. Kildekontroll gjenstår.', requestDigest: plan.requestDigest, selectedPages: plan.selectedPages, observations: [], limitations: [] }
   interpreted.inputDigest = plan.requestDigest
   if (interpreted.cost) interpreted.cost.requestDigest = plan.requestDigest
-  await page.route('**/api/document-economy/run', route => route.fulfill({ json: { outcome: interpreted } }))
+  await page.route('**/api/document-economy/run', route => {
+    expect(route.request().method()).toBe('POST')
+    expect(route.request().postDataJSON()).toEqual({ planId: plan.planId, documentHash: plan.documentHash,
+      requestDigest: plan.requestDigest, approveCost: true, approveTransfer: true })
+    return route.fulfill({ json: { outcome: interpreted } })
+  })
   await page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ }).check()
   await expect(page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })).toBeDisabled()
   await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
@@ -234,6 +241,42 @@ test('135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI
   await expect(page.locator('.document-economy')).toContainText('ufullstendig')
   expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(1)
   expect(recorded.errors).toEqual([]); expect(recorded.external).toEqual([])
+})
+
+test('gammel backend med tekstlig 404 viser omstartshjelp og kan forberedes på nytt', async ({ page }) => {
+  const recorded = audit(page); await recorded.install(); await page.goto('/')
+  await upload(page, fresh())
+  await page.route('**/api/document-economy/prepare', route => route.fulfill({ status: 404,
+    contentType: 'text/plain; charset=utf-8', body: 'API-ruten er ikke tilgjengelig.' }))
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  const alert = page.locator('.economy-ai-control [role="alert"]')
+  await expect(alert).toContainText('HTTP 404')
+  await expect(alert).toContainText('start den på nytt')
+  await expect(alert).not.toContainText('Unexpected token')
+  await expect(page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })).toHaveCount(0)
+  await page.unroute('**/api/document-economy/prepare')
+  await page.route('**/api/document-economy/prepare', route => route.fulfill({ status: 500,
+    json: { error: 'api-request-failed' } }))
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  await expect(alert).toContainText('kunne ikke behandle forespørselen')
+  await page.unroute('**/api/document-economy/prepare')
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  await expect(page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })).toBeDisabled()
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(0)
+  await page.route('**/api/document-economy/run', route => route.fulfill({ status: 404,
+    contentType: 'text/plain', body: 'API-ruten er ikke tilgjengelig.' }))
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ }).check()
+  await page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ }).check()
+  await page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true }).click()
+  await expect(alert).toContainText('HTTP 404')
+  await expect(page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Forbered KI-analyse', exact: true }).click()
+  await expect(page.getByRole('checkbox', { name: /^Jeg godkjenner overføring/ })).not.toBeChecked()
+  await expect(page.getByRole('checkbox', { name: /^Jeg godkjenner kostnaden/ })).not.toBeChecked()
+  await expect(page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true })).toBeDisabled()
+  expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(1)
+  expect(recorded.external).toEqual([])
 })
 
 test('KI-knappen krever begge uttrykkelige samtykker og ny PDF nullstiller godkjenningen', async ({ page }) => {

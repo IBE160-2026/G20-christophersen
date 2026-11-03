@@ -9,6 +9,8 @@ export const RiskFindingSchema = z.strictObject({
   consequence: z.string().min(1).max(2000), action: z.string().min(1).max(2000),
   grade: z.enum(['TG2', 'TG3']).nullable(), sources: z.array(PdfSourceSchema).min(1).max(12),
   sourceQuality: z.enum(['readable-text', 'partial-text']).optional(),
+  evidenceKind: z.enum(['summary', 'detail']).optional(),
+  component: z.string().min(1).max(200).optional(),
 })
 export const RiskAnalysisSchema = z.strictObject({
   method: z.literal('local-rules-1'), coverage: z.enum(['partial', 'unavailable']),

@@ -444,6 +444,12 @@
 .investment-shell .property-risk { padding-block: 36px 44px; border-top: 1px solid var(--investment-line); }
 .investment-shell .property-risk .investment-section-heading { margin-bottom: 18px; }
 .investment-shell .property-risk-intro { max-width: 850px; color: var(--investment-muted); font-size: 13px; line-height: 1.65; margin-bottom: 27px; }
+.investment-shell .technical-report-evidence { border-left: 2px solid var(--investment-warning); padding-left: 18px; margin-block: 20px 28px; color: var(--investment-muted); font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.investment-shell .technical-report-evidence p { margin-block: 7px; }
+.investment-shell .technical-report-evidence .quiet-button { font-size: inherit; }
+.investment-shell .technical-grade { font-weight: 600; color: var(--investment-warning); }
+.investment-shell .technical-grade--tg3 { color: var(--investment-danger); }
+.investment-shell .technical-summary-note { color: var(--investment-warning); }
 .investment-shell .property-risk-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
 .investment-shell .property-risk-group { min-width: 0; border-top: 2px solid var(--investment-line); padding-top: 16px; }
 .investment-shell .property-risk-group--documented { border-top-color: var(--investment-danger); }

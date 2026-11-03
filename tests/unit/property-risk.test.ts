@@ -15,6 +15,65 @@ async function fixture(name = 'mixed-12.pdf') {
   return state
 }
 describe('Risikooversiktens aktuelle og etterprøvbare grunnlag', () => {
+  it('bevarer salgsoppgavens sammendrag og originaler når separat rapport blir gjeldende, med status- og identitetssperrer', async () => {
+    const prospectusBasis = { ...codeFirstBasis(['Adresse: Testveien 8\nForhold som har fått TG2:\nVinduer\nDet er påvist råte i karmene.\nKonsekvens/tiltak:\nInnhent faglig vurdering.']), name: 'salgsoppgave.pdf' }
+    const prospectus = await createCodeFirstImport(prospectusBasis)
+    const state = createInitialSession()
+    const selected = { hash: prospectusBasis.hash, file: new File([], prospectusBasis.name), bytes: new Uint8Array() }
+    state.prospectus.prospectus = { selected, outcome: prospectus, status: 'imported', active: null, error: null }
+    const reportBasis = { ...codeFirstBasis(['TILSTANDSRAPPORT - START\nAdresse: Testveien 8\nBygningsdel: Tak\nTilstandsgrad: TG3\nVurdering av avvik:\nDet er påvist lekkasje.\nKonsekvens/tiltak:\nUndersøk taket.\nTILSTANDSRAPPORT - SLUTT']), role: 'report' as const, name: 'rapport.pdf', parentHash: prospectusBasis.hash }
+    const report = await createCodeFirstImport(reportBasis), reportSelected = { hash: reportBasis.hash, file: new File([], reportBasis.name), bytes: new Uint8Array() }
+    state.prospectus.report = { selected: reportSelected, outcome: report, status: 'imported', active: null, error: null }
+    state.report = { ...state.report, selected: reportSelected, outcome: importControlOutcome(report), documentImport: report, status: 'completed' }
+    const risks = selectPropertyRisks(state)
+    const summary = risks.documented.find(item => item.evidenceKind === 'summary')
+    expect(summary?.sources).toEqual(prospectus.propertyRisk!.technical.findings[0]!.sources)
+    expect(summary?.sources.every(source => source.documentName === 'salgsoppgave.pdf' && source.documentHash === prospectusBasis.hash)).toBe(true)
+    expect(risks.reportEvidence?.documentName).toBe('rapport.pdf')
+    expect(risks.reportEvidence?.ranges[0]?.source.documentHash).toBe(reportBasis.hash)
+    expect(risks.documented.some(item => item.evidenceKind === 'detail' && item.grade === 'TG3')).toBe(true)
+    report.propertyIdentity[0]!.value = 'Annen vei 2'
+    const conflicted = selectPropertyRisks(state)
+    expect(conflicted.documented.filter(item => item.domain === 'technical')).toEqual([])
+    expect(conflicted.possible.find(item => item.evidenceKind === 'summary')?.sources).toEqual(summary?.sources)
+    expect(conflicted.gaps.join(' ')).toContain('motstridende eiendomsidentitet')
+    state.prospectus.report.status = 'selecting'
+    expect(selectPropertyRisks(state).possible.filter(item => item.domain === 'technical')).toEqual([])
+    state.prospectus.report.status = 'imported'
+    state.prospectus.prospectus.status = 'selecting'
+    expect(selectPropertyRisks(state).documented).toEqual([])
+    expect(selectPropertyRisks(state).possible).toEqual([])
+  })
+  it('holder salgsoppgavens og rapportens sammendragskilder atskilt ved samme bytehash og ulike filnavn', async () => {
+    const basis = codeFirstBasis(['Adresse: Testveien 8\nForhold som har fått TG2:\nVinduer\nDet er påvist råte i karmene.\nKonsekvens/tiltak:\nInnhent faglig vurdering.'])
+    const prospectus = await createCodeFirstImport({ ...basis, name: 'salgsoppgave-navn.pdf' })
+    const report = await createCodeFirstImport({ ...basis, name: 'rapport-navn.pdf', role: 'report', parentHash: basis.hash })
+    const state = createInitialSession(), selected = { hash: basis.hash, file: new File([], prospectus.documentName), bytes: new Uint8Array() }, reportSelected = { ...selected, file: new File([], report.documentName) }
+    state.prospectus.prospectus = { selected, outcome: prospectus, status: 'imported', active: null, error: null }
+    state.prospectus.report = { selected: reportSelected, outcome: report, status: 'imported', active: null, error: null }
+    state.report = { ...state.report, selected: reportSelected, outcome: importControlOutcome(report), documentImport: report, status: 'completed' }
+    const risks = selectPropertyRisks(state)
+    const summaries = risks.documented.filter(item => item.evidenceKind === 'summary')
+    expect(summaries).toHaveLength(2)
+    expect(summaries.map(item => item.sources[0]!.documentName).sort()).toEqual(['rapport-navn.pdf', 'salgsoppgave-navn.pdf'])
+    expect(summaries.every(item => item.sources.every(source => source.documentHash === basis.hash))).toBe(true)
+    expect(risks.reportEvidence?.documentName).toBe('rapport-navn.pdf')
+  })
+  it('bevarer sammendrag som eget kildebelagt risikofunn uten å gjøre det til rapportkontrollgrunnlag', async () => {
+    const basis = codeFirstBasis(['TILSTANDSRAPPORT - START\nAdresse: Testveien 8\nTILSTANDSRAPPORT - SLUTT\nForhold som har fått TG2:\nVinduer\nDet er påvist råte i karmene.\nKonsekvens/tiltak:\nInnhent faglig vurdering.'])
+    const outcome = await createCodeFirstImport(basis), state = createInitialSession()
+    const selected = { hash: basis.hash, file: new File([], basis.name), bytes: new Uint8Array() }
+    state.prospectus.prospectus = { selected, outcome, status: 'imported', active: null, error: null }
+    state.report = { ...state.report, selected, outcome: importControlOutcome(outcome), documentImport: outcome, status: 'completed' }
+    const risks = selectPropertyRisks(state)
+    expect(risks.documented).toContainEqual(expect.objectContaining({ evidenceKind: 'summary', component: 'Vinduer', grade: 'TG2', sources: expect.arrayContaining([expect.objectContaining({ documentHash: basis.hash, pdfPage: 1 })]) }))
+    expect(outcome.technical.findings).toHaveLength(0)
+    expect(risks.technicalCoverage).toContain('ufullstendig')
+    expect(risks.reportEvidence).toMatchObject({ documentName: basis.name, ranges: [{ startPage: 1, endPage: 1, certainty: 'certain', source: { documentHash: basis.hash, documentName: basis.name, pdfPage: 1 } }] })
+    state.prospectus.prospectus.status = 'selecting'
+    expect(selectPropertyRisks(state).reportEvidence).toBeUndefined()
+    expect(selectPropertyRisks(state).documented).toEqual([])
+  })
   it('starter med manglende undersøkelser og uten en vellykket tomanalyse', () => {
     const risks = selectPropertyRisks(createInitialSession())
     expect(risks.documented).toEqual([])

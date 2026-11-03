@@ -13,6 +13,7 @@ export interface PropertyRiskOverview {
   documented: PropertyRiskItem[]; possible: PropertyRiskItem[]; unexamined: PropertyRiskItem[]
   background: PropertyRiskItem[]
   gaps: string[]; limitations: string[]; technicalCoverage: string
+  reportEvidence?: { documentName: string; ranges: { startPage: number; endPage: number; certainty: 'certain' | 'ambiguous'; source: RiskSource }[]; unreadPages: number[] }
 }
 
 /** Visningsmodell: ingen risikoscore, ingen endring av kontroll- eller finansgrunnlag. */
@@ -28,8 +29,13 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
   const candidates = [...(extraction?.findings ?? []), ...(extraction?.uncertainCandidates ?? [])]
   const localTechnical = technical?.propertyRisk?.technical.findings ?? []
   const items: PropertyRiskItem[] = [...(property.outcome?.propertyRisk?.legal.findings ?? [])]
-  if (technical && (technical.reportHash !== property.outcome?.reportHash || technical.documentName !== property.outcome.documentName)) {
+  const separateTechnical = technical && (technical.reportHash !== property.outcome?.reportHash || technical.documentName !== property.outcome.documentName)
+  if (separateTechnical) {
     items.push(...(technical.propertyRisk?.legal.findings ?? []).map(item => identityConflict && item.status !== 'not-investigated' ? { ...item, status: 'possible' as const } : item))
+    // Salgsoppgavens sammendrag er fortsatt kildegrunnlag selv når brukeren
+    // velger en separat rapport. Dokumentnavn og hash følger originalkilden.
+    items.push(...(property.outcome?.propertyRisk?.technical.findings ?? []).filter(item => item.evidenceKind === 'summary')
+      .map(item => identityConflict && item.status !== 'not-investigated' ? { ...item, status: 'possible' as const } : item))
   }
   const overlaps = (local: RiskFinding, id: string) => {
     const finding = technical?.technical.findings.find(item => item.findingId === id)
@@ -46,13 +52,16 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
       documentHash: source.reportHash ?? current!.reportHash, documentName: source.documentName, pdfPage: source.pdfPage,
     }] : []
     const associated = localTechnical.filter(local => overlaps(local, candidate.findingId))
-    const originalSources = technical?.technical.findings.find(item => item.findingId === candidate.findingId)?.sources
+    const importFinding = technical?.technical.findings.find(item => item.findingId === candidate.findingId)
+    const originalSources = importFinding?.sources
     const exactSources = !control?.correction && (originalSources || associated.length) ? [...new Map([...(originalSources ?? []), ...associated.flatMap(item => item.sources)]
       .map(item => [`${item.documentHash}:${item.pdfPage}:${item.start}:${item.end}`, item])).values()] : null
     const fullDescription = !control?.correction ? associated.reduce((description, local) => local.description.length > description.length ? local.description : description, finding?.description ?? original.description) : null
     const grade = finding?.grade ?? null
     items.push({ id: `controlled-${candidate.findingId}`, domain: 'technical', category: 'technical',
-      title: grade ? `${grade} · ${technical?.technical.findings.find(item => item.findingId === candidate.findingId)?.component ?? 'Teknisk forhold'}` : 'Teknisk forhold med usikker grad',
+      ...(importFinding?.component ? { component: importFinding.component } : {}),
+      evidenceKind: 'detail',
+      title: grade ? `${grade} · ${importFinding?.component ?? 'Teknisk forhold'}` : 'Teknisk forhold med usikker grad',
       description: fullDescription ?? finding?.description ?? original.description, grade,
       status: candidate.kind === 'uncertain' || control?.correction || identityConflict ? 'possible' : 'documented',
       consequence: grade === 'TG3' ? 'Forholdet kan ha vesentlig betydning for bruk og vedlikehold.' : 'Forholdet må inngå i eiendommens vedlikeholds- og kontrollgrunnlag.',
@@ -69,12 +78,13 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
     ...(property.outcome?.propertyRisk ? ['Lokalt regelsøk dekker bare utvalgte formuleringer. Kommunale godkjenninger, grunnbok og faktisk lovlig bruk er ikke verifisert.'] : []),
     ...(!current || coverage !== 'complete' && Boolean(technical) ? [technicalCoverage] : []),
     ...(identityConflict ? ['Rapport og salgsoppgave har motstridende eiendomsidentitet. Rapporten kan ikke brukes som bekreftet eiendomsgrunnlag.'] : []),
-    ...(technical?.coverage.technical.unreadPages.length ? [`Uleste rapportsider: ${technical.coverage.technical.unreadPages.join(', ')}.`] : []),
+    ...(technical?.coverage.technical.unreadPages.length ? [`Uleste eller ufullstendige sider i dokumentet (fysisk PDF-side): ${technical.coverage.technical.unreadPages.join(', ')}.`] : []),
     ...(property.outcome?.propertyRisk?.legal.unreadPages.length ? [`Juridisk tekst er ikke undersøkt på fysiske PDF-sider ${property.outcome.propertyRisk.legal.unreadPages.join(', ')}.`] : []),
     ...(property.outcome?.attachments ?? []).map(attachment => `Vedlegget «${attachment.name}» er ikke undersøkt.`),
   ]
   const limitations = [...new Set([
     ...(property.outcome?.propertyRisk?.legal.limitations ?? []), ...(technical?.propertyRisk?.technical.limitations ?? []),
+    ...(separateTechnical && property.outcome?.propertyRisk?.technical.findings.some(item => item.evidenceKind === 'summary') ? property.outcome.propertyRisk.technical.limitations : []),
     ...(technical?.propertyRisk?.legal.limitations ?? []),
     ...(extraction?.limitations ?? []), ...(technical?.coverage.technical.reasons ?? []), ...(technical?.technical.uncertainties ?? []),
   ])]
@@ -86,5 +96,7 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
   const grouped = groupPropertyRisks(items.filter(item => !isRiskBackground(item)), documents)
   return { documented: grouped.filter(item => item.status === 'documented').sort(order), possible: grouped.filter(item => item.status === 'possible').sort(order),
     unexamined: grouped.filter(item => item.status === 'not-investigated').sort(order), background: groupPropertyRisks(items.filter(isRiskBackground), documents),
-    gaps: [...new Set(gaps)], limitations, technicalCoverage }
+    gaps: [...new Set(gaps)], limitations, technicalCoverage,
+    ...(technical ? { reportEvidence: { documentName: technical.documentName, ranges: technical.sections.map(section => ({ startPage: section.startPage, endPage: section.endPage, certainty: section.certainty,
+      source: { documentHash: technical.reportHash, documentName: technical.documentName, pdfPage: section.startPage } })), unreadPages: technical.coverage.technical.unreadPages } } : {}) }
 }

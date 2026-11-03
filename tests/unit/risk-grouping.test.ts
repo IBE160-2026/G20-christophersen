@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { groupPropertyRisks, isRiskBackground } from '../../src/frontend/investment/risk-grouping.ts'
 import type { PropertyRiskItem } from '../../src/frontend/investment/property-risk.ts'
+import { analyzeTechnicalRisks } from '../../src/backend/import/technical-risk.ts'
+import { codeFirstBasis } from '../helpers/code-first.ts'
 
 const make = (id: string, description: string, page = 1, extra: Partial<PropertyRiskItem> = {}): PropertyRiskItem => ({
   id, description, title: 'Utleieenhet er ikke godkjent', domain: 'legal', category: 'rental-approval', status: 'documented', grade: null,
@@ -11,6 +13,66 @@ const basement = () => make('basement', 'Kjelleretasjen er innredet med en utlei
 const singular = () => make('singular', 'Utleid leilighet er ikke godkjent som egen bruksenhet.', 9)
 
 describe('Konservativ visningsgruppering', () => {
+  it('samler faktisk parserresultat med separate rom- og komponentkilder', () => {
+    const text = 'Overflater gulv\nLOFT > BAD - 4M2\nVurdering av avvik:\nDet er påvist skader i gulvet.\nKonsekvens/tiltak:\nKontroller gulvet.'
+    const basis = codeFirstBasis([text, text])
+    const findings = analyzeTechnicalRisks(basis).findings
+    expect(findings).toHaveLength(2)
+    expect(findings.every(item => item.component === 'LOFT > BAD - 4M2 · Overflater gulv')).toBe(true)
+    expect(findings[0]?.sources.map(source => source.quote)).toContain('LOFT > BAD - 4M2')
+    expect(findings[0]?.sources.map(source => source.quote)).toContain('Overflater gulv')
+    const grouped = groupPropertyRisks(findings, [{ reportHash: basis.hash, documentName: basis.name, pages: basis.pages }])
+    expect(grouped).toHaveLength(1)
+    expect(grouped[0]?.members).toHaveLength(2)
+    expect(grouped[0]?.sources).toHaveLength(6)
+    expect(grouped[0]?.sources.map(source => source.pdfPage)).toEqual([1, 1, 1, 2, 2, 2])
+    const missingRoom = { ...findings[1]!, sources: findings[1]!.sources.filter(source => source.quote !== 'LOFT > BAD - 4M2') }
+    expect(groupPropertyRisks([findings[0]!, missingRoom], [{ reportHash: basis.hash, documentName: basis.name, pages: basis.pages }])).toHaveLength(2)
+  })
+  it('holder faktisk parserresultat for samme Bad øst-avvik i første og andre etasje atskilt', () => {
+    const room = (floor: string) => `${floor}\nBygningsdel: Bad øst\nTilstandsgrad: TG2\nVurdering av avvik:\nDet er påvist lekkasje.\nKonsekvens/tiltak:\nKontroller badet.`
+    const basis = codeFirstBasis([room('Første etasje'), room('Andre etasje')])
+    const findings = analyzeTechnicalRisks(basis).findings
+    expect(findings).toHaveLength(2)
+    expect(findings.map(item => item.component)).toEqual(['Bad øst', 'Bad øst'])
+    expect(findings[0]?.description).toBe(findings[1]?.description)
+    const grouped = groupPropertyRisks(findings, [{ reportHash: basis.hash, documentName: basis.name, pages: basis.pages }])
+    expect(grouped).toHaveLength(2)
+    expect(grouped.every(item => !item.members)).toBe(true)
+    expect(new Set(grouped.flatMap(item => item.sources.map(source => source.pdfPage)))).toEqual(new Set([1, 2]))
+  })
+  it.each([['Kjeller', 'Loft'], ['Kjeller', 'Kjeller og loft'], ['Kjeller', 'Annet rom:']])('krysser ikke motstridende eller usikker romkontekst for Bad øst: %s / %s', (left, right) => {
+    const quote = 'Bygningsdel: Bad øst\nTilstandsgrad: TG3\nDet er påvist lekkasje.'
+    const pages = [left, right].map((heading, index) => ({ pdfPage: index + 1, text: `${heading}\n${quote}` }))
+    const items = pages.map(page => make(`technical-${page.pdfPage}`, 'Det er påvist lekkasje.', page.pdfPage, { domain: 'technical', category: 'technical', component: 'Bad øst', evidenceKind: 'detail', grade: 'TG3',
+      sources: [{ documentHash: 'doc-a', documentName: 'syntetisk.pdf', pdfPage: page.pdfPage, start: page.text.indexOf(quote), end: page.text.length, quote }] }))
+    const documents = [{ reportHash: 'doc-a', documentName: 'syntetisk.pdf', pages }]
+    expect(groupPropertyRisks(items, documents)).toHaveLength(2)
+    const samePage = { pdfPage: 2, text: pages[0]!.text }
+    const sameItem = { ...items[1]!, sources: [{ ...items[0]!.sources[0]!, pdfPage: 2 }] }
+    expect(groupPropertyRisks([items[0]!, sameItem], [{ ...documents[0]!, pages: [pages[0]!, samePage] }])).toHaveLength(1)
+  })
+  it('samler bare kildeverifisert samme stedfestede tekniske komponent og identiske avvik', () => {
+    const component = 'Bad øst i andre etasje', description = 'Det er påvist lekkasje.'
+    const text = `${component}\nTG3\n${description}`
+    const technical = (id: string, page: number, extra: Partial<PropertyRiskItem> = {}) => make(id, description, page, { domain: 'technical', category: 'technical', grade: 'TG3', component, evidenceKind: 'detail', sourceQuality: 'readable-text',
+      sources: [{ documentHash: 'doc-a', documentName: 'syntetisk.pdf', pdfPage: page, start: 0, end: text.length, quote: text }], ...extra })
+    const documents = [{ reportHash: 'doc-a', documentName: 'syntetisk.pdf', pages: [{ pdfPage: 1, text }, { pdfPage: 2, text }] }]
+    const input = [technical('a', 1), technical('b', 2)], before = structuredClone(input)
+    const grouped = groupPropertyRisks(input, documents)
+    expect(grouped).toHaveLength(1)
+    expect(grouped[0]?.sources.map(source => source.pdfPage)).toEqual([1, 2])
+    expect(grouped[0]?.members).toHaveLength(2)
+    expect(input).toEqual(before)
+    expect(groupPropertyRisks(input)).toHaveLength(2)
+    expect(groupPropertyRisks([input[0]!, technical('b', 2, { component: 'Bad' })], documents)).toHaveLength(2)
+    expect(groupPropertyRisks(input.map(item => ({ ...item, component: 'Bad' })), documents)).toHaveLength(2)
+    for (const extra of [{ grade: 'TG2' as const }, { status: 'possible' as const }, { evidenceKind: 'summary' as const }, { component: 'Bad vest i andre etasje' }, { sourceQuality: 'partial-text' as const }, { description: 'Det er påvist råte.' }]) {
+      expect(groupPropertyRisks([input[0]!, technical('b', 2, extra)], documents)).toHaveLength(2)
+    }
+    expect(groupPropertyRisks([technical('controlled-a', 1), technical('controlled-b', 2)], documents)).toHaveLength(2)
+    expect(groupPropertyRisks([input[0]!, { ...input[1]!, sources: [{ ...input[1]!.sources[0]!, start: 1 }] }], documents)).toHaveLength(2)
+  })
   it('samler ett konkret kjellerforhold og singular utleiereferanse med alle originalene uten mutasjon', () => {
     const input = [basement(), singular()], before = structuredClone(input)
     const grouped = groupPropertyRisks(input)

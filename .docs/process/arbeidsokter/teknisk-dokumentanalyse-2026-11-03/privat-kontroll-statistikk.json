@@ -1,0 +1,26 @@
+{
+  "pageCount": 135,
+  "sections": [
+    {
+      "start": 63,
+      "end": 87,
+      "certainty": "ambiguous"
+    }
+  ],
+  "coverage": "incomplete",
+  "technicalControlFindings": 0,
+  "localRisks": 66,
+  "summaryFindings": 23,
+  "summaryTg2": 23,
+  "summaryTg3": 0,
+  "summaryPhysicalPages": [
+    40,
+    41,
+    42,
+    43
+  ],
+  "partialCandidates": 37,
+  "checkedSources": 120,
+  "reservedUsd": "0.00000000",
+  "actualUsd": null
+}

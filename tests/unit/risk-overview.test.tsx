@@ -41,3 +41,27 @@ it('teller samlet forhold én gang og holder kilder, bakgrunn og dekning utenfor
   expect(markup).toContain('Generell lovforklaring')
   expect(markup).not.toContain(background.consequence)
 })
+
+it('viser grad, sammendragsforbehold og fysisk rapportområde uten å hevde komplette detaljer', () => {
+  const source = { documentHash: 'a', documentName: 'teknisk.pdf', pdfPage: 4, start: 0, end: 20, quote: 'Bad øst: Avvik funnet.' }
+  const item: PropertyRiskItem = { id: 'summary', domain: 'technical', category: 'technical', title: 'Bad øst', description: 'Bad øst: Avvik funnet.', grade: 'TG3', evidenceKind: 'summary', status: 'documented',
+    consequence: 'Detaljene må undersøkes.', action: 'Se originalen.', sources: [source] }
+  const risks: PropertyRiskOverview = { documented: [item], possible: [], unexamined: [], background: [], gaps: [], limitations: [], technicalCoverage: 'Rapportdekningen er ufullstendig.',
+    reportEvidence: { documentName: 'teknisk.pdf', ranges: [{ startPage: 8, endPage: 12, certainty: 'ambiguous', source: { ...source, pdfPage: 8 } }], unreadPages: [9, 11] } }
+  for (const Component of [RiskOverview, RiskDetails]) {
+    const markup = renderToStaticMarkup(createElement(Component, { risks, onSource: () => {}, onDetails: () => {} }))
+    expect(markup).toContain('technical-grade--tg3')
+    expect(markup).toContain('Oppgitt i sammendrag')
+    expect(markup).toContain('fysisk PDF-side 8–12')
+    expect(markup).toContain('usikker avgrensning')
+    expect(markup).toContain('fysisk PDF-side 9, 11')
+    expect(markup).toContain('Uleste eller ufullstendige sider i dokumentet')
+    expect(markup).toContain('ikke teknisk kontrollgrunnlag')
+    expect(markup).toContain('Åpne rapportstart')
+    expect(markup).toContain('Se originalkilde')
+    expect(markup).not.toContain('Lokal analyse har delvis dekning')
+    const detailMarkup = renderToStaticMarkup(createElement(Component, { risks: { ...risks, documented: [{ ...item, evidenceKind: 'detail' }] }, onSource: () => {}, onDetails: () => {} }))
+    expect(detailMarkup).toContain('Detaljtekst')
+    expect(detailMarkup).not.toContain('Rapportdetalj')
+  }
+})

@@ -23,6 +23,10 @@ describe('integrert lokal eiendomsrisiko', () => {
       expect(outcome.economy.fields.find(field => field.id === 'price')?.amount).toBe('3000000')
       expect(outcome.technical.findings[0]?.grade).toBe('TG3')
       expect(outcome.technical.findings[0]?.source.pdfPage).toBe(2)
+      const legacyQuote = 'Tilstandsgrad: TG3\nBygningsdel: tak\nAlvorlig lekkasje i tak\n'
+      const legacyStart = basis.pages[1]!.text.indexOf(legacyQuote)
+      expect(outcome.technical.findings[0]?.findingId).toBe('local-' + createHash('sha256').update(`${basis.hash}:2:${legacyStart}`).digest('hex').slice(0, 24))
+      expect(outcome.technical.findings[0]?.sources[0]).toMatchObject({ start: legacyStart, end: legacyStart + legacyQuote.length, quote: legacyQuote })
       expect(outcome.coverage.technical.status).not.toBe('complete')
       expect(outcome.cost?.reservedUsd).toBe('0.00000000')
       for (const analysis of Object.values(outcome.propertyRisk!)) for (const finding of analysis.findings) for (const source of finding.sources) {

@@ -1,0 +1,8 @@
+
+Running 1 test using 1 worker
+
+(node:56474) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/property-risk.spec.ts:55:1 › privat Øvre Blekeveien: side 58 og ufullstendig integrert rapport åpnes i originalen (5.9s)
+
+  1 passed (7.2s)

@@ -3,6 +3,7 @@ import { CODE_FIRST_PLAN_VERSION, normalizeImportText, collectTgCandidates } fro
 import { parseNorwegianMoney } from './norwegian-money.ts'
 import { ListingKeySchema } from '../../contracts/listing.ts'
 import { deviationStatus, extractExplicitTechnicalFindings } from './technical-risk.ts'
+import { detectReportSections } from './report-detection.ts'
 import type { DocumentImport, EconomyField, ImportManifest, ImportRole, PdfSource } from '../../contracts/document-import.ts'
 
 export type ImportBasis = { hash: string; name: string; role: ImportRole; requestId: string; pages: DocumentImport['pages']; attachments: DocumentImport['attachments']; parentHash: string | null; attachmentId: string | null }
@@ -24,6 +25,7 @@ const economyPattern = /prisantydning|totalpris|omkostninger|dokumentavgift|fell
 export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: boolean } = {}) {
   const manifest: ImportManifest = { version: CODE_FIRST_PLAN_VERSION, blocks: [], candidates: [], residual: [] }
   const findings: DocumentImport['technical']['findings'] = []
+  const safeTechnicalFindings = options.legacyEconomy ? [] : extractExplicitTechnicalFindings(basis)
   const sections: DocumentImport['sections'] = [], propertyIdentity: DocumentImport['propertyIdentity'] = []
   const headings: { page: number; start: number; end: number; closing: boolean }[] = []
   const economyPages = new Set<number>()
@@ -46,6 +48,11 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
     for (const match of page.text.matchAll(/Tilstandsgrad\s*:\s*T\s*G\s*([23])\s*\nBygningsdel\s*:\s*([^\n]+)\n([^\n]+)(?:\n|$)/gi)) {
       const quote = match[0]
       if (deviationStatus(match[3]!.trim()) !== 'documented') continue
+      // Bevar historiske ID-er og kildespenn bare når den felles parseren
+      // bekrefter hele samme avvik. En etikett eller første bullet er ikke et funn.
+      if (!options.legacyEconomy && !safeTechnicalFindings.some(finding => finding.component === match[2]!.trim()
+        && finding.grade === `TG${match[1]}` && finding.description === match[3]!.trim()
+        && finding.sources.some(source => source.pdfPage === page.pdfPage && source.start === match.index && source.quote.trim() === quote.trim()))) continue
       if (quote.length > 2000 || match[2]!.trim().length > 200 || match[3]!.trim().length > 2000 || findings.length >= 200) { if (findings.length >= 200) residual(page.pdfPage, 'Lokal funngrense nådd; resten må avklares.'); continue }
       const source = sourceFor(basis, page.pdfPage, match.index, match.index + quote.length)
       const findingId = 'local-' + hash(`${basis.hash}:${page.pdfPage}:${match.index}`).slice(0, 24)
@@ -123,20 +130,21 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
   }
   // Additional formats still require a named component and explicit grade.
   // Existing findings keep their IDs for pinned replay and human controls.
-  if (!options.legacyEconomy) for (const finding of extractExplicitTechnicalFindings(basis)) {
+  if (!options.legacyEconomy) for (const finding of safeTechnicalFindings) {
     if (findings.some(existing => existing.sources.some(left => finding.sources.some(right => left.pdfPage === right.pdfPage && left.start <= right.start && left.end >= right.end)))) continue
     if (findings.length < 200) findings.push(finding)
     else residual(finding.source.pdfPage, 'Lokal funngrense nådd; resten må avklares.')
   }
   const starts = headings.filter(item => !item.closing), ends = headings.filter(item => item.closing)
-  if (starts.length === 1 && ends.length <= 1 && (ends[0]?.page ?? basis.pages.length) >= starts[0]!.page) {
+  if (options.legacyEconomy && starts.length === 1 && ends.length <= 1 && (ends[0]?.page ?? basis.pages.length) >= starts[0]!.page) {
     const start = starts[0]!, end = ends[0]
     const certain = Boolean(end) || basis.role === 'report' && start.page === 1
     sections.push({ documentHash: basis.hash, startPage: start.page, endPage: end?.page ?? basis.pages.length, certainty: certain ? 'certain' : 'ambiguous', basis: [sourceFor(basis, start.page, start.start, start.end), ...(end ? [sourceFor(basis, end.page, end.start, end.end)] : [])] })
   }
+  if (!options.legacyEconomy) sections.push(...detectReportSections(basis))
   const reconciliationIds = new Set(findings.filter(finding => findings.some(other => other.findingId !== finding.findingId && componentKey(other.component) === componentKey(finding.component) && other.grade === finding.grade && other.description === finding.description)).map(finding => finding.findingId))
   for (const page of basis.pages) {
-    const explicitSources = [...propertyIdentity.map(item => item.source), ...sections.flatMap(item => item.basis), ...ownershipSources, ...fields.flatMap(field => field.sources), ...findings.filter(finding => !reconciliationIds.has(finding.findingId)).flatMap(finding => finding.sources)].filter(source => source.pdfPage === page.pdfPage)
+    const explicitSources = [...propertyIdentity.map(item => item.source), ...sections.filter(item => item.certainty === 'certain').flatMap(item => item.basis), ...ownershipSources, ...fields.flatMap(field => field.sources), ...findings.filter(finding => !reconciliationIds.has(finding.findingId)).flatMap(finding => finding.sources)].filter(source => source.pdfPage === page.pdfPage)
     const boundaries = new Set([0, page.text.length, ...explicitSources.flatMap(source => [source.start, source.end])])
     const pageCandidates = manifest.candidates.filter(candidate => candidate.pdfPage === page.pdfPage)
     // No original TG marker may straddle a chunk or an explicit-source boundary.

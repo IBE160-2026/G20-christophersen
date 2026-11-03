@@ -114,10 +114,13 @@ export const DocumentImportSchema = ImportContextSchema.extend({
       && source.start < page.text.length && source.end <= page.text.length && source.end - source.start === source.quote.length
       && page.text.slice(source.start, source.end) === source.quote
   }
-  const sources = [...value.propertyIdentity.map(item => item.source), ...value.sections.flatMap(item => item.basis), ...value.economy.ownershipSources,
+  const sources = [...value.propertyIdentity.map(item => item.source), ...value.economy.ownershipSources,
     ...value.economy.fields.flatMap(field => [...field.sources, ...field.alternatives.map(item => item.source)]),
     ...(value.economy.analysis?.observations.flatMap(item => item.sources) ?? []), ...(value.economy.analysis?.limitations.flatMap(item => item.sources) ?? []), ...value.technical.findings.flatMap(item => item.sources)]
   if (sources.some(source => !sourceValid(source))) fail('Kildefeil: hash, fysisk side, lesbarhet eller ordrett tekstområde avviker.')
+  // Bevarte tekstlag kan støtte et uklart rapportområde, aldri sikker avgrensning
+  // eller verifiserte økonomi-/TG-funn. Ordrette kilder valideres fortsatt.
+  if (value.sections.some(section => section.basis.some(source => !sourceValid(source, section.certainty === 'ambiguous')))) fail('Rapportgrensens kilde avviker fra originaltekst eller krever usikker avgrensning.')
   if (value.propertyRisk) {
     for (const domain of ['legal', 'technical'] as const) {
       const risk = value.propertyRisk[domain]

@@ -44,7 +44,10 @@ function subject(item: PropertyRiskItem, documents: readonly DocumentContext[]):
   if (/(?:avvikene|forholdene|tiltakene|endringene)\s+(?:nevnt (?:over|ovenfor)|ovenfor)|ovennevnte (?:avvik|forhold)/u.test(normalize(text))) return unknownSubject
   if (/\b(?:utleieenheter|leiligheter|boenheter|bruksenheter)\b/u.test(normalize(text))) return unknownSubject
   const direct = identified(text)
-  if (direct.kind !== 'none') return direct
+  // Retning i en teknisk komponent («Bad øst») må fortsatt avstemmes mot
+  // rommets etasjekontekst. Retningen alene identifiserer ikke ett rom.
+  const technicalDirection = item.domain === 'technical' && direct.kind === 'unknown' && !locations(text).ambiguous
+  if (direct.kind !== 'none' && !technicalDirection) return direct
   const preceding: Subject[] = []
   for (const source of item.sources) {
     const document = documents.find(entry => entry.reportHash === source.documentHash && entry.documentName === source.documentName)
@@ -65,7 +68,7 @@ function subject(item: PropertyRiskItem, documents: readonly DocumentContext[]):
   if (preceding.some(entry => entry.kind === 'unknown')) return unknownSubject
   const known = preceding.filter((entry): entry is Extract<Subject, { kind: 'known' }> => entry.kind === 'known')
   if (new Set(known.map(entry => entry.key)).size > 1) return unknownSubject
-  return known[0] ?? noSubject
+  return known[0] ?? (technicalDirection ? unknownSubject : noSubject)
 }
 
 function problem(item: PropertyRiskItem) {
@@ -108,14 +111,34 @@ function exactOverlap(a: PropertyRiskItem, b: PropertyRiskItem) {
     documentKey(source) === documentKey(other) && source.pdfPage === other.pdfPage && source.start === other.start && source.end === other.end && source.quote === other.quote))
 }
 function boundary(item: PropertyRiskItem) {
-  return JSON.stringify([item.domain, item.category, item.status, item.grade, item.sourceQuality ?? 'unspecified', item.controlNote ?? null,
+  return JSON.stringify([item.domain, item.category, item.status, item.grade, item.evidenceKind ?? 'unspecified', item.sourceQuality ?? 'unspecified', item.controlNote ?? null,
     item.id.startsWith('controlled-') ? item.id : null])
+}
+
+/** Et generisk «Bad» identifiserer ikke et rom. Bare samme eksplisitte,
+ * stedfestede komponent og ordrette avvik kan samles på tvers av sider. */
+function technicalIdentity(item: PropertyRiskItem, documents: readonly DocumentContext[]) {
+  if (item.domain !== 'technical' || !item.component || !item.sources.length || item.sourceQuality === 'partial-text') return null
+  const component = normalize(item.component)
+  const located = locations(component)
+  if (located.ambiguous || !located.values.length) return null
+  for (const source of item.sources) {
+    const page = documents.find(document => document.reportHash === source.documentHash && document.documentName === source.documentName)?.pages.find(page => page.pdfPage === source.pdfPage)
+    if (!page || source.start === undefined || source.end === undefined || !Number.isInteger(source.start) || !Number.isInteger(source.end)
+      || source.start < 0 || source.end <= source.start || source.end > page.text.length || !source.quote || page.text.slice(source.start, source.end) !== source.quote) return null
+  }
+  // Lokal parser bevarer romoverskrift og bygningsdel som separate,
+  // ordrette kilder; « · » kobler disse i visningsnavnet.
+  const parts = component.split(/\s+·\s+/u)
+  if (parts.some(part => !item.sources.some(source => normalize(source.quote ?? '').includes(part)))) return null
+  return JSON.stringify([component, normalize(item.description)])
 }
 
 /** Conservative display-only grouping. Original members and sources are never rewritten or truncated. */
 export function groupPropertyRisks(items: readonly PropertyRiskItem[], documents: readonly DocumentContext[] = []): PropertyRiskItem[] {
   const sorted = [...items].sort((a, b) => compare(a.id, b.id))
   const metadata = sorted.map(item => ({ item, subject: subject(item, documents), problem: problem(item),
+    technicalIdentity: technicalIdentity(item, documents),
     document: item.sources.length && new Set(item.sources.map(documentKey)).size === 1 ? documentKey(item.sources[0]!) : null }))
   const units = new Map<string, Set<string>>()
   for (const entry of metadata) {
@@ -143,6 +166,8 @@ export function groupPropertyRisks(items: readonly PropertyRiskItem[], documents
       if (!entry.document || entry.document !== first.document || boundary(entry.item) !== boundary(first.item)) return false
       if (entry.item.id.startsWith('controlled-') || first.item.id.startsWith('controlled-')) return entry.item.id === first.item.id
       if (entry.subject.kind === 'known' && first.subject.kind === 'known' && entry.subject.key !== first.subject.key) return false
+      if (entry.item.domain === 'technical' && entry.technicalIdentity && entry.technicalIdentity === first.technicalIdentity
+        && entry.subject.kind === 'known' && first.subject.kind === 'known' && entry.subject.key === first.subject.key) return true
       if (exactOverlap(entry.item, first.item)) return normalize(entry.item.description) === normalize(first.item.description) || Boolean(entry.problem && entry.problem === first.problem)
       return entry.item.domain === 'legal' && entry.subject.kind === 'known' && first.subject.kind === 'known' && entry.subject.key === first.subject.key && entry.problem !== null && entry.problem === first.problem
     })

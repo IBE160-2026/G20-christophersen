@@ -5,16 +5,18 @@ import { currentFinding } from '../state/report.ts'
 import { validateTg3Resolution } from '../../domain/tg3-resolution.ts'
 import { propertyIdentityStatus } from '../../domain/document-import.ts'
 import { selectProperty } from './property.ts'
-import { groupPropertyRisks, isRiskBackground } from './risk-grouping.ts'
+import { groupPropertyRisks, isRiskBackground, reconcileTechnicalSummaries } from './risk-grouping.ts'
 
-export type RiskSource = { documentHash: string; documentName: string; pdfPage: number; quote?: string; start?: number; end?: number }
-export type PropertyRiskItem = Omit<RiskFinding, 'sources'> & { sources: RiskSource[]; controlNote?: string; members?: PropertyRiskItem[]; displaySubject?: string }
+export type RiskSource = { documentHash: string; documentName: string; pdfPage: number; quote?: string; start?: number; end?: number; method?: 'pdf-text' | 'local-vision'; region?: { x: number; y: number; width: number; height: number }; rasterDigest?: string; extractorVersion?: string }
+export type PropertyRiskItem = Omit<RiskFinding, 'sources'> & { sources: RiskSource[]; controlNote?: string; members?: PropertyRiskItem[]; displaySubject?: string; reconciliationNote?: string }
 export interface PropertyRiskOverview {
   documented: PropertyRiskItem[]; possible: PropertyRiskItem[]; unexamined: PropertyRiskItem[]
   background: PropertyRiskItem[]
   gaps: string[]; limitations: string[]; technicalCoverage: string
-  reportEvidence?: { documentName: string; ranges: { startPage: number; endPage: number; certainty: 'certain' | 'ambiguous'; source: RiskSource }[]; unreadPages: number[] }
+  reportEvidence?: { documentHash?: string; documentName: string; ranges: { startPage: number; endPage: number; certainty: 'certain' | 'ambiguous'; source: RiskSource }[]; unreadPages: number[]; visualPages?: { pdfPage: number; rendered: boolean; status: 'processed' | 'uncertain' | 'unavailable'; reason: string | null; findings: number }[] }
 }
+const sourceIdentity = (source: RiskSource) => JSON.stringify([source.documentHash, source.documentName, source.pdfPage,
+  source.method ?? 'pdf-text', source.start, source.end, source.region, source.quote, source.rasterDigest, source.extractorVersion])
 
 /** Visningsmodell: ingen risikoscore, ingen endring av kontroll- eller finansgrunnlag. */
 export function selectPropertyRisks(session: SessionState): PropertyRiskOverview {
@@ -27,7 +29,7 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
   const technical: DocumentImport | null = current ? report.documentImport ?? null : null
   const identityConflict = Boolean(property.outcome && propertyIdentityStatus(property.outcome, p.report.outcome) === 'conflict')
   const candidates = [...(extraction?.findings ?? []), ...(extraction?.uncertainCandidates ?? [])]
-  const localTechnical = technical?.propertyRisk?.technical.findings ?? []
+  const localTechnical: PropertyRiskItem[] = (technical?.propertyRisk?.technical.findings ?? []).map(item => ({ ...item, sources: [...item.sources, ...(item.visualSources ?? [])] }))
   const items: PropertyRiskItem[] = [...(property.outcome?.propertyRisk?.legal.findings ?? [])]
   const separateTechnical = technical && (technical.reportHash !== property.outcome?.reportHash || technical.documentName !== property.outcome.documentName)
   if (separateTechnical) {
@@ -37,9 +39,9 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
     items.push(...(property.outcome?.propertyRisk?.technical.findings ?? []).filter(item => item.evidenceKind === 'summary')
       .map(item => identityConflict && item.status !== 'not-investigated' ? { ...item, status: 'possible' as const } : item))
   }
-  const overlaps = (local: RiskFinding, id: string) => {
+  const overlaps = (local: PropertyRiskItem, id: string) => {
     const finding = technical?.technical.findings.find(item => item.findingId === id)
-    return finding && local.grade === finding.grade && local.sources.some(source => finding.sources.some(other => source.pdfPage === other.pdfPage && source.start < other.end && source.end > other.start))
+    return finding && local.grade === finding.grade && local.sources.some(source => finding.sources.some(other => source.pdfPage === other.pdfPage && source.start !== undefined && source.end !== undefined && source.start < other.end && source.end > other.start))
   }
   items.push(...localTechnical.filter(local => !candidates.some(candidate => overlaps(local, candidate.findingId))).map(item => identityConflict && item.status !== 'not-investigated' ? { ...item, status: 'possible' as const } : item))
   for (const candidate of candidates) {
@@ -55,12 +57,14 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
     const importFinding = technical?.technical.findings.find(item => item.findingId === candidate.findingId)
     const originalSources = importFinding?.sources
     const exactSources = !control?.correction && (originalSources || associated.length) ? [...new Map([...(originalSources ?? []), ...associated.flatMap(item => item.sources)]
-      .map(item => [`${item.documentHash}:${item.pdfPage}:${item.start}:${item.end}`, item])).values()] : null
+      .map(item => [sourceIdentity(item), item])).values()] : null
     const fullDescription = !control?.correction ? associated.reduce((description, local) => local.description.length > description.length ? local.description : description, finding?.description ?? original.description) : null
     const grade = finding?.grade ?? null
     items.push({ id: `controlled-${candidate.findingId}`, domain: 'technical', category: 'technical',
       ...(importFinding?.component ? { component: importFinding.component } : {}),
       evidenceKind: 'detail',
+      ...(exactSources?.some(source => source.method === 'local-vision') ? { sourceQuality: 'local-visual' as const,
+        visualSources: associated.flatMap(item => item.visualSources ?? []) } : {}),
       title: grade ? `${grade} · ${importFinding?.component ?? 'Teknisk forhold'}` : 'Teknisk forhold med usikker grad',
       description: fullDescription ?? finding?.description ?? original.description, grade,
       status: candidate.kind === 'uncertain' || control?.correction || identityConflict ? 'possible' : 'documented',
@@ -93,10 +97,10 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
     return priority(a) - priority(b)
   }
   const documents = [property.outcome, technical].filter((document): document is DocumentImport => Boolean(document))
-  const grouped = groupPropertyRisks(items.filter(item => !isRiskBackground(item)), documents)
+  const grouped = reconcileTechnicalSummaries(groupPropertyRisks(items.filter(item => !isRiskBackground(item)), documents), documents)
   return { documented: grouped.filter(item => item.status === 'documented').sort(order), possible: grouped.filter(item => item.status === 'possible').sort(order),
     unexamined: grouped.filter(item => item.status === 'not-investigated').sort(order), background: groupPropertyRisks(items.filter(isRiskBackground), documents),
     gaps: [...new Set(gaps)], limitations, technicalCoverage,
-    ...(technical ? { reportEvidence: { documentName: technical.documentName, ranges: technical.sections.map(section => ({ startPage: section.startPage, endPage: section.endPage, certainty: section.certainty,
-      source: { documentHash: technical.reportHash, documentName: technical.documentName, pdfPage: section.startPage } })), unreadPages: technical.coverage.technical.unreadPages } } : {}) }
+    ...(technical ? { reportEvidence: { documentHash: technical.reportHash, documentName: technical.documentName, ranges: technical.sections.map(section => ({ startPage: section.startPage, endPage: section.endPage, certainty: section.certainty,
+      source: { documentHash: technical.reportHash, documentName: technical.documentName, pdfPage: section.startPage } })), unreadPages: technical.coverage.technical.unreadPages, ...(technical.visualAnalysis ? { visualPages: technical.visualAnalysis.pages.map(page => ({ pdfPage: page.pdfPage, rendered: Boolean(page.rasterDigest && !page.error), status: page.status, reason: page.reason, findings: page.findings.length })) } : {}) } } : {}) }
 }

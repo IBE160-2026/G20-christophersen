@@ -1,0 +1,142 @@
+{
+  "rawTechnical": 69,
+  "rawSummaries": 23,
+  "rawVisual": 10,
+  "displayedTechnical": 66,
+  "displayedSummaries": 20,
+  "displayedVisual": 10,
+  "unmergedSummaryOriginalMembers": 22,
+  "sameKindSummaryGroups": 2,
+  "mergedSummaryDetailGroups": 1,
+  "summaryMembersMerged": 1,
+  "conflictRows": 0,
+  "visualTg2": 10,
+  "visualTg3": 0,
+  "visualPages": [
+    {
+      "pdfPage": 63,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 64,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 65,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 66,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 67,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 68,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 69,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 70,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 71,
+      "rendered": true,
+      "findings": 1
+    },
+    {
+      "pdfPage": 72,
+      "rendered": true,
+      "findings": 1
+    },
+    {
+      "pdfPage": 73,
+      "rendered": true,
+      "findings": 2
+    },
+    {
+      "pdfPage": 74,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 75,
+      "rendered": true,
+      "findings": 2
+    },
+    {
+      "pdfPage": 76,
+      "rendered": true,
+      "findings": 1
+    },
+    {
+      "pdfPage": 77,
+      "rendered": true,
+      "findings": 1
+    },
+    {
+      "pdfPage": 78,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 79,
+      "rendered": true,
+      "findings": 1
+    },
+    {
+      "pdfPage": 80,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 81,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 82,
+      "rendered": true,
+      "findings": 1
+    },
+    {
+      "pdfPage": 83,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 84,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 85,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 86,
+      "rendered": true,
+      "findings": 0
+    },
+    {
+      "pdfPage": 87,
+      "rendered": true,
+      "findings": 0
+    }
+  ]
+}

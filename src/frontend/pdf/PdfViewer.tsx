@@ -3,13 +3,14 @@ import { getDocument, GlobalWorkerOptions, TextLayer } from 'pdfjs-dist'
 import type { PDFDocumentProxy, RenderTask } from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import './text-layer.css'
+import type { VisualRegion } from '../../contracts/local-visual.ts'
 import type { SelectedReport } from '../state/report.ts'
 
 GlobalWorkerOptions.workerSrc = workerUrl
 
-export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, onPage, onZoom }: {
+export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, highlight = null, onPage, onZoom }: {
   selected: SelectedReport; sourceIssue: string | null; pageNumber: number | null; zoom: number
-  onPage: (page: number) => void; onZoom: (zoom: number) => void
+  highlight?: VisualRegion | null; onPage: (page: number) => void; onZoom: (zoom: number) => void
 }) {
   const [loaded, setLoaded] = useState<{ bytes: Uint8Array; document: PDFDocumentProxy } | null>(null)
   const [failure, setFailure] = useState<{ bytes: Uint8Array; message: string } | null>(null)
@@ -27,7 +28,7 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, onPage, onZ
     return () => { observer.disconnect(); window.removeEventListener('resize', resize) }
   }, [])
   const document = loaded?.bytes === selected.bytes ? loaded.document : null
-  const key = `${selected.hash}:${pageNumber}:${zoom}:${width}:${height}`
+  const key = `${selected.hash}:${pageNumber}:${zoom}:${width}:${height}:${JSON.stringify(highlight)}`
   useEffect(() => {
     let active = true
     const task = getDocument({ data: selected.bytes.slice(),
@@ -69,6 +70,14 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, onPage, onZ
       canvas.setAttribute('aria-hidden', 'true')
       const layer = window.document.createElement('div'); layer.className = 'textLayer'
       wrapper.append(canvas, layer)
+      if (highlight) {
+        const marker = window.document.createElement('div')
+        marker.className = 'pdf-source-region'
+        marker.style.left = `${highlight.x * 100}%`; marker.style.top = `${highlight.y * 100}%`
+        marker.style.width = `${highlight.width * 100}%`; marker.style.height = `${highlight.height * 100}%`
+        marker.setAttribute('aria-hidden', 'true')
+        wrapper.append(marker)
+      }
       render = page.render({ canvas, viewport, transform: ratio === 1 ? undefined : [ratio, 0, 0, ratio, 0, 0] })
       await render.promise
       if (!active) return
@@ -81,7 +90,7 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, onPage, onZ
       setDisplay({ key, status: 'Originalside tilgjengelig' })
     })().catch(() => { if (active) { target.replaceChildren(); setDisplay({ key, status: 'Originalside kunne ikke vises. Lokal PDF-visningsfeil.' }) } })
     return () => { active = false; render?.cancel(); text?.cancel(); target.replaceChildren() }
-  }, [document, pageNumber, zoom, valid, key])
+  }, [document, pageNumber, zoom, valid, key, highlight])
   const reason = sourceIssue ?? (pageNumber === null ? 'Kildens PDF-side er ikke kjent. Ingen side er valgt.'
     : !valid ? 'Oppgitt PDF-side er utenfor originaldokumentet. Ingen side er valgt.'
       : failure?.bytes === selected.bytes ? failure.message
@@ -92,6 +101,7 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, onPage, onZ
     && (!document || display?.key !== key || display.status === 'Laster originalside')
   return <section className="pdf-viewer" aria-label="Original-PDF">
     <p className="pdf-identity"><strong>{selected.file.name}</strong> · {pageNumber === null ? 'PDF-side ukjent' : `PDF-side ${pageNumber}`}{document ? ` av ${document.numPages}` : ''}</p>
+    {highlight && <p className="pdf-region-note">Markert område viser kildebelegget fra lokal bildeanalyse. Kontroller også sammenhengen på hele originalsiden.</p>}
     <div className="pdf-controls">
       <button type="button" className="secondary-action" disabled={!document || !valid || pageNumber === null || pageNumber <= 1} onClick={() => onPage(pageNumber! - 1)}>Forrige PDF-side</button>
       <button type="button" className="secondary-action" disabled={!document || !valid || pageNumber === null || pageNumber >= document.numPages} onClick={() => onPage(pageNumber! + 1)}>Neste PDF-side</button>

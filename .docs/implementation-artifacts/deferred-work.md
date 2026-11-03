@@ -681,3 +681,18 @@ gir ikke kildebelagt grad-/bygningsdelkobling eller komplettdekning. Generell
 semantisk recall og alle ukjente oppsett er ikke verifisert. Eksisterende
 teknisk bekreftelsesport forblir sperret ved mangler. Dette lukker ingen
 tidligere live-/semantikkoppføring. [Spesifikasjon og reviewtriage](spec-teknisk-dokumentanalyse.md).
+
+
+**PAA-SO2, grafisk TG-analyse 2026-11-03 — Status: fortsatt Åpen for generell dokument-/TG-kvalitet.**
+Lokal bildeanalyse og OCR er implementert i faktisk import og Konsept A med
+originalregioner, konservativ samling og synlig sidevis usikkerhet. Ti TG2-
+detaljer er kontrollert i ekte rapport; 25/25 sider er rendret. TG3 støttes
+og testes faktisk på generiske vektor-/rasterrapporter. Dette lukker ikke
+fullstendig dekning: fortsettelser over side-/kolonneskift, ukjent layout,
+uleselige grader/rom og generell recall gjenstår. Ingen ekte TG3-dekning eller
+komplettstatus hevdes. Alle konkrete funn fra denne implementasjonens tre
+uavhengige reviewlag er rettet og etterprøvd; restarbeidet her er generell
+analysekapasitet, ikke utsatte konkrete reviewfeil.
+[Spesifikasjon og individuell triage](spec-grafisk-tg-analyse.md),
+[økten med test- og kildebevis](../process/arbeidsokter/2026-11-03-grafisk-tg-analyse.md).
+Tidligere historikk og øvrige åpne punkter er uendret.

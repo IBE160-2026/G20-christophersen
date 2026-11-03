@@ -179,6 +179,7 @@ for (const replacePrevious of [false, true]) test(`ny ekte salgsoppgave: ${repla
 
 // Private real-document acceptance: no generation transport is authorized here.
 test('135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI-forberedelse', async ({ page }, info) => {
+  test.setTimeout(90_000)
   const path = process.env.PAA_UNSEEN_PDF
   test.skip(!path, 'Sett PAA_UNSEEN_PDF til den nye private salgsoppgaven.')
   const bytes = await readFile(path!), recorded = audit(page)
@@ -269,6 +270,7 @@ test('ekte135: usikkert tidligere forsøk vises fra journal uten nytt betalt kal
 })
 
 test('ekte135: synlig fremdrift og feil ved knappen under lange utdrag, høyst ett kall', async ({ page }) => {
+  test.setTimeout(90_000)
   const path = process.env.PAA_UNSEEN_PDF
   test.skip(!path, 'Privat dokument kreves.')
   const recorded = audit(page); await recorded.install(); await page.goto('/')

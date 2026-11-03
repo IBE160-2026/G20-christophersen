@@ -68,6 +68,23 @@ test('privat Øvre Blekeveien: side 58 og ufullstendig integrert rapport åpnes 
   expect(outcome.coverage.technical.status).not.toBe('complete')
   expect(outcome.sections).toContainEqual(expect.objectContaining({ startPage: 63, endPage: 87, certainty: 'ambiguous' }))
   expect(outcome.cost?.reservedUsd).toBe('0.00000000')
+  if (process.env.PAA_TEST_LOCAL_VISION === '1') {
+    const visual = outcome.propertyRisk!.technical.findings.filter(item => item.sourceQuality === 'local-visual')
+    expect(outcome.visualAnalysis?.pages.map(page => page.pdfPage)).toEqual(Array.from({ length: 25 }, (_, index) => index + 63))
+    expect(outcome.visualAnalysis?.pages.every(page => page.rasterDigest !== null && page.error === null)).toBe(true)
+    expect(visual.length).toBeGreaterThan(0)
+    expect(visual.every(item => item.evidenceKind === 'detail' && item.visualSources?.length === 3 && item.sources.length === 0)).toBe(true)
+    expect(visual.every(item => item.visualSources!.every(source => source.documentHash === outcome.reportHash && source.documentName === outcome.documentName && source.pdfPage >= 63 && source.pdfPage <= 87))).toBe(true)
+    const displayed = page.locator('.property-risk')
+    await expect(displayed).toContainText('25 fysiske sider i analyseutvalget')
+    await displayed.getByRole('button', { name: 'Se alle funn og kilder ↗' }).click()
+    const row = page.getByRole('dialog').locator('.risk-finding').filter({ hasText: 'Lokal bildeanalyse / OCR' }).first()
+    await row.locator('summary').click()
+    await expect(row).toContainText('avledet tekst, ikke ordrett PDF-tekstlag')
+    await row.getByRole('button', { name: /Se originalkilde/ }).first().click()
+    await expect(page.locator('.pdf-source-region')).toBeVisible({ timeout: 30_000 })
+    await page.keyboard.press('Escape')
+  }
   const summary = outcome.propertyRisk?.technical.findings.find(item => item.evidenceKind === 'summary' && item.sources[0]!.pdfPage >= 40 && item.sources[0]!.pdfPage <= 43)
   expect(summary).toBeDefined()
   expect(outcome.technical.findings.some(item => item.findingId === summary?.id)).toBe(false)
@@ -103,9 +120,14 @@ test('privat Øvre Blekeveien: side 58 og ufullstendig integrert rapport åpnes 
   await expect(page.locator(`[data-pdf-page="${partial!.sources[0]!.pdfPage}"]`)).toBeVisible({ timeout: 30_000 })
   await page.keyboard.press('Escape')
   await risks.getByRole('button', { name: 'Se alle funn og kilder ↗' }).click()
-  const summaryRow = page.getByRole('dialog').locator('.risk-finding').filter({ hasText: summary!.title }).filter({ hasText: 'Oppgitt i sammendrag' }).first()
+  const summaryRow = page.getByRole('dialog').locator('.risk-finding').filter({ hasText: summary!.title }).filter({ hasText: `fysisk PDF-side ${summary!.sources[0]!.pdfPage}` }).first()
   await summaryRow.locator('summary').click()
-  await expect(summaryRow).toContainText('Sammendraget kan avvike fra rapportdetaljene')
+  if (await summaryRow.locator('summary').textContent().then(text => text?.includes('Oppgitt i sammendrag'))) {
+    await expect(summaryRow).toContainText('Sammendraget kan avvike fra rapportdetaljene')
+  } else {
+    await expect(summaryRow).toContainText('telles én gang')
+    await expect(summaryRow).toContainText('Lokal bildeanalyse')
+  }
   await summaryRow.locator('.risk-source').filter({ hasText: `fysisk PDF-side ${summary!.sources[0]!.pdfPage}` }).first().getByRole('button', { name: /Se originalkilde/ }).click()
   await expect(page.locator(`[data-pdf-page="${summary!.sources[0]!.pdfPage}"]`)).toBeVisible({ timeout: 30_000 })
   await page.keyboard.press('Escape')
@@ -183,4 +205,70 @@ test('samme PDF-bytehash med to filnavn bevarer begge sammendrag og åpner rikti
     await expect(page.locator('[data-pdf-page="1"]')).toBeVisible()
     await page.keyboard.press('Escape')
   }
+})
+
+test('lokalt visuelt kildebevis viser sideusikkerhet og åpner originalregion med tastatur og mobil', async ({ page }) => {
+  // Denne prøven isolerer visning og originalnavigasjon med syntetisk bevis.
+  // Automatisk symbollesing verifiseres separat mot lokale PDF-er.
+  const { addVisualTechnical } = await import('../../src/backend/import/visual-technical.ts')
+  const apiCalls: string[] = []
+  await page.route('**/*', async route => {
+    const url = new URL(route.request().url())
+    if (url.protocol.startsWith('http') && !['localhost', '127.0.0.1'].includes(url.hostname)) return route.abort()
+    if (url.pathname.startsWith('/api/')) apiCalls.push(url.pathname)
+    if (url.pathname !== '/api/document-import' || route.request().method() !== 'POST') return route.continue()
+    const response = await route.fetch(), result = ImportHttpResponseSchema.parse(await response.json())
+    if (result.kind !== 'document-import') return route.fulfill({ response })
+    const box = (x: number, y: number, width: number, height = .02) => ({ x, y, width, height })
+    const outcome = addVisualTechnical(result.outcome, { version: 'local-visual-1', documentHash: result.outcome.reportHash, documentName: result.outcome.documentName, pages: [{
+      pdfPage: 1, width: 600, height: 800, rasterDigest: 'c'.repeat(64), error: null,
+      lines: [
+        { text: 'Taktekking', confidence: .99, box: box(.15, .20, .28) },
+        { text: 'Vurdering av avvik:', confidence: .99, box: box(.10, .25, .30) },
+        { text: 'Det er påvist lekkasje.', confidence: .99, box: box(.10, .30, .30) },
+        { text: 'Konsekvens/tiltak:', confidence: .99, box: box(.10, .35, .30) },
+      ], symbols: [{ grade: 'TG3', confidence: .99, box: box(.10, .20, .03), text: 'TG3' }],
+    }] })
+    return route.fulfill({ response, json: { ...result, outcome } })
+  })
+  await page.goto('/')
+  const bytes = newProspectusPdf([`SYNTETISK VISNINGSTEST ${randomUUID()}`, 'Adresse: Testveien 12', 'TILSTANDSRAPPORT - START', 'Taktekking', 'Vurdering av avvik:', 'Det er påvist lekkasje.', 'Konsekvens/tiltak:', 'Innhent faglig vurdering.', 'TILSTANDSRAPPORT - SLUTT'])
+  await page.locator('#import-file-prospectus').setInputFiles({ name: 'visuelt-kildebevis.pdf', mimeType: 'application/pdf', buffer: bytes })
+  const risks = page.locator('.property-risk')
+  await expect(risks).toContainText('Fortsatt usikker bildeanalyse: fysisk PDF-side 1')
+  await expect(risks).toContainText('ikke fullstendig sidekontroll eller brukergodkjenning')
+  await expect(page.locator('.risk-summary')).toContainText('1 TG3 · 0 TG2 fra lokal bildeanalyse')
+  const visual = risks.locator('.risk-finding').filter({ hasText: 'Lokal bildeanalyse / OCR' })
+  await expect(visual).toHaveCount(1)
+  await visual.locator('summary').focus()
+  await page.keyboard.press('Enter')
+  await expect(visual).toContainText('avledet tekst, ikke ordrett PDF-tekstlag')
+  const source = visual.getByRole('button', { name: /Se originalkilde/ }).first()
+  const assertOriginalRegion = async () => {
+    await expect(page.locator('.pdf-source-region')).toBeVisible()
+    await expect.poll(() => page.locator('.pdf-source-region').evaluate(marker => {
+      const area = marker.getBoundingClientRect(), original = marker.closest('.pdf-page')!.getBoundingClientRect()
+      // Den første kilden er bygningsdelen, med normalisert område fra beviset.
+      return Math.max(Math.abs(area.x - original.x - original.width * .15), Math.abs(area.y - original.y - original.height * .20),
+        Math.abs(area.width - original.width * .28), Math.abs(area.height - original.height * .02))
+    })).toBeLessThan(1.5)
+  }
+  await source.click()
+  await expect(page.locator('[data-pdf-page="1"]')).toBeVisible()
+  await assertOriginalRegion()
+  const desktopWidth = await page.locator('.pdf-page').evaluate(element => element.getBoundingClientRect().width)
+  await page.getByLabel('PDF-zoom').selectOption('2')
+  await expect.poll(() => page.locator('.pdf-page').evaluate(element => element.getBoundingClientRect().width)).toBeGreaterThan(desktopWidth * 1.9)
+  await assertOriginalRegion()
+  await expect(page.getByRole('dialog')).toContainText('Markert område viser kildebelegget')
+  await page.keyboard.press('Escape')
+  await expect(source).toBeFocused()
+  await page.setViewportSize({ width: 390, height: 844 })
+  await source.click()
+  await assertOriginalRegion()
+  await page.getByLabel('PDF-zoom').selectOption('1.5')
+  await assertOriginalRegion()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  expect(apiCalls.filter(path => path === '/api/document-import')).toHaveLength(1)
+  expect(apiCalls.some(path => path.includes('economy-analysis') || path === '/api/analysis')).toBe(false)
 })

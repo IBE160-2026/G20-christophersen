@@ -189,3 +189,53 @@ describe('Risikooversiktens aktuelle og etterprøvbare grunnlag', () => {
     expect(order.slice(3).map(item => item.grade)).toEqual(['TG2', 'TG2'])
   })
 })
+
+it('samler sammendrag og lokal grafisk detalj én gang med begge kildetyper og usikkert sidekart', async () => {
+  const { addVisualTechnical } = await import('../../src/backend/import/visual-technical.ts')
+  const basis = codeFirstBasis(['Forhold som har fått TG2:\nTaktekking\nDet er påvist lekkasje.\nKonsekvens/tiltak:\nUndersøk taket.', 'TILSTANDSRAPPORT - START\nTILSTANDSRAPPORT - SLUTT'])
+  const original = await createCodeFirstImport(basis)
+  const box = (x: number, y: number, width: number, height = .02) => ({ x, y, width, height })
+  const outcome = addVisualTechnical(original, { version: 'local-visual-1', documentHash: basis.hash, documentName: basis.name, pages: [{ pdfPage: 2, width: 600, height: 800, rasterDigest: 'c'.repeat(64), error: null,
+    lines: [{ text: 'Taktekking', confidence: .99, box: box(.15, .20, .28) }, { text: 'Vurdering av avvik:', confidence: .99, box: box(.10, .25, .30) }, { text: 'Det er påvist lekkasje.', confidence: .99, box: box(.10, .30, .30) }, { text: 'Konsekvens/tiltak:', confidence: .99, box: box(.10, .35, .30) }],
+    symbols: [{ grade: 'TG2', confidence: .99, box: box(.10, .20, .03), text: 'TG2' }],
+  }] })
+  const state = createInitialSession(), selected = { hash: basis.hash, file: new File([], basis.name), bytes: new Uint8Array() }
+  state.prospectus.prospectus = { selected, outcome, status: 'imported', active: null, error: null }
+  state.report = { ...state.report, selected, outcome: importControlOutcome(outcome), documentImport: outcome, status: 'completed' }
+  const risks = selectPropertyRisks(state)
+  const technical = risks.documented.filter(item => item.domain === 'technical')
+  expect(technical).toHaveLength(1)
+  expect(technical[0]).toMatchObject({ sourceQuality: 'local-visual', grade: 'TG2', evidenceKind: 'detail', members: expect.arrayContaining([expect.objectContaining({ evidenceKind: 'summary' }), expect.objectContaining({ sourceQuality: 'local-visual' })]) })
+  expect(technical[0]!.sources.some(source => source.method === 'pdf-text')).toBe(true)
+  expect(technical[0]!.sources.some(source => source.method === 'local-vision' && source.start === undefined)).toBe(true)
+  expect(risks.reportEvidence?.visualPages).toEqual([expect.objectContaining({ pdfPage: 2, rendered: true, status: 'uncertain', findings: 1 })])
+  expect(risks.technicalCoverage).toContain('ufullstendig')
+  // Missing raster provenance must never manufacture summary/detail identity.
+  outcome.visualAnalysis = undefined
+  expect(selectPropertyRisks(state).documented.filter(item => item.domain === 'technical')).toHaveLength(2)
+})
+
+it('bevarer alle OCR-regioner og opphav når samme detalj også finnes i rapportkontrollen', async () => {
+  const { addVisualTechnical } = await import('../../src/backend/import/visual-technical.ts')
+  const basis = codeFirstBasis(['Bygningsdel: Bad øst\nTilstandsgrad: TG3\nVurdering av avvik:\n• Det er påvist lekkasje.\nKonsekvens/tiltak\nUtbedring anbefales.'])
+  const original = await createCodeFirstImport(basis)
+  expect(original.technical.findings).toHaveLength(1)
+  const box = (x: number, y: number, width: number, height = .02) => ({ x, y, width, height })
+  const outcome = addVisualTechnical(original, { version: 'local-visual-1', documentHash: basis.hash, documentName: basis.name, pages: [{ pdfPage: 1, width: 600, height: 800, rasterDigest: 'c'.repeat(64), error: null,
+    lines: [{ text: 'Bad øst', confidence: .99, box: box(.15, .20, .28) }, { text: 'Vurdering av avvik:', confidence: .99, box: box(.10, .25, .30) }, { text: '• Det er påvist lekkasje.', confidence: .99, box: box(.10, .30, .30) }, { text: 'Konsekvens/tiltak', confidence: .99, box: box(.10, .35, .30) }],
+    symbols: [{ grade: 'TG3', confidence: .99, box: box(.10, .20, .03), text: 'TG3' }],
+  }] })
+  const visualSources = outcome.propertyRisk!.technical.findings.find(item => item.sourceQuality === 'local-visual')!.visualSources!
+  expect(visualSources).toHaveLength(3)
+  const state = createInitialSession(), selected = { hash: basis.hash, file: new File([], basis.name), bytes: new Uint8Array() }
+  state.prospectus.prospectus = { selected, outcome, status: 'imported', active: null, error: null }
+  state.report = { ...state.report, selected, outcome: importControlOutcome(outcome), documentImport: outcome, status: 'completed' }
+  const details = selectPropertyRisks(state).documented.filter(item => item.domain === 'technical')
+  expect(details).toHaveLength(1)
+  expect(details[0]!.id).toMatch(/^controlled-/u)
+  expect(details[0]!.sourceQuality).toBe('local-visual')
+  expect(details[0]!.visualSources).toEqual(visualSources)
+  expect(details[0]!.sources.filter(source => source.method === 'local-vision')).toEqual(visualSources)
+  expect(details[0]!.sources.some(source => source.method === 'pdf-text')).toBe(true)
+  expect(new Set(details[0]!.sources.filter(source => source.method === 'local-vision').map(source => JSON.stringify(source.region))).size).toBe(3)
+})

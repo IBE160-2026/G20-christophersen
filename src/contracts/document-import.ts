@@ -6,6 +6,7 @@ import { AnalysisHttpCorrelationSchema } from './analysis-http.ts'
 import { PdfSourceSchema } from './pdf-source.ts'
 import type { PdfSource } from './pdf-source.ts'
 import { PropertyRiskSchema } from './property-risk.ts'
+import { VisualAnalysisSchema, composeVisualComponent, hasSupportedVisualGrade, sourcesForVisualFinding, visualRegionUnion, visualFindingGeometryError, hasCorroboratedVisualLine } from './local-visual.ts'
 export { PdfSourceSchema } from './pdf-source.ts'
 export type { PdfSource } from './pdf-source.ts'
 
@@ -95,7 +96,7 @@ export const EconomyAnalysisSchema = z.strictObject({
 })
 export const DocumentImportSchema = ImportContextSchema.extend({
   manifest: ImportManifestSchema.optional(), cost: ImportCostSchema.optional(),
-  propertyRisk: PropertyRiskSchema.optional(),
+  propertyRisk: PropertyRiskSchema.optional(), visualAnalysis: VisualAnalysisSchema.optional(),
   status: z.literal('imported'), documents: z.array(ImportDocumentSchema).length(1), pages: z.array(ImportPageSchema).min(1).max(200),
   attachments: z.array(z.strictObject({ id: z.string().max(1024), name: z.string().max(1024), isPdf: z.boolean() })).max(40),
   propertyIdentity: z.array(PropertyCandidateSchema).max(20), sections: z.array(ImportSectionSchema).max(10),
@@ -121,6 +122,38 @@ export const DocumentImportSchema = ImportContextSchema.extend({
   // Bevarte tekstlag kan støtte et uklart rapportområde, aldri sikker avgrensning
   // eller verifiserte økonomi-/TG-funn. Ordrette kilder valideres fortsatt.
   if (value.sections.some(section => section.basis.some(source => !sourceValid(source, section.certainty === 'ambiguous')))) fail('Rapportgrensens kilde avviker fra originaltekst eller krever usikker avgrensning.')
+  if (value.visualAnalysis) {
+    const analysis = value.visualAnalysis
+    if (analysis.documentHash !== value.reportHash || analysis.documentName !== value.documentName
+      || new Set(analysis.pages.map(page => page.pdfPage)).size !== analysis.pages.length
+      || analysis.pages.some(page => page.pdfPage > value.pageCount)) fail('Visuelt grunnlag krever samme originaldokument og unike fysiske sider.')
+    for (const page of analysis.pages) {
+      if ((page.error || !page.rasterDigest || page.status === 'unavailable') && page.findings.length) fail('Visuelt funn krever tilgjengelig sidebilde uten lesefeil.')
+      const symbols = new Set<number>()
+      for (const finding of page.findings) {
+        const component = finding.componentLines.map(index => page.lines[index]), deviation = finding.deviationLines.map(index => page.lines[index]), symbol = page.symbols[finding.symbolIndex]
+        const labels = finding.boundaryLines.map(index => page.lines[index])
+        const originalText = normalizeImportText(value.pages[page.pdfPage - 1]?.text ?? '').text
+        const geometryError = visualFindingGeometryError(page, finding, line => line.confidence >= 0.7 || hasCorroboratedVisualLine(line) || line.confidence >= 0.5 && originalText.includes(normalizeImportText(line.text).text))
+        if (geometryError) fail('Visuell geometri avviker: ' + geometryError)
+        if (symbols.has(finding.symbolIndex)) fail('Samme gradsymbol kan ikke telle som flere visuelle funn.')
+        symbols.add(finding.symbolIndex)
+        if (component.some(line => !line) || deviation.some(line => !line) || labels.some(line => !line) || !symbol) { fail('Visuelt funn viser til ukjent OCR-linje eller gradsymbol.'); continue }
+        if (!/^Vurdering av avvik\s*:?[ \t]*$/iu.test(labels[0]!.text)
+          || !/^(?:Konsekvens\s*\/?\s*tiltak|Tiltak|Kostnadsestimat|Anbefalte tiltak)\s*:?[ \t]*$/iu.test(labels[1]!.text)
+          || labels.some(line => line!.confidence < 0.7 && !hasCorroboratedVisualLine(line!) && (line!.confidence < 0.5 || !normalizeImportText(value.pages[page.pdfPage - 1]?.text ?? '').text.replace(/[^\p{L}]/gu, '').includes(normalizeImportText(line!.text).text.replace(/[^\p{L}]/gu, ''))))
+          || deviation.some(line => line!.box.y <= labels[0]!.box.y || line!.box.y >= labels[1]!.box.y)) fail('Visuelt avvik krever lesbare og bevarte avsnittsgrenser på samme originalside.')
+        if (composeVisualComponent(component.map(line => line!)) !== finding.component || deviation.map(line => line!.text).join('\n') !== finding.description
+          || symbol.grade !== finding.grade || !hasSupportedVisualGrade(symbol) || finding.confidence < 0.3
+          || new Set(finding.componentLines).size !== finding.componentLines.length || new Set(finding.deviationLines).size !== finding.deviationLines.length
+          || [...component, ...deviation].some(line => line!.confidence < (component.includes(line) ? 0.7 : 0.6) && !hasCorroboratedVisualLine(line!) && (line!.confidence < 0.5
+            || !normalizeImportText(value.pages[page.pdfPage - 1]?.text ?? '').text.includes(normalizeImportText(line!.text).text)))
+          || JSON.stringify(visualRegionUnion(component.map(line => line!.box))) !== JSON.stringify(finding.componentRegion)
+          || JSON.stringify(visualRegionUnion(deviation.map(line => line!.box))) !== JSON.stringify(finding.deviationRegion)
+          || JSON.stringify(symbol.box) !== JSON.stringify(finding.gradeRegion)) fail('Visuell kobling må bevare avledet tekst, region og gradsymbol.')
+      }
+    }
+  }
   if (value.propertyRisk) {
     for (const domain of ['legal', 'technical'] as const) {
       const risk = value.propertyRisk[domain]
@@ -129,12 +162,20 @@ export const DocumentImportSchema = ImportContextSchema.extend({
       }
       if (risk.examinedPages.some(page => {
         const basis = value.pages[page - 1]
-        return basis?.status !== 'readable' && !(domain === 'technical' && basis?.text.trim() && ['unknown', 'incomplete'].includes(basis.status))
+        return basis?.status !== 'readable' && !(domain === 'technical' && (basis?.text.trim() && ['unknown', 'incomplete'].includes(basis.status)
+          || value.visualAnalysis?.pages.some(item => item.pdfPage === page && item.findings.length > 0)))
       })) fail('Undersøkte risikosider må ha tilgjengelig tekstgrunnlag.')
       if (new Set(risk.findings.map(item => item.id)).size !== risk.findings.length) fail('Risikoanalysen har dupliserte funn.')
       if (risk.findings.some(item => item.domain !== domain || (item.category === 'technical') !== (domain === 'technical')
         || domain === 'legal' && item.grade !== null || item.sources.some(source => !risk.examinedPages.includes(source.pdfPage)))) fail('Risikofunn må ha riktig fagområde og undersøkt originalkilde.')
       for (const item of risk.findings) {
+        if (item.visualSources || item.sourceQuality === 'local-visual') {
+          const analysis = value.visualAnalysis
+          const matching = analysis?.pages.flatMap(page => page.findings.filter(finding => finding.component === item.component && finding.description === item.description && finding.grade === item.grade).map(finding => sourcesForVisualFinding(analysis, page, finding))) ?? []
+          if (domain !== 'technical' || item.sourceQuality !== 'local-visual' || item.evidenceKind !== 'detail' || item.status !== 'documented' || !item.visualSources?.length
+            || !matching.some(sources => JSON.stringify(sources) === JSON.stringify(item.visualSources))
+            || item.visualSources.some(source => !risk.examinedPages.includes(source.pdfPage))) fail('Visuelt risikofunn krever identisk OCR-kobling og fysisk originalkilde.')
+        }
         const partialText = item.sourceQuality === 'partial-text'
         if (partialText && (domain !== 'technical' || item.status !== 'possible' || item.grade !== null)) fail('Ufullstendig tekst kan bare gi mulige tekniske forhold uten fastslått grad.')
         if (item.sources.some(source => !sourceValid(source, partialText))) fail('Risikoens tekstbelegg må samsvare ordrett med originalens dokument, side og offset.')

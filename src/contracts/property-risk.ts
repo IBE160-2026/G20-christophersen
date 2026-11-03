@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { PdfSourceSchema } from './pdf-source.ts'
+import { VisualSourceSchema } from './local-visual.ts'
 
 export const RiskFindingSchema = z.strictObject({
   id: z.string().min(1).max(200), domain: z.enum(['legal', 'technical']),
@@ -7,11 +8,12 @@ export const RiskFindingSchema = z.strictObject({
   status: z.enum(['documented', 'possible', 'not-investigated']),
   category: z.enum(['rental-approval', 'use-approval', 'easement', 'rental-restriction', 'technical']),
   consequence: z.string().min(1).max(2000), action: z.string().min(1).max(2000),
-  grade: z.enum(['TG2', 'TG3']).nullable(), sources: z.array(PdfSourceSchema).min(1).max(12),
-  sourceQuality: z.enum(['readable-text', 'partial-text']).optional(),
+  grade: z.enum(['TG2', 'TG3']).nullable(), sources: z.array(PdfSourceSchema).max(12),
+  visualSources: z.array(VisualSourceSchema).min(1).max(12).optional(),
+  sourceQuality: z.enum(['readable-text', 'partial-text', 'local-visual']).optional(),
   evidenceKind: z.enum(['summary', 'detail']).optional(),
   component: z.string().min(1).max(200).optional(),
-})
+}).refine(item => item.sources.length > 0 || (item.sourceQuality === 'local-visual' && Boolean(item.visualSources?.length)), 'Originalkilde kreves.')
 export const RiskAnalysisSchema = z.strictObject({
   method: z.literal('local-rules-1'), coverage: z.enum(['partial', 'unavailable']),
   examinedPages: z.array(z.number().int().min(1).max(200)).max(200),

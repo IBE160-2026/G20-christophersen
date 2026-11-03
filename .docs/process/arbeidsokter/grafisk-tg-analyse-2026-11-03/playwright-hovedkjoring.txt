@@ -1,0 +1,73 @@
+[WebServer] (node:94365) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 39 tests using 1 worker
+
+(node:94415) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/e2e/investment-overview.spec.ts:22:1 › A: faktisk lokal PDF, egne forutsetninger og interaktiv økonomi uten autoritativ bekreftelse (19.8s)
+  ✓   2 tests/e2e/investment-overview.spec.ts:71:1 › A: ukjent leie og uriktig input viser mangler; kilde/risikodialog fungerer med tastatur (2.1s)
+  ✓   3 tests/e2e/investment-overview.spec.ts:88:1 › A: scenario endrer aldri kontrollert vurdering, TG3 eller resultatets snapshot (3.2s)
+  ✓   4 tests/e2e/investment-overview.spec.ts:123:1 › A: ugyldig år overskriver ikke egne verdier (2.2s)
+  ✓   5 tests/e2e/investment-overview.spec.ts:132:1 › A: risiko vises på hovedsiden med separate undersøkelsesgrupper og riktig originalside (1.9s)
+  ✓   6 tests/e2e/investment-overview.spec.ts:151:1 › A: separat rapport importeres direkte fra risikooversikten og kan erstattes med integrert rapport (3.3s)
+  ✓   7 tests/e2e/new-document-import.spec.ts:64:1 › ny ukjent PDF i tom økt henter bare eksplisitte kodefelt og åpner nye originalkilder (1.5s)
+  ✓   8 tests/e2e/new-document-import.spec.ts:85:1 › ny ukjent fritekst-PDF får ukjente beløp og eksplisitt sperret KI, ingen oppdiktet erstatning (1.2s)
+  ✓   9 tests/e2e/new-document-import.spec.ts:95:1 › ny PDF med samme filnavn erstatter forrige ekte dokument uten tall-, kilde- eller forutsetningslekkasje (6.8s)
+Privat ny PDF: 135 sider, 6 beløpsfelt, 9 kildebelegg, KI sperret, ingen ekstern trafikk
+  ✓  10 tests/e2e/new-document-import.spec.ts:131:46 › ny ekte salgsoppgave: tom økt (19.0s)
+Privat ny PDF: 135 sider, 6 beløpsfelt, 9 kildebelegg, KI sperret, ingen ekstern trafikk
+  ✓  11 tests/e2e/new-document-import.spec.ts:131:46 › ny ekte salgsoppgave: erstatter tidligere ekte dokument (21.0s)
+  ✓  12 tests/e2e/new-document-import.spec.ts:181:1 › 135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI-forberedelse (33.1s)
+  ✓  13 tests/e2e/new-document-import.spec.ts:253:1 › ekte135: usikkert tidligere forsøk vises fra journal uten nytt betalt kall (16.5s)
+  ✘  14 tests/e2e/new-document-import.spec.ts:272:1 › ekte135: synlig fremdrift og feil ved knappen under lange utdrag, høyst ett kall (34.9s)
+(node:98121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 tests/e2e/new-document-import.spec.ts:311:1 › hengende HTTP-svar får synlig klientfrist uten automatisk nytt kall (2.1s)
+  ✓  16 tests/e2e/new-document-import.spec.ts:340:1 › status etter ny sidelasting følges lokalt fra analyserer til feilet (2.3s)
+  ✓  17 tests/e2e/new-document-import.spec.ts:355:1 › klientfrist avstemmes lokalt til fullført uten ny betalt forespørsel (1.8s)
+  ✓  18 tests/e2e/new-document-import.spec.ts:386:1 › feilet statuspoll avslutter analyserer og gratis statuskontroll kan gjenopprette (2.5s)
+  ✓  19 tests/e2e/new-document-import.spec.ts:403:1 › gammel backend uten statusrute gir konkret omstartshjelp og sperrer betaling (893ms)
+  ✓  20 tests/e2e/new-document-import.spec.ts:413:1 › gratis kontroll kan gjenopprette idle etter statusfeil før noe betalt forsøk (1.0s)
+  ✓  21 tests/e2e/new-document-import.spec.ts:428:1 › gammel backend med tekstlig 404 viser omstartshjelp og kan forberedes på nytt (2.9s)
+  ✓  22 tests/e2e/new-document-import.spec.ts:464:1 › KI-knappen krever begge uttrykkelige samtykker og ny PDF nullstiller godkjenningen (1.8s)
+  ✓  23 tests/e2e/new-document-import.spec.ts:492:1 › godkjent KI-svar oppdaterer gjeldende eiendom med nye kildebundne tall (1.9s)
+  ✓  24 tests/e2e/property-risk.spec.ts:10:1 › juridisk risiko fra ny lokal PDF vises med ordrett originalside uten KI-kall (1.8s)
+  ✓  25 tests/e2e/property-risk.spec.ts:55:1 › privat Øvre Blekeveien: side 58 og ufullstendig integrert rapport åpnes i originalen (18.3s)
+  ✓  26 tests/e2e/property-risk.spec.ts:137:1 › tekniske grader og sammendrag holdes atskilt med originalside, tastatur og mobil (2.3s)
+  ✓  27 tests/e2e/property-risk.spec.ts:183:1 › samme PDF-bytehash med to filnavn bevarer begge sammendrag og åpner riktig original (3.7s)
+  ✓  28 tests/e2e/property-risk.spec.ts:210:1 › lokalt visuelt kildebevis viser sideusikkerhet og åpner originalregion med tastatur og mobil (1.6s)
+  ✓  29 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Gå videre (1.9s)
+  ✓  30 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Forkast (1.9s)
+  ✓  31 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Innhent mer informasjon (1.9s)
+  ✓  32 tests/e2e/prospectus-import.spec.ts:48:1 › SO-AC5/6: økonomikilde og fysisk10/trykt6 åpnes i riktig original; to bad og ett tak består (2.1s)
+  ✓  33 tests/e2e/prospectus-import.spec.ts:64:1 › SO-AC4/12: faktisk PDF-vedlegg ber om separat fil; rapportbytte bevarer økonomi og åpner separat fysisk3 (2.5s)
+  ✓  34 tests/e2e/prospectus-import.spec.ts:77:1 › SO-AC3/4: raster med digital bunntekst og uklare rapporter kan ikke få komplett kontroll (1.4s)
+  ✓  35 tests/e2e/prospectus-import.spec.ts:82:1 › SO-AC12: sammehash gjenbruk og nyhash tømmer manuell økonomi/finansiering (2.0s)
+  ✓  36 tests/e2e/prospectus-import.spec.ts:92:1 › SO-AC9/11: kontrollert dokumentøkonomi og delt slider/finansiering fyller P/D/J uten manuell overføring (2.6s)
+  ✓  37 tests/e2e/prospectus-import.spec.ts:121:1 › salgsoppgavens hovedinngang og selektivt 200-sidersgrunnlag er synlig uten intern kildeinformasjon i hovedtekst (2.2s)
+  ✓  38 tests/e2e/prospectus-import.spec.ts:129:1 › review: kontrollbelegg åpner riktig original og separat rapport kan gjenopprettes lokalt uten ny POST (3.8s)
+  ✓  39 tests/e2e/prospectus-import.spec.ts:150:1 › code-first: ukjent PDF gir lokal økonomi, synlig rest/kostnad og uoverstyrbar rapportport; samme hash gjenbrukes (2.6s)
+
+
+  1) tests/e2e/new-document-import.spec.ts:272:1 › ekte135: synlig fremdrift og feil ved knappen under lange utdrag, høyst ett kall
+
+    Error: browserContext.close: ENOENT: no such file or directory, open '/Users/madschristophersen/IBE160/G20-christophersen/test-results/.playwright-artifacts-0/traces/a410569ae3bab03d29c6-8e51c594f67c7982a2c2-recording26.network'
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/new-document-import-ekte13-95ee2-lange-utdrag-høyst-ett-kall/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/new-document-import-ekte13-95ee2-lange-utdrag-høyst-ett-kall/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/new-document-import-ekte13-95ee2-lange-utdrag-høyst-ett-kall/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/new-document-import-ekte13-95ee2-lange-utdrag-høyst-ett-kall/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/new-document-import.spec.ts:272:1 › ekte135: synlig fremdrift og feil ved knappen under lange utdrag, høyst ett kall
+  38 passed (4.0m)

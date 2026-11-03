@@ -1,7 +1,8 @@
+import { sourcesForVisualFinding } from '../../contracts/local-visual.ts'
 import type { DocumentImport } from '../../contracts/document-import.ts'
 import type { PropertyRiskItem, RiskSource } from './property-risk.ts'
 
-type DocumentContext = Pick<DocumentImport, 'reportHash' | 'documentName'> & { pages: readonly Pick<DocumentImport['pages'][number], 'pdfPage' | 'text'>[] }
+type DocumentContext = Pick<DocumentImport, 'reportHash' | 'documentName'> & { pages: readonly Pick<DocumentImport['pages'][number], 'pdfPage' | 'text'>[]; visualAnalysis?: DocumentImport['visualAnalysis'] }
 const documentKey = (source: RiskSource) => JSON.stringify([source.documentHash, source.documentName])
 const normalize = (text: string) => text.toLocaleLowerCase('nb-NO').replace(/\s+/gu, ' ').trim()
 const compare = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0
@@ -104,7 +105,7 @@ export function isRiskBackground(item: PropertyRiskItem) {
 
 function sourceKey(source: RiskSource) {
   return JSON.stringify([source.documentHash, source.documentName, source.pdfPage, source.start, source.end, source.quote,
-    'method' in source ? source.method : null, 'printedPage' in source ? source.printedPage : null])
+    'method' in source ? source.method : null, 'printedPage' in source ? source.printedPage : null, source.region ?? null, source.rasterDigest ?? null])
 }
 function exactOverlap(a: PropertyRiskItem, b: PropertyRiskItem) {
   return a.sources.some(source => source.start !== undefined && source.end !== undefined && b.sources.some(other =>
@@ -184,4 +185,59 @@ export function groupPropertyRisks(items: readonly PropertyRiskItem[], documents
       .sort((a, b) => compare(documentKey(a), documentKey(b)) || a.pdfPage - b.pdfPage || (a.start ?? -1) - (b.start ?? -1) || compare(sourceKey(a), sourceKey(b)))
     return { ...representative, id: members[0]!.id, sources, members, ...(displaySubject ? { displaySubject } : {}) }
   })
+}
+
+/** A summary is supplementary evidence only when one unambiguous component has
+ * exactly one detail counterpart in the same original document. Members and all
+ * original sources stay inspectable; grade disagreements are never reconciled. */
+export function reconcileTechnicalSummaries(items: readonly PropertyRiskItem[], documents: readonly DocumentContext[] = []): PropertyRiskItem[] {
+  const componentKey = (item: PropertyRiskItem) => {
+    if (item.domain !== 'technical' || !item.component || !item.grade || item.status !== 'documented' || item.sourceQuality === 'partial-text') return null
+    const component = normalize(item.component)
+    if (locations(component).ambiguous) return null
+    const parts = component.split(/\s+·\s+/u)
+    if (parts.some(part => !item.sources.some(source => normalize(source.quote ?? '').includes(part)))) return null
+    if (!item.sources.length || new Set(item.sources.map(documentKey)).size !== 1) return null
+    for (const source of item.sources) {
+      const document = documents.find(document => document.reportHash === source.documentHash && document.documentName === source.documentName)
+      if (!document) return null
+      if (source.method === 'local-vision') {
+        if (!source.region || !source.rasterDigest || source.extractorVersion !== 'local-visual-1') return null
+        const analysis = document.visualAnalysis
+        const known = analysis?.pages.flatMap(page => page.findings.filter(finding => finding.component === item.component && finding.description === item.description && finding.grade === item.grade).flatMap(finding => sourcesForVisualFinding(analysis, page, finding))) ?? []
+        if (!known.some(original => sourceKey(original) === sourceKey(source))) return null
+      } else {
+        const page = document.pages.find(page => page.pdfPage === source.pdfPage)
+        if (!page || source.start === undefined || source.end === undefined || source.start < 0 || source.end <= source.start || page.text.slice(source.start, source.end) !== source.quote) return null
+      }
+    }
+    const context = identified([item.component, item.description, ...item.sources.map(source => source.quote ?? '')].join('\n'))
+    if (context.kind === 'unknown') return null
+    // Navnelikhet identifiserer ikke gjentakbare bygningsdeler som sluk,
+    // gulvoverflater eller avtrekk. Uten sted støttes bare disse eksplisitte
+    // bygningsomfattende aggregatene, fortsatt med én unik detaljmotpart.
+    // En altan er en enkeltkomponent og kan finnes flere steder i bygget.
+    if (context.kind === 'none' && !/^(?:taktekking|grunnmur|drenering|nedløp, beslag og skorsteiner over tak)$/u.test(component)) return null
+    return JSON.stringify([documentKey(item.sources[0]!), component, context.kind === 'known' ? context.key : null])
+  }
+  const keys = items.map(componentKey)
+  const replacements = new Map<number, PropertyRiskItem>(), removed = new Set<number>()
+  for (const [index, item] of items.entries()) {
+    if (item.evidenceKind !== 'summary' || !keys[index]) continue
+    const summaries = items.map((other, otherIndex) => ({ other, otherIndex })).filter(entry => entry.other.evidenceKind === 'summary' && keys[entry.otherIndex] === keys[index])
+    const details = items.map((other, otherIndex) => ({ other, otherIndex })).filter(entry => entry.other.evidenceKind === 'detail' && keys[entry.otherIndex] === keys[index])
+    if (summaries.length !== 1 || details.length !== 1) continue
+    const detail = details[0]!
+    if (detail.other.grade !== item.grade) {
+      const note = `Ulik tilstandsgrad i sammendrag (${item.grade}) og detalj (${detail.other.grade}). Kontroller begge originalkilder; forholdene er ikke slått sammen.`
+      replacements.set(index, { ...item, reconciliationNote: note })
+      replacements.set(detail.otherIndex, { ...detail.other, reconciliationNote: note })
+      continue
+    }
+    const members = [...(detail.other.members ?? [detail.other]), ...(item.members ?? [item])]
+    const sources = [...new Map(members.flatMap(member => member.sources).map(source => [sourceKey(source), source])).values()]
+    replacements.set(detail.otherIndex, { ...detail.other, sources, members, reconciliationNote: 'Samme entydige bygningsdel og grad i sammendrag og detalj er samlet og telles én gang. Sammendraget er supplerende kildebelegg.' })
+    removed.add(index)
+  }
+  return items.flatMap((item, index) => removed.has(index) ? [] : [replacements.get(index) ?? item])
 }

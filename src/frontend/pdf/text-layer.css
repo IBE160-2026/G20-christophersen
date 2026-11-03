@@ -24,3 +24,5 @@
 .pdf-page .textLayer .markedContent { display: contents; }
 .pdf-page .textLayer span[role="img"] { user-select: none; cursor: default; }
 .pdf-page .textLayer ::selection { background: rgb(0 0 255 / 25%); }
+
+.pdf-page .pdf-source-region { position: absolute; border: 2px solid #a24d17; background: rgb(245 166 35 / 10%); pointer-events: none; box-sizing: border-box; z-index: 2; }

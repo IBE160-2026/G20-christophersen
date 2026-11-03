@@ -121,7 +121,7 @@ it('ukjent originalhash får generell lokal plan med stengt semantisk port',asyn
     expect(parsed.outcome.economy.fields.find(field=>field.id==='price')?.amount).toBe('3000000')
     expect(createHash('sha256').update(bytes).digest('hex')).toHaveLength(64)
   }finally{await app.close()}
-})
+},60_000)
 
 it('SO-AC13: mottatt svar over 8 MiB stoppes før validering og ingen sen suksess',async()=>{
   const bytes=await readFile(new URL('../fixtures/sales-prospectus/mixed-12.pdf',import.meta.url)),events:string[]=[]

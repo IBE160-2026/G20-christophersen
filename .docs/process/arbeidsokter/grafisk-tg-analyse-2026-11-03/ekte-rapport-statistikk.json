@@ -1,0 +1,231 @@
+{
+  "pageCount": 135,
+  "visualMs": 14585,
+  "visualPages": [
+    {
+      "page": 63,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 64,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 65,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 66,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 67,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 68,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 69,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 70,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 71,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 1,
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "page": 72,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 1,
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "page": 73,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 2,
+      "tg2": 2,
+      "tg3": 0
+    },
+    {
+      "page": 74,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 75,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 2,
+      "tg2": 2,
+      "tg3": 0
+    },
+    {
+      "page": 76,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 1,
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "page": 77,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 1,
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "page": 78,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 79,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 1,
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "page": 80,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 81,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 82,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 1,
+      "tg2": 1,
+      "tg3": 0
+    },
+    {
+      "page": 83,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 84,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 85,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 86,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    },
+    {
+      "page": 87,
+      "rendered": true,
+      "status": "uncertain",
+      "details": 0,
+      "tg2": 0,
+      "tg3": 0
+    }
+  ],
+  "visualTg2": 10,
+  "visualTg3": 0,
+  "sections": [
+    {
+      "start": 63,
+      "end": 87,
+      "certainty": "ambiguous"
+    }
+  ],
+  "coverage": "incomplete",
+  "technicalControlFindings": 0,
+  "localRisks": 69,
+  "summaryFindings": 23,
+  "summaryTg2": 23,
+  "summaryTg3": 0,
+  "summaryPhysicalPages": [
+    40,
+    41,
+    42,
+    43
+  ],
+  "partialCandidates": 30,
+  "checkedSources": 104,
+  "reservedUsd": "0.00000000",
+  "actualUsd": null
+}

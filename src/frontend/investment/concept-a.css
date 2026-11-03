@@ -492,3 +492,9 @@
   .investment-shell .property-risk { padding-block: 28px; }
   .investment-shell .property-risk .investment-section-heading { align-items: flex-start; }
 }
+
+.investment-shell .technical-visual-pages { margin-block: 16px; }
+.investment-shell .technical-visual-pages > summary { cursor: pointer; min-height: 44px; padding-block: 10px; }
+.investment-shell .technical-visual-pages ul { padding-left: 20px; }
+.investment-shell .technical-visual-pages li { padding-block: 8px; border-top: 1px solid var(--investment-line); }
+.investment-shell .technical-visual-pages button { min-height: 44px; }

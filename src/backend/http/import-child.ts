@@ -5,6 +5,7 @@ import { createCodeFirstImport } from '../import/semantic-adapter.ts'
 import { attachUploadedEconomy } from '../import/uploaded-economy-cache.ts'
 import { attachSavedEconomy } from '../import/saved-economy.ts'
 import { createOfflineImport } from '../import/offline-adapter.ts'
+import { enrichImportWithLocalVisual } from '../documents/visual-import.ts'
 import type { ImportRole } from '../../contracts/document-import.ts'
 import { IMPORT_MAX_RESPONSE_BYTES } from '../../contracts/document-import.ts'
 const send = (value: unknown) => new Promise<void>((resolve, reject) => process.send?.(value, error => error ? reject(error) : resolve()))
@@ -16,9 +17,9 @@ process.once('message', async (input: { bytes: Uint8Array; documentName: string;
     input.bytes = new Uint8Array()
     if (format.status !== 'format-validated') throw new ImportFailure(format.error.code === 'page-limit' ? 'page-limit' : 'invalid-format')
     const extracted = await extractImport(format)
-    const permitted = new Promise<void>(resolve => process.once('message', () => resolve()))
+    const permitted = new Promise<number>(resolve => process.once('message', (permission: { remainingMs?: number }) => resolve(permission.remainingMs ?? 0)))
     await send({ kind: 'adapter-ready', hash })
-    await permitted
+    const remainingMs = await permitted, adapterStarted = performance.now()
     const basis = { hash, name: input.documentName, requestId: input.requestId, role: input.role, parentHash: input.parentHash,
       attachmentId: input.attachmentId, pages: extracted.pages, attachments: extracted.attachments }
     let outcome
@@ -29,6 +30,7 @@ process.once('message', async (input: { bytes: Uint8Array; documentName: string;
         outcome = await attachSavedEconomy(outcome, bytes!, basis)
         outcome = await attachUploadedEconomy(outcome, bytes!, basis)
       }
+      outcome = await enrichImportWithLocalVisual(outcome, bytes!, { deadlineMs: Math.max(0, remainingMs - (performance.now() - adapterStarted) - 2500) })
     }
     if (Buffer.byteLength(JSON.stringify(outcome)) > IMPORT_MAX_RESPONSE_BYTES) throw new ImportFailure('response-limit')
     await send({ kind: 'outcome', outcome })

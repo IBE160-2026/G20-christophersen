@@ -50,6 +50,9 @@ it('viser grad, sammendragsforbehold og fysisk rapportområde uten å hevde komp
     reportEvidence: { documentName: 'teknisk.pdf', ranges: [{ startPage: 8, endPage: 12, certainty: 'ambiguous', source: { ...source, pdfPage: 8 } }], unreadPages: [9, 11] } }
   for (const Component of [RiskOverview, RiskDetails]) {
     const markup = renderToStaticMarkup(createElement(Component, { risks, onSource: () => {}, onDetails: () => {} }))
+    expect(markup).toContain('sammendragsopplysninger vises i tillegg og inngår ikke i antallet over')
+    expect(markup).toContain('sammendrags- og detaljtall skal ikke legges sammen')
+    expect(markup).toContain(Component === RiskOverview ? 'Dokumenterte problemer <span>0</span>' : 'Dokumenterte problemer (0)')
     expect(markup).toContain('technical-grade--tg3')
     expect(markup).toContain('Oppgitt i sammendrag')
     expect(markup).toContain('fysisk PDF-side 8–12')
@@ -63,5 +66,27 @@ it('viser grad, sammendragsforbehold og fysisk rapportområde uten å hevde komp
     const detailMarkup = renderToStaticMarkup(createElement(Component, { risks: { ...risks, documented: [{ ...item, evidenceKind: 'detail' }] }, onSource: () => {}, onDetails: () => {} }))
     expect(detailMarkup).toContain('Detaljtekst')
     expect(detailMarkup).not.toContain('Rapportdetalj')
+  }
+})
+
+it('viser avledet OCR, usikre sider og delvis kobling uten å kalle sidene ferdig kontrollert', () => {
+  const source = { method: 'local-vision' as const, documentHash: 'a', documentName: 'grafisk.pdf', pdfPage: 9, quote: 'Taktekking: Det er påvist lekkasje.', region: { x: .1, y: .1, width: .6, height: .3 }, rasterDigest: 'b'.repeat(64), extractorVersion: 'local-visual-1' }
+  const item: PropertyRiskItem = { id: 'visual', domain: 'technical', category: 'technical', title: 'TG3 · Taktekking', description: source.quote, grade: 'TG3', evidenceKind: 'detail', sourceQuality: 'local-visual', status: 'documented', consequence: 'Avklar tiltak.', action: 'Kontroller originalen.', sources: [source] }
+  const risks: PropertyRiskOverview = { documented: [item], possible: [], unexamined: [], background: [], gaps: [], limitations: [], technicalCoverage: 'Rapportdekningen er ufullstendig.', reportEvidence: { documentHash: 'a', documentName: source.documentName, ranges: [{ startPage: 8, endPage: 11, certainty: 'ambiguous', source: { documentHash: 'a', documentName: source.documentName, pdfPage: 8 } }], unreadPages: [9, 10], visualPages: [{ pdfPage: 9, rendered: true, status: 'uncertain', reason: 'Ett symbol kunne ikke knyttes til en komponent.', findings: 1 }, { pdfPage: 10, rendered: false, status: 'unavailable', reason: 'Lokal bildeanalyse utilgjengelig.', findings: 0 }] } }
+  for (const Component of [RiskOverview, RiskDetails]) {
+    const markup = renderToStaticMarkup(createElement(Component, { risks, onSource: () => {}, onDetails: () => {} }))
+    expect(markup).toContain('2 fysiske sider i analyseutvalget; 1 side rendret og lokalt lest')
+    expect(markup).toContain('Automatisk kobling med kildebelegg')
+    expect(markup).not.toContain('Sikker automatisk kobling')
+    expect(markup).toContain('Lokal bildeanalyse / OCR')
+    expect(markup).toContain('OCR-lesning fra sidebildet')
+    expect(markup).toContain('avledet tekst, ikke ordrett PDF-tekstlag')
+    expect(markup).toContain('ikke fullstendig sidekontroll eller brukergodkjenning')
+    expect(markup).toContain('Fortsatt usikker bildeanalyse: fysisk PDF-side 9, 10')
+    expect(markup).toContain('Ikke bildebehandlet i identifisert rapportområde: fysisk PDF-side 8, 11')
+    expect(markup).toContain('Ett symbol kunne ikke knyttes')
+    expect(markup).toContain('Åpne originalside 9')
+    expect(markup).toContain('technical-grade--tg3')
+    expect(markup).not.toContain('grad ukjent')
   }
 })

@@ -52,7 +52,7 @@ export async function runImport(input: ImportPipelineInput, signal: AbortSignal,
         if (value.kind === 'adapter-ready' && 'hash' in value && value.hash === hash && !permitted) {
           if (markers.has(key)) { fail('duplicate-analysis', 409); return }
           markers.add(key); permitted = true; notify('adapter-permitted')
-          child.send({ kind: 'permit-adapter' }, error => { if (error) fail('processing-failure') })
+          child.send({ kind: 'permit-adapter', remainingMs: Math.max(0, deadline - performance.now()) }, error => { if (error) fail('processing-failure') })
         } else if (value.kind === 'outcome' && 'outcome' in value && permitted) {
           if (Buffer.byteLength(JSON.stringify(value.outcome)) > IMPORT_MAX_RESPONSE_BYTES) { fail('response-limit'); return }
           const parsed = DocumentImportSchema.safeParse(value.outcome)

@@ -60,7 +60,17 @@ Grafene viser akkumulert konstant kontantstrøm, restgjeld på privat lån og å
 
 Risikoanalysen er gratis og lokal og har alltid delvis dekning. Den verifiserer ikke kommunens byggesaksarkiv eller grunnbok. Grafiske grader gjettes aldri. Bevart tekst fra sider med ufullstendig eller usikker lesing kan bare gi **mulige forhold**, tydelig merket med ufullstendig tekstgrunnlag og uten fastslått TG. Uleste sider, vedlegg og usikre rapportgrenser sperrer fortsatt komplett rapportdekning. Fravær av treff er ingen friskmelding. Risikomodulen endrer ikke finansreglene eller den kontrollerte screeninganbefalingen.
 
-Teknisk analyse identifiserer nå også rapportområder fra omslag, oppdragsnummer og sammenhengende rapportpaginering, både innebygd og separat. Området og usikre fysiske sider vises med originalåpning. Eksplisitte flerlinjede avvik støttes i avgrensede tekstformater. TG2/TG3 fra en navngitt komponentliste under eksplisitt TG-overskrift merkes **Oppgitt i sammendrag**; sammendraget kan avvike fra rapporten og inngår ikke i bekreftet rapportgrunnlag. Like tekniske avvik samles bare når komponent/sted og kildebelegg støtter det. Ukjente oppsett og grafiske grader krever fortsatt kontroll. Se [implementasjon og verifikasjon](.docs/process/arbeidsokter/2026-11-03-teknisk-dokumentanalyse.md).
+Teknisk analyse identifiserer rapportområder fra omslag, oppdragsnummer og sammenhengende rapportpaginering, både innebygd og separat. Området og usikre fysiske sider vises med originalåpning. Eksplisitte flerlinjede avvik støttes i avgrensede tekstformater. TG2/TG3 fra en navngitt komponentliste under eksplisitt TG-overskrift merkes **Oppgitt i sammendrag**; sammendraget kan avvike fra rapporten og inngår ikke i bekreftet rapportgrunnlag. Entydig samme navngitte komponent og grad i sammendrag og detalj vises én gang med begge belegg. Generiske navn, ukjent rom og gradkonflikter holdes atskilt. Ukoblede sammendrag har egen teller og skal ikke summeres med detaljene.
+
+På macOS kan grafiske gradsymboler leses med lokal PDFKit og Vision OCR. Klargjør én gang per kodeversjon med Node-versjonen angitt over:
+
+```bash
+npm run prepare:visual
+```
+
+Dette krever Apples lokale kommandolinjeverktøy (`swiftc`) og bygger en ignorert kjørbar fil i `private/.local-visual/`. Ingen PDF eller OCR-tekst sendes til en tjeneste. Importen prøver automatisk bildeanalyse for ufullstendige/rasterbaserte rapporter eller uløste TG-markører, etter PDF.js. Separate rapporter uten sikre grenser beholder alle sine fysiske sider i analyseutvalget. Samsvar mellom helside-OCR og et eget symbolutsnitt gir lokal gradtolkning; geometrien må også støtte bygningsdel og avviksblokk. Kildene merkes **Lokal bildeanalyse / OCR** og åpner originalside med markert område. PDF-tekst og avledet OCR har forskjellige kildeformer. Økonomianalysen bruker fortsatt sine opprinnelige kilder.
+
+Bildeanalysen har 35 sekunder, høyst 40 sider per import og 12 MiB prosessutdata. Detaljblokker prioriteres; alle øvrige sider beholdes som usikre. Manglende runtime på andre plattformer, utydelige symboler, ukjente oppsett og avvik over sideskift gir synlige mangler. En rendret side eller et automatisk koblet funn er ikke komplett sidekontroll eller brukergodkjenning. Visuell analyse oppgraderer aldri TG-dekning til komplett. Kjør de faktiske lokale renderer-/OCR-integrasjonstestene på klargjort macOS med `PAA_TEST_LOCAL_VISION=1 npm test`; vanlige tester krever ikke Vision. Se [tekstleveransen](.docs/process/arbeidsokter/2026-11-03-teknisk-dokumentanalyse.md) og [grafisk analyse og verifikasjon](.docs/implementation-artifacts/spec-grafisk-tg-analyse.md).
 
 **Forhold å ta stilling til** viser risiko, TG-status og mangler. **Bak tallene** åpner registrering, kildebelegg og bekreftelse; **Etterprøv grunnlaget** åpner dokumentasjon og original-PDF. Rapportkontroll, separate TG3-avklaringer og kodebestemt anbefaling følger samme krav som før. Scenarioslidere endrer ingen bekreftelse eller tidligere kontrollert vurdering. FINN-feltet finnes fortsatt under alternativ inngang og bruker uendret backendport. Hele den lokale økten avsluttes ved sidelasting.
 
@@ -111,7 +121,7 @@ og hele rapporten 5–12 til det kombinerte grunnlaget.
 Ny salgsoppgavehash tømmer hele det tidligere objektet. Samme hash i samme
 aktive versjons-/moduskontekst gjenbruker vurderingen, også ved nytt filnavn.
 Sidelasting avslutter økten. Backend beholder ingen originaler eller tekst mellom
-requests. Ingen OCR, automatisk vedleggsutpakking, betalt kall, token-count-tjeneste
+requests. Lokal OCR for tekniske rapporter er beskrevet over. Ingen automatisk vedleggsutpakking, betalt kall, token-count-tjeneste
 eller live-fallback inngår. Lokal frist er 60 s; tekstgrensene er 128 KiB/side og
 1 MiB samlet UTF-8, svargrensen 8 MiB. PDF-barnet har 256 MiB V8-heap, og
 forelderen stopper ved målt RSS over 512 MiB. RSS er best effort, ingen hard

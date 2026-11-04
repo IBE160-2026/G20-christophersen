@@ -158,6 +158,7 @@ test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekrefte
   expect(rent.property.district!.sources).toEqual(expect.arrayContaining([expect.objectContaining({ pdfPage: 117, quote: expect.stringContaining('Bydel: 1 Gamle Oslo') })]))
   expect(outcome.economy.fields.find(field => field.id === 'price')).toMatchObject({ status: 'available', amount: '8600000' })
   expect(outcome.economy.fields.find(field => field.id === 'commonCosts')).toMatchObject({ status: 'available', amount: '3660', period: 'month' })
+  expect(outcome.economy.fields.find(field => field.id === 'commonCosts')!.sources).toEqual(expect.arrayContaining([expect.objectContaining({ pdfPage: 27, quote: 'Det er målere i hver leilighet for varme/varmtvann som\navregnes en gang i året, pr. 31.12.' })]))
   for (const field of [rent.property.address, rent.property.municipality, rent.property.district, rent.property.area, rent.property.rooms, rent.property.bedrooms, rent.property.propertyType]) {
     expect(field?.sources.length).toBeGreaterThan(0)
     for (const source of field!.sources) {
@@ -180,24 +181,20 @@ test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekrefte
   await expect(panel.getByTestId('rent-monthly')).toHaveText(`${displayedAmount(expected.monthly)} kr`)
   await expect(panel.getByTestId('rent-interval')).toHaveText(`${displayedAmount(expected.low)}–${displayedAmount(expected.high)} kr/mnd`)
   await expect(panel).toContainText('01.02'); await expect(panel).toContainText(`Brukes automatisk i ubekreftet økonomiscenario for ${expected.year}`)
-  await expect(page.getByTestId('scenario-gross')).toContainText('—')
+  await expect(page.getByTestId('scenario-gross')).toContainText(expected.grossYield)
+  await expect(page.getByTestId('scenario-preliminary-net')).toContainText(new Intl.NumberFormat('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format((expected.annual - 43920) / 8600000 * 100))
+  await expect(page.getByTestId('scenario-preliminary-formula')).toContainText(displayedAmount(expected.annual - 43920))
+  await expect(page.getByTestId('scenario-preliminary-formula')).toContainText('43 920')
+  await expect(page.getByRole('region', { name: 'Foreløpig netto før finansiering' })).toContainText('Kostnadsår: ukjent')
   await panel.locator('summary').click()
   await expect(panel).toContainText('3.060'); await expect(panel).toContainText(`${expected.raw} × (1 − ${expected.margin})`)
   await expect(panel.getByRole('link', { name: /Hent det samme datagrunnlaget/ })).toHaveAttribute('href', new RegExp(`valueCodes%5BTid%5D=${expected.year}`))
-  // Fellesgjeld er ukjent. Automatisk P må forbli sperret; brukeren kan registrere en eksplisitt ubekreftet pris.
-  expect(outcome.economy.fields.find(field => field.id === 'sharedDebt')?.status).not.toBe('available')
-  await page.getByTestId('open-financial-basis').click()
-  await expect(page.locator('#value-L')).toHaveValue('')
-  await expect(page.locator('#status-L')).toContainText('Ubekreftet')
-  await page.locator('#value-P').fill('8600000')
-  await page.locator('#source-kind-P').selectOption('source')
-  await page.locator('#source-P').fill('Brukerregistrert pris fra Nordvik; fellesgjeld må avklares separat')
-  await expect(page.locator('#status-P')).toContainText('Ubekreftet')
-  await page.getByRole('button', { name: '← Tilbake til investeringsoversikten' }).click()
-  await expect(page.getByTestId('scenario-gross')).toContainText(expected.grossYield)
+  // Urørt dokumentøkonomi gir automatisk P og bare en avgrenset foreløpig netto.
+  expect(outcome.economy.fields.find(field => field.id === 'sharedDebt')).toMatchObject({ status: 'available', amount: '0' })
+  await expect(page.locator('.document-economy')).toContainText('Seksjonen har ingen gjeld per. 26.10.2026')
   await expect(page.getByTestId('scenario-net')).toContainText('—')
   await expect(page.getByTestId('scenario-cash')).toContainText('—')
-  for (const [id, label, displayed] of [['price', 'Prisantydning', '8 600 000,00 kr'], ['commonCosts', 'Felleskostnader', '3 660,00 kr']] as const) {
+  for (const [id, label, displayed] of [['price', 'Prisantydning', '8 600 000,00 kr'], ['commonCosts', 'Felleskostnader', '3 660,00 kr'], ['sharedDebt', 'Fellesgjeld', '0,00 kr']] as const) {
     const row = page.locator('.document-economy-fields > div').filter({ has: page.locator('dt', { hasText: new RegExp(`^${label}$`) }) })
     await expect(row.locator('dd > strong')).toHaveText(displayed)
     if (id === 'commonCosts') await expect(row).toContainText('måned')

@@ -21,7 +21,7 @@ it('viser alle økonomifelt, manglende grunnlag, kilder og proveniens direkte', 
   expect(markup).toContain('Lokalt dokumentuttrekk')
   expect(markup.replaceAll('\u00a0', ' ')).toContain('3 000 000,00 kr')
   expect(markup).toContain('Lagret analyse ble avvist')
-  expect(markup).toContain('full drift')
+  expect(markup).toContain('Full drift')
   expect(markup).toContain('fysisk PDF-side 1')
   expect(markup).toContain('Åpne originalside')
   for (const field of outcome.economy.fields) expect(markup).toContain(field.label)

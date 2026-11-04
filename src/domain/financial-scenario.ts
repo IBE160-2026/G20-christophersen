@@ -11,6 +11,7 @@ export type ScenarioValue = 'P' | 'L' | 'D' | 'cashRequired' | 'sharedAnnualPaym
 export interface ScenarioBasis {
   P: string | null; L: string | null; D: string | null
   cashRequired: string | null; sharedAnnualPayment: string | null
+  preliminaryOperatingSubtotal?: string | null; preliminaryCostYear?: string | null
   year: string | null; issues: string[]; provenance: Record<ScenarioValue, string>
 }
 export interface ScenarioControls { equity: string; annualInterest: string; months: string }
@@ -23,6 +24,7 @@ export interface FinancialScenario {
   basis: ScenarioBasis; controls: ScenarioControls
   loan: string | null; monthly: string | null; annual: string | null; J: string | null
   grossYield: string | null; netYield: string | null; noi: string | null; cashFlow: string | null
+  preliminaryNoi: string | null; preliminaryNetYield: string | null
   issues: string[]; series: ScenarioPoint[]; sensitivity: ScenarioSensitivity[]
 }
 
@@ -44,6 +46,9 @@ export function calculateFinancialScenario(basis: ScenarioBasis, controls: Scena
   if (L === null) issues.push('Leieinntekt mangler eller er ugyldig.')
   if (D === null) issues.push('Fullstendig årlig drift mangler eller er ugyldig.')
   if (shared === null) issues.push('Betaling på fellesgjeld er ukjent. Samlet gjeldsbetaling og kontantstrøm kan ikke beregnes.')
+  const partialCosts = nonnegative(basis.preliminaryOperatingSubtotal ?? null)
+  const preliminaryNoi = L !== null && partialCosts !== null ? new Decimal(L).minus(partialCosts).toFixed() : null
+  const preliminaryNetYield = price !== null && preliminaryNoi !== null ? new Decimal(preliminaryNoi).times('100').div(price).toFixed() : null
   const financing = financingSuggestion({ ...controls, cashRequired: cash, sharedAnnualPayment: shared })
   if (cash === null) issues.push('Kontantbehov ved kjøp er ukjent. Det settes ikke lik totalpris inklusive fellesgjeld.')
   if (financing.error) issues.push(financing.error)
@@ -83,6 +88,6 @@ export function calculateFinancialScenario(basis: ScenarioBasis, controls: Scena
     }
   }
   return { basis: structuredClone(basis), controls: { ...controls }, loan: financing.loan, monthly: financing.monthly,
-    annual: financing.annual, J: financing.J, grossYield, netYield, noi, cashFlow,
+    annual: financing.annual, J: financing.J, grossYield, netYield, noi, cashFlow, preliminaryNoi, preliminaryNetYield,
     issues: [...new Set(issues)], series, sensitivity }
 }

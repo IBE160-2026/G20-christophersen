@@ -772,3 +772,19 @@ verifisert her gjelder dokumentets eksisterende inndeling og SSBs kontrollerte
 soner; den er ikke en adressekonvertering til kommende bydeler. Nye geografier
 må avstemmes mot framtidige metadata og dokumentets inndelingsår før presis
 prissone brukes. [Kommunens kilde og reviewbevis](../process/arbeidsokter/2026-11-04-rostockgata-leieestimat.md#review-og-nummerert-bydel).
+
+
+**PAA-SO2 / PAA-LEIE1, automatisk dokumentøkonomi 2026-11-04 — Status: fortsatt Åpen for full kostnadsdekning, kalibrering og teknisk kvalitet.**
+
+Ny bestilling etter `fae71a3180cd63e20211188821cf306c1c451d1b` følger opp den
+konkrete automatiske prisblokkeringen: fysisk side 28 dokumenterer null
+seksjonsgjeld per 26.10.2026 og ingen registrerte sameielån. Prisen 8 600 000 var
+allerede hentet; det manglet tolkning av den eksplisitte nullgjeldsteksten.
+Foreløpig netto skal bruke kjent fellesutgift 3 660 × 12 = 43 920 kr uten dobbelttelling
+av 2 704 + 159 + 797 kr som inngår. Ved SSB-referanse 18 900 kr/mnd gir det 182 880 kr/år og 2,13 %.
+Dette er før øvrige ukjente kostnader og finansiering; udaterte fellesutgifter
+får ikke oppdiktet år, og SSB 2025 er fortsatt en ukalibrert referanse. Full D,
+kontantstrøm, markedsvalidering og TG-kompletthet gjenstår. Ingen historisk
+oppføring lukkes av denne caseforbedringen. Se
+[spec og review](spec-rostockgata-automatisk-netto.md) og
+[faktiske testresultater og gjenværende grenser](../process/arbeidsokter/2026-11-04-rostockgata-automatisk-netto.md).

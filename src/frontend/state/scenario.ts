@@ -58,6 +58,7 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
     D = null
     issues.push('Leie og driftskostnader gjelder ulike år. Nettoyield og kontantstrøm kan ikke beregnes.')
   }
+  let preliminaryOperatingSubtotal: string | null = null, preliminaryCostYear: string | null = null
   let cashRequired: string | null = null, sharedAnnualPayment: string | null = null
   const outcome = slot.status === 'imported' && slot.selected?.hash === slot.outcome?.reportHash ? slot.outcome : null
   const listing = session.listing.status === 'ready' ? listingDraft : null
@@ -69,6 +70,14 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
     if (session.financial.P.rawValue.trim() === '' && !session.sources.P.conflict && !session.listing.manualFields.includes('P') && suggested.P !== null) { P = suggested.P; provenance.P = label }
     if (session.financial.D.rawValue.trim() === '' && !session.sources.D.conflict && !independent.fields.D.issues.some(issue => issue.target === 'cost') && !session.listing.manualFields.includes('D') && suggested.D !== null
       && (effectiveRentYear === null || effectiveRentYear === suggested.year)) { D = suggested.D; provenance.D = label; year ??= suggested.year }
+    const untouchedDrift = session.financial.D.rawValue.trim() === '' && session.financial.D.period === '' && session.financial.D.year === ''
+      && session.sources.D.kind === '' && session.sources.D.description.trim() === '' && !session.sources.D.conflict
+      && !session.listing.manualFields.includes('D') && session.costItems.length === 0
+    if (untouchedDrift && suggested.preliminaryOperatingSubtotal !== null) {
+      preliminaryOperatingSubtotal = suggested.preliminaryOperatingSubtotal
+      preliminaryCostYear = suggested.preliminaryCostYear
+      issues.push(`Foreløpig drift er bare en kjent delsum. Kostnadsår: ${preliminaryCostYear ?? 'ukjent'}. Leieår/-nivå: ${effectiveRentYear ?? 'ukjent'}; blandede prisnivåer uten prisjustering. Manglende kostnader er ikke null.`)
+    }
     // A different manual price cannot borrow purchase funding from the original listing.
     const priceMatches = P !== null && suggested.P !== null && new Decimal(P).eq(suggested.P)
     if (priceMatches) {
@@ -87,5 +96,5 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
   }
   // Missing values remain null. This selector never dispatches, changes a revision or confirms a field.
   for (const [field, amount] of Object.entries({ P, L, D })) if (amount === null) issues.push(...(fieldIssues[field as 'P' | 'L' | 'D'] ?? []))
-  return { P, L, D, cashRequired, sharedAnnualPayment, year, issues: [...new Set(issues)], provenance }
+  return { P, L, D, cashRequired, sharedAnnualPayment, preliminaryOperatingSubtotal, preliminaryCostYear, year, issues: [...new Set(issues)], provenance }
 }

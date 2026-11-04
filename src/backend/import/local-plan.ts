@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { CODE_FIRST_PLAN_VERSION, normalizeImportText, collectTgCandidates } from '../../contracts/document-import.ts'
+import { enrichExplicitEconomy } from './explicit-economy.ts'
 import { parseNorwegianMoney } from './norwegian-money.ts'
 import { ListingKeySchema } from '../../contracts/listing.ts'
 import { deviationStatus, extractExplicitTechnicalFindings } from './technical-risk.ts'
@@ -142,6 +143,7 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
       }
     }
   }
+  if (!options.legacyEconomy) enrichExplicitEconomy(basis, fields, (page, start, end) => sourceFor(basis, page, start, end))
   // Additional formats still require a named component and explicit grade.
   // Existing findings keep their IDs for pinned replay and human controls.
   if (!options.legacyEconomy) for (const finding of safeTechnicalFindings) {

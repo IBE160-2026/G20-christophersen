@@ -62,6 +62,26 @@ export function economySuggestions(draft: SourceEconomyDraft, options: { require
   const cashRequired = !draft.oneOffReviewIssue && price !== null && oneOff !== null ? new Decimal(price).plus(oneOff).toFixed() : null
   const recurring = fields.filter(field => field.category === 'recurring' && active(field))
   let knownOperatingSubtotal: string | null = null
+  // A partial subtotal may retain an unknown cost year. It never supplies full D.
+  let preliminaryOperatingSubtotal: string | null = null
+  const provisionalValid = recurring.length > 0 && recurring.every(field => checked(field.id) && field.status === 'available'
+    && field.amount !== null && new Decimal(field.amount).gte('0') && field.debtPart !== null && new Decimal(field.debtPart).gte('0')
+    && new Decimal(field.debtPart).lte(field.amount) && field.includedIn !== null && ['month', 'year'].includes(field.period))
+  const costYears = new Set(recurring.map(field => field.year))
+  if (provisionalValid && costYears.size === 1) {
+    const annual = (field: SourceEconomyField) => new Decimal(field.amount!).times(field.period === 'month' ? '12' : '1')
+    const annualDebt = (field: SourceEconomyField) => new Decimal(field.debtPart!).times(field.period === 'month' ? '12' : '1')
+    const roots = recurring.filter(field => field.includedIn === '')
+    const linksValid = recurring.every(field => field.includedIn === '' || roots.some(root => root.id === field.includedIn))
+      && roots.every(root => {
+        const children = recurring.filter(field => field.includedIn === root.id)
+        const childDebt = children.reduce((sum, child) => sum.plus(annualDebt(child)), new Decimal('0'))
+        const childOperating = children.reduce((sum, child) => sum.plus(annual(child).minus(annualDebt(child))), new Decimal('0'))
+        return childDebt.lte(annualDebt(root)) && childOperating.lte(annual(root).minus(annualDebt(root)))
+      })
+    if (roots.length && linksValid) preliminaryOperatingSubtotal = roots.reduce((sum, field) => sum.plus(annual(field).minus(new Decimal(field.debtPart!).times(field.period === 'month' ? '12' : '1'))), new Decimal('0')).toFixed()
+  }
+  const preliminaryCostYear = costYears.size === 1 ? recurring[0]?.year ?? null : null
   let D: string | null = null, sharedAnnualPayment: string | null = null, year: string | null = null
   const debtPayment = get('sharedDebtPayment')
   const knownDebtPayment = amount('sharedDebtPayment')
@@ -97,7 +117,7 @@ export function economySuggestions(draft: SourceEconomyDraft, options: { require
   if (!validBreakdown) sharedAnnualPayment = null
   if (D === null) issues.push('Full D krever komplett, kontrollert kostnadsinnhold med kjent fordeling, inkludering, periode og år.')
   if (sharedAnnualPayment === null) issues.push('Full J krever kjent betaling av fellesgjeld.')
-  return { P, D, year, cashRequired, sharedAnnualPayment, knownOperatingSubtotal, issues }
+  return { P, D, year, cashRequired, sharedAnnualPayment, knownOperatingSubtotal, preliminaryOperatingSubtotal, preliminaryCostYear, issues }
 }
 
 /** Samme årsvilkår styrer både forhåndsvisning og atomisk bruk. */

@@ -510,12 +510,19 @@ Eksplisitt «Bydel: 1 Gamle Oslo» på fysisk PDF-side 117 velger prissone 01.02
 For 59 m² og 3 rom brukes den publiserte 60 m²-cellen (3.060) som tydelig
 merket tilnærming: 18 900 kr/mnd, 226 800 kr/år i 2025-nivå. Det foreløpige,
 ukalibrerte scenariointervallet er 12 200–25 600 kr/mnd (35 % margin). Dette er
-ikke en direkte SSB-prediksjon for 59 m² eller en dokumentert leie. Ukjent
-fellesgjeld hindrer fortsatt automatisk prisgrunnlag; bruttoyield blir
-tilgjengelig etter eksplisitt brukerregistrert pris med kilde. Teknisk fullstendighet er fortsatt
-uavklart, selv om alle 19 rapportsider er lokalt bildekontrollert.
+ikke en direkte SSB-prediksjon for 59 m² eller en dokumentert markedsleie.
+Dokumentert null fellesgjeld per 26.10.2026 (fysisk side 28) gir automatisk
+prisgrunnlag 8 600 000 kr. Fellesutgifter 3 660 kr/mnd (side 26) gir kjent
+årsdrift 43 920 kr, uten å telle de inkluderte delpostene på nytt. Med
+SSB-referansen blir bruttoyield 2,64 % og foreløpig netto før finansiering og
+øvrige ukjente kostnader 182 880 kr/år, tilsvarende 2,13 %. Dette er et
+avgrenset scenario: kostnadsåret er ukjent, flere eierkostnader mangler og
+full drift/kontantstrøm og kontrollert screening har fortsatt egne sperrer.
+Teknisk fullstendighet er fortsatt uavklart, selv om alle 19 rapportsider er
+lokalt bildekontrollert.
 Se [minneundersøkelsen](.docs/process/arbeidsokter/2026-11-04-nordvik-minneflyt.md) og
-[leiegrunnlag, økonomigrenser og ekte testbevis](.docs/process/arbeidsokter/2026-11-04-rostockgata-leieestimat.md).
+[leiegrunnlag og tidligere testbevis](.docs/process/arbeidsokter/2026-11-04-rostockgata-leieestimat.md) og
+[automatisk dokumentøkonomi og foreløpig netto](.docs/process/arbeidsokter/2026-11-04-rostockgata-automatisk-netto.md).
 
 Den private originalen må ligge i `private/incoming/nordvik-rostockgata-96.pdf`.
 Kjør på macOS med klargjort lokal Vision og ledig testport:

@@ -1,5 +1,5 @@
 /** Fiktivt to-kolonne-rapportark. Farger/posisjoner er generiske, ingen kundedata. */
-export function visualReportPdf(options: { monochrome?: boolean; closeHeading?: boolean; inlineHeading?: boolean; darkRed?: boolean } = {}): Buffer {
+export function visualReportPdf(options: { monochrome?: boolean; closeHeading?: boolean; inlineHeading?: boolean; darkRed?: boolean; continuation?: boolean } = {}): Buffer {
   const streams: string[] = []
   const text = (x: number, y: number, content: string, size = 10, white = false) => `${white ? '1 1 1' : '0 0 0'} rg BT /F1 ${size} Tf ${x} ${y} Td (${content}) Tj ET`
   const block = (x: number, y: number, grade: string, name: string, color: string, description: string) => [
@@ -13,7 +13,12 @@ export function visualReportPdf(options: { monochrome?: boolean; closeHeading?: 
   streams.push(block(45, 400, 'TG1', 'Ventilasjon', options.monochrome ? '0.2 0.2 0.2' : '0.45 0.75 0.18', 'Ingen avvik er registrert.'))
   // Fargede skilt og avvik er utilstrekkelig uten eksplisitt gradtekst.
   streams.push(block(330, 400, '', 'Vinduer', options.monochrome ? '0.2 0.2 0.2' : '1 0.45 0.05', 'Det er registrert sprekker.'))
-  const stream = streams.join('\n')
+  const stream = options.continuation ? [text(70, 670, 'Tilstandsrapport', 14),
+    '1 0.45 0.05 rg 45 170 40 14 re f', text(57, 173, 'TG2', 9, true), text(112, 173, 'Drenering', 11),
+    text(45, 140, 'Beskrivelse'), text(45, 100, 'Vurdering av avvik:'), text(45, 80, 'Det er registrert skader'),
+    text(330, 620, 'og brudd i dreneringen.'), text(330, 590, 'Konsekvens/tiltak'),
+    block(330, 500, 'TG1', 'Tak', '0.45 0.75 0.18', 'Ingen avvik er registrert.'),
+  ].join('\n') : streams.join('\n')
   const objects = ['<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Kids [4 0 R] /Count 1 >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>', '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>', `<< /Length ${Buffer.byteLength(stream)} >>\nstream\n${stream}\nendstream`]
   let pdf = '%PDF-1.7\n'; const offsets = [0]
   objects.forEach((object, index) => { offsets.push(Buffer.byteLength(pdf)); pdf += `${index + 1} 0 obj\n${object}\nendobj\n` })

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { DocumentImportSchema, normalizeImportText } from '../../contracts/document-import.ts'
 import type { DocumentImport } from '../../contracts/document-import.ts'
-import { LocalVisualEvidenceSchema, composeVisualComponent, hasSupportedVisualGrade, sourcesForVisualFinding, visualRegionUnion, isVisualComponentName, visualHeadingAligned, visualLayoutForHeading, visualFindingGeometryError, hasCorroboratedVisualLine } from '../../contracts/local-visual.ts'
+import { LocalVisualEvidenceSchema, composeVisualComponent, hasSupportedVisualGrade, sourcesForVisualFinding, visualRegionUnion, isVisualComponentName, visualHeadingAligned, visualLayoutForHeading, visualFindingGeometryError, hasCorroboratedVisualLine, visualNextColumn } from '../../contracts/local-visual.ts'
 import type { LocalVisualEvidence, LocalVisualPage, VisualAnalysis } from '../../contracts/local-visual.ts'
 import { deviationStatus } from './technical-risk.ts'
 import { isTechnicalComponent } from './technical-summary.ts'
@@ -18,11 +18,11 @@ function resolvePage(page: LocalVisualPage, originalText = ''): VisualAnalysis['
   if (page.error || !page.rasterDigest) return { ...page, findings, status: 'unavailable', reason: page.error ?? 'Originalsiden kunne ikke rendres lokalt.' }
   const unresolved: string[] = []
   const corroboratedText = normalizeImportText(originalText).text
-  const reliable = (line: LocalVisualPage['lines'][number], threshold: number) => line.confidence >= threshold
+  const reliable = (line: LocalVisualPage['lines'][number], threshold: number) => !line.conflictingReading && (line.confidence >= threshold
     || hasCorroboratedVisualLine(line)
-    || line.confidence >= 0.5 && corroboratedText.includes(normalizeImportText(line.text).text)
+    || line.confidence >= 0.5 && corroboratedText.includes(normalizeImportText(line.text).text))
   const reliableLabel = (line: LocalVisualPage['lines'][number]) => reliable(line, 0.7)
-    || line.confidence >= 0.5 && corroboratedText.replace(/[^\p{L}]/gu, '').includes(normalizeImportText(line.text).text.replace(/[^\p{L}]/gu, ''))
+    || !line.conflictingReading && line.confidence >= 0.5 && corroboratedText.replace(/[^\p{L}]/gu, '').includes(normalizeImportText(line.text).text.replace(/[^\p{L}]/gu, ''))
   for (const [symbolIndex, symbol] of page.symbols.entries()) {
     if (symbol.grade !== 'TG2' && symbol.grade !== 'TG3') { if (symbol.grade === null) unresolved.push('Uavklart gradsymbol.'); continue }
     if (!hasSupportedVisualGrade(symbol)) { unresolved.push('TG-symbolet har utilstrekkelig lokal lesesikkerhet eller mangler samsvarende avlesninger.'); continue }
@@ -39,15 +39,17 @@ function resolvePage(page: LocalVisualPage, originalText = ''): VisualAnalysis['
       .sort((a, b) => a.box.y - b.box.y || a.box.x - b.box.x)
     const labels = lines.filter(line => deviationLabel(line.text))
     if (!labels.length || !reliableLabel(labels[0]!)) { unresolved.push('Avviksoverskrift mangler eller er utydelig under bygningsdelen.'); continue }
-    const label = labels[0]!, boundary = lines.find(line => line.box.y > label.box.y && endingLabel(line.text))
-    if (!boundary || !reliableLabel(boundary)) { unresolved.push('Avviket mangler en sikker avslutning på samme side.'); continue }
+    const label = labels[0]!, sameColumnEnd = lines.find(line => line.box.y > label.box.y && endingLabel(line.text))
+    const flow = sameColumnEnd ? null : visualNextColumn(page, symbolIndex, heading, label.index)
+    const boundary = sameColumnEnd ?? (flow ? { ...flow.boundary.line, index: flow.boundary.index } : null)
+    if (!boundary || !reliableLabel(boundary)) { unresolved.push('Avviket mangler en sikker avslutning i samme eller entydig neste kolonne.'); continue }
     if (labels.some(other => other !== label && other.box.y < boundary.box.y)) { unresolved.push('Flere avviksoverskrifter gir tvetydig avgrensning.'); continue }
-    const potentialBody = page.lines.map((line, index) => ({ ...line, index })).filter(line => layout.intersectsColumn(line)
+    const potentialBody = flow ? flow.body.map(({ line, index }) => ({ ...line, index })) : page.lines.map((line, index) => ({ ...line, index })).filter(line => layout.intersectsColumn(line)
       && line.box.y > label.box.y + label.box.height / 2 && line.box.y < boundary.box.y)
-    if (potentialBody.some(line => !layout.selected(line))) {
+    if (!flow && potentialBody.some(line => !layout.selected(line))) {
       unresolved.push('Avviksblokken har innrykk eller brede OCR-linjer som ikke kan kobles fullstendig.'); continue
     }
-    const body = potentialBody.sort((a, b) => a.box.y - b.box.y || a.box.x - b.box.x)
+    const body = flow ? potentialBody : potentialBody.sort((a, b) => a.box.y - b.box.y || a.box.x - b.box.x)
     if (body.some(line => isTechnicalComponent(line.text) || /^(?:Beskrivelse|Vurdering av avvik|Tilstandsrapport)\s*:?[ \t]*$/iu.test(line.text))) {
       unresolved.push('En ny komponent eller overskrift bryter avviket før avslutningen.'); continue
     }
@@ -73,7 +75,7 @@ function resolvePage(page: LocalVisualPage, originalText = ''): VisualAnalysis['
     const finding: VisualAnalysis['pages'][number]['findings'][number] = { component: composeVisualComponent(component), description, grade: symbol.grade,
       componentRegion: visualRegionUnion(component.map(line => line.box)), deviationRegion: visualRegionUnion(body.map(line => line.box)), gradeRegion: symbol.box,
       componentLines: component.map(line => line.index), deviationLines: body.map(line => line.index), boundaryLines: [label.index, boundary.index], symbolIndex,
-      confidence: Math.min(symbol.confidence, ...component.map(line => line.confidence), ...body.map(line => line.confidence)) }
+      confidence: Math.min(symbol.confidence, ...component.map(line => line.confidence), ...body.map(line => line.confidence)), ...(flow ? { nextColumn: true as const } : {}) }
     const geometryError = visualFindingGeometryError(page, finding, line => reliable(line, 0.7))
     if (geometryError) { unresolved.push(geometryError); continue }
     findings.push(finding)

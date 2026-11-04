@@ -97,6 +97,68 @@ func badgeRegions(_ context: CGContext, _ width: Int, _ height: Int) -> [Region]
     }
     return regions
 }
+// En avgrenset neste-spalte-pass kan finne etiketter som helsiden utelot.
+// Ulike avlesninger erstatter aldri hverandre som sikkert tekstbevis.
+func recoverColumnContinuation(_ image: CGImage, _ lines: inout [[String:Any]], _ symbols: [[String:Any]]) throws {
+    func normalized(_ value: String) -> String { value.uppercased().filter{!$0.isWhitespace} }
+    func grade(_ value: String) -> String? {
+        let text=normalized(value).replacingOccurrences(of:"Т",with:"T").replacingOccurrences(of:"Τ",with:"T")
+        guard text.range(of:"^[!0OJI•().-]*TG[23][!•().-]*$",options:.regularExpression) != nil else { return nil }
+        return text.contains("TG3") ? "TG3" : "TG2"
+    }
+    func ending(_ text: String) -> Bool { text.range(of:"^(Konsekvens\\s*/?\\s*tiltak|Tiltak|Kostnadsestimat|Anbefalte tiltak)\\s*:?[ \\t]*$",options:[.regularExpression,.caseInsensitive]) != nil }
+    let headers=lines.compactMap { line -> Double? in
+        guard let text=line["text"] as? String,text.range(of:"^Tilstandsrapport$",options:[.regularExpression,.caseInsensitive]) != nil,
+              let box=line["box"] as? [String:Double],let y=box["y"],let h=box["height"] else { return nil }
+        return y+h+0.01
+    }
+    // Uten gjenkjennelig innholdsområde beholdes siden for videre tolkning.
+    guard let top=headers.max(),top >= 0.05,top < 0.4 else { return }
+    for symbol in symbols {
+        guard let box=symbol["box"] as? [String:Double],let sx=box["x"],let sy=box["y"],sx < 0.45,sy > 0.7,
+              let readings=symbol["readings"] as? [[String:Any]],readings.count == 2,
+              let first=readings[0]["text"] as? String,let second=readings[1]["text"] as? String,
+              let firstGrade=grade(first),grade(second) == firstGrade,
+              readings.allSatisfy({($0["confidence"] as? Double ?? 0) >= 0.3}) else { continue }
+        let bottomLabels=lines.filter { line in
+            guard let text=line["text"] as? String,let b=line["box"] as? [String:Double],let x=b["x"],let y=b["y"] else { return false }
+            return text.range(of:"^Vurdering av avvik\\s*:?[ \\t]*$",options:[.regularExpression,.caseInsensitive]) != nil && x >= sx-0.025 && x < sx+0.16 && y > max(sy,0.8) && y < 0.94
+        }
+        guard bottomLabels.count == 1,let labelBox=bottomLabels[0]["box"] as? [String:Double],let labelY=labelBox["y"] else { continue }
+        let hasEnding=lines.contains { line in
+            guard let text=line["text"] as? String,let b=line["box"] as? [String:Double],let x=b["x"],let y=b["y"] else { return false }
+            return ending(text) && x >= sx-0.025 && x < sx+0.16 && y > labelY && y < 0.94
+        }
+        if hasEnding { continue }
+        let rightHeaders=symbols.compactMap { other -> [String:Double]? in
+            guard let b=other["box"] as? [String:Double],let x=b["x"],let y=b["y"],x > sx+0.25,x < 0.8,y > top else { return nil };return b
+        }
+        guard let rightX=rightHeaders.compactMap({$0["x"]}).min(),let end=rightHeaders.filter({abs(($0["x"] ?? 0)-rightX)<0.08}).compactMap({$0["y"]}).min(),end-top > 0.02,end-top < 0.4 else { continue }
+        let left=max(0,Int(floor((rightX-0.02)*Double(image.width)))),pixelTop=max(0,Int(floor(top*Double(image.height))))
+        let w=image.width-left-Int(Double(image.width)*0.02),h=Int(floor((end-top)*Double(image.height)))
+        guard w>0,h>0,let crop=image.cropping(to:CGRect(x:left,y:pixelTop,width:w,height:h)),
+              let enlarged=CGContext(data:nil,width:crop.width*2,height:crop.height*2,bitsPerComponent:8,bytesPerRow:crop.width*8,space:CGColorSpaceCreateDeviceRGB(),bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else { continue }
+        enlarged.interpolationQuality = .high;enlarged.draw(crop,in:CGRect(x:0,y:0,width:crop.width*2,height:crop.height*2))
+        guard let cropImage=enlarged.makeImage() else { continue }
+        for var candidate in try recognize(cropImage) {
+            guard let b=candidate["box"] as? [String:Double],let x=b["x"],let y=b["y"],let width=b["width"],let height=b["height"],let text=candidate["text"] as? String,let confidence=candidate["confidence"] as? Double else { continue }
+            let mapped=["x":(Double(left)+x*Double(w))/Double(image.width),"y":(Double(pixelTop)+y*Double(h))/Double(image.height),"width":width*Double(w)/Double(image.width),"height":height*Double(h)/Double(image.height)]
+            candidate["box"]=mapped
+            let overlaps=lines.indices.filter { index in
+                guard let old=lines[index]["box"] as? [String:Double],let ox=old["x"],let oy=old["y"],let ow=old["width"],let oh=old["height"] else { return false }
+                let overlapX=max(0,min(ox+ow,mapped["x"]!+mapped["width"]!)-max(ox,mapped["x"]!))
+                return overlapX/min(ow,mapped["width"]!) > 0.5 && abs(oy+oh/2-mapped["y"]!-mapped["height"]!/2)<max(0.006,max(oh,mapped["height"]!)*0.65)
+            }
+            if overlaps.isEmpty { lines.append(candidate);continue }
+            if overlaps.count == 1,let index=overlaps.first,let oldText=lines[index]["text"] as? String,normalized(oldText) == normalized(text) {
+                lines[index]["cropReading"]=["text":text,"confidence":confidence]
+            } else {
+                for index in overlaps { lines[index]["conflictingReading"]=["text":text,"confidence":confidence];lines[index].removeValue(forKey:"cropReading") }
+            }
+        }
+        break // høyst ett lite fortsettelsesområde per side
+    }
+}
 for number in requested.prefix(40) {
     autoreleasepool {
         var result: [String: Any] = ["pdfPage":number,"lines":[],"symbols":[],"width":1,"height":1,"rasterDigest":NSNull(),"error":NSNull()]
@@ -179,6 +241,8 @@ for number in requested.prefix(40) {
                 let pageConfidence = wholeReadings.compactMap { $0["confidence"] as? Double }.min() ?? 0
                 symbols.append(["grade":NSNull(),"text":text,"confidence":confidence,"box":badgeBox,"readings":[["text":pageText,"confidence":pageConfidence],["text":text,"confidence":confidence]]])
             }
+            try recoverColumnContinuation(image,&pageLines,symbols)
+            result["lines"] = pageLines
             result["symbols"] = symbols
         } catch { result["error"] = "Lokal bilde-/OCR-lesing feilet på siden (\((error as NSError).domain):\((error as NSError).code))." }
         if let data = try? JSONSerialization.data(withJSONObject:result,options:[.sortedKeys]) { FileHandle.standardOutput.write(data); FileHandle.standardOutput.write(Data([10])) }

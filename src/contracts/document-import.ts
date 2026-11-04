@@ -6,6 +6,7 @@ import { AnalysisHttpCorrelationSchema } from './analysis-http.ts'
 import { PdfSourceSchema } from './pdf-source.ts'
 import type { PdfSource } from './pdf-source.ts'
 import { PropertyRiskSchema } from './property-risk.ts'
+import { TechnicalInterpretationPlanSchema, technicalInterpretationSourceError } from './technical-interpretation.ts'
 import { VisualAnalysisSchema, composeVisualComponent, hasSupportedVisualGrade, sourcesForVisualFinding, visualRegionUnion, visualFindingGeometryError, hasCorroboratedVisualLine } from './local-visual.ts'
 export { PdfSourceSchema } from './pdf-source.ts'
 export type { PdfSource } from './pdf-source.ts'
@@ -97,6 +98,7 @@ export const EconomyAnalysisSchema = z.strictObject({
 export const DocumentImportSchema = ImportContextSchema.extend({
   manifest: ImportManifestSchema.optional(), cost: ImportCostSchema.optional(),
   propertyRisk: PropertyRiskSchema.optional(), visualAnalysis: VisualAnalysisSchema.optional(),
+  technicalInterpretation: TechnicalInterpretationPlanSchema.optional(),
   status: z.literal('imported'), documents: z.array(ImportDocumentSchema).length(1), pages: z.array(ImportPageSchema).min(1).max(200),
   attachments: z.array(z.strictObject({ id: z.string().max(1024), name: z.string().max(1024), isPdf: z.boolean() })).max(40),
   propertyIdentity: z.array(PropertyCandidateSchema).max(20), sections: z.array(ImportSectionSchema).max(10),
@@ -108,6 +110,12 @@ export const DocumentImportSchema = ImportContextSchema.extend({
   const document = value.documents[0]!
   if (document.hash !== value.reportHash || document.name !== value.documentName || document.role !== value.role || document.pageCount !== value.pageCount) fail('Dokumentidentitet stemmer ikke.')
   if (value.pages.length !== value.pageCount || value.pages.some((page, index) => page.pdfPage !== index + 1)) fail('Alle fysiske sider kreves i rekkefølge.')
+  if (value.technicalInterpretation) {
+    const error = technicalInterpretationSourceError(value, value.technicalInterpretation)
+    if (error) fail(error)
+    if ((value.technicalInterpretation.candidateCount || value.technicalInterpretation.unresolvedPages.length)
+      && value.coverage.technical.status === 'complete') fail('Uavklarte tolkningsområder kan ikke gi komplett teknisk dekning.')
+  }
   const sourceValid = (source: PdfSource, partialText = false) => {
     const page = value.pages[source.pdfPage - 1]
     return source.documentHash === value.reportHash && source.documentName === value.documentName && (page?.status === 'readable'
@@ -134,15 +142,16 @@ export const DocumentImportSchema = ImportContextSchema.extend({
         const component = finding.componentLines.map(index => page.lines[index]), deviation = finding.deviationLines.map(index => page.lines[index]), symbol = page.symbols[finding.symbolIndex]
         const labels = finding.boundaryLines.map(index => page.lines[index])
         const originalText = normalizeImportText(value.pages[page.pdfPage - 1]?.text ?? '').text
-        const geometryError = visualFindingGeometryError(page, finding, line => line.confidence >= 0.7 || hasCorroboratedVisualLine(line) || line.confidence >= 0.5 && originalText.includes(normalizeImportText(line.text).text))
+        const geometryError = visualFindingGeometryError(page, finding, line => !line.conflictingReading && (line.confidence >= 0.7 || hasCorroboratedVisualLine(line) || line.confidence >= 0.5 && originalText.includes(normalizeImportText(line.text).text)))
         if (geometryError) fail('Visuell geometri avviker: ' + geometryError)
         if (symbols.has(finding.symbolIndex)) fail('Samme gradsymbol kan ikke telle som flere visuelle funn.')
         symbols.add(finding.symbolIndex)
         if (component.some(line => !line) || deviation.some(line => !line) || labels.some(line => !line) || !symbol) { fail('Visuelt funn viser til ukjent OCR-linje eller gradsymbol.'); continue }
+        if ([...component, ...deviation, ...labels].some(line => line!.conflictingReading)) fail('Motstridende lokale OCR-avlesninger krever videre kontroll.')
         if (!/^Vurdering av avvik\s*:?[ \t]*$/iu.test(labels[0]!.text)
           || !/^(?:Konsekvens\s*\/?\s*tiltak|Tiltak|Kostnadsestimat|Anbefalte tiltak)\s*:?[ \t]*$/iu.test(labels[1]!.text)
           || labels.some(line => line!.confidence < 0.7 && !hasCorroboratedVisualLine(line!) && (line!.confidence < 0.5 || !normalizeImportText(value.pages[page.pdfPage - 1]?.text ?? '').text.replace(/[^\p{L}]/gu, '').includes(normalizeImportText(line!.text).text.replace(/[^\p{L}]/gu, ''))))
-          || deviation.some(line => line!.box.y <= labels[0]!.box.y || line!.box.y >= labels[1]!.box.y)) fail('Visuelt avvik krever lesbare og bevarte avsnittsgrenser på samme originalside.')
+          || !finding.nextColumn && deviation.some(line => line!.box.y <= labels[0]!.box.y || line!.box.y >= labels[1]!.box.y)) fail('Visuelt avvik krever lesbare og bevarte avsnittsgrenser på samme originalside.')
         if (composeVisualComponent(component.map(line => line!)) !== finding.component || deviation.map(line => line!.text).join('\n') !== finding.description
           || symbol.grade !== finding.grade || !hasSupportedVisualGrade(symbol) || finding.confidence < 0.3
           || new Set(finding.componentLines).size !== finding.componentLines.length || new Set(finding.deviationLines).size !== finding.deviationLines.length

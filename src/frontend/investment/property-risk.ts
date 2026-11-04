@@ -13,7 +13,7 @@ export interface PropertyRiskOverview {
   documented: PropertyRiskItem[]; possible: PropertyRiskItem[]; unexamined: PropertyRiskItem[]
   background: PropertyRiskItem[]
   gaps: string[]; limitations: string[]; technicalCoverage: string
-  reportEvidence?: { documentHash?: string; documentName: string; ranges: { startPage: number; endPage: number; certainty: 'certain' | 'ambiguous'; source: RiskSource }[]; unreadPages: number[]; visualPages?: { pdfPage: number; rendered: boolean; status: 'processed' | 'uncertain' | 'unavailable'; reason: string | null; findings: number }[] }
+  reportEvidence?: { documentHash?: string; documentName: string; ranges: { startPage: number; endPage: number; certainty: 'certain' | 'ambiguous'; source: RiskSource }[]; unreadPages: number[]; interpretation?: DocumentImport['technicalInterpretation']; visualPages?: { pdfPage: number; rendered: boolean; status: 'processed' | 'uncertain' | 'unavailable'; reason: string | null; findings: number }[] }
 }
 const sourceIdentity = (source: RiskSource) => JSON.stringify([source.documentHash, source.documentName, source.pdfPage,
   source.method ?? 'pdf-text', source.start, source.end, source.region, source.quote, source.rasterDigest, source.extractorVersion])
@@ -102,5 +102,7 @@ export function selectPropertyRisks(session: SessionState): PropertyRiskOverview
     unexamined: grouped.filter(item => item.status === 'not-investigated').sort(order), background: groupPropertyRisks(items.filter(isRiskBackground), documents),
     gaps: [...new Set(gaps)], limitations, technicalCoverage,
     ...(technical ? { reportEvidence: { documentHash: technical.reportHash, documentName: technical.documentName, ranges: technical.sections.map(section => ({ startPage: section.startPage, endPage: section.endPage, certainty: section.certainty,
-      source: { documentHash: technical.reportHash, documentName: technical.documentName, pdfPage: section.startPage } })), unreadPages: technical.coverage.technical.unreadPages, ...(technical.visualAnalysis ? { visualPages: technical.visualAnalysis.pages.map(page => ({ pdfPage: page.pdfPage, rendered: Boolean(page.rasterDigest && !page.error), status: page.status, reason: page.reason, findings: page.findings.length })) } : {}) } } : {}) }
+      source: { documentHash: technical.reportHash, documentName: technical.documentName, pdfPage: section.startPage } })), unreadPages: technical.coverage.technical.unreadPages,
+      ...(technical.technicalInterpretation ? { interpretation: technical.technicalInterpretation } : {}),
+      ...(technical.visualAnalysis ? { visualPages: technical.visualAnalysis.pages.map(page => ({ pdfPage: page.pdfPage, rendered: Boolean(page.rasterDigest && !page.error), status: page.status, reason: page.reason, findings: page.findings.length })) } : {}) } } : {}) }
 }

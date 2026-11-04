@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { analyzeVisualTechnical, addVisualTechnical } from '../../src/backend/import/visual-technical.ts'
-import { sourcesForVisualFinding, visualRegionUnion, type LocalVisualEvidence, type LocalVisualPage } from '../../src/contracts/local-visual.ts'
+import { sourcesForVisualFinding, visualRegionUnion, visualFindingGeometryError, type LocalVisualEvidence, type LocalVisualPage } from '../../src/contracts/local-visual.ts'
 import { DocumentImportSchema } from '../../src/contracts/document-import.ts'
 import { createCodeFirstImport } from '../../src/backend/import/semantic-adapter.ts'
 import { codeFirstBasis } from '../helpers/code-first.ts'
@@ -16,6 +16,56 @@ function page(): LocalVisualPage {
 const evidence = (input = page()): LocalVisualEvidence => ({ version: 'local-visual-1', documentHash: 'a'.repeat(64), documentName: 'test.pdf', pages: [input] })
 
 describe('lokal visuell TG-kobling', () => {
+  function continuedColumn() {
+    const input = page()
+    input.lines = [line('Tilstandsrapport', 0.13, 0.15), line('Bad øst', 0.13, 0.754), line('Beskrivelse', 0.08, 0.80),
+      line('Vurdering av avvik:', 0.08, 0.86), line('• Det er påvist lekkasje', 0.08, 0.89),
+      line('og råte i bjelkelaget.', 0.54, 0.21), line('Konsekvens/tiltak', 0.54, 0.25)]
+    input.symbols[0]!.box.y = 0.75
+    return input
+  }
+  it('bevarer avvik fra venstre spaltebunn til høyre spaltetopp i leserekkefølge', async () => {
+    const input = continuedColumn(), result = analyzeVisualTechnical(evidence(input)), finding = result.pages[0]!.findings[0]!
+    expect(finding).toMatchObject({ nextColumn: true, description: '• Det er påvist lekkasje\nog råte i bjelkelaget.', deviationLines: [4, 5] })
+    const sources = sourcesForVisualFinding(result, result.pages[0]!, finding)
+    expect(sources).toHaveLength(4)
+    expect(sources.slice(2).map(source => source.quote)).toEqual(['• Det er påvist lekkasje', 'og råte i bjelkelaget.'])
+    const basis = codeFirstBasis(['Rapport i to kolonner']); basis.pages[0]!.status = 'unknown'
+    const ev = evidence(input); ev.documentHash = basis.hash; ev.documentName = basis.name
+    const imported = addVisualTechnical(await createCodeFirstImport(basis), ev)
+    expect(DocumentImportSchema.safeParse(imported).success).toBe(true)
+    const invalidBoundary = structuredClone(imported)
+    invalidBoundary.visualAnalysis!.pages[0]!.findings[0]!.boundaryLines[1] = 2000
+    expect(DocumentImportSchema.safeParse(invalidBoundary).success).toBe(false)
+    imported.visualAnalysis!.pages[0]!.findings[0]!.deviationLines.reverse()
+    expect(DocumentImportSchema.safeParse(imported).success).toBe(false)
+  })
+  it.each(['new-component', 'low-confidence', 'missing-end', 'crossing', 'missing-report', 'missing-line', 'unknown-heading', 'weak-report', 'late-left'] as const)('avviser usikker kolonnefortsettelse: %s', kind => {
+    const input = continuedColumn()
+    if (kind === 'new-component') input.symbols.push({ grade: 'TG2', confidence: 1, text: 'TG2', box: box(.53, .19, .035, .02) })
+    if (kind === 'low-confidence') input.lines[5]!.confidence = .4
+    if (kind === 'missing-end') input.lines.pop()
+    if (kind === 'crossing') input.lines[5]!.box.x = .40
+    if (kind === 'missing-report') input.lines[0]!.text = 'En ukjent overskrift'
+    if (kind === 'missing-line') input.lines.splice(6, 0, line('Ventilasjon', .54, .23))
+    if (kind === 'unknown-heading') input.lines.splice(5, 0, line('Solcelleanlegg', .54, .20))
+    if (kind === 'weak-report') input.lines[0]!.confidence = .1
+    if (kind === 'late-left') input.lines.push(line('Solcelleanlegg', .08, .945))
+    expect(analyzeVisualTechnical(evidence(input)).pages[0]!.findings).toEqual([])
+  })
+  it('utelater ikke høyre avvikslinjer nær rapportoverskriften', () => {
+    const input = continuedColumn(); input.lines.push(line('Det gjelder ikke badet.', .54, .17))
+    const finding = analyzeVisualTechnical(evidence(input)).pages[0]!.findings[0]
+    expect(finding?.description).toContain('Det gjelder ikke badet.')
+  })
+  it('kontrakten avviser en senere avviksoverskrift som utelater første avsnitt', () => {
+    const input = continuedColumn()
+    const finding = analyzeVisualTechnical(evidence(input)).pages[0]!.findings[0]!
+    input.lines.push(line('Vurdering av avvik:', .08, .875), line('Det er store skader i taket.', .08, .865))
+    finding.boundaryLines[0] = 7
+    expect(visualFindingGeometryError(input, finding)).toContain('tidligere avviksavsnitt')
+    expect(analyzeVisualTechnical(evidence(input)).pages[0]!.findings).toEqual([])
+  })
   it('kobler eksplisitt gradsymbol, bygningsdel og hele avviket med originale regioner', () => {
     const result = analyzeVisualTechnical(evidence()), found = result.pages[0]!.findings[0]!
     expect(found).toMatchObject({ component: 'Bad øst', description: '• Det er påvist lekkasje.', grade: 'TG3', componentLines: [0], deviationLines: [3], symbolIndex: 0 })
@@ -109,6 +159,12 @@ describe('lokal visuell TG-kobling', () => {
     expect(analyzeVisualTechnical(evidence(input)).pages[0]!.findings).toEqual([])
     body.cropReading = { text: body.text, confidence: 0.4 }
     expect(analyzeVisualTechnical(evidence(input)).pages[0]!.findings).toEqual([])
+  })
+  it('beholder score men avviser motstridende OCR selv med sikkert tekstlag', () => {
+    const input = page()
+    input.lines[3] = { ...input.lines[3]!, conflictingReading: { text: '• Det er ikke påvist lekkasje.', confidence: 1 } }
+    expect(input.lines[3]!.confidence).toBe(1)
+    expect(analyzeVisualTechnical(evidence(input), [{ pdfPage: 1, text: '• Det er påvist lekkasje.' }]).pages[0]!.findings).toEqual([])
   })
   it('kontrakten etterprøver separat linjeutsnitt og tillater ikke endret benektelse', async () => {
     const basis = codeFirstBasis(['Uleselig raster']); basis.pages[0]!.status = 'unreadable'

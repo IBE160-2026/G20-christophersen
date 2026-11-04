@@ -9,6 +9,16 @@ import { rasterVisualReportPdf } from '../helpers/raster-visual-report.ts'
 import { runImport } from '../../src/backend/http/run-import.ts'
 
 describe.skipIf(process.platform !== 'darwin' || process.env.PAA_TEST_LOCAL_VISION !== '1')('ekte lokal renderer og OCR på fiktiv rapport', () => {
+  it('kobler faktisk rasterisert kolonnefortsettelse med separate originalområder', async () => {
+    const bytes = await rasterVisualReportPdf(visualReportPdf({ continuation: true }), false)
+    const outcome = await runImport({ bytes, documentName: 'Fiktiv-kolonnefortsettelse.pdf', requestId: 'column-native', sessionId: 'column-native', role: 'report', parentHash: null, attachmentId: null }, new AbortController().signal, new Set())
+    const finding = outcome.visualAnalysis?.pages[0]!.findings[0]
+    expect(finding).toMatchObject({ component: 'Drenering', grade: 'TG2', nextColumn: true, description: 'Det er registrert skader\nog brudd i dreneringen.' })
+    const risk = outcome.propertyRisk!.technical.findings.find(item => item.sourceQuality === 'local-visual')!
+    expect(risk.visualSources).toHaveLength(4)
+    expect(risk.visualSources!.slice(2).map(source => source.region.x < .5)).toEqual([true, false])
+    expect(outcome.coverage.technical.status).toBe('incomplete')
+  }, 90_000)
   it('binder TG3/TG2 i to kolonner, og tolker aldri farge alene eller TG1 som TG2/TG3', async () => {
     const bytes = visualReportPdf(), hash = createHash('sha256').update(bytes).digest('hex')
     const evidence = await extractLocalVisualEvidence(bytes, hash, 'Fiktiv-generell-rapport.pdf', [1])

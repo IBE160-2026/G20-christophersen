@@ -33,6 +33,26 @@ export function readTechnicalDeviation(text: string, start: number, pdfPage: num
   return { end, bounded: Boolean(boundary), description: text.slice(start, end).trim() }
 }
 
+/** Sidekanter alene knytter aldri tekst sammen. Begge sider må navngi en
+ * eksplisitt fortsettelse, og neste side må avslutte avviket før et tiltak. */
+function readExplicitContinuation(basis: ImportBasis, pdfPage: number, start: number, bodyStart: number, component: string) {
+  const page = basis.pages[pdfPage - 1]!, next = basis.pages[pdfPage]
+  if (!next || next.status !== 'readable' || page.rasterUnprocessed || next.rasterUnprocessed) return null
+  const first = page.text.slice(bodyStart)
+  const footer = /\r?\n[ \t]*(?:Fortsetter på neste side|Fortsettelse på neste side)\.?[ \t]*(?:\r?\n)?$/iu.exec(first)
+  if (!footer) return null
+  const initial = first.slice(0, footer.index).trim()
+  if (!initial || readTechnicalDeviation(initial, 0, pdfPage).bounded) return null
+  const anchor = /^[ \t]*(?:Bygningsdel[ \t]*:[ \t]*)?([^\r\n]+?)[ \t]*\((?:forts\.?|fortsettelse)\)[ \t]*\r?\n[ \t]*Vurdering av avvik(?:[ \t]*\((?:forts\.?|fortsettelse)\))?[ \t]*:[ \t]*\r?\n/iu.exec(next.text)
+  if (!anchor || anchor[1]!.trim().toLocaleLowerCase('nb-NO') !== component.toLocaleLowerCase('nb-NO')) return null
+  const parsed = readTechnicalDeviation(next.text, anchor[0].length, next.pdfPage)
+  if (!parsed.bounded || !/^Konsekvens\s*\/\s*tiltak/iu.test(next.text.slice(parsed.end).trimStart()) || !parsed.description) return null
+  const description = initial + '\n' + parsed.description
+  if (description.length > 2000 || page.text.length - start > 2000 || parsed.end > 2000
+    || !/[.!?][ \t]*$/u.test(description) || deviationStatus(description) !== 'documented') return null
+  return { description, sources: [source(basis, pdfPage, start, page.text.length), source(basis, next.pdfPage, 0, parsed.end)] }
+}
+
 /** These formats bind a named component, explicit grade and deviation together.
  * A legend, a summary count, or nearby graphic never supplies the grade. */
 export function extractExplicitTechnicalFindings(basis: ImportBasis): DocumentImport['technical']['findings'] {
@@ -47,16 +67,17 @@ export function extractExplicitTechnicalFindings(basis: ImportBasis): DocumentIm
     for (const [format, pattern] of patterns.entries()) for (const match of page.text.matchAll(pattern)) {
       const component = match[format === 0 ? 2 : 1]!.trim(), bodyStart = match.index + match[0].length
       const parsed = readTechnicalDeviation(page.text, bodyStart, page.pdfPage)
-      const { end, description } = parsed
+      const continuation = readExplicitContinuation(basis, page.pdfPage, match.index, bodyStart, component)
+      const { end } = parsed, description = continuation?.description ?? parsed.description
       if (!component || component.length > 200 || !description || end - match.index > 2000 || findings.length >= 200) continue
-      const legacy = format === 0 && !/Vurdering av avvik/i.test(match[0]) && !description.includes('\n')
+      const legacy = !continuation && format === 0 && !/Vurdering av avvik/i.test(match[0]) && !description.includes('\n')
       if (deviationStatus(description) !== 'documented' || !/[.!?][ \t]*$/u.test(description) && !(legacy && parsed.bounded)) continue
       // Multiline prose needs an explicit ending. Page edges are not proof
       // that a continued deviation has ended.
-      if (!parsed.bounded && description.includes('\n')) continue
+      if (!continuation && !parsed.bounded && description.includes('\n')) continue
       if (findings.some(item => item.sources.some(itemSource => itemSource.pdfPage === page.pdfPage && itemSource.start === match.index))) continue
       const sourceEnd = legacy && page.text[end - 1] !== '\n' && page.text[end] === '\n' ? end + 1 : end
-      const sources = [source(basis, page.pdfPage, match.index, sourceEnd)]
+      const sources = continuation?.sources ?? [source(basis, page.pdfPage, match.index, sourceEnd)]
       const findingId = legacy ? 'local-' + createHash('sha256').update(`${basis.hash}:${page.pdfPage}:${match.index}`).digest('hex').slice(0, 24) : 'local-technical-' + identifier(basis, page.pdfPage, match.index, 'explicit')
       const grade = `TG${match[format === 0 ? 1 : 2]}` as 'TG2' | 'TG3'
       const origin = { documentName: basis.name, reportHash: basis.hash, pdfPage: page.pdfPage }
@@ -107,9 +128,11 @@ export function analyzeTechnicalRisks(basis: ImportBasis): RiskAnalysis {
       }
       const description = page.text.slice(bodyStart, end).trim()
       if (!description || !/[\p{L}]/u.test(description)) continue
-      const status = deviationStatus(description)
-      if (status === null) continue
       const explicit = explicitFindings.find(finding => finding.sources.some(item => item.pdfPage === page.pdfPage && item.start <= match.index && item.end >= bodyStart))
+      // En eksplisitt videreført blokk er allerede samlet på startsiden.
+      if (explicit && explicit.source.pdfPage !== page.pdfPage) continue
+      const status = deviationStatus(explicit?.description ?? description)
+      if (status === null) continue
       const contextStart = Math.max(0, match.index - 1200)
       const contextLines = technicalLines(page.text.slice(contextStart, match.index), page.pdfPage)
       const previousBoundary = Math.max(...contextLines.filter(line => /Vurdering av avvik|Konsekvens\s*\/\s*tiltak/iu.test(line.text)).map(line => line.start), -1)
@@ -119,13 +142,15 @@ export function analyzeTechnicalRisks(basis: ImportBasis): RiskAnalysis {
       const namedContext = namedLine ? [roomLine?.text.trim(), namedLine.text.trim()].filter(Boolean).join(' · ') : undefined
       const component = explicit?.component ?? (namedContext && namedContext.length <= 200 ? namedContext : undefined)
       const contextSources = explicit ? explicit.sources : component && namedLine ? [namedLine, ...(roomLine ? [roomLine] : [])].map(line => source(basis, page.pdfPage, contextStart + line.start, contextStart + line.end)) : []
+      const completeDescription = explicit?.sources.length && explicit.sources.length > 1 ? explicit.description : description
       const title = status === 'not-investigated' ? 'Undersøkelse mangler' : component ?? description.split(/\r?\n/, 1)[0]!.replace(/^[•*−\s-]+/u, '').slice(0, 140)
       if (status === 'not-investigated') unexaminedBlocks.push({ page: page.pdfPage, start: match.index, end })
-      add(page.pdfPage, match.index, end, status, title, description.slice(0, 2000), explicit?.grade ?? null, component, contextSources)
+      add(page.pdfPage, match.index, end, status, title, completeDescription.slice(0, 2000), explicit?.grade ?? null, component, contextSources)
     }
     for (const match of page.text.matchAll(/[^\r\n]*(?:hulltaking er ikke foretatt|(?:er |har )?ikke (?:vært )?undersøkt|ikke (?:er )?tilgjengelig for (?:kontroll|inspeksjon|undersøkelse)|uten mulighet for inspeksjon)[^\r\n]*/gi)) {
       const description = match[0].trim()
-      if (unexaminedBlocks.some(block => block.page === page.pdfPage && match.index >= block.start && match.index < block.end)) continue
+      if (unexaminedBlocks.some(block => block.page === page.pdfPage && match.index >= block.start && match.index < block.end)
+        || explicitFindings.some(finding => finding.sources.length > 1 && finding.sources.some(item => item.pdfPage === page.pdfPage && match.index >= item.start && match.index < item.end))) continue
       if (!description || match[0].length > 2000 || /(?:BYGNINGSSAKKYNDIGE SER|TILSTANDSGRAD|TG IU|KONSTRUKSJONER SOM IKKE ER UNDERSØKT|IKKE UNDERSØKT\/IKKE TILGJENGELIG)/i.test(description)) continue
       add(page.pdfPage, match.index, match.index + match[0].length, 'not-investigated', 'Undersøkelse mangler', description)
     }
@@ -133,7 +158,7 @@ export function analyzeTechnicalRisks(basis: ImportBasis): RiskAnalysis {
   for (const finding of explicitFindings) {
     if (findings.some(item => item.sources.some(itemSource => finding.sources.some(findingSource => itemSource.pdfPage === findingSource.pdfPage && itemSource.start >= findingSource.start && itemSource.start < findingSource.end)))) continue
     const first = finding.sources[0]!
-    add(first.pdfPage, first.start, first.end, 'documented', finding.component, finding.description, finding.grade, finding.component)
+    add(first.pdfPage, first.start, first.end, 'documented', finding.component, finding.description, finding.grade, finding.component, finding.sources.slice(1))
   }
   const summaries = extractTechnicalSummary(basis).flatMap(item => {
     const status = deviationStatus(item.description)

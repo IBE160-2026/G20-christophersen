@@ -42,6 +42,17 @@ function ReportEvidence({ risks, onSource }: { risks: PropertyRiskOverview; onSo
   return <div className="technical-report-evidence" aria-label="Teknisk dokumentgrunnlag"><p><b>Rapportgrunnlag:</b> {evidence.documentName}</p>
     {evidence.ranges.length ? evidence.ranges.map((range, index) => <p key={index}>Identifisert rapportområde: fysisk PDF-side {range.startPage}–{range.endPage} · {range.certainty === 'certain' ? 'avgrenset med kildebelegg' : 'usikker avgrensning'}. <button type="button" className="quiet-button" onClick={() => onSource(range.source)}>Åpne rapportstart ↗{evidence.ranges.length > 1 ? ` (${index + 1})` : ''}</button></p>) : <p>Rapportens start og slutt er ikke sikkert identifisert.</p>}
     {evidence.visualPages && <VisualPageEvidence evidence={evidence} onSource={onSource} />}
+    {evidence.interpretation && evidence.interpretation.status === 'requires-approval' && <details className="technical-visual-pages"><summary>Områder som trenger videre tolkning ({evidence.interpretation.candidateCount})</summary>
+      <p>{evidence.interpretation.targets.length} avgrensede tolkningsområder er forberedt lokalt. Ingen AI-tolkning er utført. Betalte kall krever godkjenning og kontrollert kostnadsestimat innen USD 0,20 for hele analysen.</p>
+      <ul>{evidence.interpretation.targets.map(target => <li key={target.id}><p>{target.explanation}</p>{target.sources.map((source, index) => {
+        const original = source.kind === 'pdf-text' ? source.source : source
+        return <button key={index} type="button" className="quiet-button" onClick={() => onSource({ documentHash: original.documentHash, documentName: original.documentName, pdfPage: original.pdfPage,
+          ...(source.kind === 'visual-region' ? { method: 'local-vision' as const, region: source.region, rasterDigest: source.rasterDigest, extractorVersion: 'local-visual-1' }
+            : { method: 'pdf-text' as const, start: source.source.start, end: source.source.end, quote: source.source.quote }) })}>Åpne usikkert område · PDF-side {original.pdfPage} ↗</button>
+      })}</li>)}</ul>
+      {evidence.interpretation.deferred.length > 0 && <p>{evidence.interpretation.deferred.reduce((sum, item) => sum + item.count, 0)} ytterligere områder er utenfor dette avgrensede utvalget eller mangler lesbart bildegrunnlag. Fysisk PDF-side {[...new Set(evidence.interpretation.deferred.map(item => item.pdfPage))].sort((a, b) => a - b).join(', ')}. Disse er fortsatt uavklart.</p>}
+      <p>Utvalget beviser ikke komplett TG-dekning. Resterende usikre sider: {evidence.interpretation.unresolvedPages.join(', ') || 'se rapportens dekningsbegrunnelser'}.</p>
+    </details>}
     {evidence.unreadPages.length > 0 && <p>Uleste eller ufullstendige sider i dokumentet: fysisk PDF-side {evidence.unreadPages.join(', ')}.</p>}
     {summaries > 0 && <p>{summaries} tekniske opplysninger fra sammendrag. De beviser ikke rapportdetaljer eller komplett TG-dekning og inngår ikke i teknisk kontrollgrunnlag. Opplysninger som ikke er entydig koblet, kan omtale samme forhold som detaljlisten; sammendrags- og detaljtall skal ikke legges sammen.</p>}
   </div>

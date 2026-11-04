@@ -1,0 +1,112 @@
+{
+  "baselineCommit": "b982e10d7e6fa4b1ca81824a6c02de94301f2edb",
+  "documentHash": "3d0db0a7e84fb863bdeff1bd3390e833bd8fa151be8cbc3709835062d51ab49c",
+  "pagesInPdf": 135,
+  "reportRanges": [
+    [
+      63,
+      87
+    ]
+  ],
+  "renderedAndRead": 25,
+  "tg2Details": 10,
+  "tg3Details": 0,
+  "detailCountsByPhysicalPage": [
+    {
+      "page": 71,
+      "count": 1
+    },
+    {
+      "page": 72,
+      "count": 1
+    },
+    {
+      "page": 73,
+      "count": 2
+    },
+    {
+      "page": 75,
+      "count": 2
+    },
+    {
+      "page": 76,
+      "count": 1
+    },
+    {
+      "page": 77,
+      "count": 1
+    },
+    {
+      "page": 79,
+      "count": 1
+    },
+    {
+      "page": 82,
+      "count": 1
+    }
+  ],
+  "newVerifiedDetailsSinceBaseline": 0,
+  "visualSources": 30,
+  "textSourcesChecked": 104,
+  "summaryTg2": 23,
+  "technicalCoverage": "incomplete",
+  "uncertainVisualPages": [
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87
+  ],
+  "ocrConflictCounts": [
+    {
+      "page": 81,
+      "count": 4
+    }
+  ],
+  "interpretation": {
+    "status": "requires-approval",
+    "candidateAreas": 70,
+    "selectedTargets": 12,
+    "selectedPages": [
+      69,
+      74,
+      76,
+      77,
+      78,
+      79,
+      81
+    ],
+    "deferredCandidates": 58,
+    "firstTargetPhysicalPages": [
+      81,
+      81
+    ],
+    "firstTargetSourceCount": 2,
+    "firstTargetExplainsOcrConflict": true,
+    "sourceValidation": "passed",
+    "reservedUsd": "0.00000000",
+    "budgetLimitUsd": "0.20",
+    "budgetHistory": "unverified"
+  },
+  "importReservedUsd": "0.00000000"
+}

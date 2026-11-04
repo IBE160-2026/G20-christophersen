@@ -8,6 +8,7 @@ export const VisualRegionSchema = z.strictObject({
 }).refine(box => box.x + box.width <= 1.001 && box.y + box.height <= 1.001, 'Regionen ligger utenfor originalside.')
 export const VisualLineSchema = z.strictObject({ text: z.string().min(1).max(4000), confidence: z.number().min(0).max(1), box: VisualRegionSchema,
   cropReading: z.strictObject({ text: z.string().min(1).max(4000), confidence: z.number().min(0).max(1) }).optional(),
+  conflictingReading: z.strictObject({ text: z.string().min(1).max(4000), confidence: z.number().min(0).max(1) }).optional(),
 })
 export const VisualSymbolSchema = z.strictObject({
   grade: z.enum(['TG0', 'TG1', 'TG2', 'TG3', 'TGIU']).nullable(), box: VisualRegionSchema,
@@ -31,6 +32,7 @@ export const VisualFindingSchema = z.strictObject({
   deviationLines: z.array(z.number().int().nonnegative()).min(1).max(80),
   boundaryLines: z.tuple([z.number().int().nonnegative(), z.number().int().nonnegative()]),
   symbolIndex: z.number().int().nonnegative(), confidence: z.number().min(0).max(1),
+  nextColumn: z.literal(true).optional(),
 })
 export const VisualAnalysisSchema = LocalVisualEvidenceSchema.safeExtend({
   pages: z.array(LocalVisualPageSchema.safeExtend({
@@ -52,7 +54,7 @@ type VisualLine = LocalVisualPage['lines'][number]
 /** Et separat faktisk utsnitt kan støtte helsidens OCR, uten å endre score. */
 export function hasCorroboratedVisualLine(line: VisualLine): boolean {
   const normalize = (text: string) => text.toUpperCase().replace(/\s+/gu, '')
-  return line.confidence >= 0.5 && Boolean(line.cropReading && line.cropReading.confidence >= 0.5
+  return !line.conflictingReading && line.confidence >= 0.5 && Boolean(line.cropReading && line.cropReading.confidence >= 0.5
     && normalize(line.text) === normalize(line.cropReading.text))
 }
 const visualMiddle = (box: VisualRegion) => box.y + box.height / 2
@@ -86,6 +88,43 @@ export function visualLayoutForHeading(page: LocalVisualPage, symbolIndex: numbe
   return { columnStart, columnEnd, nextHeader, inColumn, selected, intersectsColumn, belowHeading }
 }
 
+/** Bare et siste avviksavsnitt ved venstre spaltebunn kan fortsette til
+ * høyre spaltetopp. Rapportoverskrift og eksplisitt tiltaksetikett avgrenser
+ * mottaket; bilder, nye overskrifter og uklar kolonnegeometri avviser kobling. */
+export function visualNextColumn(page: LocalVisualPage, symbolIndex: number, heading: VisualLine, labelIndex: number) {
+  const label = page.lines[labelIndex], symbol = page.symbols[symbolIndex]
+  if (!label || !symbol || symbol.box.x > 0.35 || label.box.y < 0.70) return null
+  const indexed = page.lines.map((line, index) => ({ line, index }))
+  const report = indexed.filter(({ line }) => /^Tilstandsrapport\s*$/iu.test(line.text) && line.box.y < 0.25)
+  if (report.length !== 1) return null
+  if (report[0]!.line.conflictingReading || report[0]!.line.confidence < 0.7 && !hasCorroboratedVisualLine(report[0]!.line)) return null
+  const top = report[0]!.line.box.y
+  const ends = indexed.filter(({ line }) => line.box.x > symbol.box.x + 0.25 && line.box.y > top && line.box.y < 0.45
+    && /^(?:Konsekvens\s*\/?\s*tiltak|Tiltak|Kostnadsestimat|Anbefalte tiltak)\s*:?[ \t]*$/iu.test(line.text))
+    .sort((a, b) => a.line.box.y - b.line.box.y)
+  const boundary = ends[0]
+  if (!boundary) return null
+  const rightStart = boundary.line.box.x - 0.012
+  if (rightStart < 0.40 || rightStart > 0.70) return null
+  // En senere komponent i venstre spalte eller en ny komponent før den
+  // høyre avslutningen betyr at avviket ikke har entydig leserekkefølge.
+  if (page.symbols.some(other => other !== symbol && (other.box.x < rightStart && other.box.y > symbol.box.y + symbol.box.height
+    || other.box.x >= rightStart && other.box.y >= top && other.box.y < boundary.line.box.y))) return null
+  const footer = (line: VisualLine) => /^(?:Oppdragsnr\.?\s*:|Befaringsdato\s*:|Side\s*:\s*\d+\s+av\s+\d+)/iu.test(line.text)
+  const left = indexed.filter(({ line }) => line.box.y > label.box.y + label.box.height / 2
+    && line.box.x < rightStart && line.box.x + line.box.width > symbol.box.x - 0.025 && !footer(line))
+  const right = indexed.filter(({ line }) => line.box.y >= top && line.box.y < boundary.line.box.y
+    && line.box.x + line.box.width > rightStart && line.box.x < 0.98)
+  if (!right.length || [...left, ...right].some(({ line }) => /^(?:Beskrivelse|Vurdering av avvik|Tilstandsrapport|Konsekvens|Tiltak)\s*[:/]?/iu.test(line.text))) return null
+  if ([...left, ...right].some(({ line }) => isVisualComponentName(line.text) && /^\p{Lu}/u.test(line.text)
+    && !/^(?:Det|Den|De|Dette|Disse|Som|Og|Men|Ved|For|På|Av|Er|Har|Mangler)\b/iu.test(line.text))) return null
+  if (left.some(({ line }) => line.box.x < symbol.box.x - 0.025 || line.box.x + line.box.width > rightStart
+    || line.box.x > symbol.box.x + 0.16)
+    || right.some(({ line }) => line.box.x < rightStart || line.box.x > rightStart + 0.16 || line.box.x + line.box.width > 0.98)) return null
+  const sort = (a: typeof left[number], b: typeof left[number]) => a.line.box.y - b.line.box.y || a.line.box.x - b.line.box.x
+  return { body: [...left.sort(sort), ...right.sort(sort)], boundary, heading }
+}
+
 /** En konsistent omskrevet kilde må fortsatt oppfylle den opprinnelige geometrien.
  * Ingen OCR-linje inne i avviksbåndet kan falle ut ved innrykk eller bredde. */
 export function visualFindingGeometryError(page: LocalVisualPage, finding: z.infer<typeof VisualFindingSchema>,
@@ -101,12 +140,17 @@ export function visualFindingGeometryError(page: LocalVisualPage, finding: z.inf
   if (aligned.length !== 1 || aligned[0] !== heading) return 'Andre OCR-linjer gjør komponentkoblingen tvetydig.'
   if (page.symbols.some((other, index) => index !== finding.symbolIndex && visualHeadingAligned(heading, other))) return 'Flere symboler kan tilhøre komponenten.'
   const label = page.lines[finding.boundaryLines[0]], boundary = page.lines[finding.boundaryLines[1]]
-  if (!label || !boundary || !layout.selected(label) || !layout.selected(boundary) || !layout.belowHeading(label)
-    || !layout.belowHeading(boundary) || boundary.box.y <= label.box.y) return 'Avviksgrensene ligger ikke under komponenten i samme kolonne.'
-  const body = page.lines.map((line, index) => ({ line, index })).filter(({ line }) => layout.intersectsColumn(line)
+  const firstLabel = page.lines.map((line, index) => ({ line, index })).filter(({ line }) => layout.selected(line) && layout.belowHeading(line)
+    && /^Vurdering av avvik\s*:?[ \t]*$/iu.test(line.text)).sort((a, b) => a.line.box.y - b.line.box.y)[0]
+  if (firstLabel?.index !== finding.boundaryLines[0]) return 'Et tidligere avviksavsnitt kan ikke utelates fra komponenten.'
+  const flow = finding.nextColumn ? visualNextColumn(page, finding.symbolIndex, heading, finding.boundaryLines[0]) : null
+  if (finding.nextColumn && (!flow || flow.boundary.index !== finding.boundaryLines[1])) return 'Kolonnefortsettelsen er ikke entydig avgrenset.'
+  if (!label || !boundary || !layout.selected(label) || !layout.belowHeading(label)
+    || !finding.nextColumn && (!layout.selected(boundary) || !layout.belowHeading(boundary) || boundary.box.y <= label.box.y)) return 'Avviksgrensene ligger ikke under komponenten i samme kolonne.'
+  const body = flow?.body ?? page.lines.map((line, index) => ({ line, index })).filter(({ line }) => layout.intersectsColumn(line)
     && line.box.y > label.box.y + label.box.height / 2 && line.box.y < boundary.box.y)
     .sort((a, b) => a.line.box.y - b.line.box.y || a.line.box.x - b.line.box.x)
-  if (body.some(({ line }) => !layout.selected(line)) || JSON.stringify(body.map(item => item.index)) !== JSON.stringify(finding.deviationLines)) return 'Avviksblokken inneholder utelatte eller feilordnede OCR-linjer.'
+  if (!finding.nextColumn && body.some(({ line }) => !layout.selected(line)) || JSON.stringify(body.map(item => item.index)) !== JSON.stringify(finding.deviationLines)) return 'Avviksblokken inneholder utelatte eller feilordnede OCR-linjer.'
   const description = page.lines.filter(line => layout.selected(line) && layout.belowHeading(line) && /^Beskrivelse\s*:?[ \t]*$/iu.test(line.text)).sort((a, b) => a.box.y - b.box.y)[0]
   const continuation = page.lines.map((line, index) => ({ line, index })).filter(({ line }) => layout.intersectsColumn(line) && layout.belowHeading(line)
     && line.box.y < (description?.box.y ?? label.box.y) && line.box.y < label.box.y
@@ -157,11 +201,16 @@ export function visualRegionUnion(boxes: readonly VisualRegion[]): VisualRegion 
 
 /** Avledet OCR-kilde er aldri et ordrett PDF.js-tekstområde. */
 export function sourcesForVisualFinding(analysis: VisualAnalysis, page: VisualAnalysis['pages'][number], finding: VisualAnalysis['pages'][number]['findings'][number]): VisualSource[] {
-  if (!page.rasterDigest) return []
+  if (!page.rasterDigest || !page.lines[finding.boundaryLines[1]] || finding.deviationLines.some(index => !page.lines[index])) return []
+  const splitX = page.lines[finding.boundaryLines[1]]!.box.x - 0.012
+  const segments = finding.nextColumn ? [false, true].map(right => finding.deviationLines.map(index => page.lines[index]!)
+    .filter(line => (line.box.x >= splitX) === right)).filter(lines => lines.length)
+    .map(lines => ({ quote: lines.map(line => line.text).join('\n'), region: visualRegionUnion(lines.map(line => line.box)) })) : []
   return [
     { quote: finding.component, region: finding.componentRegion },
     { quote: finding.grade, region: finding.gradeRegion },
-    { quote: finding.description, region: finding.deviationRegion },
+    ...(finding.nextColumn ? segments
+      : [{ quote: finding.description, region: finding.deviationRegion }]),
   ].map(source => VisualSourceSchema.parse({ ...source, method: 'local-vision', documentHash: analysis.documentHash,
     documentName: analysis.documentName, pdfPage: page.pdfPage, rasterDigest: page.rasterDigest!, extractorVersion: analysis.version }))
 }

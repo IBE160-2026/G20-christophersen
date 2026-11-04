@@ -84,6 +84,21 @@ test('privat Øvre Blekeveien: side 58 og ufullstendig integrert rapport åpnes 
     await row.getByRole('button', { name: /Se originalkilde/ }).first().click()
     await expect(page.locator('.pdf-source-region')).toBeVisible({ timeout: 30_000 })
     await page.keyboard.press('Escape')
+    const plan = outcome.technicalInterpretation!
+    expect(plan.status).toBe('requires-approval')
+    expect(plan.targets.length).toBeGreaterThan(0)
+    expect(plan.budget).toMatchObject({ limitUsd: '0.20', reservedUsd: '0.00000000', history: 'unverified' })
+    await page.keyboard.press('Escape')
+    const interpretation = displayed.locator('details').filter({ has: page.locator('summary', { hasText: 'Områder som trenger videre tolkning' }) })
+    await interpretation.locator('summary').click()
+    await expect(interpretation).toContainText('Ingen AI-tolkning er utført')
+    await expect(interpretation).toContainText('ytterligere områder')
+    const source = plan.targets[0]!.sources[0]!
+    const physicalPage = source.kind === 'pdf-text' ? source.source.pdfPage : source.pdfPage
+    await interpretation.getByRole('button', { name: /Åpne usikkert område/ }).first().click()
+    await expect(page.locator(`[data-pdf-page="${physicalPage}"]`)).toBeVisible({ timeout: 30_000 })
+    if (source.kind === 'visual-region') await expect(page.locator('.pdf-source-region')).toBeVisible()
+    await page.keyboard.press('Escape')
   }
   const summary = outcome.propertyRisk?.technical.findings.find(item => item.evidenceKind === 'summary' && item.sources[0]!.pdfPage >= 40 && item.sources[0]!.pdfPage <= 43)
   expect(summary).toBeDefined()

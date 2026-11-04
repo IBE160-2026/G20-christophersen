@@ -134,3 +134,49 @@ describe('local technical risk evidence', () => {
     expect(analyzeTechnicalRisks(codeFirstBasis([''])).unreadPages).toEqual([])
   })
 })
+
+describe('eksplisitte avviksfortsettelser mellom fysiske sider', () => {
+  const first = 'Bygningsdel: Tak øst\nTilstandsgrad: TG3\nVurdering av avvik:\n• Det er påvist lekkasje i\nFortsetter på neste side\n'
+  const next = 'Bygningsdel: Tak øst (forts.)\nVurdering av avvik (forts.):\ntekkingen.\n• Beslaget er skadet.\nKonsekvens/tiltak\nUtbedre taket.\n'
+  it('samler hele avviket én gang med ordrette kilder fra begge sider', async () => {
+    const basis = codeFirstBasis([first, next])
+    const [finding] = extractExplicitTechnicalFindings(basis)
+    expect(finding).toMatchObject({ component: 'Tak øst', grade: 'TG3', description: '• Det er påvist lekkasje i\ntekkingen.\n• Beslaget er skadet.' })
+    expect(finding!.sources.map(item => item.pdfPage)).toEqual([1, 2])
+    const risk = analyzeTechnicalRisks(basis)
+    expect(risk.findings).toHaveLength(1)
+    expect(risk.findings[0]).toMatchObject({ component: 'Tak øst', grade: 'TG3', description: finding!.description })
+    expect(new Set(risk.findings[0]!.sources.map(item => item.pdfPage))).toEqual(new Set([1, 2]))
+    for (const item of risk.findings[0]!.sources) expect(basis.pages[item.pdfPage - 1]!.text.slice(item.start, item.end)).toBe(item.quote)
+    expect(risk.coverage).toBe('partial')
+    const outcome = await createCodeFirstImport(basis)
+    expect(outcome.technical.findings).toHaveLength(1)
+    expect(outcome.coverage.technical.status).not.toBe('complete')
+  })
+  it('teller ikke en gjentatt vanlig avviksetikett som et nytt funn', () => {
+    const basis = codeFirstBasis([first, next.replace('avvik (forts.):', 'avvik:')])
+    expect(analyzeTechnicalRisks(basis).findings).toHaveLength(1)
+  })
+  it.each([
+    next.replace('Tak øst', 'Tak vest'),
+    next.replace(' (forts.)', ''),
+    next.replace('Konsekvens/tiltak', 'Vinduer'),
+    next.replace('Konsekvens/tiltak\nUtbedre taket.\n', ''),
+  ])('avviser ulik komponent, manglende anker eller usikker slutt', text => {
+    expect(extractExplicitTechnicalFindings(codeFirstBasis([first, text]))).toEqual([])
+  })
+  it.each(['unknown', 'incomplete', 'unreadable'] as const)('kobler ikke gjennom %s neste side', status => {
+    const basis = codeFirstBasis([first, next])
+    basis.pages[1]!.status = status
+    expect(extractExplicitTechnicalFindings(basis)).toEqual([])
+  })
+  it('krever eksplisitt utgående anker og sammenhengende fysiske sider', () => {
+    expect(extractExplicitTechnicalFindings(codeFirstBasis([first.replace('Fortsetter på neste side\n', ''), next]))).toEqual([])
+    expect(extractExplicitTechnicalFindings(codeFirstBasis([first, '', next]))).toEqual([])
+  })
+  it('arver ikke grad gjennom raster eller en ny komponent før sidekanten', () => {
+    const raster = codeFirstBasis([first, next]); raster.pages[1]!.rasterUnprocessed = true
+    expect(extractExplicitTechnicalFindings(raster)).toEqual([])
+    expect(extractExplicitTechnicalFindings(codeFirstBasis([first.replace('Fortsetter', 'Vinduer\nFortsetter'), next]))).toEqual([])
+  })
+})

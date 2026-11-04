@@ -56,7 +56,7 @@ export async function attachSavedEconomy(outcome: DocumentImport, bytes: Uint8Ar
   packet: await readPinned('packet.json') as EconomyTrial, response: await readPinned('actual-api-response.json'), output: await readPinned('model-output.json'),
 })): Promise<DocumentImport> {
   const local = (reason: string) => DocumentImportSchema.parse({ ...outcome, economy: { ...outcome.economy, analysis: {
-    provenance: 'local-only', reason: reason + ' Videre KI-analyse har ikke startet. Ingen nye API-kall er utført.', requestDigest: null, selectedPages: [], observations: [], limitations: [],
+    provenance: 'local-only', reason: reason + ' Videre KI-analyse har ikke startet. Ingen nye KI-API-kall er utført.', requestDigest: null, selectedPages: [], observations: [], limitations: [],
   } } })
   try {
     const { packet, result } = validateSavedEconomy(await load(), bytes, basis)

@@ -1,6 +1,7 @@
 import express, { type ErrorRequestHandler } from 'express'
 import { createListingBackend } from './listing/backend.ts'
 import { createListingRouter } from './http/listing-route.ts'
+import { createRentRouter } from './http/rent-route.ts'
 import { createEconomyRouter } from './http/economy-route.ts'
 import { createImportRouter } from './http/import-route.ts'
 import { createProcessingLock } from './http/processing-lock.ts'
@@ -42,6 +43,7 @@ async function start() {
   const analysis = createAnalysisRouter({ mode, lock })
   const documentImport = createImportRouter({ lock })
   const economy = createEconomyRouter({ lock })
+  app.use('/api', createRentRouter())
   app.use('/api', economy)
   app.use('/api', documentImport)
   app.use('/api', analysis)

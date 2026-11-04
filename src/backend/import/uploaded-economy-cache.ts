@@ -53,7 +53,7 @@ export async function attachUploadedEconomy(outcome: DocumentImport, bytes: Uint
     return DocumentImportSchema.parse({ ...outcome, inputDigest: call.requestDigest, cost,
       economy: { ...outcome.economy, status: fields.some(field => field.amount !== null) ? 'partial' : 'unavailable', fields,
         analysis: { provenance: 'saved-same-document', requestDigest: call.requestDigest, selectedPages: packet.selectedPages, observations, limitations: result.limitations,
-          reason: 'Lagret analyse av samme dokument. Beløp og kilder er validert på nytt mot denne opplastingen. Ingen nye API-kall. Menneskelig kildekontroll gjenstår.' } },
+          reason: 'Lagret analyse av samme dokument. Beløp og kilder er validert på nytt mot denne opplastingen. Ingen nye KI-API-kall. Menneskelig kildekontroll gjenstår.' } },
       coverage: { ...outcome.coverage, economy: { ...outcome.coverage.economy, status: 'incomplete', omittedPages: basis.pages.filter(page => !packet.selectedPages.includes(page.pdfPage)).map(page => page.pdfPage), reasons: ['Lagret KI-analyse dekker bare de godkjente økonomisidene; øvrig og teknisk dekning er uavklart.'] } } })
   } catch { return outcome }
 }

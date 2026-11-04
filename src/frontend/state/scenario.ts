@@ -6,6 +6,7 @@ import { validateFinancialBasis } from '../../domain/financial-basis.ts'
 import { importEconomyDraft } from '../../domain/document-import.ts'
 import { economySuggestions, effectiveEconomyFields } from '../../domain/source-economy.ts'
 import { validateListingUrl } from '../../domain/listing.ts'
+import type { RentEstimate } from '../../contracts/rent-estimate.ts'
 import type { SessionState } from './session.ts'
 
 const Decimal = Big()
@@ -13,7 +14,7 @@ Decimal.strict = true
 const onlyControlPending = (issue: FinancialIssue) => issue.code === 'unconfirmed-value' || issue.code === 'unconfirmed-zero'
 
 /** Read-only adapter. Unconfirmed candidates stay unconfirmed; conflicts never become assumptions. */
-export function selectScenarioBasis(session: SessionState): ScenarioBasis {
+export function selectScenarioBasis(session: SessionState, rent: RentEstimate | null = null): ScenarioBasis {
   const slot = session.prospectus.prospectus
   const listingDraft = session.listing.draft
   const staleDocument = (slot.selected !== null || slot.status === 'selecting')
@@ -38,10 +39,22 @@ export function selectScenarioBasis(session: SessionState): ScenarioBasis {
     return 'normalization' in validated ? validated.normalization?.annualValue ?? null : validated.decimal
   }
   let P = value('P'), D = value('D')
-  const L = value('L')
+  let L = value('L')
+  const currentOutcome = slot.status === 'imported' && slot.selected?.hash === slot.outcome?.reportHash ? slot.outcome : null
+  const automaticRent = rent?.status === 'estimated' && rent.annual !== null && currentOutcome?.reportHash === rent.documentHash
+    && rent.property.documentHash === currentOutcome.reportHash && rent.property.documentName === currentOutcome.documentName
+    && !session.rentManuallyEdited && session.financial.L.rawValue.trim() === '' && session.financial.L.period === '' && session.financial.L.year === ''
+    && session.sources.L.kind === '' && session.sources.L.description.trim() === '' && !session.sources.L.conflict && session.sources.L.rentNature === ''
+  const rentYear = automaticRent ? rent.statisticsYear : null
+  if (automaticRent) {
+    L = rent.annual
+    provenance.L = `SSB-estimat · tabell 09897 · ${rent.statisticsYear}-nivå · ubekreftet`
+    issues.push(`Automatisk forventet leie er et estimat, ikke dokumentert leie. Scenarioår ${rentYear}; SSB-nivå ${rent.statisticsYear} uten prisjustering. Ledighet og eierbetalt drift er ikke trukket fra.`)
+  }
   const yearFor = (field: RecurringField) => independent.fields[field].normalization?.year ?? null
-  let year = yearFor('L') ?? yearFor('D')
-  if (L !== null && D !== null && yearFor('L') !== yearFor('D')) {
+  const effectiveRentYear = rentYear ?? yearFor('L')
+  let year = effectiveRentYear ?? yearFor('D')
+  if (L !== null && D !== null && effectiveRentYear !== yearFor('D')) {
     D = null
     issues.push('Leie og driftskostnader gjelder ulike år. Nettoyield og kontantstrøm kan ikke beregnes.')
   }
@@ -55,7 +68,7 @@ export function selectScenarioBasis(session: SessionState): ScenarioBasis {
     // An entered invalid/conflicting/manual value is never silently replaced by an import candidate.
     if (session.financial.P.rawValue.trim() === '' && !session.sources.P.conflict && !session.listing.manualFields.includes('P') && suggested.P !== null) { P = suggested.P; provenance.P = label }
     if (session.financial.D.rawValue.trim() === '' && !session.sources.D.conflict && !independent.fields.D.issues.some(issue => issue.target === 'cost') && !session.listing.manualFields.includes('D') && suggested.D !== null
-      && (yearFor('L') === null || yearFor('L') === suggested.year)) { D = suggested.D; provenance.D = label; year ??= suggested.year }
+      && (effectiveRentYear === null || effectiveRentYear === suggested.year)) { D = suggested.D; provenance.D = label; year ??= suggested.year }
     // A different manual price cannot borrow purchase funding from the original listing.
     const priceMatches = P !== null && suggested.P !== null && new Decimal(P).eq(suggested.P)
     if (priceMatches) {

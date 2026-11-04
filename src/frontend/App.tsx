@@ -6,6 +6,8 @@ import { ReportClient } from './analysis/report-client.ts'
 import { createInitialSession, isFinancialConfirmed, sessionReducer } from './state/session.ts'
 import type { SessionAction } from './state/session.ts'
 import { ControlWorkspace } from './ControlWorkspace.tsx'
+import { useRentEstimate } from './investment/useRentEstimate.ts'
+import { selectProperty } from './investment/property.ts'
 import { InvestmentOverview } from './investment/InvestmentOverview.tsx'
 import type { ScenarioControls } from '../domain/financial-scenario.ts'
 import './investment/concept-a.css'
@@ -19,6 +21,7 @@ export default function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
   useEffect(() => () => listingClient.abort(), [listingClient])
   const [client] = useState(() => new ReportClient(dispatch))
   const slot = session.prospectus.prospectus
+  const rent = useRentEstimate(selectProperty(session).outcome)
   const objectKey = slot.status === 'imported' ? slot.selected?.hash ?? `listing:${session.listing.generation}` : slot.status !== 'idle' ? `pending:${session.prospectus.generation}` : `listing:${session.listing.generation}`
   const [scenarioDraft, setScenarioDraft] = useState<{ key: string; controls: ScenarioControls } | null>(null)
   const controls = scenarioDraft?.key === objectKey ? scenarioDraft.controls : slot.status !== 'idle' ? slot.status === 'imported' ? session.prospectus.financing : { equity: '', annualInterest: '', months: '' } : session.listing.financing
@@ -45,6 +48,6 @@ export default function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
     {controlsOpen ? <>
       <div className="control-heading app-header"><button type="button" className="quiet-button" onClick={() => { setControlsOpen(false); window.scrollTo(0, 0); requestAnimationFrame(() => overview.current?.focus()) }}>← Tilbake til investeringsoversikten</button><span className="meta">{session.prospectus.prospectus.outcome?.manifest || session.prospectus.report.outcome?.manifest ? 'Offline · lokalt dokumentuttrekk' : analysisModeLabel(session.report.mode)}</span></div>
       <ControlWorkspace session={session} dispatch={controlDispatch} importClient={importClient} client={client} listingClient={listingClient} />
-    </> : <InvestmentOverview session={session} dispatch={dispatch} importClient={importClient} listingClient={listingClient} onOpen={open} overviewRef={overview} controls={controls} onControls={controls => setScenarioDraft({ key: objectKey, controls })} />}
+    </> : <InvestmentOverview rent={rent} session={session} dispatch={dispatch} importClient={importClient} listingClient={listingClient} onOpen={open} overviewRef={overview} controls={controls} onControls={controls => setScenarioDraft({ key: objectKey, controls })} />}
   </div>
 }

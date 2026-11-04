@@ -710,3 +710,12 @@ Dette lukker ingen tidligere oppføring eller live-port. Alle konkrete funn
 fra denne leveransens uavhengige review er rettet og etterprøvd.
 [Spesifikasjon og individuell triage](spec-tg-fortsettelser.md),
 [økt med faktisk dekning og verifikasjon](../process/arbeidsokter/2026-11-04-tg-fortsettelser.md).
+
+**PAA-LEIE1 — Status: Åpen — Kalibrering og utvidet dekning av leieestimat (2026-11-04).**
+Første leieagent bruker åpne SSB 09897-data og et synlig konservativt
+scenariointervall. Individuell markedsleie og intervallets faktiske dekning er
+ikke empirisk kalibrert. Flere geografier krever verifisert adresse-/kommune-/
+tettstedskobling; ukjente PDF-oppsett og flere boenheter krever avklart grunnlag.
+Dette er videre arbeid, ingen lukking av PDF-/OCR-/TG-punktene.
+[Spesifikasjon](spec-automatisk-leieestimering.md),
+[SSB-grunnlag og metode](leieagent-ssb-research.md).

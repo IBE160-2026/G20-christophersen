@@ -22,6 +22,8 @@ Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rappo
 
 **Bevisstatus 27. oktober 2026:** Story 4.4 har [godkjente originale live-/S2-bevis](.docs/implementation-artifacts/story-4-4-b2-uavhengig-sluttreview-2026-10-27.md). Story 4.5/S5 er avsluttet med [aksepterte avvik S5-W1](.docs/implementation-artifacts/story-4-5-s5-waiver-2026-10-27.md), med ufullstendig formell AC-akseptanse og uten validert tidsbesparelse. Ingen nye S5-målinger er planlagt. Annen-person-S6/5.4 er **ikke gjennomført**; 5.5 er delvis klargjort. [Leveringskontrollen](.docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md) skiller faktiske bevis fra åpne porter. Demo beviser ingen live-kvalitet eller live-tid. Automatisk søk, markedsdata, rangering og lagring mellom økter er utenfor denne smale v1.
 
+**Utvidelse 4. november 2026:** Brukeren har bestilt automatisk leieestimering for enkeltleiligheter. [Leieagenten nedenfor](#automatisk-leieestimat-i-konsept-a) henter åpne SSB-data og kobler dem til ubekreftet økonomiscenario. Historiske v1-bevis og kontrollporter over beholdes.
+
 **FINN-utvidelse 28. oktober 2026:** Importmotor, kontroll-UI, finansieringsforslag og backendens Responses-kobling er implementert og [offline-verifisert med uavhengig review](.docs/implementation-artifacts/finn-responses-2026-10-28/sluttverifikasjon.md). **Tilgangsgaten er stengt som standard.** [Første implementeringsbevis](.docs/implementation-artifacts/finn-import-2026-10-28/sluttverifikasjon.md) og [tidligere gjennomførbarhet](.docs/implementation-artifacts/finn-import-checkpoint-2026-10-28.md) bevares som historikk. Eksisterende manuell registrering, rapport-PDF og screening beholdes. Ingen estimater, automatisk PDF eller overvåking inngår.
 
 I **Tallgrunnlag**, under **FINN som alternativ**, kan du lime inn en FINN-boliglenke og prøve import. Med standardoppsettet returnerer serveren en gatemelding uten nøkkellesing eller eksternt kall. `ANALYSIS_MODE=live` gjelder bare rapportanalyse og åpner ikke FINN-gaten. SDK-koblingen bruker den eksakte validerte lenken og godtar bare ett fullført `open_page` på denne URL-en. Entydig P fylles automatisk som ubekreftet; kostnader/kilder vises for kontroll, mens ufullstendig D/J forblir ukjent. Manuelle verdier bevares. Rapport-PDF lastes fortsatt opp manuelt.
@@ -426,3 +428,45 @@ Private originaler hører til Git-ignorert `private/`. `.env`/`.env.*`, avhengig
 - Kursgrunnlag: [sensorveiledning](.docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf) og [faglærerens brief-tilbakemelding](.docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md).
 
 Gruppeprosjekt i **IBE160 Programmering med KI**, Høgskolen i Molde, høsten 2026. Medlem: Mads Semb Christophersen. Startstrukturen er tilpasset [Vites offisielle react-ts-starter](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).
+
+### Automatisk leieestimat i Konsept A
+
+Etter opplasting forsøker appen automatisk å lese adresse, kommune, internt areal,
+rom og boligtype fra det eksisterende tekstlaget. Leieagenten bruker SSBs åpne
+PxWebApi v2, tabell 09897, uten nøkkel eller betaling. Lokalserveren må ha
+internettilgang til `https://data.ssb.no`; bare statistikkoder sendes dit.
+Dokumentet og adressen behandles lokalt. PDF/OCR/TG-løpet og kostnadsportene
+for eventuell modellbruk er uendret.
+
+Første versjon støtter enkeltleiligheter i Oslo, Bergen, Trondheim, Stavanger,
+Kristiansand, Tromsø, Bærum, Nesodden og Lørenskog, med eksplisitt kommune i
+tekstlaget. Ukjent bydel i de tre første byene gir et grovere spenn over alle
+aktuelle bysoner. Andre geografier, flerboligobjekter, uklare opplysninger og
+areal utenfor SSBs publiserte punkter gir en synlig begrensning. Rom er ikke
+samme opplysning som soverom. BRA-i foretrekkes; BRA/P-ROM merkes som svakere
+grunnlag. Dokumentoppsett som ikke gjenkjennes må fortsatt kontrolleres.
+
+Agenten henter nyeste publiserte år, interpolerer mellom arealpunkter for samme
+romgruppe og viser råceller, formel, kilder og avrunding. Data fra SSB er
+områdestatistikk, ikke dokumentert leie for leiligheten eller dagens annonserte
+markedsleie. Konservativt scenariointervall er en foreløpig produktregel:
+grunnmargin ±25 %, +10 prosentpoeng ved ukjent bydel, +5 ved alternativ
+arealbasis og +5 per år etter statistikkåret. Det er **ikke** et statistisk
+konfidens-/prediksjonsintervall og er ikke empirisk kalibrert. Ingen automatisk
+prisvekst, kvalitets- eller etasjepåslag gjøres. Data eldre enn tre år brukes
+ikke. Offentlig statistikk mellomlagres i minnet i 15 minutter; ingen
+leilighetsopplysninger lagres i denne cachen.
+
+Forventet leie brukes i ubekreftet økonomiscenario bare når registrert
+leiegrunnlag er tomt og ikke manuelt redigert. Registrert faktisk/forventet
+leie og kildekonflikter overstyres aldri. Årsleie er 12 × månedsleie før ledighet,
+kostnader og skatt. Full drift, gjeldsbetaling, samme år og manuell kontroll
+kreves fremdeles der økonomireglene krever dem. Automatisk scenario beholder
+SSBs statistikkår; hentetidspunkt gjør ikke eldre leie sammenlignbar med drift
+fra et nytt år. En eksplisitt egen forventning kan registreres for ønsket år.
+Leieoppslaget bekrefter ingen
+felt og endrer ingen kontrollert screeninganbefaling. SSB-feil stopper ikke
+PDF-importen; «Prøv leieoppslaget på nytt» gjentar bare det gratis oppslaget.
+
+Se [SSB-undersøkelsen og reproduserbare API-kall](.docs/implementation-artifacts/leieagent-ssb-research.md)
+og [implementasjonsspesifikasjonen](.docs/implementation-artifacts/spec-automatisk-leieestimering.md).

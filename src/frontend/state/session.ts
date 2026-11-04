@@ -27,6 +27,7 @@ export interface SessionState {
   nextCostId: number
   currentStep: 'tallgrunnlag' | 'tilstandsrapport' | 'kontroller-funn' | 'resultat'
   report: ReportState
+  rentManuallyEdited: boolean
   financialRevision: number
   changedFields: FinancialField[]
   explicitZeros: FinancialField[]
@@ -73,7 +74,7 @@ export function createInitialSession(mode: 'demo' | 'live' = 'demo'): SessionSta
     costItems: [],
     nextCostId: 1,
     currentStep: 'tallgrunnlag', report: createReportState(mode),
-    financialRevision: 0, changedFields: [], explicitZeros: [], confirmationAttempts: 0,
+    rentManuallyEdited: false, financialRevision: 0, changedFields: [], explicitZeros: [], confirmationAttempts: 0,
     resultSnapshot: null, resultChanges: [],
   }
 }
@@ -109,6 +110,7 @@ function invalidate(state: SessionState, update: Partial<SessionState>, fields: 
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {
   if (action.type === 'calculate-result') return { ...state, resultSnapshot: calculateResultSnapshot(state), resultChanges: [] }
   let next = reduceSession(state, action)
+  if ((action.type === 'register-rent-nature' || action.type.startsWith('register-') && 'field' in action && action.field === 'L') && next !== state) next = { ...next, rentManuallyEdited: true }
   // Manual values, periods and source edits remain owned by the user, even if blank.
   if (next !== state && (action.type.startsWith('register-') || action.type === 'check-zero' || action.type === 'add-cost' || action.type === 'change-cost' || action.type === 'remove-cost')) {
     const fields = 'field' in action && ['P', 'D', 'J'].includes(action.field) ? [action.field as 'P' | 'D' | 'J']
@@ -139,7 +141,7 @@ function reduceSession(state: SessionState, action: SessionAction): SessionState
     const listing = { ...state.listing, url: action.url, active: null, status: state.listing.status === 'ready' ? 'ready' as const : state.listing.status === 'failed' ? 'failed' as const : 'idle' as const, generation: state.listing.generation + 1, error: null }
     if (!identity || identity.listingCode === state.listing.objectCode) return { ...state, listing }
     const clean = createInitialSession(state.report.mode)
-    return invalidate(state, { financial: clean.financial, sources: clean.sources, costItems: [],
+    return invalidate(state, { financial: clean.financial, sources: clean.sources, costItems: [], rentManuallyEdited: false,
       prospectus: { ...createProspectusState(), generation: state.prospectus.generation + 1 },
       ...(state.prospectus.prospectus.selected ? { resultSnapshot: null, resultChanges: [] } : {}),
       report: { ...clean.report, generation: state.report.generation + 1 },

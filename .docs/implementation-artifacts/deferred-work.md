@@ -719,3 +719,16 @@ tettstedskobling; ukjente PDF-oppsett og flere boenheter krever avklart grunnlag
 Dette er videre arbeid, ingen lukking av PDF-/OCR-/TG-punktene.
 [Spesifikasjon](spec-automatisk-leieestimering.md),
 [SSB-grunnlag og metode](leieagent-ssb-research.md).
+
+**PAA-LEIE1, ekte PDF 2026-11-04 — Status: fortsatt Åpen for modell- og dokumentdekning.**
+Kompakte meglerfelt, Unicode BRA-i, eksplisitt matrikkelkommune, forsideadresse
+og etasjefordeling er forbedret med kildebevarende regresjoner. Frisk import av
+tilgjengelig ekte PDF identifiserer en enebolig på 196 m² med 3 rom. Det er ikke
+en støttet enkeltleilighet, og 196 m² ligger utenfor SSB 09897 sine publiserte
+3-romspunkter (60–100 m²). Numerisk leie for dette objektet er fortsatt ikke
+løst; feltuttrekksrettingen er ikke en godkjent ny leiemodell. Den eldre private
+PDF-en gjelder en bygård. Ingen av disse skal fremstilles som vellykket ekte
+leilighetsestimering. Positiv støttet flyt er verifisert separat med syntetisk
+PDF og faktisk gratis SSB-oppslag. Historikk/kalibrering og PDF-/TG-porter
+beholdes åpne. [Spesifikasjon](spec-leieagent-ekte-pdf.md),
+[undersøkelse og faktisk Playwright-bevis](../process/arbeidsokter/2026-11-04-leieagent-ekte-pdf.md).

@@ -515,3 +515,7 @@
 .investment-shell .rent-estimate-evidence table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .investment-shell .rent-estimate-evidence th, .investment-shell .rent-estimate-evidence td { padding: 10px; text-align: left; border-bottom: 1px solid var(--investment-line); }
 @media (max-width: 700px) { .investment-shell .rent-estimate-values { grid-template-columns: 1fr; gap: 20px; } }
+.investment-shell .rent-document-facts { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--investment-line); }
+.investment-shell .rent-document-facts .quiet-button { display: block; font-size: 12px; }
+.investment-shell .rent-document-facts small { color: var(--investment-muted); }
+.investment-shell .rent-blockers { padding: 18px; border-left: 3px solid var(--investment-accent); background: #edf1eb; line-height: 1.6; }

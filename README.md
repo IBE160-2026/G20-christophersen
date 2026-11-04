@@ -470,3 +470,23 @@ PDF-importen; «Prøv leieoppslaget på nytt» gjentar bare det gratis oppslaget
 
 Se [SSB-undersøkelsen og reproduserbare API-kall](.docs/implementation-artifacts/leieagent-ssb-research.md)
 og [implementasjonsspesifikasjonen](.docs/implementation-artifacts/spec-automatisk-leieestimering.md).
+
+#### Ekte megleroppsett og modellgrenser
+
+Leieuttrekket støtter også `SALGSOBJEKT`, `Boligtype/eierform`, Unicode-
+bindestrek i BRA-i, kompakt `BRA-I/ BRA TOTAL intern/total kvm`, forsideadresse
+på to linjer og kommune fra eksplisitt matrikkelbetegnelse. Etasjetabeller
+holdes adskilt fra objekttotaler, også over sideskift. Tomme budskjemafelt og
+meglerkontorets adresse/kommune blir ikke boligopplysninger.
+
+Dokumenterte boligopplysninger vises i Konsept A selv når markedsestimat ikke
+kan beregnes. Enebolig, blandet boligtype eller intern/total-motstrid skal ikke
+bli en kunstig leilighetsleie. SSB-modellens publiserte arealpunkter må passe
+romgruppen; ingen ekstrapolering eller automatisk bruk av en etasje som en
+selvstendig leilighet skjer. Ukjent faktisk leie beholdes som ukjent.
+
+`tests/e2e/rent-real-document.spec.ts` inneholder en valgfri privat PDF-prøve
+og en eksplisitt gratis SSB-nettprøve. Nettprøven aktiveres med
+`PAA_TEST_SSB_NETWORK=1`; vanlig regresjon bruker offentlige, lagrede SSB-svar
+og krever ikke nett. Private PDF-er, råresponser og bilder distribueres ikke.
+Se [ekte PDF-undersøkelse og testbevis](.docs/process/arbeidsokter/2026-11-04-leieagent-ekte-pdf.md).

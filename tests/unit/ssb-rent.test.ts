@@ -172,3 +172,20 @@ describe('SSB-leieagent med ekte, offentlige 2025-celler', () => {
     }
   })
 })
+
+it('forklarer konkret boligtypegrensen og bruker aldri leilighetsceller som eneboligleie', async () => {
+  const input = property(); input.propertyType!.value = 'unsupported'; input.area!.value = 196; input.rooms!.value = 3
+  input.issues = ['Første leiemodell støtter bare enkeltleiligheter.']
+  const fetcher = transport(), result = await estimateRent(input, { fetch: fetcher, now })
+  expect(result.status).toBe('unavailable'); expect(result.monthly).toBeNull(); expect(result.observations).toEqual([])
+  expect(result.limitations.join(' ')).toContain('ingen SSB-celle brukes som leie for hele objektet')
+  expect(fetcher).not.toHaveBeenCalled()
+})
+it('forklarer faktisk areal/rom og publisert spenn når en leilighet ligger utenfor datastøtten', async () => {
+  const input = property(); input.area!.value = 196; input.rooms!.value = 3
+  const fetcher = transport(), result = await estimateRent(input, { fetch: fetcher, now })
+  expect(result.status).toBe('unavailable'); expect(result.monthly).toBeNull()
+  expect(result.limitations.join(' ')).toContain('196 m² og 3 rom')
+  expect(result.limitations.join(' ')).toContain('60–100 m²')
+  expect(fetcher).toHaveBeenCalledTimes(1)
+})

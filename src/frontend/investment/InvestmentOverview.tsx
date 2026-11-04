@@ -6,6 +6,7 @@ import type { ListingClient } from '../analysis/listing-client.ts'
 import type { ImportClient } from '../analysis/import-client.ts'
 import type { ScenarioControls } from '../../domain/financial-scenario.ts'
 import type { RentState } from './useRentEstimate.ts'
+import { rentalTypeLabel } from './rental-type-label.ts'
 import { RentEstimatePanel } from './RentEstimatePanel.tsx'
 import { useFinancialScenario } from './useFinancialScenario.ts'
 import { selectScenarioBasis } from '../state/scenario.ts'
@@ -87,9 +88,9 @@ export function InvestmentOverview({ rent, session, dispatch, importClient, list
       <div><span className="mode-label">{property.outcome ? property.outcome.economy.analysis?.provenance === 'saved-same-document' ? 'Lagret analyse · samme dokument' : property.outcome.economy.analysis?.provenance === 'live-document' ? 'KI-analyse · dette dokumentet' : 'Offline · lokalt dokumentuttrekk' : session.report.mode === 'demo' ? 'Demo · lagret KI-uttrekk' : 'Live · operatørstyrt analyse'}</span><button type="button" className="primary-action" onClick={upload}>{property.outcome ? 'Bytt salgsoppgave ↗' : 'Last opp salgsoppgave ↗'}</button></div>
     </header>
     <main className="investment-main">
-      <section className="hero" aria-labelledby="investment-title"><div className="hero-copy"><p className="eyebrow">EIENDOM / INVESTERING</p><h1 id="investment-title" className="hero-title" tabIndex={-1}>{property.title}</h1>
+      <section className="hero" aria-labelledby="investment-title"><div className="hero-copy"><p className="eyebrow">EIENDOM / INVESTERING</p><h1 id="investment-title" className="hero-title" tabIndex={-1}>{rent.result?.property.address?.value ?? property.title}</h1>
         <p className="hero-intro">{property.outcome ? `${property.outcome.documentName} · Dokumentuttrekk, ikke bekreftet eiendomsinformasjon.` : 'Fra salgsoppgave til et tydelig investeringsgrunnlag.'}</p>
-        <div className="property-facts"><span>{property.ownership}</span><span>{rent.result?.property.area ? `${rent.result.property.area.value} m² ${rent.result.property.area.basis}` : 'Areal ikke oppgitt'}</span><span>Byggeår ukjent</span></div>
+        <div className="property-facts"><span>{property.ownership}</span><span>{rent.result?.property.area ? `${rent.result.property.area.value} m² ${rent.result.property.area.basis}` : 'Areal ikke oppgitt'}</span><span>{rentalTypeLabel(rent.result?.property.propertyType ?? null)}</span><span>{rent.result?.property.rooms ? `${rent.result.property.rooms.value} rom` : 'Romantall ukjent'}</span></div>
         <div className="property-prices"><div><span>Prisantydning</span><strong>{number(property.price)}{property.price !== null && <small> kr</small>}</strong><p>{property.price !== null ? `${property.priceOrigin} · ubekreftet` : property.priceStatus}</p></div><div><span>Pris inkl. fellesgjeld</span><strong>{number(basis.P)}{basis.P !== null && <small> kr</small>}</strong><p>Uten kjøpsomkostninger</p></div><div><span>Kontantbehov</span><strong>{number(basis.cashRequired)}{basis.cashRequired !== null && <small> kr</small>}</strong><p>Kjøpesum og omkostninger</p></div></div>
         <div className="hero-upload"><label htmlFor="import-file-prospectus">{property.outcome ? 'Velg ny salgsoppgave (PDF)' : 'Velg salgsoppgave (PDF)'}</label><input id="import-file-prospectus" ref={fileInput} type="file" accept="application/pdf,.pdf" onChange={e => { setDetail(null); void importClient.select(e.currentTarget.files?.[0] ?? null, session.prospectus, 'prospectus') }} />
           <p className="metric-caption">PDF med tekstlag · inntil 200 sider / samlet 50 MiB · lokal OCR der tilgjengelig</p>

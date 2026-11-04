@@ -120,6 +120,7 @@ export async function estimateRent(property: RentalProperty, options: { fetch?: 
     limitations: [...property.issues], observations: [], formula: null,
   }
   const unavailable = (reason: string) => ({ ...base, limitations: [...base.limitations, reason] })
+  if (property.propertyType?.value === 'unsupported') return unavailable('Boligtypen i dokumentet er ikke en enkeltleilighet. Denne leiemodellen støtter bare enkeltleiligheter; ingen SSB-celle brukes som leie for hele objektet.')
   if (property.issues.length) return unavailable('Dokumentgrunnlaget inneholder uavklarte opplysninger; automatisk leieestimat er ikke beregnet.')
   if (!property.address || !property.municipality || !property.area || !property.rooms || property.propertyType?.value !== 'apartment') return unavailable('Adresse, kommune, internt areal, rom og én leilighet må kunne identifiseres i salgsoppgaven.')
   if (!Number.isInteger(property.rooms.value) || property.rooms.value < 1 || property.rooms.value > 8 || !Number.isFinite(property.area.value) || property.area.value <= 0) return unavailable('Rom eller areal ligger utenfor modellens støttede grunnlag.')
@@ -141,7 +142,7 @@ export async function estimateRent(property: RentalProperty, options: { fetch?: 
     }).sort((a, b) => a.area - b.area)
     const area = property.area.value
     const lower = sizes.findLast(size => size.area <= area), upper = sizes.find(size => size.area >= area)
-    if (!lower || !upper) return unavailable('Arealet ligger utenfor SSBs publiserte arealpunkter for romgruppen. Ingen ekstrapolering er utført.')
+    if (!lower || !upper) return unavailable(`Dokumentets areal ${area} m² og ${property.rooms.value} rom ligger utenfor SSBs publiserte arealpunkter for romgruppen${sizes.length ? ` (${sizes[0]!.area}–${sizes.at(-1)!.area} m²)` : ''}. Ingen ekstrapolering er utført.`)
     if (region.zones.some(zone => metadata.dimension.Soner2!.category.index[zone] === undefined)) return unavailable('SSBs prissoner er endret; geografitilpasningen må kontrolleres.')
     const url = new URL(`${API}/data`)
     for (const [key, value] of Object.entries({ lang: 'no', 'valueCodes[Soner2]': '*', 'valueCodes[AntRomBRA]': '*', 'valueCodes[ContentsCode]': 'Husleie', 'valueCodes[Tid]': year })) url.searchParams.set(key, value)

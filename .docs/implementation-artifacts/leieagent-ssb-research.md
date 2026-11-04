@@ -112,7 +112,7 @@ Anbefalte regler for agenten (prosjektets metodevalg, ikke SSBs modell):
 
 1. Bruk dokumentert adresse/kommune, internt bruksareal, rom og boligtype med sidereferanse. Motstridende eller flerboligopplysninger må gi eksplisitt avgrensning. Bevar opprinnelig kilde og felttype.
 2. Hent metadata og siste år automatisk. Les JSON-stat-dimensjonene; ikke anta at `value[0]` alltid er riktig celle eller at dimensjonsrekkefølgen er fast.
-3. Foretrekk 09897. Mellom to arealpunkter i samme romgruppe kan lineær interpolasjon brukes med begge celler og formel synlig. Ikke ekstrapoler utover støttet areal uten en separat begrunnet metode.
+3. Foretrekk 09897. Mellom to arealpunkter i samme romgruppe kan lineær interpolasjon brukes med begge celler og formel synlig. Inntil og med 2 m² utenfor romgruppens ytterpunkt brukes nærmeste publiserte celle uendret før vanlig avrunding, med eksplisitt tilnærmingsmerking. Større avvik avvises. Det er ingen lineær ekstrapolasjon.
 4. Uavklart bydel kan representeres ved flere aktuelle bysoner og et spenn som inkluderer dem, merket grov geografisk tilpasning. Nasjonale tall fra 09895 er et grovt sammenligningsgrunnlag, ikke lokal adressepris. Ikke lag landsgjennomsnitt ved å ta uvektet gjennomsnitt av 09897-sonene.
 5. Vis punktestimat avrundet til hundrekroner og et romslig **scenariointervall**. Prosentsatser valgt i prosjektet må være synlige, begrunnede og merkes som foreløpige, ukalibrerte metodeantakelser. Øk bredden når geografi, arealgrunnlag eller datadato er usikre. Ikke kall intervallet 95 prosent konfidens- eller prediksjonsintervall uten empirisk kalibrering.
 6. SSBs oppgitte 95 prosent/10 prosent publiseringskriterium gjelder usikkerhet om **gjennomsnittsleien** i 09895; det beskriver ikke hvor 95 prosent av enkeltleilighetenes leie ligger.
@@ -125,7 +125,7 @@ Liveundersøkelsen benyttet kun SSBs offentlige tjenester. Ingen betalte API-kal
 
 `src/backend/rent/ssb-rent.ts` bruker 09897 for Oslo, Bergen, Trondheim, Stavanger, Kristiansand, Tromsø og de historisk entydige kommunene Bærum, Nesodden og Lørenskog. Asker, Nordre Follo og Lillestrøm tas ikke automatisk med, fordi sammenslåingene ikke passer entydig til metadataenes eldre geografiske avgrensning. Ukjent kommune blir ikke gjettet fra et poststed.
 
-Punktet er midten mellom laveste og høyeste aktuelle soneverdi etter arealinterpolasjon. Foreløpig intervallmargin er 25 prosent pluss 10 prosentpoeng ved ukjent bydel, 5 ved BRA/P-ROM i stedet for BRA-i og 5 per år etter statistikkåret. Nedre grense beregnes fra laveste sone og øvre fra høyeste. Marginen begrenses til 75 prosent, og data eldre enn tre år avvises. Dette er et transparent produktvalg uten empirisk kalibrering; intervallet innebærer ingen bestemt dekningssannsynlighet. Punkt avrundes til nærmeste hundre, grenser utover til hundre. Årsleie er avrundet månedsleie ganger tolv.
+Punktet er midten mellom laveste og høyeste aktuelle soneverdi etter arealinterpolasjon. Foreløpig intervallmargin er 25 prosent pluss 10 prosentpoeng ved ukjent bydel, 5 ved BRA/P-ROM i stedet for BRA-i og 5 per år etter statistikkåret og 5 ved ytterpunktstilnærming. Nedre grense beregnes fra laveste sone og øvre fra høyeste. Marginen begrenses til 75 prosent, og data eldre enn tre år avvises. Dette er et transparent produktvalg uten empirisk kalibrering; intervallet innebærer ingen bestemt dekningssannsynlighet. Punkt avrundes til nærmeste hundre, grenser utover til hundre. Årsleie er avrundet månedsleie ganger tolv.
 
 Metadata og siste-årsdata mellomlagres i minnet i 15 minutter, maksimalt åtte offentlige responser. Injiserte testtransporter deler ikke hurtigbuffer. Hvert kall har åtte sekunders frist og grense på 256 KiB; JSON-stat-ID, størrelse og kategoriindeks valideres før bruk. Bare offentlige tabellkoder sendes til SSB.
 
@@ -137,3 +137,35 @@ ikke automatisk nettoyield/kontantstrøm med historisk leie; en eksplisitt egen
 forventning for ønsket år kan registreres i eksisterende skjema. Ved uleselige
 sider vises en egen begrensning om at disse kan inneholde motstridende
 boligopplysninger; dette endrer ikke eksisterende dokument-/TG-kontrollporter.
+
+
+## Arealregel ssb-rent-2 — 4. november 2026
+
+Metadataenes faktiske arealpunkter brukes generelt innen samme romgruppe, også
+med ulike avstander mellom punktene. Eksakt punkt bruker én celle. Mellom
+nabopunkter brukes `lav + (høy − lav) × (areal − lavt areal) / arealavstand`.
+Inntil og med 2 m² utenfor ytterpunktet brukes bare ytterpunktets celle uendret
+før vanlig avrunding. Avstand over 2 m², manglende romgruppe, manglende relevante
+punkter eller nullcelle gir ingen leie; ingen alternativ sone eller romgruppe
+velges som reserve. Strukturert `areaMethod` oppgir metode, dokumentareal,
+referansepunkter og lineær vekt. Kontrakt og metodeidentitet er `ssb-rent-2`.
+
+Dette er en strengt avgrenset produktantakelse for en liten arealforskjell, ikke
+en publisert SSB-prediksjon for det avvikende arealet. Fem ekstra prosentpoeng
+i scenariointervallet gjør den ekstra usikkerheten synlig. Tillegget og resten
+av intervallet er foreløpige konservative antakelser uten empirisk kalibrering.
+Ingen adresse-, standard- eller årsjustering av beløpet utføres.
+
+Rostockgata: dokumentet har 59 m² BRA-i, 3 rom og eksplisitt nummerert bydel
+«Bydel: 1 Gamle Oslo» på fysisk PDF-side 117. Navnet brukes semantisk mens
+kildesitat og offset beholdes ordrett. Dette velger SSB-sone 01.02, ikke bydeler
+nevnt i parkeringsomtalen. SSBs 2025-celle `01.02 / 3.060 / Husleie / 2025` er
+18 900 kr/mnd. Tilnærmingen 59→60 bruker denne uendret; årsleie blir
+`18 900 × 12 = 226 800`. Grunnmargin 25 % + ett års datalder 5 prosentpoeng +
+tilnærming 5 prosentpoeng gir 35 %. Nedre verdi `18 900 × 0,65 = 12 285`
+avrundes ned til 12 200; øvre `18 900 × 1,35 = 25 515` opp til 25 600 kr/mnd.
+Automatisk leie er fortsatt ubekreftet i statistikkåret, og registrert manuell
+eller faktisk leie har forrang. Ukjent fellesgjeld, full drift og teknisk
+rapportdekning oppgraderes ikke av estimatet.
+
+Etter review normaliseres nummerert bydel bare ved verifisert kommune/nummer/navn-par i et uttrykkelig merket Oslo-register for 2004–2027-inndelingen. Uavklarte par beholdes med ordrett kilde og blokkerende issue. Dette er ikke en konvertering til kommende bydeler. Den ekte Nordvik-nettprøven henter uavhengige ferske metadata/celleverdier og kalenderår; historiske 2025-beløp er fortsatt deterministiske unit-fasiter. [Individuell reviewtriage og verifikasjon](spec-rostockgata-leieestimat.md).

@@ -3,9 +3,37 @@ import { createInitialSession, sessionReducer } from '../../src/frontend/state/s
 import { selectScenarioBasis } from '../../src/frontend/state/scenario.ts'
 import { selectResult } from '../../src/frontend/state/result.ts'
 import { fixtureRent, rentalDocument } from '../helpers/rental-fixture.ts'
+import { calculateFinancialScenario } from '../../src/domain/financial-scenario.ts'
 let fixture: Awaited<ReturnType<typeof rentalDocument>>
 let rent: Awaited<ReturnType<typeof fixtureRent>>
 beforeAll(async () => { fixture = await rentalDocument(); rent = await fixtureRent(fixture.outcome) })
+it('59→60-estimat fyller bare urørt L, bevarer ukjent fellesgjeld og viker for manuell og dokumentert leie', async () => {
+  const apartment = await rentalDocument(['Adresse: Eksempelgata 1, 0194 Oslo', 'Kommune: Oslo', 'Bydel: 1 Gamle Oslo', 'Boligtype: Leilighet', 'BRA-i: 59 m2', 'Antall rom: 3', 'Prisantydning: 8 600 000 kr', 'Felleskostnader: 3660 kr/mnd'])
+  const estimate = await fixtureRent(apartment.outcome)
+  let session = createInitialSession()
+  session.prospectus.prospectus = { ...session.prospectus.prospectus, status: 'imported', ...apartment }
+  const initial = selectScenarioBasis(session, estimate)
+  expect(initial).toMatchObject({ P: null, L: '226800', D: null, year: '2025' })
+  expect(initial.provenance.L).toContain('ubekreftet'); expect(session.financial.L.rawValue).toBe('')
+  session = sessionReducer(session, { type: 'register-value', field: 'P', rawValue: '8600000' })
+  session = sessionReducer(session, { type: 'register-source', field: 'P', source: { kind: 'source', description: 'Egen registrering fra prisopplysningen; fellesgjeld må avklares', conflict: null } })
+  const automatic = selectScenarioBasis(session, estimate)
+  expect(Number(calculateFinancialScenario(automatic, { equity: '', annualInterest: '', months: '' }).grossYield)).toBeCloseTo(2.63720930232558, 12)
+  expect(automatic.D).toBeNull(); expect(session.financial.P.confirmed).toBe(false)
+  for (const action of [
+    { type: 'register-value', field: 'L', rawValue: '240000' }, { type: 'register-period', field: 'L', period: 'year' },
+    { type: 'register-year', field: 'L', year: '2025' }, { type: 'register-source', field: 'L', source: { kind: 'assumption', description: 'Egen forventning', conflict: null } },
+    { type: 'register-rent-nature', rentNature: 'expected' },
+  ] as const) session = sessionReducer(session, action)
+  expect(selectScenarioBasis(session, estimate)).toMatchObject({ L: '240000', D: null, year: '2025' })
+  session = sessionReducer(session, { type: 'register-value', field: 'L', rawValue: '21000' })
+  session = sessionReducer(session, { type: 'register-period', field: 'L', period: 'month' })
+  session = sessionReducer(session, { type: 'register-source', field: 'L', source: { kind: 'source', description: 'Brukerregistrert leiekontrakt', conflict: null } })
+  session = sessionReducer(session, { type: 'register-rent-nature', rentNature: 'actual' })
+  expect(selectScenarioBasis(session, estimate)).toMatchObject({ L: '252000', D: null })
+  expect(selectScenarioBasis(session, estimate).provenance.L).toContain('Brukerregistrert leiekontrakt')
+  expect(selectResult(session).status).toBe('not-calculated')
+})
 function state() {
   const session = createInitialSession()
   session.prospectus.prospectus = { ...session.prospectus.prospectus, status: 'imported', ...fixture }

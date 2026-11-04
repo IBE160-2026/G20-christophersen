@@ -12,14 +12,49 @@ function document(text: string): DocumentImport {
 }
 const apartment = 'Adresse: Fasitveien 4, 0001 Testby\nKommune: Oslo\nBydel: Sagene\nBoligtype: Leilighet\nBRA-i: 65,5 m²\nAntall rom: 3'
 function estimate(): RentEstimate {
-  return { version: 'ssb-rent-1', documentHash: fixture.reportHash, property: extractRentalProperty(document(apartment)),
+  return { version: 'ssb-rent-2', documentHash: fixture.reportHash, property: extractRentalProperty(document(apartment)),
     status: 'estimated', monthly: '12000.01', low: '9000', high: '15000', annual: '144000.12', statisticsYear: '2025',
     fetchedAt: '2026-11-04T10:00:00.000Z', sourceUrl: 'https://www.ssb.no/statbank/table/09897/', method: 'Lineær interpolasjon',
-    limitations: ['Usikkerhetsbåndet er en modellforutsetning.'], observations: [{ zoneCode: '01', zoneLabel: 'Oslo', sizeCode: '3', area: 60, monthly: '11500' }],
+    limitations: ['Usikkerhetsbåndet er en modellforutsetning.'], observations: [{ zoneCode: '01.02', zoneLabel: 'Oslo', sizeCode: '3.060', area: 60, monthly: '11500' }, { zoneCode: '01.02', zoneLabel: 'Oslo', sizeCode: '3.070', area: 70, monthly: '12500' }],
+    areaMethod: { kind: 'interpolated', documentArea: 65.5, lowerArea: 60, upperArea: 70, weight: '0.55' },
     formula: '12000.01 × 12 = 144000.12', sourceUpdated: '2025-12-22' }
 }
 
 describe('Leieagentens kildebundne boligopplysninger', () => {
+  it.each(['1 Gamle Oslo', '01 Gamle Oslo', '15 Søndre Nordstrand', '4 St. Hanshaugen'])('verifiserer Oslo-registerets nummer/navn-par og bevarer ordrett kilde: %s', district => {
+    const input = document(apartment.replace('Bydel: Sagene', `Bydel: ${district}`))
+    const property = extractRentalProperty(input)
+    expect(property.district?.value).toBe(district.replace(/^\d+ /, ''))
+    const source = property.district!.sources[0]!
+    expect(source.quote).toBe(`Bydel: ${district}`)
+    expect(input.pages[0]!.text.slice(source.start, source.end)).toBe(source.quote)
+    expect(property.issues).toEqual([])
+  })
+  it('samler nummerert og unummerert samme bydel, men blokkerer reell kollisjon', () => {
+    const matching = extractRentalProperty(document(apartment.replace('Bydel: Sagene', 'Bydel: 3 Sagene\nBydel: 03 Sagene\nBydel: Sagene')))
+    expect(matching.district?.value).toBe('Sagene'); expect(matching.district?.sources).toHaveLength(3); expect(matching.issues).toEqual([])
+    const conflict = extractRentalProperty(document(apartment + '\nBydel: 1 Gamle Oslo'))
+    expect(conflict.district).toBeNull(); expect(conflict.issues).toContain('Motstridende bydeler i dokumentet. Ingen kandidat er valgt.')
+  })
+  it.each(['Beboerparkering gjelder i bydel Gamle Oslo og Sagene.', 'Parkering\nBydelene Gamle Oslo, Grünerløkka og Sagene er omfattet.', 'Bydel:\nKommune: Oslo'])('gjetter ikke bydel fra parkeringsomtale eller ugyldig etikett: %s', mention => {
+    expect(extractRentalProperty(document(apartment.replace('Bydel: Sagene', mention))).district).toBeNull()
+  })
+  it.each(['99 Gamle Oslo', '2 Gamle Oslo', '1001 Gamle Oslo', '0 Gamle Oslo', '0001 Gamle Oslo'])('beholder motstridende/ukjent bydelsnummer som synlig uavklart: %s', district => {
+    const input = document(apartment.replace('Bydel: Sagene', `Bydel: ${district}`))
+    const property = extractRentalProperty(input)
+    expect(property.district?.value).toBe(district)
+    expect(property.issues.join(' ')).toContain('Uavklart nummerert bydel'); expect(property.issues.join(' ')).toContain('2004–2027')
+    const source = property.district!.sources[0]!
+    expect(input.pages[0]!.text.slice(source.start, source.end)).toBe(`Bydel: ${district}`)
+  })
+  it.each(['Kommune: Bergen', 'Kommune: Ukjent kommune', ''])('normaliserer ikke Oslo-nummer uten sikkert eksplisitt Oslo-kommunegrunnlag: %s', municipality => {
+    const property = extractRentalProperty(document(apartment.replace('Kommune: Oslo', municipality).replace('Bydel: Sagene', 'Bydel: 1 Gamle Oslo')))
+    expect(property.district?.value).toBe('1 Gamle Oslo'); expect(property.issues.join(' ')).toContain('Uavklart nummerert bydel')
+  })
+  it('verifiserer nummerert bydel også når kommuneetiketten kommer senere i dokumentet', () => {
+    const property = extractRentalProperty(document(apartment.replace('Kommune: Oslo\nBydel: Sagene', 'Bydel: 1 Gamle Oslo\nKommune: Oslo')))
+    expect(property.district?.value).toBe('Gamle Oslo'); expect(property.issues).toEqual([])
+  })
   it('leser adresse, kommune, bydel, areal, rom og boligtype med eksakte originalspenn', () => {
     const input = document(apartment), property = extractRentalProperty(input)
     expect(RentalPropertySchema.safeParse(property).success).toBe(true)
@@ -126,7 +161,7 @@ describe('Leieagentens kildebundne boligopplysninger', () => {
     expect(extractRentalProperty(document('Adresse: 7. juni-plassen 4, 4005 Stavanger')).address?.value).toBe('7. juni-plassen 4, 4005 Stavanger')
   })
   it('leiekontrakten avviser ugyldige beløp og struktur', () => {
-    expect(RentEstimateSchema.safeParse({ version: 'ssb-rent-1', monthly: '-2' }).success).toBe(false)
+    expect(RentEstimateSchema.safeParse({ version: 'ssb-rent-2', monthly: '-2' }).success).toBe(false)
     expect(extractRentalProperty(document('BRA-i: 0 m²\nAntall rom: 0')).area).toBeNull()
     expect(extractRentalProperty(document('Adressen er Kontorveien 2\nKommunen er Oslo')).address).toBeNull()
     expect(extractRentalProperty(document('Adressen er Kontorveien 2\nKommunen er Oslo')).municipality).toBeNull()
@@ -134,6 +169,20 @@ describe('Leieagentens kildebundne boligopplysninger', () => {
 })
 
 describe('Leieestimatets kontraktinvarianter', () => {
+  it.each(['', 'bad', 'NaN', 'Infinity', '-1', '1e-3', ' ', '0.'.padEnd(90, '1')])('safeParse avviser ugyldig arealvekt uten å kaste: %j', weight => {
+    const input = estimate(); input.areaMethod!.weight = weight
+    expect(() => RentEstimateSchema.safeParse(input)).not.toThrow()
+    expect(RentEstimateSchema.safeParse(input).success).toBe(false)
+  })
+  it('avviser manglende, feilmerket eller kryssende arealgrunnlag', () => {
+    const valid = estimate()
+    for (const areaMethod of [null, { ...valid.areaMethod!, documentArea: 64 }, { ...valid.areaMethod!, kind: 'exact' }, { ...valid.areaMethod!, weight: '0.5' },
+      { kind: 'nearest-boundary', documentArea: 65.5, lowerArea: 60, upperArea: 60, weight: '0' }]) {
+      expect(RentEstimateSchema.safeParse({ ...valid, areaMethod }).success).toBe(false)
+    }
+    expect(RentEstimateSchema.safeParse({ ...valid, observations: valid.observations.map(item => ({ ...item, sizeCode: '2.060' })) }).success).toBe(false)
+    expect(RentEstimateSchema.safeParse({ ...valid, observations: valid.observations.slice(0, 1) }).success).toBe(false)
+  })
   it('godtar eksakt årsbeløp uten flyttallsavrunding', () => {
     expect(RentEstimateSchema.safeParse(estimate()).success).toBe(true)
   })
@@ -145,7 +194,7 @@ describe('Leieestimatets kontraktinvarianter', () => {
     expect(RentEstimateSchema.safeParse({ ...estimate(), ...override }).success).toBe(false)
   })
   it('utilgjengelig resultat krever tomt beregningsgrunnlag og nullbeløp', () => {
-    const unavailable = { ...estimate(), status: 'unavailable', monthly: null, low: null, high: null, annual: null, observations: [], formula: null }
+    const unavailable = { ...estimate(), status: 'unavailable', monthly: null, low: null, high: null, annual: null, observations: [], formula: null, areaMethod: null }
     expect(RentEstimateSchema.safeParse(unavailable).success).toBe(true)
     for (const override of [{ monthly: '100' }, { observations: estimate().observations }, { formula: 'x' }]) {
       expect(RentEstimateSchema.safeParse({ ...unavailable, ...override }).success).toBe(false)

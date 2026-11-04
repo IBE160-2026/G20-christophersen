@@ -18,6 +18,86 @@ function transport(metadata = structuredClone(originalMetadata), data = structur
 }
 
 describe('SSB-leieagent med ekte, offentlige 2025-celler', () => {
+  it.each([1, 2, 3, 4, 5])('bruker alle faktiske punkter og nabointervaller i romgruppe %i, også ikke-like avstander', async rooms => {
+    const points = Object.keys(originalMetadata.dimension.AntRomBRA.category.index).filter(code => code.startsWith(`${rooms}.`)).map(code => ({ code, area: Number(code.split('.')[1]) }))
+    const raw = (code: string): number => originalData.value[originalData.dimension.Soner2.category.index['05.00'] * 25 + originalData.dimension.AntRomBRA.category.index[code]]
+    for (const [index, point] of points.entries()) {
+      const input = property(); input.rooms!.value = rooms; input.area!.value = point.area
+      const exact = await estimateRent(input, { fetch: transport(), now })
+      expect(exact.status).toBe('estimated'); expect(exact.monthly).toBe(String(raw(point.code)))
+      expect(exact.areaMethod).toEqual({ kind: 'exact', documentArea: point.area, lowerArea: point.area, upperArea: point.area, weight: '0' })
+      expect(exact.observations.map(item => item.sizeCode)).toEqual([point.code])
+      expect(RentEstimateSchema.safeParse(exact).success).toBe(true)
+      const next = points[index + 1]
+      if (!next) continue
+      input.area!.value = point.area + (next.area - point.area) / 4
+      const interpolated = await estimateRent(input, { fetch: transport(), now })
+      expect(interpolated.monthly).toBe(String(Math.round((raw(point.code) * 0.75 + raw(next.code) * 0.25) / 100) * 100))
+      expect(interpolated.observations.map(item => item.sizeCode)).toEqual([point.code, next.code])
+      expect(interpolated.areaMethod).toEqual({ kind: 'interpolated', documentArea: input.area!.value, lowerArea: point.area, upperArea: next.area, weight: '0.25' })
+      expect(interpolated.formula).toContain(`/ ${next.area - point.area} = 0.25`)
+      expect(RentEstimateSchema.safeParse(interpolated).success).toBe(true)
+    }
+  })
+  it.each([1, 2, 3, 4, 5])('avgrenser begge ytterpunkter til nøyaktig 2 m² i romgruppe %i uten ekstrapolasjon', async rooms => {
+    const points = Object.keys(originalMetadata.dimension.AntRomBRA.category.index).filter(code => code.startsWith(`${rooms}.`)).map(code => ({ code, area: Number(code.split('.')[1]) }))
+    for (const [point, direction] of [[points[0]!, -1], [points.at(-1)!, 1]] as const) {
+      const input = property(); input.rooms!.value = rooms; input.area!.value = point.area
+      const reference = await estimateRent(input, { fetch: transport(), now })
+      for (const distance of [0.1, 1, 2]) {
+        input.area!.value = point.area + direction * distance
+        const result = await estimateRent(input, { fetch: transport(), now })
+        expect(result.status).toBe('estimated'); expect(result.monthly).toBe(reference.monthly)
+        expect(result.observations).toEqual(reference.observations)
+        expect(result.areaMethod).toEqual({ kind: 'nearest-boundary', documentArea: input.area!.value, lowerArea: point.area, upperArea: point.area, weight: '0' })
+        expect(Number(result.low)).toBeLessThan(Number(reference.low)); expect(Number(result.high)).toBeGreaterThan(Number(reference.high))
+        expect(RentEstimateSchema.safeParse(result).success).toBe(true)
+      }
+      input.area!.value = point.area + direction * 2.0001
+      const fetcher = transport(), rejected = await estimateRent(input, { fetch: fetcher, now })
+      expect(rejected).toMatchObject({ status: 'unavailable', monthly: null, annual: null, observations: [], areaMethod: null })
+      expect(rejected.limitations.join(' ')).toContain('mer enn 2 m²'); expect(fetcher).toHaveBeenCalledTimes(1)
+    }
+  })
+  it('avviser tom romgruppe, manglende relevant punkt og null i tilnærming uten å gjette annen sone', async () => {
+    const missingGroup = structuredClone(originalMetadata)
+    const remaining = Object.keys(missingGroup.dimension.AntRomBRA.category.index).filter(code => !code.startsWith('3.'))
+    missingGroup.dimension.AntRomBRA.category.index = Object.fromEntries(remaining.map((code, index) => [code, index])); missingGroup.size[1] = remaining.length
+    const input = property(); input.rooms!.value = 3; input.area!.value = 59; input.municipality!.value = 'Oslo'; input.district = { value: 'Gamle Oslo', sources: input.address!.sources }
+    const noPoints = await estimateRent(input, { fetch: transport(missingGroup), now })
+    expect(noPoints.status).toBe('unavailable'); expect(noPoints.limitations.join(' ')).toContain('ingen publiserte arealpunkter')
+    const nullData = structuredClone(originalData)
+    nullData.value[originalData.dimension.Soner2.category.index['01.02'] * 25 + originalData.dimension.AntRomBRA.category.index['3.060']] = null
+    const nullResult = await estimateRent(input, { fetch: transport(undefined, nullData), now })
+    expect(nullResult).toMatchObject({ status: 'unavailable', monthly: null, observations: [], areaMethod: null })
+    expect(nullResult.limitations.join(' ')).toContain('ikke publisert en gyldig leie')
+    const missingData = structuredClone(originalData)
+    const retainedSizes = Object.keys(missingData.dimension.AntRomBRA.category.index).filter(code => code !== '3.060')
+    missingData.dimension.AntRomBRA.category.index = Object.fromEntries(retainedSizes.map((code, index) => [code, index]))
+    delete missingData.dimension.AntRomBRA.category.label['3.060']
+    missingData.size[1] = retainedSizes.length
+    missingData.value = originalData.value.filter((_: unknown, index: number) => index % 25 !== originalData.dimension.AntRomBRA.category.index['3.060'])
+    const missing = await estimateRent(input, { fetch: transport(undefined, missingData), now })
+    expect(missing).toMatchObject({ status: 'unavailable', monthly: null, observations: [] })
+    expect(missing.limitations.join(' ')).toContain('mangler valgt kombinasjon')
+  })
+  it.each(['nullcelle', 'manglende sone'])('avviser hele ytterpunktstilnærmingen ved ukjent Oslo-bydel med én %s og gyldige øvrige soner', async missing => {
+    const input = property(); input.rooms!.value = 3; input.area!.value = 59; input.municipality!.value = 'Oslo'
+    const data = structuredClone(originalData), size = originalData.dimension.AntRomBRA.category.index['3.060']
+    const selectedZones = ['01.01', '01.02', '01.03', '01.04']
+    expect(selectedZones.every(zone => originalData.value[originalData.dimension.Soner2.category.index[zone] * 25 + size] > 0)).toBe(true)
+    if (missing === 'nullcelle') data.value[originalData.dimension.Soner2.category.index['01.03'] * 25 + size] = null
+    else {
+      const retainedZones = Object.keys(data.dimension.Soner2.category.index).filter(zone => zone !== '01.03')
+      data.dimension.Soner2.category.index = Object.fromEntries(retainedZones.map((zone, index) => [zone, index]))
+      delete data.dimension.Soner2.category.label['01.03']
+      data.size[0] = retainedZones.length
+      data.value = originalData.value.filter((_: unknown, index: number) => Math.floor(index / 25) !== originalData.dimension.Soner2.category.index['01.03'])
+    }
+    const result = await estimateRent(input, { fetch: transport(undefined, data), now })
+    expect(result).toMatchObject({ status: 'unavailable', monthly: null, annual: null, observations: [], areaMethod: null })
+    expect(result.limitations.join(' ')).toContain(missing === 'nullcelle' ? 'ikke publisert en gyldig leie' : 'mangler valgt kombinasjon')
+  })
   it('bruker verifisert Stavanger-celle, skiller måned/år og viser konservativt usikkerhetsspenn', async () => {
     const fetcher = transport()
     const result = await estimateRent(property(), { fetch: fetcher, now })
@@ -39,6 +119,12 @@ describe('SSB-leieagent med ekte, offentlige 2025-celler', () => {
     expect(result.observations.map(item => item.monthly)).toEqual(['12200', '12800'])
     expect(result.formula).toContain('(55 − 50) / 10 = 0.5')
     expect(result.formula).toContain('12200 + (12800 − 12200) × 0.5 = 12500.00')
+  })
+  it('bevarer gyldig kontrakt for små desimalvekter uten eksponentformat', async () => {
+    const input = property(); input.area!.value = 60.0000001
+    const result = await estimateRent(input, { fetch: transport(), now })
+    expect(result.status).toBe('estimated'); expect(result.areaMethod?.weight).toBe('0.00000001')
+    expect(RentEstimateSchema.safeParse(result).success).toBe(true)
   })
   it('bruker alle Oslo-soner ved ukjent bydel og snevrer bare ved eksplisitt kjent bydel', async () => {
     const input = property(); input.municipality!.value = 'Oslo'
@@ -190,11 +276,16 @@ it('forklarer faktisk areal/rom og publisert spenn når en leilighet ligger uten
   expect(fetcher).toHaveBeenCalledTimes(1)
 })
 
-it('59 m² og 3 rom ligger under publisert 60 m²: metadata leses, ingen leiecelle ekstrapoleres', async () => {
+it('59 m² bruker uendret 3.060-celle bare i dokumentert Gamle Oslo-sone og får synlig ekstra margin', async () => {
   const input = property(); input.area!.value = 59; input.rooms!.value = 3; input.municipality!.value = 'Oslo'
+  input.district = { value: 'Gamle Oslo', sources: input.address!.sources }
   const fetcher = transport(), result = await estimateRent(input, { fetch: fetcher, now })
-  expect(result).toMatchObject({ status: 'unavailable', monthly: null, annual: null, statisticsYear: '2025', observations: [], formula: null })
-  expect(result.limitations.join(' ')).toContain('59 m² og 3 rom ligger utenfor SSBs publiserte arealpunkter for romgruppen (60–100 m²)')
-  expect(result.limitations.join(' ')).toContain('Ingen ekstrapolering er utført')
-  expect(fetcher).toHaveBeenCalledTimes(1)
+  expect(result).toMatchObject({ status: 'estimated', monthly: '18900', annual: '226800', low: '12200', high: '25600', statisticsYear: '2025',
+    areaMethod: { kind: 'nearest-boundary', documentArea: 59, lowerArea: 60, upperArea: 60, weight: '0' } })
+  expect(result.observations).toEqual([{ zoneCode: '01.02', zoneLabel: originalData.dimension.Soner2.category.label['01.02'], sizeCode: '3.060', area: 60, monthly: '18900' }])
+  expect(result.formula).toContain('59 → 60 m²; referanseverdi uendret')
+  expect(result.limitations.join(' ')).toContain('ikke en direkte SSB-prediksjon for 59 m²')
+  expect(result.limitations.join(' ')).toContain('±35 %')
+  expect(RentEstimateSchema.safeParse(result).success).toBe(true)
+  expect(fetcher).toHaveBeenCalledTimes(2)
 })

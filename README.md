@@ -442,16 +442,19 @@ Første versjon støtter enkeltleiligheter i Oslo, Bergen, Trondheim, Stavanger,
 Kristiansand, Tromsø, Bærum, Nesodden og Lørenskog, med eksplisitt kommune i
 tekstlaget. Ukjent bydel i de tre første byene gir et grovere spenn over alle
 aktuelle bysoner. Andre geografier, flerboligobjekter, uklare opplysninger og
-areal utenfor SSBs publiserte punkter gir en synlig begrensning. Rom er ikke
+areal mer enn 2 m² utenfor SSBs publiserte ytterpunkter gir en synlig begrensning. Rom er ikke
 samme opplysning som soverom. BRA-i foretrekkes; BRA/P-ROM merkes som svakere
 grunnlag. Dokumentoppsett som ikke gjenkjennes må fortsatt kontrolleres.
 
 Agenten henter nyeste publiserte år, interpolerer mellom arealpunkter for samme
-romgruppe og viser råceller, formel, kilder og avrunding. Data fra SSB er
+romgruppe og viser råceller, formel, kilder og avrunding. Inntil og med 2 m²
+utenfor et ytterpunkt brukes nærmeste publiserte verdi uendret før vanlig
+avrunding, tydelig merket ytterpunktstilnærming med dokument- og referanseareal.
+Ingen lineær ekstrapolasjon utføres. Data fra SSB er
 områdestatistikk, ikke dokumentert leie for leiligheten eller dagens annonserte
 markedsleie. Konservativt scenariointervall er en foreløpig produktregel:
 grunnmargin ±25 %, +10 prosentpoeng ved ukjent bydel, +5 ved alternativ
-arealbasis og +5 per år etter statistikkåret. Det er **ikke** et statistisk
+arealbasis, +5 per år etter statistikkåret og +5 ved ytterpunktstilnærming. Det er **ikke** et statistisk
 konfidens-/prediksjonsintervall og er ikke empirisk kalibrert. Ingen automatisk
 prisvekst, kvalitets- eller etasjepåslag gjøres. Data eldre enn tre år brukes
 ikke. Offentlig statistikk mellomlagres i minnet i 15 minutter; ingen
@@ -482,7 +485,8 @@ meglerkontorets adresse/kommune blir ikke boligopplysninger.
 Dokumenterte boligopplysninger vises i Konsept A selv når markedsestimat ikke
 kan beregnes. Enebolig, blandet boligtype eller intern/total-motstrid skal ikke
 bli en kunstig leilighetsleie. SSB-modellens publiserte arealpunkter må passe
-romgruppen; ingen ekstrapolering eller automatisk bruk av en etasje som en
+romgruppen, med høyst 2 m² avvik for tydelig merket ytterpunktstilnærming;
+ingen ekstrapolering eller automatisk bruk av en etasje som en
 selvstendig leilighet skjer. Ukjent faktisk leie beholdes som ukjent.
 
 `tests/e2e/rent-real-document.spec.ts` inneholder en valgfri privat PDF-prøve
@@ -502,10 +506,16 @@ dekning. Originalviseren frigjør avsluttede canvas- og sideressurser.
 
 Nordvik Rostockgata 96 er prøvd med ekte privat PDF på 170 sider og integrert
 19-siders rapport. Alle bestilte bolig-/økonomifelt hentes med fysiske kilder.
-59 m² og 3 rom ligger under SSB-modellens minste punkt på 60 m²; automatisk
-leieestimat er derfor utilgjengelig. Teknisk fullstendighet er fortsatt
+Eksplisitt «Bydel: 1 Gamle Oslo» på fysisk PDF-side 117 velger prissone 01.02.
+For 59 m² og 3 rom brukes den publiserte 60 m²-cellen (3.060) som tydelig
+merket tilnærming: 18 900 kr/mnd, 226 800 kr/år i 2025-nivå. Det foreløpige,
+ukalibrerte scenariointervallet er 12 200–25 600 kr/mnd (35 % margin). Dette er
+ikke en direkte SSB-prediksjon for 59 m² eller en dokumentert leie. Ukjent
+fellesgjeld hindrer fortsatt automatisk prisgrunnlag; bruttoyield blir
+tilgjengelig etter eksplisitt brukerregistrert pris med kilde. Teknisk fullstendighet er fortsatt
 uavklart, selv om alle 19 rapportsider er lokalt bildekontrollert.
-Se [årsaksundersøkelse og ekte testbevis](.docs/process/arbeidsokter/2026-11-04-nordvik-minneflyt.md).
+Se [minneundersøkelsen](.docs/process/arbeidsokter/2026-11-04-nordvik-minneflyt.md) og
+[leiegrunnlag, økonomigrenser og ekte testbevis](.docs/process/arbeidsokter/2026-11-04-rostockgata-leieestimat.md).
 
 Den private originalen må ligge i `private/incoming/nordvik-rostockgata-96.pdf`.
 Kjør på macOS med klargjort lokal Vision og ledig testport:
@@ -517,5 +527,5 @@ PAA_E2E_PORT=3001 PAA_TEST_NORDVIK_REQUIRED=1 npx playwright test tests/e2e/rent
 ```
 
 Flagget krever originalen og tillater ikke skip. Prøven bruker faktisk gratis
-SSB-metadata og ingen betalt KI. Uten privat fil hoppes denne enkeltprøven over
+SSB-metadata og celler og ingen betalt KI. Uten privat fil hoppes denne enkeltprøven over
 i vanlig regresjon; syntetiske format-, felt- og ressursprøver kjører fortsatt.

@@ -19,18 +19,20 @@ export const RentalPropertySchema = z.strictObject({
 })
 
 export const RentEstimateSchema = z.strictObject({
-  version: z.literal('ssb-rent-1'), documentHash: ReportHashSchema, property: RentalPropertySchema,
+  version: z.literal('ssb-rent-2'), documentHash: ReportHashSchema, property: RentalPropertySchema,
   status: z.enum(['estimated', 'unavailable']), monthly: amount.nullable(), low: amount.nullable(), high: amount.nullable(), annual: amount.nullable(),
   statisticsYear: z.string().regex(/^\d{4}$/).nullable(), fetchedAt: z.iso.datetime().max(40), sourceUrl: z.string().url().max(2048).nullable(),
   method: z.string().min(1).max(500), limitations: z.array(z.string().min(1).max(2000)).max(100),
   observations: z.array(z.strictObject({ zoneCode: z.string().min(1).max(50), zoneLabel: z.string().min(1).max(300), sizeCode: z.string().min(1).max(100), area: z.number().positive().max(1000), monthly: amount })).max(100),
   formula: z.string().min(1).max(2000).nullable(), sourceUpdated: z.string().min(1).max(100).nullable(),
+  areaMethod: z.strictObject({ kind: z.enum(['exact', 'interpolated', 'nearest-boundary']), documentArea: z.number().positive().max(1000),
+    lowerArea: z.number().positive().max(1000), upperArea: z.number().positive().max(1000), weight: amount }).nullable(),
 }).superRefine((value, context) => {
   const fail = (message: string) => context.addIssue({ code: 'custom', message })
   if (value.documentHash !== value.property.documentHash) fail('Leieestimatet må gjelde samme dokument som boliggrunnlaget.')
   const amounts = [value.monthly, value.low, value.high, value.annual]
   if (value.status === 'unavailable') {
-    if (amounts.some(amount => amount !== null) || value.observations.length > 0 || value.formula !== null) fail('Utilgjengelig leieestimat skal ikke inneholde beløp, observasjoner eller formel.')
+    if (amounts.some(amount => amount !== null) || value.observations.length > 0 || value.formula !== null || value.areaMethod !== null) fail('Utilgjengelig leieestimat skal ikke inneholde beløp, observasjoner, arealmetode eller formel.')
     return
   }
   const property = value.property
@@ -42,6 +44,22 @@ export const RentEstimateSchema = z.strictObject({
   }
   if (!value.statisticsYear || Number(value.statisticsYear) < 2012 || !value.sourceUpdated?.trim() || !value.formula?.trim() || value.observations.length === 0) {
     fail('Et beregnet estimat krever statistikkår, kildeoppdatering, formel og SSB-observasjoner.')
+  }
+  const area = value.areaMethod
+  if (!area || area.documentArea !== property.area?.value) fail('Estimatet krever en arealmetode som stemmer med dokumentarealet.')
+  else if (!amount.safeParse(area.weight).success) fail('Arealvekten må være et gyldig desimaltall.')
+  else {
+    const documentArea = new Decimal(String(area.documentArea)), lower = new Decimal(String(area.lowerArea)), upper = new Decimal(String(area.upperArea))
+    const weight = new Decimal(area.weight)
+    if (area.kind === 'exact' && (!lower.eq(upper) || !lower.eq(documentArea) || !weight.eq('0'))) fail('Eksakt arealpunkt må være lik dokumentarealet og ha vekt null.')
+    if (area.kind === 'interpolated' && (!lower.lt(documentArea) || !documentArea.lt(upper) || !weight.eq(documentArea.minus(lower).div(upper.minus(lower))))) fail('Interpolasjon må bruke to omsluttende arealpunkter og korrekt lineær vekt.')
+    if (area.kind === 'nearest-boundary' && (!lower.eq(upper) || lower.eq(documentArea) || lower.minus(documentArea).abs().gt('2') || !weight.eq('0'))) fail('Ytterpunktstilnærming krever ett referansepunkt høyst 2 m² fra dokumentarealet og vekt null.')
+    const roomGroup = String(Math.min(5, property.rooms?.value ?? 0))
+    if (value.observations.some(observation => observation.sizeCode !== `${roomGroup}.${String(observation.area).padStart(3, '0')}` || ![area.lowerArea, area.upperArea].includes(observation.area))) fail('SSB-cellene må bruke arealmetodens referansepunkter i samme romgruppe.')
+    for (const zone of new Set(value.observations.map(observation => observation.zoneCode))) {
+      const points = value.observations.filter(observation => observation.zoneCode === zone).map(observation => observation.area).sort((a, b) => a - b)
+      if (points.join() !== [...new Set([area.lowerArea, area.upperArea])].sort((a, b) => a - b).join()) fail('Hver prissone må inneholde akkurat de relevante arealcellene.')
+    }
   }
   try {
     const source = new URL(value.sourceUrl ?? '')

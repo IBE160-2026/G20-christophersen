@@ -748,3 +748,27 @@ publiserte 60–100 m². Ingen markedsleie/yield er fabrikert; utvidelse eller
 kalibrering av modellen gjenstår. Ingen historiske oppføringer lukkes av denne
 caseprøven. [Spec og review](spec-nordvik-minneflyt.md),
 [årsaks-/verifikasjonsbevis](../process/arbeidsokter/2026-11-04-nordvik-minneflyt.md).
+
+**PAA-LEIE1 / PAA-SO2, Rostockgata-leieestimat 2026-11-04 — Status: fortsatt Åpen for kalibrering, økonomi- og teknisk dekning.**
+
+Brukerautorisert metodeutvidelse `ssb-rent-2` bruker metadataenes nabopunkter
+innen samme romgruppe og tillater bare uendret nærmeste ytterpunkt ved høyst
+2 m² avvik. Ekte Nordvik-opplasting når faktisk gratis SSB: dokumentets
+«Bydel: 1 Gamle Oslo» på fysisk side 117 gir sone 01.02; 59 m²/3 rom bruker
+60 m²-cellen fra 2025 som tydelig merket tilnærming, 18 900 kr/måned og
+226 800 kr/år. Foreløpig scenariointervall 12 200–25 600 kr/måned (35 %)
+er ikke empirisk kalibrert. Manuell og registrert faktisk leie har verifisert
+forrang. Dette løser den konkrete 59 m²-avvisningen, men lukker ingen historisk
+oppføring: individuell markedsleie og intervallets faktiske dekning er fortsatt
+uvalidert. Ukjent fellesgjeld sperrer automatisk P, full årskompatibel drift og
+finansiering mangler for nettoyield/kontantstrøm, og teknisk status er fortsatt
+`incomplete`. Ingen ekte leiekontrakt eller komplett TG-dekning hevdes.
+[Spesifikasjon og individuell reviewtriage](spec-rostockgata-leieestimat.md),
+[faktiske celler, utregning og endeprøve](../process/arbeidsokter/2026-11-04-rostockgata-leieestimat.md).
+
+Til samme åpne PAA-LEIE1-geografidekning: Oslo har varslet nye bydelsgrenser og
+numre fra 1. januar 2028, med gjenbrukte navn. Nummernormaliseringen som er
+verifisert her gjelder dokumentets eksisterende inndeling og SSBs kontrollerte
+soner; den er ikke en adressekonvertering til kommende bydeler. Nye geografier
+må avstemmes mot framtidige metadata og dokumentets inndelingsår før presis
+prissone brukes. [Kommunens kilde og reviewbevis](../process/arbeidsokter/2026-11-04-rostockgata-leieestimat.md#review-og-nummerert-bydel).

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import type { APIRequestContext, TestInfo } from '@playwright/test'
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { writeFile } from 'node:fs/promises'
@@ -82,11 +83,56 @@ test('gratis SSB-nettprøve: støttet kompakt leilighet gir synlig estimat gjenn
 })
 
 const nordvik = fileURLToPath(new URL('../../private/incoming/nordvik-rostockgata-96.pdf', import.meta.url))
-test('ekte Nordvik: alle 170 sider, kildebelagte boligfelt og ærlig SSB-grense gjennom HTTP', async ({ page }, info) => {
+type LiveSsb = { updated: string; id: string[]; size: number[]; value: (number | null)[];
+  dimension: Record<string, { category: { index: Record<string, number>; label: Record<string, string> } }> }
+const displayedAmount = (value: number) => new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 }).format(value).replaceAll('\u00a0', ' ')
+
+/** Independent live oracle: selected public cell + documented integer-percent arithmetic, no production estimator. */
+async function nordvikLiveExpected(request: APIRequestContext, info: TestInfo) {
+  const observedAt = new Date(), currentYear = observedAt.getUTCFullYear()
+  const metadataUrl = 'https://data.ssb.no/api/pxwebapi/v2/tables/09897/metadata?lang=no'
+  const metadataResponse = await request.get(metadataUrl, { timeout: 15_000, headers: { 'Cache-Control': 'no-cache' } })
+  expect(metadataResponse.ok()).toBe(true)
+  const metadataRaw = await metadataResponse.text()
+  await writeFile(info.outputPath('nordvik-expected-ssb-metadata.json'), metadataRaw)
+  const metadata = JSON.parse(metadataRaw) as LiveSsb
+  const year = Object.keys(metadata.dimension.Tid!.category.index).filter(year => /^\d{4}$/.test(year) && Number(year) <= currentYear).sort().at(-1)!
+  expect(year).toBeTruthy()
+  const age = currentYear - Number(year)
+  expect(age).toBeGreaterThanOrEqual(0); expect(age).toBeLessThanOrEqual(3)
+  expect(metadata.dimension.AntRomBRA!.category.index['3.060']).toBeDefined()
+  const coordinates = { Soner2: '01.02', AntRomBRA: '3.060', ContentsCode: 'Husleie', Tid: year }
+  const dataUrl = new URL('https://data.ssb.no/api/pxwebapi/v2/tables/09897/data')
+  dataUrl.searchParams.set('lang', 'no')
+  for (const [dimension, code] of Object.entries(coordinates)) dataUrl.searchParams.set(`valueCodes[${dimension}]`, code)
+  const dataResponse = await request.get(dataUrl.href, { timeout: 15_000, headers: { 'Cache-Control': 'no-cache' } })
+  expect(dataResponse.ok()).toBe(true)
+  const dataRaw = await dataResponse.text()
+  await writeFile(info.outputPath('nordvik-expected-ssb-data.json'), dataRaw)
+  const data = JSON.parse(dataRaw) as LiveSsb
+  expect(data.updated).toBe(metadata.updated)
+  expect([...data.id].sort()).toEqual(Object.keys(coordinates).sort())
+  expect(data.size).toEqual([1, 1, 1, 1])
+  for (const [dimension, code] of Object.entries(coordinates)) expect(data.dimension[dimension]!.category.index).toEqual({ [code]: 0 })
+  const raw = data.value[0]!
+  expect(data.value).toHaveLength(1); expect(raw).not.toBeNull(); expect(Number.isInteger(raw)).toBe(true); expect(raw).toBeGreaterThan(0)
+  const marginPercent = Math.min(75, 25 + age * 5 + 5)
+  const monthly = Math.round(raw / 100) * 100, annual = monthly * 12
+  // Integer percentages avoid floating point rounding at exact hundred-kr boundaries.
+  const low = Math.floor(raw * (100 - marginPercent) / 10_000) * 100, high = Math.ceil(raw * (100 + marginPercent) / 10_000) * 100
+  const expected = { observedAt: observedAt.toISOString(), currentYear, metadataUrl, dataUrl: dataUrl.href, sourceUpdated: data.updated,
+    coordinates, year, age, raw, marginPercent, margin: String(marginPercent / 100), monthly, annual, low, high,
+    grossYield: new Intl.NumberFormat('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(annual / 8_600_000 * 100) }
+  await writeFile(info.outputPath('nordvik-expected-ssb-audit.json'), JSON.stringify(expected, null, 2))
+  return expected
+}
+
+test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekreftet økonomi gjennom HTTP', async ({ page, request }, info) => {
   const required = process.env.PAA_TEST_NORDVIK_REQUIRED === '1'
   test.skip(!existsSync(nordvik) && !required, 'Privat original distribueres ikke i Git. PAA_TEST_NORDVIK_REQUIRED=1 krever denne prøven uten skip.')
   expect(existsSync(nordvik), 'Obligatorisk Nordvik-original må være tilgjengelig lokalt').toBe(true)
   test.setTimeout(120_000)
+  const expected = await nordvikLiveExpected(request, info)
   const errors: string[] = [], paid: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   for (const endpoint of ['document-economy/run', 'analysis']) await page.route(`**/api/${endpoint}`, route => { paid.push(endpoint); return route.abort() })
@@ -108,10 +154,11 @@ test('ekte Nordvik: alle 170 sider, kildebelagte boligfelt og ærlig SSB-grense 
   expect(graphicalDetail.lines.some(line => /Vinduer|Ytterdører/i.test(line.text))).toBe(true)
   expect(graphicalDetail.symbols.length).toBeGreaterThan(0)
   expect(outcome.coverage.technical.status).toBe('incomplete')
-  expect(rent.property).toMatchObject({ municipality: { value: 'Oslo' }, area: { value: 59, basis: 'BRA-i' }, rooms: { value: 3 }, bedrooms: { value: 2 }, propertyType: { value: 'apartment' }, issues: [] })
+  expect(rent.property).toMatchObject({ municipality: { value: 'Oslo' }, district: { value: 'Gamle Oslo' }, area: { value: 59, basis: 'BRA-i' }, rooms: { value: 3 }, bedrooms: { value: 2 }, propertyType: { value: 'apartment' }, issues: [] })
+  expect(rent.property.district!.sources).toEqual(expect.arrayContaining([expect.objectContaining({ pdfPage: 117, quote: expect.stringContaining('Bydel: 1 Gamle Oslo') })]))
   expect(outcome.economy.fields.find(field => field.id === 'price')).toMatchObject({ status: 'available', amount: '8600000' })
   expect(outcome.economy.fields.find(field => field.id === 'commonCosts')).toMatchObject({ status: 'available', amount: '3660', period: 'month' })
-  for (const field of [rent.property.address, rent.property.municipality, rent.property.area, rent.property.rooms, rent.property.bedrooms, rent.property.propertyType]) {
+  for (const field of [rent.property.address, rent.property.municipality, rent.property.district, rent.property.area, rent.property.rooms, rent.property.bedrooms, rent.property.propertyType]) {
     expect(field?.sources.length).toBeGreaterThan(0)
     for (const source of field!.sources) {
       expect(source.documentHash).toBe(outcome.reportHash)
@@ -119,14 +166,37 @@ test('ekte Nordvik: alle 170 sider, kildebelagte boligfelt og ærlig SSB-grense 
     }
   }
   for (const field of outcome.economy.fields) for (const source of field.sources) expect(outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
-  expect(rent).toMatchObject({ status: 'unavailable', monthly: null, annual: null, observations: [] })
-  expect(rent.statisticsYear).toMatch(/^\d{4}$/)
-  expect(rent.limitations.join(' ')).toMatch(/59 m² og 3 rom.*utenfor SSBs publiserte arealpunkter/)
+  expect(rent).toMatchObject({ status: 'estimated', monthly: String(expected.monthly), annual: String(expected.annual), low: String(expected.low), high: String(expected.high), statisticsYear: expected.year, sourceUpdated: expected.sourceUpdated,
+    areaMethod: { kind: 'nearest-boundary', documentArea: 59, lowerArea: 60, upperArea: 60, weight: '0' } })
+  expect(rent.observations).toEqual([expect.objectContaining({ zoneCode: '01.02', sizeCode: '3.060', area: 60, monthly: String(expected.raw) })])
+  expect(rent.formula).toContain('59 → 60 m²; referanseverdi uendret')
+  expect(rent.limitations.join(' ')).toContain(`±${expected.marginPercent} %`)
   const panel = page.getByRole('region', { name: 'Forventet leie.' })
   await expect(panel).toContainText('Selveierleilighet')
   await expect(panel).toContainText('59 m² BRA-i')
-  await expect(panel).toContainText('Ingen ekstrapolering er utført')
-  await expect(page.getByTestId('rent-monthly')).toHaveCount(0)
+  await expect(panel.getByTestId('rent-area-approximation')).toContainText('59 → 60 m²')
+  await expect(panel.getByTestId('rent-area-approximation')).toContainText('ikke en direkte SSB-prediksjon for 59 m²')
+  await expect(panel.getByTestId('rent-area-approximation')).toContainText('ikke empirisk kalibrert')
+  await expect(panel.getByTestId('rent-monthly')).toHaveText(`${displayedAmount(expected.monthly)} kr`)
+  await expect(panel.getByTestId('rent-interval')).toHaveText(`${displayedAmount(expected.low)}–${displayedAmount(expected.high)} kr/mnd`)
+  await expect(panel).toContainText('01.02'); await expect(panel).toContainText(`Brukes automatisk i ubekreftet økonomiscenario for ${expected.year}`)
+  await expect(page.getByTestId('scenario-gross')).toContainText('—')
+  await panel.locator('summary').click()
+  await expect(panel).toContainText('3.060'); await expect(panel).toContainText(`${expected.raw} × (1 − ${expected.margin})`)
+  await expect(panel.getByRole('link', { name: /Hent det samme datagrunnlaget/ })).toHaveAttribute('href', new RegExp(`valueCodes%5BTid%5D=${expected.year}`))
+  // Fellesgjeld er ukjent. Automatisk P må forbli sperret; brukeren kan registrere en eksplisitt ubekreftet pris.
+  expect(outcome.economy.fields.find(field => field.id === 'sharedDebt')?.status).not.toBe('available')
+  await page.getByTestId('open-financial-basis').click()
+  await expect(page.locator('#value-L')).toHaveValue('')
+  await expect(page.locator('#status-L')).toContainText('Ubekreftet')
+  await page.locator('#value-P').fill('8600000')
+  await page.locator('#source-kind-P').selectOption('source')
+  await page.locator('#source-P').fill('Brukerregistrert pris fra Nordvik; fellesgjeld må avklares separat')
+  await expect(page.locator('#status-P')).toContainText('Ubekreftet')
+  await page.getByRole('button', { name: '← Tilbake til investeringsoversikten' }).click()
+  await expect(page.getByTestId('scenario-gross')).toContainText(expected.grossYield)
+  await expect(page.getByTestId('scenario-net')).toContainText('—')
+  await expect(page.getByTestId('scenario-cash')).toContainText('—')
   for (const [id, label, displayed] of [['price', 'Prisantydning', '8 600 000,00 kr'], ['commonCosts', 'Felleskostnader', '3 660,00 kr']] as const) {
     const row = page.locator('.document-economy-fields > div').filter({ has: page.locator('dt', { hasText: new RegExp(`^${label}$`) }) })
     await expect(row.locator('dd > strong')).toHaveText(displayed)
@@ -145,6 +215,10 @@ test('ekte Nordvik: alle 170 sider, kildebelagte boligfelt og ærlig SSB-grense 
   }
   const bedrooms = panel.locator('.source-summary > div').filter({ has: page.locator('dt', { hasText: /^Soverom$/ }) })
   await expect(bedrooms.locator('dd')).toContainText('2')
+  const district = panel.locator('.source-summary > div').filter({ has: page.locator('dt', { hasText: /^Bydel$/ }) })
+  await district.getByRole('button', { name: /PDF-side 117/ }).click()
+  await expect(page.locator('[data-pdf-page="117"]')).toBeVisible()
+  await page.keyboard.press('Escape')
   const area = panel.locator('.source-summary > div').filter({ has: page.locator('dt', { hasText: /^Areal$/ }) })
   await area.getByRole('button', { name: /PDF-side/ }).first().click()
   const sourcePage = rent.property.area!.sources[0]!.pdfPage
@@ -168,10 +242,36 @@ test('ekte Nordvik: alle 170 sider, kildebelagte boligfelt og ærlig SSB-grense 
   await expect.poll(() => page.workers().length).toBe(0)
   await page.setViewportSize({ width: 390, height: 844 })
   await expect(panel.getByRole('heading', { name: 'Boligopplysninger fra dokumentet' })).toBeVisible()
+  await expect(panel.getByTestId('rent-monthly')).toHaveText(`${displayedAmount(expected.monthly)} kr`)
+  await expect(panel.getByTestId('rent-area-approximation')).toContainText('59 → 60 m²')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.screenshot({ path: info.outputPath('nordvik-mobile.png'), fullPage: true })
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.screenshot({ path: info.outputPath('nordvik-desktop.png'), fullPage: true })
-  await writeFile(info.outputPath('nordvik-import-rent.json'), JSON.stringify({ import: body, rent, errors, paid }, null, 2))
+  // Begge registreringsmåter skal ha forrang foran den automatiske, fortsatt synlige leien.
+  await page.getByTestId('open-financial-basis').click()
+  await page.locator('#value-L').fill('240000')
+  await page.locator('#period-L').selectOption('year')
+  await page.locator('#year-L').fill(expected.year)
+  await page.locator('#source-kind-L').selectOption('assumption')
+  await page.locator('#source-L').fill('Egen forventning til leie')
+  await page.locator('#rent-nature-L').selectOption('expected')
+  await page.getByRole('button', { name: '← Tilbake til investeringsoversikten' }).click()
+  await expect(page.getByTestId('scenario-gross')).toContainText('2,79')
+  await expect(panel).toContainText('erstatter ikke registrert leie')
+  await expect(panel.getByTestId('rent-monthly')).toHaveText(`${displayedAmount(expected.monthly)} kr`)
+  await page.getByTestId('open-financial-basis').click()
+  await page.locator('#value-L').fill('21000')
+  await page.locator('#period-L').selectOption('month')
+  await page.locator('#source-kind-L').selectOption('source')
+  await page.locator('#source-L').fill('Brukerregistrert leiekontrakt for prioritetstest')
+  await page.locator('#rent-nature-L').selectOption('actual')
+  await expect(page.locator('#status-L')).toContainText('Ubekreftet')
+  await page.getByRole('button', { name: '← Tilbake til investeringsoversikten' }).click()
+  await expect(page.getByTestId('scenario-gross')).toContainText('2,93')
+  await expect(panel).toContainText('Ubekreftet faktisk leie er registrert med grunnlag: Brukerregistrert leiekontrakt for prioritetstest')
+  await expect(page.getByTestId('scenario-net')).toContainText('—')
+  await expect(page.getByTestId('scenario-cash')).toContainText('—')
+  await writeFile(info.outputPath('nordvik-import-rent.json'), JSON.stringify({ import: body, rent, expected, errors, paid }, null, 2))
   expect(errors).toEqual([]); expect(paid).toEqual([])
 })

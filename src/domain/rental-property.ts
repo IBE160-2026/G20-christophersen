@@ -11,6 +11,11 @@ const municipalityName = (value: string) => {
   const name = normalize(value).replace(/^\d{4}\s+/, '').replace(/\s+kommune\.?$/i, '')
   return /^[\p{L}][\p{L} .’'-]{1,80}$/u.test(name) && !/\b(?:vedrørende|oppdragsnummer|postnr|datert|kommunen|kommune|boligtype|salgsobjekt|adresse|byggeår|eierform|soverom|bruksareal|selger|kjøper|hjemmelshaver|oppdragsgiver|arealer)\b/i.test(name) ? name : null
 }
+// Legacy Oslo-bydeler 2004–2027, ikke et tidløst register: reform fra 2028.
+// Verifiserer bare eksplisitte nummer/navn-par; utvider ingen SSB-prissoner.
+// Kilde: https://www.oslo.kommune.no/get-file/1134117/5092c0da27edb275d119c717b8985d96a9b0b2badcebd7ac393657322162ccb4
+const OSLO_LEGACY_DISTRICTS_2004_2027 = ['Gamle Oslo', 'Grünerløkka', 'Sagene', 'St. Hanshaugen', 'Frogner', 'Ullern', 'Vestre Aker', 'Nordre Aker', 'Bjerke', 'Grorud', 'Stovner', 'Alna', 'Østensjø', 'Nordstrand', 'Søndre Nordstrand']
+const districtNameKey = (value: string) => normalize(value).toLocaleLowerCase('nb').replace(/[ .]/g, '')
 
 /** Leser bare eksisterende tekstlag. Alle verdier beholder ordrett kilde i originalen. */
 export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
@@ -79,7 +84,7 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
         const value = normalize(match[1]!)
         if (brokerContext(page.text, match.index!)) continue
         if (list === address && !addressParts(value)) continue
-        if (list !== address && !/^(?:\d{4}\s+)?[\p{L}][\p{L} .’'/-]*(?:\s+kommune)?$/iu.test(value)) continue
+        if (list !== address && !/^(?:\d+[ \t]+)?[\p{L}][\p{L} .’'/-]*$/iu.test(value)) continue
         add(list, value, source(match))
       }
     }
@@ -179,8 +184,20 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
   const areaBasis = (['BRA-i', 'BRA', 'P-ROM'] as const).find(basis => areas[basis].length > 0)
   const selectedArea = areaBasis ? choose(areas[areaBasis], `areal (${areaBasis})`) : null
   const area = selectedArea && areaBasis ? { ...selectedArea, basis: areaBasis } : null
+  const selectedMunicipality = choose(municipality, 'kommuner')
+  const verifiedDistricts: Candidate<string>[] = []
+  for (const candidate of district) {
+    const numbered = /^(\d+)[ \t]+(.+)$/.exec(candidate.value)
+    let value = candidate.value
+    if (numbered) {
+      const registered = /^0?[1-9]$|^1[0-5]$/.test(numbered[1]!) ? OSLO_LEGACY_DISTRICTS_2004_2027[Number(numbered[1]) - 1] : null
+      if (key(selectedMunicipality?.value) === 'oslo' && registered && districtNameKey(numbered[2]!) === districtNameKey(registered)) value = numbered[2]!
+      else issues.push(`Uavklart nummerert bydel på fysisk PDF-side ${candidate.sources[0]!.pdfPage}: «${candidate.value}». Nummer/navn kan ikke verifiseres mot Oslo-registeret 2004–2027 for dokumentets kommune; originalverdien er beholdt.`)
+    }
+    for (const source of candidate.sources) add(verifiedDistricts, value, source)
+  }
   const result = { documentHash: outcome.reportHash, documentName: outcome.documentName,
-    address: choose(address, 'adresser'), municipality: choose(municipality, 'kommuner'), district: choose(district, 'bydeler'),
+    address: choose(address, 'adresser'), municipality: selectedMunicipality, district: choose(verifiedDistricts, 'bydeler'),
     area, rooms: choose(rooms, 'romantall'), bedrooms: choose(bedrooms, 'soverom'), propertyType: choose(types, 'boligtyper'), issues }
   for (const [field, label] of [['address', 'Eiendommens adresse'], ['area', 'Areal'], ['rooms', 'Antall rom'], ['propertyType', 'Boligtype']] as const) {
     if (!result[field]) issues.push(`${label} mangler eller er ikke entydig i det lesbare tekstlaget.`)

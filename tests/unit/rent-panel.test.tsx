@@ -6,6 +6,18 @@ import { RentEstimatePanel } from '../../src/frontend/investment/RentEstimatePan
 import { rentalDocument, fixtureRent } from '../helpers/rental-fixture.ts'
 let fixture: Awaited<ReturnType<typeof rentalDocument>>, result: Awaited<ReturnType<typeof fixtureRent>>
 beforeAll(async () => { fixture = await rentalDocument(); result = await fixtureRent(fixture.outcome) })
+it('viser 59→60-tilnærming fremtredende ved beløpet sammen med riktig prissone og ukalibrert intervall', async () => {
+  const apartment = await rentalDocument(['Adresse: Eksempelgata 1, 0194 Oslo', 'Kommune: Oslo', 'Bydel: 1 Gamle Oslo', 'Boligtype: Leilighet', 'BRA-i: 59 m2', 'Antall rom: 3'])
+  const rent = await fixtureRent(apartment.outcome), session = createInitialSession()
+  session.prospectus.prospectus = { ...session.prospectus.prospectus, status: 'imported', ...apartment }
+  const markup = renderToStaticMarkup(<RentEstimatePanel session={session} rent={{ status: 'ready', result: rent, retry() {} }} basis={selectScenarioBasis(session, rent)} controls={{ equity: '', annualInterest: '', months: '' }} onSource={() => undefined} />).replaceAll('\u00a0', ' ')
+  expect(markup).toContain('18 900 kr'); expect(markup).toContain('12 200–25 600 kr/mnd')
+  const prominent = markup.slice(0, markup.indexOf('<details'))
+  expect(prominent).toContain('59 → 60 m²'); expect(prominent).toContain('ikke en direkte SSB-prediksjon for 59 m²')
+  expect(prominent).toContain('5 prosentpoeng ekstra'); expect(prominent).toContain('ikke empirisk kalibrert')
+  expect(prominent).toContain('(01.02)'); expect(prominent).toContain('2025-nivå uten prisjustering')
+  expect(markup).toContain('3.060'); expect(rent.property.district!.sources[0]!.quote).toBe('Bydel: 1 Gamle Oslo')
+})
 it('en valgt actual-kategori uten gyldig kilde og beløp fremstilles ikke som registrert faktisk leie', () => {
   const session = createInitialSession()
   session.prospectus.prospectus = { ...session.prospectus.prospectus, status: 'imported', ...fixture }

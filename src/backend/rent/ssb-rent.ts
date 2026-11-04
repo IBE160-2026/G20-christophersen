@@ -114,10 +114,10 @@ function rounded(value: Big, mode: 0 | 1 | 3 = Decimal.roundHalfUp) { return val
 export async function estimateRent(property: RentalProperty, options: { fetch?: typeof fetch; now?: () => Date; signal?: AbortSignal } = {}): Promise<RentEstimate> {
   const now = options.now?.() ?? new Date()
   const base: RentEstimate = {
-    version: 'ssb-rent-1', documentHash: property.documentHash, property, status: 'unavailable',
+    version: 'ssb-rent-2', documentHash: property.documentHash, property, status: 'unavailable',
     monthly: null, low: null, high: null, annual: null, statisticsYear: null, fetchedAt: now.toISOString(),
-    sourceUrl: null, sourceUpdated: null, method: 'SSB 09897 · lineær arealinterpolasjon · versjon ssb-rent-1',
-    limitations: [...property.issues], observations: [], formula: null,
+    sourceUrl: null, sourceUpdated: null, method: 'SSB 09897 · faktiske arealpunkter, lineær interpolasjon og ytterpunktstilnærming inntil 2 m² · versjon ssb-rent-2',
+    limitations: [...property.issues], observations: [], formula: null, areaMethod: null,
   }
   const unavailable = (reason: string) => ({ ...base, limitations: [...base.limitations, reason] })
   if (property.propertyType?.value === 'unsupported') return unavailable('Boligtypen i dokumentet er ikke en enkeltleilighet. Denne leiemodellen støtter bare enkeltleiligheter; ingen SSB-celle brukes som leie for hele objektet.')
@@ -141,8 +141,15 @@ export async function estimateRent(property: RentalProperty, options: { fetch?: 
       return match?.[1] === rooms && Number(match[2]) > 0 ? [{ code, area: Number(match[2]) }] : []
     }).sort((a, b) => a.area - b.area)
     const area = property.area.value
-    const lower = sizes.findLast(size => size.area <= area), upper = sizes.find(size => size.area >= area)
-    if (!lower || !upper) return unavailable(`Dokumentets areal ${area} m² og ${property.rooms.value} rom ligger utenfor SSBs publiserte arealpunkter for romgruppen${sizes.length ? ` (${sizes[0]!.area}–${sizes.at(-1)!.area} m²)` : ''}. Ingen ekstrapolering er utført.`)
+    if (!sizes.length) return unavailable(`SSB har ingen publiserte arealpunkter for romgruppen ${property.rooms.value} rom.`)
+    let lower = sizes.findLast(size => size.area <= area), upper = sizes.find(size => size.area >= area)
+    const boundary = !lower ? sizes[0]! : !upper ? sizes.at(-1)! : null
+    if (boundary) {
+      if (new Decimal(String(area)).minus(String(boundary.area)).abs().gt('2')) return unavailable(`Dokumentets areal ${area} m² og ${property.rooms.value} rom ligger utenfor SSBs publiserte arealpunkter for romgruppen (${sizes[0]!.area}–${sizes.at(-1)!.area} m²), mer enn 2 m² fra ytterpunktet. Ingen ekstrapolering er utført.`)
+      lower = upper = boundary
+    }
+    // Both bounds exist after either bracketing or the explicitly limited boundary rule.
+    if (!lower || !upper) return unavailable('SSBs relevante arealpunkter mangler.')
     if (region.zones.some(zone => metadata.dimension.Soner2!.category.index[zone] === undefined)) return unavailable('SSBs prissoner er endret; geografitilpasningen må kontrolleres.')
     const url = new URL(`${API}/data`)
     for (const [key, value] of Object.entries({ lang: 'no', 'valueCodes[Soner2]': '*', 'valueCodes[AntRomBRA]': '*', 'valueCodes[ContentsCode]': 'Husleie', 'valueCodes[Tid]': year })) url.searchParams.set(key, value)
@@ -165,24 +172,26 @@ export async function estimateRent(property: RentalProperty, options: { fetch?: 
     })
     const min = estimates.reduce((a, b) => a.lt(b) ? a : b), max = estimates.reduce((a, b) => a.gt(b) ? a : b)
     const point = min.plus(max).div('2')
-    const margin = new Decimal('0.25').plus(region.broad ? '0.10' : '0').plus(property.area.basis !== 'BRA-i' ? '0.05' : '0').plus(new Decimal(String(age)).times('0.05'))
+    const margin = new Decimal('0.25').plus(region.broad ? '0.10' : '0').plus(property.area.basis !== 'BRA-i' ? '0.05' : '0').plus(new Decimal(String(age)).times('0.05')).plus(boundary ? '0.05' : '0')
     const boundedMargin = margin.gt('0.75') ? new Decimal('0.75') : margin
     const monthly = rounded(point)
     const limitations = [
       ...base.limitations,
       `Statistikkår ${year}; ingen inflasjonsjustering til dagens nivå.`,
       `Konservativt scenariointervall valgt i produktet: ±${boundedMargin.times('100').toFixed(0)} % rundt laveste/høyeste tilpassede soneverdi; ikke et statistisk konfidens- eller prediksjonsintervall fra SSB. Prosenten er foreløpig og ikke empirisk kalibrert.`,
-      'Grunnmargin 25 %, tillegg 10 prosentpoeng ved ukjent bydel, 5 ved annet arealgrunnlag enn BRA-i og 5 per år etter statistikkåret; samlet margin begrenses til 75 %.',
+      'Grunnmargin 25 %, tillegg 10 prosentpoeng ved ukjent bydel, 5 ved annet arealgrunnlag enn BRA-i, 5 per år etter statistikkåret og 5 ved ytterpunktstilnærming; samlet margin begrenses til 75 %.',
       'Gjelder umøblert bolig uten tillegg for balkong, garasje, strøm eller oppvarming. Standard, etasje og utsikt er ikke prisjustert.',
       'Årsleie er månedsleie × 12 før ledighet, kostnader og skatt. Estimatet dokumenterer ikke oppnådd leie eller tillatelse til utleie.',
     ]
+    if (boundary) limitations.push(`Ytterpunktstilnærming: dokumentareal ${area} m² → SSB-referanse ${boundary.area} m². Referanseverdien brukes uendret før vanlig avrunding, uten lineær ekstrapolasjon. Dette er ikke en direkte SSB-prediksjon for ${area} m². Tillegget på 5 prosentpoeng i scenariointervallet er en foreløpig, ikke empirisk kalibrert konservativ antakelse.`)
     if (region.broad) limitations.push('Bydel er uavklart. Alle SSB-soner i kommunen inngår; midtpunktet mellom laveste og høyeste sone brukes uten påstått geografisk sannsynlighet.')
     if (property.area.basis !== 'BRA-i') limitations.push(`Arealgrunnlaget er ${property.area.basis}; forskjell fra internt leilighetsareal er en usikkerhetskilde.`)
     return {
       ...base, status: 'estimated', monthly, annual: new Decimal(monthly).times('12').toFixed(0),
       low: rounded(min.times(new Decimal('1').minus(boundedMargin)), Decimal.roundDown),
       high: rounded(max.times(new Decimal('1').plus(boundedMargin)), Decimal.roundUp), observations, limitations,
-      formula: `${lower.area === upper.area ? `Publisert arealpunkt ${area} m²; arealvekt 0` : `Arealvekt (${area} − ${lower.area}) / ${upper.area - lower.area} = ${weight.toString()}`}. ${calculations.join('; ')}. Punkt = (${min.toString()} + ${max.toString()}) / 2 = ${point.toFixed(2)} kr/mnd; avrundet til nærmeste 100 kr. Lav = ${min.toString()} × (1 − ${boundedMargin.toString()}), høy = ${max.toString()} × (1 + ${boundedMargin.toString()}); avrundes utover til 100 kr.`,
+      areaMethod: { kind: boundary ? 'nearest-boundary' : lower.area === upper.area ? 'exact' : 'interpolated', documentArea: area, lowerArea: lower.area, upperArea: upper.area, weight: weight.toFixed() },
+      formula: `${boundary ? `Ytterpunktstilnærming ${area} → ${boundary.area} m²; referanseverdi uendret, arealvekt 0` : lower.area === upper.area ? `Publisert arealpunkt ${area} m²; arealvekt 0` : `Arealvekt (${area} − ${lower.area}) / ${upper.area - lower.area} = ${weight.toString()}`}. ${calculations.join('; ')}. Punkt = (${min.toString()} + ${max.toString()}) / 2 = ${point.toFixed(2)} kr/mnd; avrundet til nærmeste 100 kr. Lav = ${min.toString()} × (1 − ${boundedMargin.toString()}), høy = ${max.toString()} × (1 + ${boundedMargin.toString()}); avrundes utover til 100 kr.`,
     }
   } catch (error) {
     return unavailable(error instanceof Error && !['AbortError', 'TimeoutError', 'SyntaxError'].includes(error.name) && !error.message.includes('fetch failed')

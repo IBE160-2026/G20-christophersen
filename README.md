@@ -490,3 +490,32 @@ og en eksplisitt gratis SSB-nettprøve. Nettprøven aktiveres med
 `PAA_TEST_SSB_NETWORK=1`; vanlig regresjon bruker offentlige, lagrede SSB-svar
 og krever ikke nett. Private PDF-er, råresponser og bilder distribueres ikke.
 Se [ekte PDF-undersøkelse og testbevis](.docs/process/arbeidsokter/2026-11-04-leieagent-ekte-pdf.md).
+
+
+#### Store digitale salgsoppgaver og Nordvik-prøven
+
+Importen isolerer formatparseren og leser digital PDF-tekst i grupper på 20
+sider. Hver parserworker avsluttes før neste gruppe; samlet tekstbudsjett og
+512 MiB RSS-vakt består. OCR brukes som lokalt supplement for manglende/usikker
+tekst og grafiske detaljer; sider uten bildekontroll beholder eksplisitt usikker
+dekning. Originalviseren frigjør avsluttede canvas- og sideressurser.
+
+Nordvik Rostockgata 96 er prøvd med ekte privat PDF på 170 sider og integrert
+19-siders rapport. Alle bestilte bolig-/økonomifelt hentes med fysiske kilder.
+59 m² og 3 rom ligger under SSB-modellens minste punkt på 60 m²; automatisk
+leieestimat er derfor utilgjengelig. Teknisk fullstendighet er fortsatt
+uavklart, selv om alle 19 rapportsider er lokalt bildekontrollert.
+Se [årsaksundersøkelse og ekte testbevis](.docs/process/arbeidsokter/2026-11-04-nordvik-minneflyt.md).
+
+Den private originalen må ligge i `private/incoming/nordvik-rostockgata-96.pdf`.
+Kjør på macOS med klargjort lokal Vision og ledig testport:
+
+```bash
+npm run prepare:visual
+npm run build
+PAA_E2E_PORT=3001 PAA_TEST_NORDVIK_REQUIRED=1 npx playwright test tests/e2e/rent-real-document.spec.ts --grep "ekte Nordvik"
+```
+
+Flagget krever originalen og tillater ikke skip. Prøven bruker faktisk gratis
+SSB-metadata og ingen betalt KI. Uten privat fil hoppes denne enkeltprøven over
+i vanlig regresjon; syntetiske format-, felt- og ressursprøver kjører fortsatt.

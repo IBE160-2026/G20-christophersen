@@ -21,7 +21,7 @@ const labels = {
   price: 'Prisantydning', totalPrice: 'Totalpris', purchaseCosts: 'Omkostninger', documentTax: 'Dokumentavgift', sharedDebt: 'Fellesgjeld',
   commonCosts: 'Felleskostnader', propertyTax: 'Eiendomsskatt', municipalFees: 'Kommunale avgifter', sharedDebtPayment: 'Betaling av fellesgjeld',
 } as const
-const economyPattern = /prisantydning|totalpris|omkostninger|dokumentavgift|fellesgjeld|felleskostnader|eiendomsskatt|kommunale avgifter/i
+const economyPattern = /prisantydning|totalpris|omkostninger|dokumentavgift|fellesgjeld|felleskostnader|fellesutgifter|eiendomsskatt|kommunale avgifter/i
 export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: boolean } = {}) {
   const manifest: ImportManifest = { version: CODE_FIRST_PLAN_VERSION, blocks: [], candidates: [], residual: [] }
   const findings: DocumentImport['technical']['findings'] = []
@@ -86,6 +86,7 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
       const aliases: Partial<Record<EconomyField['id'], string>> = {
         price: '(?:Prisantydning|Total prisantydning eksklusiv omkostninger)',
         totalPrice: '(?:Totalpris|Total ink\\. omk\\.)',
+        commonCosts: '(?:Felleskostnader|Fellesutgifter)',
       }
       const label = aliases[field.id] ?? labels[field.id as keyof typeof labels]
       const number = '(\\d[\\d. \\u00a0\\u202f]*(?:,\\d{1,2}|,[-\\u2011\\u2013])?)'
@@ -97,6 +98,19 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
         new RegExp(`^${gap}${label}${separator}(?:kr|NOK)${gap}${number}${qualifier}\\.?${gap}$`, 'gim'),
         new RegExp(`^${gap}${label}${separator}${number}${gap}(?:kr|NOK)${qualifier}\\.?${gap}$`, 'gim'),
       ]
+      // Norwegian listings also use the explicit monetary suffix ",-" instead
+      // of a currency word. Bare digits remain insufficient financial evidence.
+      const moneySuffix = '(\\d[\\d. \\u00a0\\u202f]*,[-\\u2011\\u2013])'
+      if (field.category !== 'recurring') expressions.push(new RegExp(`^${gap}${label}${separator}${moneySuffix}${gap}$`, 'gim'))
+      if (field.id === 'commonCosts') {
+        const monthly = `(?:per|pr\\.?)${gap}(?:måned|mnd\\.?)`
+        // One amount capture per expression keeps the original source offsets
+        // and excludes amounts lacking both currency and the monetary suffix.
+        for (const amount of [`(?:kr|NOK)${gap}${number}`, `${moneySuffix}${gap}(?:kr|NOK)?`, `${number}${gap}(?:kr|NOK)`]) {
+          expressions.push(new RegExp(`^${gap}${label}${gap}${monthly}${separator}${amount}${gap}$`, 'gim'),
+            new RegExp(`^${gap}${label}${separator}${amount}${gap}${monthly}${gap}$`, 'gim'))
+        }
+      }
       const ledgerLabels: Partial<Record<EconomyField['id'], string>> = {
         documentTax: 'Dokumentavgift(?: \\(\\d+(?:,\\d+)? %\\))?',
         purchaseCosts: 'Omkostninger totalt',
@@ -114,7 +128,7 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
         if (match[0].length > 2000 || amount.length > 80) { residual(page.pdfPage, 'Langt økonomibelegg er uavklart.'); continue }
         const source = sourceFor(basis, page.pdfPage, match.index, match.index + match[0].length)
         if (field.sources.some(item => repeatedEvidence(item, source))) continue
-        const period = match[2] === 'måned' ? 'month' : match[2] === 'år' || !options.legacyEconomy && match[3] ? 'year' : field.category === 'recurring' ? 'unknown' : 'once'
+        const period = match[2] === 'måned' || field.id === 'commonCosts' && /(?:per|pr\.?)[ \t]*(?:måned|mnd\.?)\b/i.test(match[0]) ? 'month' : match[2] === 'år' || !options.legacyEconomy && match[3] ? 'year' : field.category === 'recurring' ? 'unknown' : 'once'
         const year = match[3] ?? match[4] ?? null
         if (field.amount === null) Object.assign(field, { amount, period, year, status: 'available', nature: 'fact', originalText: source.quote })
         else if (field.amount !== amount || field.period !== period || field.year !== year) {

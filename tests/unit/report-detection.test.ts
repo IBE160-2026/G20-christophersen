@@ -117,3 +117,28 @@ describe('kildebelagt rapportidentifisering', () => {
     expect(detectReportSections(basis)[0]).toMatchObject({ startPage: 1, endPage: 3, certainty: 'certain' })
   })
 })
+
+it('binder sammenlimt rapporttotal/prospektfooter bare til ubrutt kjent oppdrag og stigende nabofot', () => {
+  const texts = [
+    'Tilstandsrapport\nRapportdato: 01.10.2026 Oppdragsnr.: 901-12',
+    '901-12Oppdragsnr.: Side: 2 av 4Befaringsdato: 01.10.2026',
+    'Tilstandsrapport\nOppdragsnr.: 901-12 Befaringsdato: 01.10.2026 Side: 3 av 449',
+    'Tilstandsrapport\nOppdragsnr.: 901-12 Befaringsdato: 01.10.2026 Side: 4 av 450',
+    'Vedlegg utenfor rapporten',
+  ]
+  const basis = codeFirstBasis(texts)
+  expect(detectReportSections(basis)).toMatchObject([{ startPage: 1, endPage: 4, certainty: 'certain' }])
+  for (const evidence of detectReportSections(basis)[0]!.basis) expect(basis.pages[evidence.pdfPage - 1]!.text.slice(evidence.start, evidence.end)).toBe(evidence.quote)
+  const bad = codeFirstBasis(texts.map(text => text.replace('4 av 450', '4 av 460')))
+  expect(detectReportSections(bad).every(section => section.certainty === 'ambiguous')).toBe(true)
+})
+
+it('gjenoppretter liten sammenlimt total uten å beholde den som motstridende nummerering', () => {
+  const basis = codeFirstBasis([
+    'Tilstandsrapport\nRapportdato: 01.10.2026 Oppdragsnr.: 901-12',
+    '901-12Oppdragsnr.: Side: 2 av 4Befaringsdato: 01.10.2026',
+    'Tilstandsrapport\nOppdragsnr.: 901-12 Befaringsdato: 01.10.2026 Side: 3 av 49',
+    'Tilstandsrapport\nOppdragsnr.: 901-12 Befaringsdato: 01.10.2026 Side: 4 av 410',
+  ])
+  expect(detectReportSections(basis)).toMatchObject([{ startPage: 1, endPage: 4, certainty: 'certain' }])
+})

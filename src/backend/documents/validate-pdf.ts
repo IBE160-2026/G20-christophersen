@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto'
+import { Worker } from 'node:worker_threads'
 import { getDocument, PDFWorker, VerbosityLevel } from 'pdfjs-dist/legacy/build/pdf.mjs'
 import type { AnalysisError } from '../../contracts/document-analysis.ts'
 import { countPdfPages } from './count-pdf-pages.ts'
@@ -49,6 +50,24 @@ async function destroyResources(task: ReturnType<typeof getDocument> | undefined
   if (failed) throw new Error('PDF-behandlingen kunne ikke avsluttes. Prøv igjen.')
 }
 
+async function openImportContainer(bytes: Uint8Array): Promise<void> {
+  const snapshot = Uint8Array.from(bytes)
+  const worker = new Worker(new URL('./pdf-container-worker.ts', import.meta.url), { workerData: snapshot, transferList: [snapshot.buffer] })
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const fail = () => reject(new Error('PDF-behandlingen kunne ikke gjennomføres. Prøv igjen.'))
+      worker.once('message', (reply: { kind?: string; name?: string } | null | undefined) => {
+        if (!reply || typeof reply !== 'object') { fail(); return }
+        if (reply.kind === 'opened') resolve()
+        else if (reply.kind === 'invalid' && ['InvalidPDFException', 'PasswordException', 'UnknownErrorException'].includes(reply.name ?? '')) {
+          const error = new Error('Invalid PDF container'); error.name = reply.name!; reject(error)
+        } else fail()
+      })
+      worker.once('error', fail); worker.once('messageerror', fail); worker.once('exit', fail)
+    })
+  } finally { await worker.terminate() }
+}
+
 /** Uses bytes only; documentName is display metadata and is never opened as a path. */
 export async function validatePdf(bytes: Uint8Array, documentName: string, profile: { maxPages: 30 | 200 } = { maxPages: 30 }): Promise<PdfFormatOutcome> {
   // Snapshot before awaiting: caller mutation and PDF.js buffer transfer must not change the original.
@@ -57,10 +76,14 @@ export async function validatePdf(bytes: Uint8Array, documentName: string, profi
   let task: ReturnType<typeof getDocument> | undefined
   let worker: PDFWorker | undefined
   try {
-    // Own the worker so it is released even when transport destruction rejects.
-    worker = new PDFWorker({ verbosity: VerbosityLevel.ERRORS })
-    task = getDocument({ data: Uint8Array.from(originalBytes), worker, verbosity: VerbosityLevel.ERRORS })
-    await task.promise
+    if (profile.maxPages === 200) await openImportContainer(originalBytes)
+    else {
+      // Legacy API keeps its public loader lifecycle; large imports additionally
+      // release the loader's entire isolate before independent tree inspection.
+      worker = new PDFWorker({ verbosity: VerbosityLevel.ERRORS })
+      task = getDocument({ data: Uint8Array.from(originalBytes), worker, verbosity: VerbosityLevel.ERRORS })
+      await task.promise
+    }
     const pageCount = await countPdfPages(originalBytes)
     if (pageCount === null) return failure(identity, 'invalid-container', null)
     if (pageCount > profile.maxPages) {

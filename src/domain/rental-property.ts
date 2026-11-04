@@ -9,14 +9,14 @@ const key = (value: unknown) => typeof value === 'string' ? normalize(value).toL
 const addressParts = (value: string) => /^(?<street>(?:\d{1,2}\.?[ \t]+)?[\p{L}][\p{L} .’'/-]*?[ \t]+\d+[ \t]*[\p{L}]?)(?:[ \t]*,?[ \t]*(?<postal>\d{4})[ \t]+(?<place>[\p{L}][\p{L} .’'-]*))?$/u.exec(normalize(value))?.groups
 const municipalityName = (value: string) => {
   const name = normalize(value).replace(/^\d{4}\s+/, '').replace(/\s+kommune\.?$/i, '')
-  return /^[\p{L}][\p{L} .’'-]{1,80}$/u.test(name) && !/\b(?:vedrørende|oppdragsnummer|postnr|datert|kommunen|kommune|boligtype|salgsobjekt|adresse|byggeår|eierform|soverom|bruksareal)\b/i.test(name) ? name : null
+  return /^[\p{L}][\p{L} .’'-]{1,80}$/u.test(name) && !/\b(?:vedrørende|oppdragsnummer|postnr|datert|kommunen|kommune|boligtype|salgsobjekt|adresse|byggeår|eierform|soverom|bruksareal|selger|kjøper|hjemmelshaver|oppdragsgiver|arealer)\b/i.test(name) ? name : null
 }
 
 /** Leser bare eksisterende tekstlag. Alle verdier beholder ordrett kilde i originalen. */
 export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
   const issues: string[] = []
   const address: Candidate<string>[] = [], municipality: Candidate<string>[] = [], district: Candidate<string>[] = []
-  const rooms: Candidate<number>[] = [], types: Candidate<'apartment' | 'unsupported'>[] = []
+  const rooms: Candidate<number>[] = [], bedrooms: Candidate<number>[] = [], types: Candidate<'apartment' | 'unsupported'>[] = []
   let floorSection = false
   const areas: Record<'BRA-i' | 'BRA' | 'P-ROM', Candidate<number>[]> = { 'BRA-i': [], BRA: [], 'P-ROM': [] }
   const sourceValid = (source: PdfSource) => source.documentHash === outcome.reportHash && source.documentName === outcome.documentName
@@ -59,6 +59,13 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
       // Enhetstelling for fellesskapet/bygget sier ikke at alle enhetene selges.
       if (/^[ \t]*(?:sameiet|borettslaget|bygningen|bygget|boligblokken)\b/i.test(prefix)) return false
       const previousLine = page.text.slice(0, Math.max(0, lineStart - 1)).split('\n').at(-1) ?? ''
+      const context = page.text.slice(Math.max(0, match.index! - 1000), match.index!)
+      // Public planning cases describe neighbouring projects. A nearby sale-
+      // object statement restores the multi-unit guard; a case number alone
+      // never describes how many units are included in this sale.
+      if (/(?:nabo(?:eiendom|tiltak|prosjekt)|nærliggende (?:områder|eiendommer)|andre (?:eiendommer|byggeprosjekter))/i.test(context)
+        && /\b(?:tiltaket|nybygg|byggeprosjektet)\b/i.test(context)
+        && !/\b(?:salgsobjektet|(?:denne )?eiendommen|eiendommen som selges)\b/i.test(prefix + '\n' + previousLine)) return false
       return !(!prefix.trim() && /^[ \t]*(?:sameiet|borettslaget|bygningen|bygget|boligblokken)(?:[ \t]*:|[ \t]+består[ \t]+av)?[ \t]*$/i.test(previousLine))
     })?.[0]
     if (multiMatch && !issues.some(issue => issue.startsWith('Flerboligsignal'))) issues.push(`Flerboligsignal på fysisk PDF-side ${page.pdfPage}: «${normalize(multiMatch)}». Modellen gjelder én enkeltleilighet og estimerer ikke samlet leie for flere boenheter.`)
@@ -66,7 +73,7 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
       pdfPage: page.pdfPage, start: match.index!, end: match.index! + match[0].length, quote: match[0], method: 'pdf-text', printedPage: null })
     // Etikett/verdi kan stå på hver sin linje, men en tom etikett får ikke sluke en ny etikett.
     const gap = '(?:[ \\t]*:[ \\t]*(?:\\r?\\n[ \\t]*)?|[ \\t]+|[ \\t]*\\r?\\n[ \\t]*)'
-    for (const [label, list] of [['(?:Eiendommens adresse|Adresse)', address], ['Bydel', district]] as const) {
+    for (const [label, list] of [['(?:Eiendommens adresse|Adresse og betegnelse|Adresse)', address], ['Bydel', district]] as const) {
       const pattern = new RegExp(`^[ \\t]*${label}${gap}([^\\r\\n:]{2,250})[ \\t]*$`, 'gim')
       for (const match of page.text.matchAll(pattern)) {
         const value = normalize(match[1]!)
@@ -95,7 +102,7 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
       const name = municipalityName(match[1]!)
       if (name) add(municipality, name, source(match))
     }
-    for (const match of page.text.matchAll(/\b(?:Gårdsnummer|gnr\.?)[^\r\n]{0,150}\bi[ \t]+([\p{L}][\p{L} .’'-]{1,80}?)[ \t]+kommune\b/giu)) {
+    for (const match of page.text.matchAll(/\b(?:Gårdsnummer|gnr\.?)[^\r\n]{0,150}\bi[ \t]+([\p{L}][\p{L} .’'-]{1,80}?)[ \t]*(?:\r?\n[ \t]*)?kommune\b/giu)) {
       if (brokerContext(page.text, match.index!)) continue
       const name = municipalityName(match[1]!)
       if (name) add(municipality, name, source(match))
@@ -105,7 +112,12 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
       if (Number.isInteger(value) && value >= 1 && value <= 20) add(rooms, value, source(match))
       else issues.push(`Ugyldig romantall på fysisk PDF-side ${page.pdfPage}: «${normalize(match[0]).slice(0, 300)}». Motstrid må avklares.`)
     }
-    for (const match of page.text.matchAll(/\b(\d{1,2})[ \t]*[-–]?[ \t]*roms(?:leilighet|[ \t]+leilighet)?\b/gi)) {
+    for (const match of page.text.matchAll(new RegExp(`^[ \\t]*(?:Antall soverom|Soverom)${gap}(-?\\d+(?:[,.]\\d+)?)[ \\t]*$`, 'gim'))) {
+      const value = Number(match[1]!.replace(',', '.'))
+      if (Number.isInteger(value) && value >= 0 && value <= 20) add(bedrooms, value, source(match))
+      else issues.push(`Ugyldig antall soverom på fysisk PDF-side ${page.pdfPage}: «${normalize(match[0]).slice(0, 300)}». Motstrid må avklares.`)
+    }
+    for (const match of page.text.matchAll(/\b(\d{1,2})[ \t]*[-–]?[ \t]*roms(?:(?:selveier|andels|aksje|eier)?leilighet|[ \t]+(?:selveier|andels|aksje|eier)?leilighet)?\b/gi)) {
       const lineStart = page.text.lastIndexOf('\n', match.index!) + 1
       const lineEnd = page.text.indexOf('\n', match.index! + match[0].length)
       const line = page.text.slice(lineStart, lineEnd < 0 ? page.text.length : lineEnd)
@@ -116,9 +128,11 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
       const value = Number(match[1]); if (value >= 1 && value <= 20) add(rooms, value, source(match))
       if (/leilighet/i.test(match[0])) add(types, 'apartment', source(match))
     }
-    for (const match of page.text.matchAll(new RegExp(`^[ \\t]*(Boligtype(?:[ \\t]*/[ \\t]*eierform)?|Type bolig|Salgsobjekt)${gap}([^\\r\\n:]{1,250})[ \\t]*$`, 'gim'))) {
-      const parts = normalize(match[2]!).split(/\s*\/\s*/)
-      const validOwner = /\/\s*eierform$/i.test(match[1]!) && parts.length === 2 && /^(?:eiet|selveier|eierseksjon|borettslag|andel|aksje)$/i.test(parts[1]!)
+    for (const match of page.text.matchAll(new RegExp(`^[ \\t]*(Boligtype(?:[ \\t]*(?:/|og)[ \\t]*eierform)?|Type bolig|Salgsobjekt)${gap}([^\\r\\n:]{1,250})[ \\t]*$`, 'gim'))) {
+      const combinedOwner = /(?:\/|og)[ \t]*eierform$/i.test(match[1]!)
+      const valueWithOwner = normalize(match[2]!)
+      const parts = (combinedOwner ? valueWithOwner.replace(/[ \t]+\((?:eiet|selveier|eierseksjon|borettslag|andel|aksje)\)$/i, '') : valueWithOwner).split(/\s*\/\s*/)
+      const validOwner = combinedOwner && parts.length === 2 && /^(?:eiet|selveier|eierseksjon|borettslag|andel|aksje)$/i.test(parts[1]!)
       if (parts.length > 1 && !validOwner) {
         issues.push(`Uavklart boligtype på fysisk PDF-side ${page.pdfPage}: «${normalize(match[0])}». Flere klassifikasjoner kan ikke behandles som én leilighet.`)
         continue
@@ -167,7 +181,7 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
   const area = selectedArea && areaBasis ? { ...selectedArea, basis: areaBasis } : null
   const result = { documentHash: outcome.reportHash, documentName: outcome.documentName,
     address: choose(address, 'adresser'), municipality: choose(municipality, 'kommuner'), district: choose(district, 'bydeler'),
-    area, rooms: choose(rooms, 'romantall'), propertyType: choose(types, 'boligtyper'), issues }
+    area, rooms: choose(rooms, 'romantall'), bedrooms: choose(bedrooms, 'soverom'), propertyType: choose(types, 'boligtyper'), issues }
   for (const [field, label] of [['address', 'Eiendommens adresse'], ['area', 'Areal'], ['rooms', 'Antall rom'], ['propertyType', 'Boligtype']] as const) {
     if (!result[field]) issues.push(`${label} mangler eller er ikke entydig i det lesbare tekstlaget.`)
   }

@@ -46,7 +46,10 @@ interface Parser {
   setVerbosityLevel(level: number): void
 }
 let manager: Manager | undefined
-let reply: { kind: 'extracted'; pages: DocumentBasis['pages']; attachments?: { id: string; name: string; isPdf: boolean }[] } | { kind: 'unavailable' | 'text-limit' } = { kind: 'unavailable' }
+let reply: { kind: 'extracted'; pages: DocumentBasis['pages']; textBytes?: number; attachments?: { id: string; name: string; isPdf: boolean }[] } | { kind: 'unavailable' | 'text-limit' } = { kind: 'unavailable' }
+const startPage: number = workerData.startPage ?? 0
+const endPage: number = Math.min(workerData.endPage ?? workerData.pageCount, workerData.pageCount)
+const budget = workerData.importProfile === true ? { pageBytes: 128 * 1024, totalBytes: 1024 * 1024, used: workerData.textBytes ?? 0 } : undefined
 const pages: (DocumentBasis['pages'][number] & { rasterUnprocessed?: boolean })[] = []
 const originalWarn = console.warn
 const originalInfo = console.info
@@ -69,7 +72,7 @@ try {
       throw new Error('Unsupported parser resource request')
     },
   }
-  manager = new parser.LocalPdfManager({ docId: 'extraction', source: Uint8Array.from(workerData.bytes), enableXfa: false,
+  manager = new parser.LocalPdfManager({ docId: 'extraction', source: workerData.bytes, enableXfa: false,
     // Internal equivalent of public stopAtErrors:true; retain the pinned defaults.
     evaluatorOptions: { ...parser.DefaultPartialEvaluatorOptions, ignoreErrors: false, useWorkerFetch: false }, handler })
   try { await manager.initDocument(false) } catch (error) {
@@ -80,7 +83,6 @@ try {
   if (leaves.size !== workerData.pageCount) throw new Error('Changed physical page basis')
   const { xref, catalog } = manager.pdfDocument
   const bounded = workerData.importProfile === true
-  const budget = bounded ? { pageBytes: 128 * 1024, totalBytes: 1024 * 1024, used: 0 } : undefined
   // Pinned Catalog.attachments contains FileSpec.serializable metadata only. Never request attachmentContent.
   const attachments: { id: string; name: string; isPdf: boolean }[] = []
   if (bounded && catalog.attachments instanceof Map) {
@@ -353,6 +355,7 @@ try {
   }
   const documentMessages = [...messages]
   for (const [pageIndex, [dict, ref]] of leaves) {
+    if (pageIndex < startPage || pageIndex >= endPage) continue
     messages = [...documentMessages]
     if (dict instanceof Error) {
       pages.push({ pdfPage: pageIndex + 1, text: '', status: 'unknown', reason: 'PDF-sidens innhold kunne ikke kontrolleres.' })
@@ -382,14 +385,15 @@ try {
       pages.push(extracted)
     } finally { task.terminate(); task.finish(); await manager.cleanup() }
   }
-  reply = { kind: 'extracted', pages, ...(bounded ? { attachments } : {}) }
+  reply = { kind: 'extracted', pages, ...(bounded ? { attachments, textBytes: budget!.used } : {}) }
 } catch (error) {
   // A parser/mapping failure after startup cannot certify any physical page.
   // Preserve the trusted 2.2 positions; do not invent a damaged-document cause.
   if (error instanceof TextBudgetExceeded) reply = { kind: 'text-limit' }
-  else if (manager) reply = { kind: 'extracted', pages: Array.from({ length: workerData.pageCount }, (_, index) => ({
-    ...(pages[index] ?? { pdfPage: index + 1, text: '', status: 'unknown', reason: 'PDF-sidens innhold kunne ikke kontrolleres.' }),
-  })) }
+  else if (manager) reply = { kind: 'extracted', ...(workerData.importProfile ? { attachments: [], textBytes: budget!.used } : {}),
+    pages: Array.from({ length: endPage - startPage }, (_, index) => ({
+      ...(pages[index] ?? { pdfPage: startPage + index + 1, text: '', status: 'unknown', reason: 'PDF-sidens innhold kunne ikke kontrolleres.' }),
+    })) }
 }
 finally {
   try { manager?.terminate(new Error('Extraction finished')) } catch { reply = { kind: 'unavailable' } }

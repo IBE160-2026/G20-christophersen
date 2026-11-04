@@ -68,3 +68,32 @@ describe('automatisk lokal bildefallback i dokumentimport', () => {
     expect(result.coverage.technical.status).toBe('incomplete')
   })
 })
+
+it('rasterlogo alene utløser ikke OCR av lesbar prosa; grafiske detaljer og manglende tekst prioriteres uten skjult dekning', async () => {
+  const { pagesNeedingVisualSupplement } = await import('../../src/backend/documents/visual-import.ts')
+  const basis = codeFirstBasis([
+    'TILSTANDSRAPPORT - START\n' + 'Dette er lesbar digital informasjon om rapportens forutsetninger. '.repeat(10),
+    'Vinduer\nBeskrivelse\n' + 'Vinduene er undersøkt med grafisk tilstandsgrad. '.repeat(8),
+    'Side 3',
+    'TILSTANDSRAPPORT - SLUTT',
+  ])
+  basis.pages[0]!.rasterUnprocessed = true
+  basis.pages[1]!.rasterUnprocessed = true
+  basis.pages[2]!.status = 'unreadable'
+  const original = await createCodeFirstImport(basis)
+  expect(pagesNeedingVisualSupplement(original).map(page => page.pdfPage)).toEqual([2, 3])
+  const result = await enrichImportWithLocalVisual(original, new Uint8Array(), { deadlineMs: 0 })
+  expect(result.visualAnalysis?.pages.map(page => page.pdfPage)).toEqual([1, 2, 3, 4])
+  expect(result.visualAnalysis?.pages[0]?.reason).toContain('ikke bildekontrollert')
+  expect(result.pages).toEqual(original.pages)
+  expect(result.coverage.technical.status).toBe('incomplete')
+})
+
+it('lesbar uløst TG-kandidat får bildesupplement også uten rasterflagg', async () => {
+  const { pagesNeedingVisualSupplement } = await import('../../src/backend/documents/visual-import.ts')
+  const original = await createCodeFirstImport(codeFirstBasis(['TILSTANDSRAPPORT - START\nUavklart TG2\nTILSTANDSRAPPORT - SLUTT']))
+  expect(original.pages[0]?.rasterUnprocessed).toBe(false)
+  expect(pagesNeedingVisualSupplement(original).map(page => page.pdfPage)).toEqual([1])
+  const result = await enrichImportWithLocalVisual(original, new Uint8Array(), { deadlineMs: 0 })
+  expect(result.visualAnalysis?.pages[0]?.reason).toContain('tidsbudsjett')
+})

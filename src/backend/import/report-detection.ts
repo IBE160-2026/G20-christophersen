@@ -22,6 +22,7 @@ const source = (basis: ImportBasis, item: Evidence): PdfSource => ({
  * aldri oppgradert ved hjelp av rapportnavn, paginering eller opplastingsrolle. */
 export function detectReportSections(basis: ImportBasis): DocumentImport['sections'] {
   const covers: Cover[] = [], numbering: Numbering[] = []
+  const joinedNumbers: (Evidence & { number: number; rawTotal: string; assignment: string | null })[] = []
   for (const page of basis.pages) {
     if (!available(page)) continue
     for (const match of page.text.matchAll(/^[^\r\n]{0,200}?(?:TILSTANDSRAPPORT|BOLIGSALGSRAPPORT)(?:[ \t]*[-–:][ \t]*(START|SLUTT))?[ \t]*[^\r\n]*$/gim)) {
@@ -35,10 +36,31 @@ export function detectReportSections(basis: ImportBasis): DocumentImport['sectio
       if (!explicit && !(heading && metadata) && !(heading && basis.role === 'report' && page.pdfPage === 1)) continue
       covers.push({ pdfPage: page.pdfPage, start: match.index, end: match.index + match[0].length, explicit, closing })
     }
-    for (const match of page.text.matchAll(/Side[ \t]*:?[ \t]*(\d{1,3})[ \t]+av[ \t]+(\d{1,3})(?!\d)/gi)) {
+    for (const match of page.text.matchAll(/Side[ \t]*:?[ \t]*(\d{1,3})[ \t]+av[ \t]+(\d{1,6})(?!\d)/gi)) {
       const number = Number(match[1]), total = Number(match[2])
+      if (number >= 1) joinedNumbers.push({ pdfPage: page.pdfPage, start: match.index, end: match.index + match[0].length,
+        number, rawTotal: match[2]!, assignment: assignment(page.text) })
       if (number < 1 || total < number || total > 200) continue
       numbering.push({ pdfPage: page.pdfPage, start: match.index, end: match.index + match[0].length, number, total, assignment: assignment(page.text) })
+    }
+  }
+  // PDF.js can concatenate the report total with the brochure's independent
+  // printed footer ("Side: 8 av 1949"). Accept that split only against an intact
+  // same-assignment run and an adjacent, independently increasing brochure footer.
+  for (const item of joinedNumbers) {
+    const options = [...new Set(numbering.filter(anchor => anchor.assignment !== null && anchor.assignment === item.assignment
+      && anchor.pdfPage - anchor.number === item.pdfPage - item.number).map(anchor => anchor.total))]
+      .filter(total => item.number <= total && item.rawTotal.startsWith(String(total)) && /^\d{1,4}$/.test(item.rawTotal.slice(String(total).length)))
+    if (options.length !== 1) continue
+    const total = options[0]!, printed = Number(item.rawTotal.slice(String(total).length))
+    const corroborated = joinedNumbers.some(other => other !== item && other.assignment === item.assignment
+      && Math.abs(other.pdfPage - item.pdfPage) === 1 && other.pdfPage - other.number === item.pdfPage - item.number
+      && other.rawTotal.startsWith(String(total)) && /^\d{1,4}$/.test(other.rawTotal.slice(String(total).length))
+      && Number(other.rawTotal.slice(String(total).length)) - printed === other.pdfPage - item.pdfPage)
+    if (corroborated) {
+      const unsplit = numbering.findIndex(entry => entry.pdfPage === item.pdfPage && entry.start === item.start)
+      if (unsplit >= 0) numbering.splice(unsplit, 1)
+      numbering.push({ ...item, total })
     }
   }
   const explicitStarts = covers.filter(item => item.explicit && !item.closing)

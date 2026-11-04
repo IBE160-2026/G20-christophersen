@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { getDocument, GlobalWorkerOptions, TextLayer } from 'pdfjs-dist'
-import type { PDFDocumentProxy, RenderTask } from 'pdfjs-dist'
+import type { PDFDocumentProxy, PDFPageProxy, RenderTask } from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import './text-layer.css'
 import type { VisualRegion } from '../../contracts/local-visual.ts'
@@ -48,11 +48,17 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, highlight =
     let active = true
     let render: RenderTask | undefined
     let text: TextLayer | undefined
+    let page: PDFPageProxy | undefined
+    let canvas: HTMLCanvasElement | undefined
+    let finished = false
+    const releaseCanvas = () => {
+      if (canvas) { canvas.width = 0; canvas.height = 0; canvas.remove() }
+    }
     // Nytt detached tre per forsøk. Bare siste ferdige side kan publiseres.
     target.replaceChildren()
     setDisplay({ key, status: 'Laster originalside' })
     void (async () => {
-      const page = await document.getPage(pageNumber)
+      page = await document.getPage(pageNumber)
       if (!active) return
       const natural = page.getViewport({ scale: 1 })
       const available = Math.max(200, (target.parentElement?.clientWidth ?? target.clientWidth) - 16)
@@ -63,7 +69,7 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, highlight =
       wrapper.style.width = `${viewport.width}px`; wrapper.style.height = `${viewport.height}px`
       wrapper.style.setProperty('--scale-factor', `${viewport.scale}`)
       wrapper.style.setProperty('--total-scale-factor', `${viewport.scale}`)
-      const canvas = window.document.createElement('canvas')
+      canvas = window.document.createElement('canvas')
       const ratio = window.devicePixelRatio || 1
       canvas.width = Math.floor(viewport.width * ratio); canvas.height = Math.floor(viewport.height * ratio)
       canvas.style.width = `${viewport.width}px`; canvas.style.height = `${viewport.height}px`
@@ -88,8 +94,18 @@ export function PdfViewer({ selected, sourceIssue, pageNumber, zoom, highlight =
       if (!active) return
       target.replaceChildren(wrapper)
       setDisplay({ key, status: 'Originalside tilgjengelig' })
-    })().catch(() => { if (active) { target.replaceChildren(); setDisplay({ key, status: 'Originalside kunne ikke vises. Lokal PDF-visningsfeil.' }) } })
-    return () => { active = false; render?.cancel(); text?.cancel(); target.replaceChildren() }
+    })().catch(() => { if (active) { target.replaceChildren(); releaseCanvas(); setDisplay({ key, status: 'Originalside kunne ikke vises. Lokal PDF-visningsfeil.' }) } })
+      .finally(() => {
+        // cleanup is safe only after render/text promises have settled. A late
+        // getPage/render from an abandoned attempt can never publish its canvas.
+        finished = true
+        page?.cleanup()
+        if (!active) releaseCanvas()
+      })
+    return () => {
+      active = false; render?.cancel(); text?.cancel(); target.replaceChildren()
+      if (finished) releaseCanvas()
+    }
   }, [document, pageNumber, zoom, valid, key, highlight])
   const reason = sourceIssue ?? (pageNumber === null ? 'Kildens PDF-side er ikke kjent. Ingen side er valgt.'
     : !valid ? 'Oppgitt PDF-side er utenfor originaldokumentet. Ingen side er valgt.'

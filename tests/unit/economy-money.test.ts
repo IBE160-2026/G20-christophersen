@@ -76,3 +76,23 @@ it('lar faktisk LF og CRLF avslutte setning før neste tall uten å godta fortse
   const sameLine = createEconomyMoneyCatalogue(basis('kr 12 345. 100 kr'), [1])
   expect(sameLine[0]!.amount).toBeNull()
 })
+
+it('leser eksakt monetært ,- og fellesutgifter pr. mnd uten å godta nakne tall eller valgfrie alternativer', async () => {
+  const { createLocalPlan } = await import('../../src/backend/import/local-plan.ts')
+  const input = basis('Prisantydning 8 600 000,-\nFellesutgifter pr. mnd 3 660,-\nTotalpris 8 816 090,-\nOmkostninger 216 090,-\n229 090,- (Omkostninger totalt (med Boligkjøperpakke))')
+  const plan = createLocalPlan(input)
+  expect(plan.fields.find(field => field.id === 'price')).toMatchObject({ amount: '8600000', period: 'once', status: 'available' })
+  expect(plan.fields.find(field => field.id === 'commonCosts')).toMatchObject({ amount: '3660', period: 'month', status: 'available' })
+  expect(plan.fields.find(field => field.id === 'purchaseCosts')).toMatchObject({ amount: '216090', status: 'available', alternatives: [] })
+  for (const field of plan.fields) for (const source of field.sources) expect(input.pages[0]!.text.slice(source.start, source.end)).toBe(source.quote)
+  expect(createLocalPlan(basis('Prisantydning 8 600 000\nFellesutgifter pr. mnd 3 660')).fields.every(field => field.amount === null)).toBe(true)
+})
+
+it.each(['Fellesutgifter pr. mnd kr 3 660,-', 'Fellesutgifter 3 660,- pr. mnd', 'Fellesutgifter pr. mnd 3 660,-', 'Fellesutgifter 3 660,- kr pr. mnd'])('månedlig pengebeløp bevarer kildespennet: %s', async text => {
+  const { createLocalPlan } = await import('../../src/backend/import/local-plan.ts')
+  const input = basis('😀 Innledning\n' + text), field = createLocalPlan(input).fields.find(field => field.id === 'commonCosts')!
+  expect(field).toMatchObject({ status: 'available', amount: '3660', period: 'month' })
+  expect(field.sources[0]?.quote).toBe(text)
+  expect(input.pages[0]!.text.slice(field.sources[0]!.start, field.sources[0]!.end)).toBe(text)
+  for (const invalid of ['Fellesutgifter 3 660 pr. mnd', 'Fellesutgifter pr. mnd 3 660', text + ' (valgfritt)']) expect(createLocalPlan(basis(invalid)).fields.find(field => field.id === 'commonCosts')?.amount).toBeNull()
+})

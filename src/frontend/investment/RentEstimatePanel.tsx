@@ -21,7 +21,7 @@ export function RentEstimatePanel({ rent, session, basis, controls, onSource }: 
   const fields = result ? [
     ['Adresse', result.property.address], ['Kommune', result.property.municipality], ['Bydel', result.property.district],
     ['Areal', result.property.area ? { ...result.property.area, value: `${result.property.area.value} m² ${result.property.area.basis}` } : null],
-    ['Rom', result.property.rooms], ['Boligtype', result.property.propertyType ? { ...result.property.propertyType, value: rentalTypeLabel(result.property.propertyType) } : null],
+    ['Rom', result.property.rooms], ['Soverom', result.property.bedrooms], ['Boligtype', result.property.propertyType ? { ...result.property.propertyType, value: rentalTypeLabel(result.property.propertyType) } : null],
   ] as const : []
   const actualSelected = session.sources.L.rentNature === 'actual'
   const rentValidation = actualSelected ? validateFinancialBasis({ values: session.financial, sources: session.sources, costItems: session.costItems }, []).fields.L : null

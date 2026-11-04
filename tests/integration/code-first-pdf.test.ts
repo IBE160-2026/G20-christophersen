@@ -82,3 +82,12 @@ it('real 200-page near-1MiB profile retains >1000 residual entries, every candid
   expect(outcome.coverage.technical.status).toBe('incomplete');expect(DocumentImportSchema.safeParse(outcome).success).toBe(true)
   expect(Buffer.byteLength(JSON.stringify(outcome))).toBeLessThanOrEqual(IMPORT_MAX_RESPONSE_BYTES)
 },15000)
+
+it('samlet tekstgrense består over flere parserlevetider uten å returnere avkortede sider', async () => {
+  const { syntheticTextPdf } = await import('../helpers/synthetic-text-pdf.ts')
+  const bytes = syntheticTextPdf(Array.from({ length: 24 }, () => 45_000))
+  const format = await validatePdf(bytes, 'over-global-text-budget.pdf', { maxPages: 200 })
+  if (format.status !== 'format-validated') throw new Error('format')
+  await expect(extractImport(format)).rejects.toMatchObject({ code: 'text-limit' })
+  expect(Buffer.from(format.originalBytes)).toEqual(bytes)
+}, 15000)

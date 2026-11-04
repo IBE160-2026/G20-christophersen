@@ -732,3 +732,19 @@ leilighetsestimering. Positiv støttet flyt er verifisert separat med syntetisk
 PDF og faktisk gratis SSB-oppslag. Historikk/kalibrering og PDF-/TG-porter
 beholdes åpne. [Spesifikasjon](spec-leieagent-ekte-pdf.md),
 [undersøkelse og faktisk Playwright-bevis](../process/arbeidsokter/2026-11-04-leieagent-ekte-pdf.md).
+
+
+**PAA-SO2 / PAA-LEIE1, ekte Nordvik 2026-11-04 — Status: fortsatt Åpen for generell TG-/modellkvalitet.**
+
+Minneavvisningen for Rostockgata 96 er rettet uten økte grenser: isolert
+formatparser, 20-siders tekstworkere, færre bytekopier og eksplisitt
+canvascleanup. Alle 170 sider/293 168 tegn er bevart eksakt; rapportområdet er
+36–54 og alle 19 sider har lokalt billedbevis. Oslo, selveierleilighet,
+59 m² BRA-i, 3 rom/2 soverom, 8 600 000 kr og 3 660 kr/måned er kontrollert
+med ekte Playwright-opplasting og originale kildespenn. Dette lukker ikke
+teknisk fullstendighet: rapportdekningen forblir incomplete/blocked.
+Leieagenten når faktisk gratis SSB, men 59 m²/3 rom ligger under modellens
+publiserte 60–100 m². Ingen markedsleie/yield er fabrikert; utvidelse eller
+kalibrering av modellen gjenstår. Ingen historiske oppføringer lukkes av denne
+caseprøven. [Spec og review](spec-nordvik-minneflyt.md),
+[årsaks-/verifikasjonsbevis](../process/arbeidsokter/2026-11-04-nordvik-minneflyt.md).

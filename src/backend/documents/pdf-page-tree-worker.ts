@@ -30,7 +30,7 @@ try {
   parser.setVerbosityLevel(0)
   manager = new parser.LocalPdfManager({
     // The internal Stream parser assumes byteOffset=0 (the public loader also normalizes).
-    docId: 'format-page-tree', source: Uint8Array.from(workerData), enableXfa: false, evaluatorOptions: {},
+    docId: 'format-page-tree', source: workerData, enableXfa: false, evaluatorOptions: {},
     handler: { send() {}, sendWithPromise() { return Promise.resolve(null) } },
   })
   try {

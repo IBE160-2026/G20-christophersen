@@ -458,10 +458,20 @@ test('2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og orig
   const b = page.getByRole('button', { name: 'TG3 · Alvorlig lekkasje i tak', exact: true })
   await b.click(); await expect(page.locator('[data-pdf-page="4"]')).toBeVisible()
   await page.evaluate(() => {
+    const completed = document.querySelector('.pdf-page canvas') as HTMLCanvasElement
+    const created: HTMLCanvasElement[] = []
+    const create = document.createElement.bind(document)
+    document.createElement = ((...args: Parameters<typeof document.createElement>) => {
+      const element = create(...args)
+      if (args[0] === 'canvas') created.push(element as HTMLCanvasElement)
+      return element
+    }) as typeof document.createElement
     const original = window.requestAnimationFrame.bind(window)
     const pending: FrameRequestCallback[] = []
     window.requestAnimationFrame = callback => { pending.push(callback); return 0 }
+    ;(window as unknown as { pdfRaceResources: { completed: HTMLCanvasElement; created: HTMLCanvasElement[]; interrupted: HTMLCanvasElement | null; pending: FrameRequestCallback[] } }).pdfRaceResources = { completed, created, interrupted: null, pending }
     ;(window as unknown as { releasePdfFrames: () => void }).releasePdfFrames = () => {
+      document.createElement = create
       window.requestAnimationFrame = original
       for (const callback of pending) original(callback)
     }
@@ -469,6 +479,14 @@ test('2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og orig
   await a.evaluate(element => (element as HTMLButtonElement).click())
   await expect(page.locator('#pdf-status')).toContainText('PDF-side 2: Laster originalside')
   await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
+  // Wait for an actual render frame to be held, then retain its detached canvas
+  // before cancellation. This proves interrupted cleanup independently of timing.
+  await expect.poll(() => page.evaluate(() => {
+    const state = (window as unknown as { pdfRaceResources: { created: HTMLCanvasElement[]; interrupted: HTMLCanvasElement | null; pending: FrameRequestCallback[] } }).pdfRaceResources
+    const canvas = state.created.find(canvas => canvas.width > 0 && canvas.height > 0)
+    if (canvas && state.pending.length) state.interrupted = canvas
+    return state.interrupted !== null
+  })).toBe(true)
   await b.evaluate(element => (element as HTMLButtonElement).click())
   await expect(page.locator('#pdf-status')).toContainText('PDF-side 4: Laster originalside')
   await expect(page.locator('[data-pdf-page]')).toHaveCount(0)
@@ -477,6 +495,11 @@ test('2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og orig
   await expect(page.locator('[data-pdf-page="2"]')).toBeVisible()
   await expect(page.locator('[data-pdf-page="4"]')).toHaveCount(0)
   await expect(page.locator('.textLayer')).toContainText('Slitt overflate')
+  await expect.poll(() => page.evaluate(() => {
+    const state = (window as unknown as { pdfRaceResources: { completed: HTMLCanvasElement; interrupted: HTMLCanvasElement } }).pdfRaceResources
+    return [state.completed.width, state.completed.height, state.interrupted.width, state.interrupted.height]
+  })).toEqual([0, 0, 0, 0])
+  await expect(page.locator('.pdf-page canvas')).toHaveCount(1)
   await page.getByRole('button', { name: 'Tilbake til Tilstandsrapport', exact: true }).click()
   await showList(page)
   await expect(a).toHaveAttribute('aria-pressed', 'true')

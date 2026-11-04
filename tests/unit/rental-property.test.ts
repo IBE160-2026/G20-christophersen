@@ -259,3 +259,40 @@ describe('Review: feltgrenser og etasjefortsettelser', () => {
     expect(property.area).toBeNull(); expect(property.issues.join(' ')).toMatch(/Motstridende areal|Ugyldig areal/)
   })
 })
+
+it('leser kildebelagt leilighet, soverom og linjedelt matrikkelkommune uten å tolke soverom som rom', () => {
+  const input = document('Adresse og betegnelse\nFasitgata 8, 0194 OSLO\nGnr 234, bnr 93, snr 262 (ideell andel 1/1) i Oslo\nkommune\nBoligtype og eierform\nSelveierleilighet (Eierseksjon)\nEn moderne 3-roms selveierleilighet.\nBRA-i 59 kvm\nAntall soverom\n2')
+  const property = extractRentalProperty(input)
+  expect(property).toMatchObject({ municipality: { value: 'Oslo' }, address: { value: 'Fasitgata 8, 0194 OSLO' }, area: { value: 59, basis: 'BRA-i' }, rooms: { value: 3 }, bedrooms: { value: 2 }, propertyType: { value: 'apartment' }, issues: [] })
+  for (const field of [property.address, property.municipality, property.area, property.rooms, property.bedrooms, property.propertyType]) {
+    for (const source of field!.sources) expect(input.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
+  }
+  const missing = extractRentalProperty(document('Antall soverom: 2'))
+  expect(missing.rooms).toBeNull(); expect(missing.bedrooms?.value).toBe(2)
+  const conflicting = extractRentalProperty(document('Soverom 2\nAntall soverom: 3'))
+  expect(conflicting.bedrooms).toBeNull(); expect(conflicting.issues.join(' ')).toContain('Motstridende soverom')
+})
+
+it('skiller kommune fra neste etikett og nabotiltak fra enheter i salgsobjektet', () => {
+  const input = document(apartment + '\nGnr. 1 bnr. 2 i Oslo\nkommune\nSelger\nNavn Navnesen\nArbeider i nærliggende områder\nPågående saker:\nSaksnummer: 20259999\nStatus: Søknad under behandling\nTiltaket består av frittstående nybygg.\nTiltaket har til\nsammen ca. 120 leiligheter samt næringsarealer.')
+  const property = extractRentalProperty(input)
+  expect(property.municipality?.value).toBe('Oslo'); expect(property.issues).toEqual([])
+  const multi = extractRentalProperty(document(apartment + '\nSaksnummer: 20259999\nTiltaket gjelder salgsobjektet med 3 leiligheter.'))
+  expect(multi.issues.join(' ')).toContain('Flerboligsignal')
+})
+
+it.each(['Saksnummer: 12345\nNybygg på eiendommen\nAntall boenheter: 3', 'Saksnummer: 12345\nNybygg\nEiendommen består av 3 leiligheter'])('bevarer eksplisitt flerboligsignal i salgsobjektet: %s', text => {
+  expect(extractRentalProperty(document(apartment + '\n' + text)).issues.join(' ')).toContain('Flerboligsignal')
+})
+it('godtar kjent eierform etter og-etikett, mens blandede boligtyper sperres', () => {
+  expect(extractRentalProperty(document('Boligtype og eierform: Leilighet / Eierseksjon')).propertyType?.value).toBe('apartment')
+  const mixed = extractRentalProperty(document('Boligtype og eierform: Leilighet / Enebolig'))
+  expect(mixed.propertyType).toBeNull(); expect(mixed.issues.join(' ')).toContain('Uavklart boligtype')
+})
+it.each(['-1', '2,5', '3.5', '21', '200'])('ugyldig soveromsverdi %s skjules ikke av en gyldig kandidat', value => {
+  const input = document(apartment + '\nSoverom: 2\nAntall soverom: ' + value), property = extractRentalProperty(input)
+  expect(property.bedrooms?.value).toBe(2)
+  expect(property.issues.join(' ')).toContain('Ugyldig antall soverom')
+  for (const source of property.bedrooms!.sources) expect(input.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
+  expect(extractRentalProperty(document('Antall soverom: 0')).bedrooms?.value).toBe(0)
+})

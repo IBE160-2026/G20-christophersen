@@ -13,6 +13,7 @@ export const RentalPropertySchema = z.strictObject({
   address: textField.nullable(), municipality: textField.nullable(), district: textField.nullable(),
   area: z.strictObject({ value: z.number().positive().max(1000), sources, basis: z.enum(['BRA-i', 'BRA', 'P-ROM']) }).nullable(),
   rooms: z.strictObject({ value: z.number().int().min(1).max(20), sources }).nullable(),
+  bedrooms: z.strictObject({ value: z.number().int().min(0).max(20), sources }).nullable().optional(),
   propertyType: z.strictObject({ value: z.enum(['apartment', 'unsupported']), sources }).nullable(),
   issues: z.array(z.string().min(1).max(2000)).max(200),
 })
@@ -36,7 +37,7 @@ export const RentEstimateSchema = z.strictObject({
   if (!property.address || !property.municipality || !property.area || !property.rooms || property.propertyType?.value !== 'apartment' || property.issues.length > 0) {
     fail('Et beregnet estimat krever entydig adresse, kommune, areal, romantall og støttet enkeltleilighet uten blokkerende opplysninger.')
   }
-  for (const field of [property.address, property.municipality, property.area, property.rooms, property.propertyType, property.district]) {
+  for (const field of [property.address, property.municipality, property.area, property.rooms, property.bedrooms, property.propertyType, property.district]) {
     if (field?.sources.some(source => source.documentHash !== property.documentHash || source.documentName !== property.documentName)) fail('Boligopplysningenes kilder må gjelde samme dokument.')
   }
   if (!value.statisticsYear || Number(value.statisticsYear) < 2012 || !value.sourceUpdated?.trim() || !value.formula?.trim() || value.observations.length === 0) {

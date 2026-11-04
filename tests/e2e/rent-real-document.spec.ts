@@ -80,3 +80,98 @@ test('gratis SSB-nettprøve: støttet kompakt leilighet gir synlig estimat gjenn
   await writeFile(info.outputPath('ekte-ssb-syntetisk-leilighet.json'), JSON.stringify(rent, null, 2))
   expect(paid).toEqual([])
 })
+
+const nordvik = fileURLToPath(new URL('../../private/incoming/nordvik-rostockgata-96.pdf', import.meta.url))
+test('ekte Nordvik: alle 170 sider, kildebelagte boligfelt og ærlig SSB-grense gjennom HTTP', async ({ page }, info) => {
+  const required = process.env.PAA_TEST_NORDVIK_REQUIRED === '1'
+  test.skip(!existsSync(nordvik) && !required, 'Privat original distribueres ikke i Git. PAA_TEST_NORDVIK_REQUIRED=1 krever denne prøven uten skip.')
+  expect(existsSync(nordvik), 'Obligatorisk Nordvik-original må være tilgjengelig lokalt').toBe(true)
+  test.setTimeout(120_000)
+  const errors: string[] = [], paid: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  for (const endpoint of ['document-economy/run', 'analysis']) await page.route(`**/api/${endpoint}`, route => { paid.push(endpoint); return route.abort() })
+  await page.goto('/')
+  const imported = page.waitForResponse(response => response.url().endsWith('/api/document-import') && response.request().method() === 'POST', { timeout: 90_000 })
+  const rented = page.waitForResponse(response => response.url().endsWith('/api/rent-estimate') && response.request().method() === 'POST', { timeout: 100_000 })
+  await page.locator('#import-file-prospectus').setInputFiles(nordvik)
+  const [http, rentHttp] = await Promise.all([imported, rented])
+  expect(http.ok()).toBe(true); expect(rentHttp.ok()).toBe(true)
+  const body = await http.json(), outcome = DocumentImportSchema.parse(body.outcome)
+  const rent = RentEstimateSchema.parse(await rentHttp.json())
+  expect(outcome.reportHash).toBe('3e2dd467c11785c1de7c8c79b8e5f58f786e87416f7dc9b14f7a2d713ec6cb70')
+  expect(outcome.pageCount).toBe(170)
+  expect(outcome.pages.map(item => item.pdfPage)).toEqual(Array.from({ length: 170 }, (_, index) => index + 1))
+  expect(outcome.sections.map(section => [section.startPage, section.endPage])).toEqual([[36, 54]])
+  expect(outcome.visualAnalysis?.pages.map(item => item.pdfPage)).toEqual(Array.from({ length: 19 }, (_, index) => index + 36))
+  expect(outcome.visualAnalysis?.pages.every(item => item.rasterDigest !== null && item.error === null && item.lines.length > 0)).toBe(true)
+  const graphicalDetail = outcome.visualAnalysis!.pages.find(item => item.pdfPage === 43)!
+  expect(graphicalDetail.lines.some(line => /Vinduer|Ytterdører/i.test(line.text))).toBe(true)
+  expect(graphicalDetail.symbols.length).toBeGreaterThan(0)
+  expect(outcome.coverage.technical.status).toBe('incomplete')
+  expect(rent.property).toMatchObject({ municipality: { value: 'Oslo' }, area: { value: 59, basis: 'BRA-i' }, rooms: { value: 3 }, bedrooms: { value: 2 }, propertyType: { value: 'apartment' }, issues: [] })
+  expect(outcome.economy.fields.find(field => field.id === 'price')).toMatchObject({ status: 'available', amount: '8600000' })
+  expect(outcome.economy.fields.find(field => field.id === 'commonCosts')).toMatchObject({ status: 'available', amount: '3660', period: 'month' })
+  for (const field of [rent.property.address, rent.property.municipality, rent.property.area, rent.property.rooms, rent.property.bedrooms, rent.property.propertyType]) {
+    expect(field?.sources.length).toBeGreaterThan(0)
+    for (const source of field!.sources) {
+      expect(source.documentHash).toBe(outcome.reportHash)
+      expect(outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
+    }
+  }
+  for (const field of outcome.economy.fields) for (const source of field.sources) expect(outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
+  expect(rent).toMatchObject({ status: 'unavailable', monthly: null, annual: null, observations: [] })
+  expect(rent.statisticsYear).toMatch(/^\d{4}$/)
+  expect(rent.limitations.join(' ')).toMatch(/59 m² og 3 rom.*utenfor SSBs publiserte arealpunkter/)
+  const panel = page.getByRole('region', { name: 'Forventet leie.' })
+  await expect(panel).toContainText('Selveierleilighet')
+  await expect(panel).toContainText('59 m² BRA-i')
+  await expect(panel).toContainText('Ingen ekstrapolering er utført')
+  await expect(page.getByTestId('rent-monthly')).toHaveCount(0)
+  for (const [id, label, displayed] of [['price', 'Prisantydning', '8 600 000,00 kr'], ['commonCosts', 'Felleskostnader', '3 660,00 kr']] as const) {
+    const row = page.locator('.document-economy-fields > div').filter({ has: page.locator('dt', { hasText: new RegExp(`^${label}$`) }) })
+    await expect(row.locator('dd > strong')).toHaveText(displayed)
+    if (id === 'commonCosts') await expect(row).toContainText('måned')
+    await row.locator('summary').click()
+    const sources = outcome.economy.fields.find(field => field.id === id)!.sources
+    expect(sources.length).toBeGreaterThan(0)
+    for (const [index, source] of sources.entries()) {
+      const evidence = row.locator('.document-economy-source').nth(index)
+      await expect(evidence.locator('q')).toHaveText(source.quote)
+      await evidence.getByRole('button', { name: 'Åpne originalside ↗', exact: true }).click()
+      await expect(page.locator(`[data-pdf-page="${source.pdfPage}"]`)).toBeVisible()
+      await page.keyboard.press('Escape')
+      await expect.poll(() => page.workers().length).toBe(0)
+    }
+  }
+  const bedrooms = panel.locator('.source-summary > div').filter({ has: page.locator('dt', { hasText: /^Soverom$/ }) })
+  await expect(bedrooms.locator('dd')).toContainText('2')
+  const area = panel.locator('.source-summary > div').filter({ has: page.locator('dt', { hasText: /^Areal$/ }) })
+  await area.getByRole('button', { name: /PDF-side/ }).first().click()
+  const sourcePage = rent.property.area!.sources[0]!.pdfPage
+  await expect(page.locator(`[data-pdf-page="${sourcePage}"]`)).toBeVisible()
+  // Retain old DOM references only in this test to prove backing stores are
+  // explicitly released, independently of browser GC timing.
+  await page.evaluate(() => { (window as unknown as { discardedPdfCanvas: HTMLCanvasElement }).discardedPdfCanvas = document.querySelector('.pdf-page canvas')! })
+  for (let offset = 1; offset <= 3; offset++) {
+    await page.getByRole('button', { name: 'Neste PDF-side', exact: true }).evaluate(element => (element as HTMLButtonElement).click())
+    await expect(page.locator('#pdf-status')).toContainText(`PDF-side ${sourcePage + offset}:`)
+  }
+  await page.getByLabel('PDF-zoom').selectOption('2')
+  await page.getByLabel('PDF-zoom').selectOption('1')
+  await expect(page.locator(`[data-pdf-page="${sourcePage + 3}"]`)).toBeVisible()
+  await expect(page.locator('.pdf-page canvas')).toHaveCount(1)
+  await expect.poll(() => page.evaluate(() => {
+    const canvas = (window as unknown as { discardedPdfCanvas: HTMLCanvasElement }).discardedPdfCanvas
+    return [canvas.width, canvas.height]
+  })).toEqual([0, 0])
+  await page.keyboard.press('Escape')
+  await expect.poll(() => page.workers().length).toBe(0)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(panel.getByRole('heading', { name: 'Boligopplysninger fra dokumentet' })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await page.screenshot({ path: info.outputPath('nordvik-mobile.png'), fullPage: true })
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.screenshot({ path: info.outputPath('nordvik-desktop.png'), fullPage: true })
+  await writeFile(info.outputPath('nordvik-import-rent.json'), JSON.stringify({ import: body, rent, errors, paid }, null, 2))
+  expect(errors).toEqual([]); expect(paid).toEqual([])
+})

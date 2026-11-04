@@ -189,3 +189,12 @@ it('forklarer faktisk areal/rom og publisert spenn når en leilighet ligger uten
   expect(result.limitations.join(' ')).toContain('60–100 m²')
   expect(fetcher).toHaveBeenCalledTimes(1)
 })
+
+it('59 m² og 3 rom ligger under publisert 60 m²: metadata leses, ingen leiecelle ekstrapoleres', async () => {
+  const input = property(); input.area!.value = 59; input.rooms!.value = 3; input.municipality!.value = 'Oslo'
+  const fetcher = transport(), result = await estimateRent(input, { fetch: fetcher, now })
+  expect(result).toMatchObject({ status: 'unavailable', monthly: null, annual: null, statisticsYear: '2025', observations: [], formula: null })
+  expect(result.limitations.join(' ')).toContain('59 m² og 3 rom ligger utenfor SSBs publiserte arealpunkter for romgruppen (60–100 m²)')
+  expect(result.limitations.join(' ')).toContain('Ingen ekstrapolering er utført')
+  expect(fetcher).toHaveBeenCalledTimes(1)
+})

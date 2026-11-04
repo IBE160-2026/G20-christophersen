@@ -16,6 +16,7 @@ process.once('message', async (input: { bytes: Uint8Array; documentName: string;
     const format = await validatePdf(bytes, input.documentName, { maxPages: 200 })
     input.bytes = new Uint8Array()
     if (format.status !== 'format-validated') throw new ImportFailure(format.error.code === 'page-limit' ? 'page-limit' : 'invalid-format')
+    bytes = format.originalBytes
     const extracted = await extractImport(format)
     const permitted = new Promise<number>(resolve => process.once('message', (permission: { remainingMs?: number }) => resolve(permission.remainingMs ?? 0)))
     await send({ kind: 'adapter-ready', hash })

@@ -15,6 +15,20 @@ function withInterpretation(outcome: DocumentImport): DocumentImport {
   return DocumentImportSchema.parse(result)
 }
 
+/** A raster flag alone can mean a logo. Readable digital prose remains the
+ * primary basis; visual work targets missing text, grade layouts and charts.
+ * Pages omitted here retain their original incomplete coverage below.
+ */
+export function pagesNeedingVisualSupplement(outcome: DocumentImport): DocumentImport['pages'] {
+  return outcome.pages.filter(page => {
+    if (!['readable', 'blank'].includes(page.status)) return true
+    if (outcome.manifest?.candidates.some(candidate => candidate.pdfPage === page.pdfPage && candidate.disposition === 'unresolved')) return true
+    if (!page.rasterUnprocessed) return false
+    return page.text.trim().length < 200
+      || /^[ \t]*(?:Beskrivelse|Vurdering av avvik|Fordeling av tilstandsgrader|Oppsummering av (?:avvik|tilstand)|Sammendrag av boligens tilstand)\b/imu.test(page.text)
+  })
+}
+
 /** Bildeanalyse følger rapportområdet, uten case-spesifikke sider eller navn.
  * Et helt uidentifisert prospekt sendes ikke automatisk til OCR. Separat rapport
  * beholder derimot alle sine fysiske sider som aktuelt, usikkert rapportgrunnlag.
@@ -33,11 +47,17 @@ export async function enrichImportWithLocalVisual(outcome: DocumentImport, bytes
   }
   // Ved tidsgrensen prioriteres detaljblokker før omslag og rapportvedlegg.
   // Samtlige sider beholdes i sidekartet, også de som ikke blir ferdig lest.
-  const ordered = [...reportPages].sort((a, b) => Number(/Vurdering av avvik/iu.test(b.text)) - Number(/Vurdering av avvik/iu.test(a.text)) || a.pdfPage - b.pdfPage)
+  const supplement = new Set(pagesNeedingVisualSupplement(outcome).map(page => page.pdfPage))
+  const ordered = reportPages.filter(page => supplement.has(page.pdfPage)).sort((a, b) => Number(/Vurdering av avvik|^Beskrivelse/imu.test(b.text)) - Number(/Vurdering av avvik|^Beskrivelse/imu.test(a.text)) || a.pdfPage - b.pdfPage)
   const remainingBytes = Math.max(0, IMPORT_MAX_RESPONSE_BYTES - Buffer.byteLength(JSON.stringify(outcome)))
   const evidence = await extractLocalVisualEvidence(bytes, outcome.reportHash, outcome.documentName, ordered.map(page => page.pdfPage), {
     deadlineMs: Math.max(0, (options.deadlineMs ?? 35_000) - (performance.now() - started)), maxOutputBytes: Math.floor(remainingBytes / 3),
   })
+  // Keep the complete report overview, including pages deliberately read only
+  // through digital text. Skipping OCR can never certify graphical coverage.
+  for (const page of reportPages) if (!supplement.has(page.pdfPage)) evidence.pages.push({ pdfPage: page.pdfPage,
+    width: 1, height: 1, rasterDigest: null, lines: [], symbols: [],
+    error: 'Digitalt tekstlag er beholdt. Siden er ikke bildekontrollert; eventuelt grafisk innhold må kontrolleres i originalen.' })
   evidence.pages.sort((a, b) => a.pdfPage - b.pdfPage)
   return fitVisualEvidence(outcome, evidence)
 }

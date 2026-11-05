@@ -133,6 +133,25 @@ describe('local technical risk evidence', () => {
   it('regner ikke en bevist blank side som ulest', () => {
     expect(analyzeTechnicalRisks(codeFirstBasis([''])).unreadPages).toEqual([])
   })
+  it('navngir den konkrete ikke undersøkte installasjonen med bevart usikker kildekvalitet', () => {
+    const text = 'Innebygget varmtvannstank på kjøkken, ikke tilgjengelig for kontroll.'
+    const basis = codeFirstBasis([text]); basis.pages[0]!.status = 'unknown'
+    const finding = analyzeTechnicalRisks(basis).findings[0]!
+    expect(finding).toMatchObject({ title: 'Innebygget varmtvannstank på kjøkken, ikke tilgjengelig for kontroll', status: 'possible', grade: null, sourceQuality: 'partial-text' })
+    expect(finding.sources[0]!.quote).toBe(text)
+    expect(finding.description).toContain('Ufullstendig og ukontrollert tekstuttrekk')
+  })
+
+  it('knytter manglende undersøkelse til eksplisitt bygningsdel uten å påstå skade eller grad', () => {
+    const finding = analyzeTechnicalRisks(codeFirstBasis(['Bad\nVurdering av avvik:\nHulltaking er ikke foretatt.\nKonsekvens/tiltak\nUndersøk nærmere.'])).findings[0]!
+    expect(finding).toMatchObject({ title: 'Bad: ikke undersøkt', component: 'Bad', status: 'not-investigated', grade: null })
+    expect(finding.sources.map(source => source.quote)).toContain('Bad')
+  })
+  it('viser ikke generelle TGIU-definisjoner eller en fragmentert standardtekst som eiendomsfunn', () => {
+    const basis = codeFirstBasis(['TGIU er ikke undersøkt av takstmann. Beskrivelsen av\nFlater eller bygningsdeler som er skjult, tildekket, innbygget, møblert, låst,\nsnødekket eller på annen måte utilgjengelige, blir ikke undersøkt.'])
+    expect(analyzeTechnicalRisks(basis).findings).toEqual([])
+    expect(analyzeTechnicalRisks(codeFirstBasis(['Taket er snødekket og er ikke undersøkt.'])).findings).toHaveLength(1)
+  })
 })
 
 describe('eksplisitte avviksfortsettelser mellom fysiske sider', () => {

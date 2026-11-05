@@ -80,4 +80,61 @@ describe('lokalt juridisk risikosøk', () => {
   it.each(['Ferdigattest mangler for bruksendringen.', 'Midlertidig brukstillatelse foreligger ikke.'])('bevarer kontrollbehov med motsatt ordstilling: %s', text => {
     expect(analyzeLegalRisks(codeFirstBasis([text])).findings[0]).toMatchObject({ category: 'use-approval', status: 'possible' })
   })
+
+  it('bruker bare rommet i den dokumenterte påstanden, uten å arve rom fra en annen klausul', () => {
+    const result = analyzeLegalRisks(codeFirstBasis(['Utleiedelen i underetasjen er ikke godkjent som egen boenhet. Loftstuen er innredet uten dokumentert godkjenning. Soverommet er godkjent, men ferdigattest mangler.']))
+    expect(result.findings.map(item => item.title)).toEqual([
+      'Utleiedelen i underetasjen: ikke godkjent', 'Loftstuen: godkjenning er ikke dokumentert', 'Ferdigattest er ikke dokumentert',
+    ])
+    const ambiguous = analyzeLegalRisks(codeFirstBasis(['Loftstue og soverom er innredet uten dokumentert godkjenning.'])).findings[0]!
+    expect(ambiguous.title).toBe('Godkjenning er ikke dokumentert')
+  })
+
+  it.each(['Nei, ikke som jeg kjenner til', 'Ja', ''])('gjør ikke et egenerklæringsspørsmål til en dokumentert mangel når svaret er %s', answer => {
+    const text = `11.2 Kjenner du til om boligen eller andre bygninger mangler brukstillatelse\neller ferdigattest?\n${answer}`
+    expect(analyzeLegalRisks(codeFirstBasis([text])).findings).toEqual([])
+  })
+
+  it.each([
+    'Korttidsutleie av hele boligseksjonen er tillatt i inntil 60 døgn per\nkalenderår, jf. eierseksjonsloven § 24.',
+    'Korttidsutleie er tillatt i opptil 60 døgn i året, jf. eierseksjonsloven § 24.',
+  ])('viser uttrykkelig døgnbegrensning uten å utlede et generelt utleieforbud: %s', text => {
+    const basis = codeFirstBasis([text]), finding = analyzeLegalRisks(basis).findings[0]!
+    expect(finding).toMatchObject({ title: 'Korttidsutleie: inntil 60 døgn', category: 'rental-restriction', status: 'documented' })
+    const source = finding.sources[0]!
+    expect(text.slice(source.start, source.end)).toBe(source.quote)
+    expect(finding.title).not.toContain('forbud')
+  })
+
+  it('bevarer lovlig midlertidig bruk og synliggjør bare gjenstående arbeider før ferdigattest', () => {
+    const text = 'Det foreligger midlertidig brukstillatelse for eiendommen datert 02.08.2023. Midlertidig brukstillatelse dokumenterer at boligen lovlig kan brukes, men at det gjenstår arbeider før ferdigattest kan utstedes. Dagens rombruk stemmer med det som er godkjent.'
+    const findings = analyzeLegalRisks(codeFirstBasis([text])).findings
+    expect(findings).toHaveLength(1)
+    expect(findings[0]).toMatchObject({ title: 'Ferdigattest: gjenstående arbeider', status: 'documented', category: 'use-approval' })
+    expect(findings[0]!.description).toContain('boligen lovlig kan brukes')
+    expect(findings[0]!.title).not.toMatch(/ulovlig|soverom|loft/i)
+  })
+
+  it('skiller formidlingstjenesteforbud fra forbud mot all utleie', () => {
+    const text = 'Det er ikke\ntillatt å leie ut seksjonen via formidlingstjenester som\nVander og lignende (gjelder både kort- og langtidsleie).'
+    const finding = analyzeLegalRisks(codeFirstBasis([text])).findings[0]!
+    expect(finding).toMatchObject({ title: 'Utleie via formidlingstjenester er ikke tillatt', category: 'rental-restriction', status: 'documented' })
+    expect(finding.sources[0]!.quote).toBe(text)
+  })
+
+  it.each([
+    'Dersom vedtektene gjelder, er utleie ikke tillatt via formidlingstjenester.',
+    'Dersom bestemmelsen gjelder, utleie krever styrets samtykke.',
+    'Dersom det gjenstår arbeider før ferdigattest, må dette avklares.',
+  ])('gir ikke hypotetiske vilkår en kategorisk overskrift: %s', text => {
+    const finding = analyzeLegalRisks(codeFirstBasis([text])).findings[0]!
+    expect(finding.status).toBe('possible')
+    expect(finding.title).toMatch(/uavklart|mulig/iu)
+  })
+
+  it('navngir dokumentert adkomstrett og bevarer det uavklarte omfanget', () => {
+    const finding = analyzeLegalRisks(codeFirstBasis(['Adkomstrett for drift og vedlikehold av\nanlegg/ledninger/kabler.'])).findings[0]!
+    expect(finding).toMatchObject({ title: 'Adkomstrett for drift og vedlikehold av anlegg', status: 'possible', category: 'easement' })
+    expect(finding.description).toContain('anlegg/ledninger/kabler')
+  })
 })

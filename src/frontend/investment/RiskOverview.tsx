@@ -7,20 +7,21 @@ const findingCount = (items: readonly PropertyRiskItem[]) => items.length - summ
 const riskKey = (item: PropertyRiskItem) => JSON.stringify([item.id, ...item.sources.map(source => [source.documentHash, source.documentName])])
 
 export function RiskOverview({ risks, onDetails, onSource, children }: { risks: PropertyRiskOverview; onDetails: () => void; onSource: (source: RiskSource) => void; children?: React.ReactNode }) {
-  return <section className="property-risk" aria-labelledby="property-risk-title">
-    <div className="investment-section-heading"><div><p className="eyebrow">EIENDOMSRISIKO</p><h2 id="property-risk-title">Forhold som påvirker valget.</h2></div><button type="button" className="quiet-button" onClick={onDetails}>Se alle funn og kilder ↗</button></div>
-    <p className="property-risk-intro">{risks.technicalCoverage} Opplysninger i dokumentene er ikke en juridisk eller teknisk godkjenning.</p>
-    <ReportEvidence risks={risks} onSource={onSource} />
-    <div className="property-risk-groups">{groups.map(group => <div key={group} className={`property-risk-group property-risk-group--${group}`}>
-      <h3>{labels[group]} <span>{findingCount(risks[group])}</span></h3>
-      {summaryCount(risks[group]) > 0 && <p>{summaryCount(risks[group])} sammendragsopplysninger vises i tillegg og inngår ikke i antallet over.</p>}
-      {risks[group].length === 0 && group !== 'unexamined' && <p>Ingen slike treff i gjeldende uttrekk. Dette bekrefter ikke fravær av problemer.</p>}
-      <ul>{risks[group].slice(0, 3).map(item => <RiskDetail key={riskKey(item)} item={item} onSource={onSource} />)}</ul>
-      {risks[group].length > 3 && <p>{risks[group].length - 3} flere opplysninger i full liste.</p>}
-    </div>)}</div>
-    <RiskCoverage risks={risks} /><RiskBackground risks={risks} onSource={onSource} />
-    {children}
-  </section>
+  const all = [...risks.documented, ...risks.possible, ...risks.unexamined]
+  return <div className="property-risk">
+    {(['legal', 'technical'] as const).map(domain => {
+      const items = all.filter(item => item.domain === domain)
+      const visible = items.slice(0, 6)
+      return <section className={`risk-domain risk-domain--${domain}`} key={domain} id={`${domain}-risk`} aria-labelledby={`${domain}-risk-title`}>
+        <div className="investment-section-heading"><div><p className="eyebrow">{domain === 'legal' ? 'JURIDISKE FORHOLD' : 'TEKNISK TILSTAND'}</p><h2 id={`${domain}-risk-title`}>{domain === 'legal' ? 'Bruk, godkjenning og begrensninger.' : 'Tilstandsrapport og vedlikehold.'}</h2></div>{domain === 'legal' && <button type="button" className="quiet-button" onClick={onDetails}>Se alle funn og kilder ↗</button>}</div>
+        <p className="property-risk-intro">{domain === 'legal' ? 'Kildebaserte treff. Godkjenninger og lovlig bruk er ikke verifisert.' : risks.technicalCoverage}</p>
+        {visible.length ? <ul className="risk-domain-findings">{visible.map(item => <RiskDetail key={riskKey(item)} item={item} onSource={onSource} compact />)}</ul> : <p className="metric-caption">Ingen konkrete treff i gjeldende uttrekk. Dette bekrefter ikke fravær av problemer.</p>}
+        {items.length > visible.length && <details className="risk-more"><summary>Vis {items.length - visible.length} flere opplysninger</summary><ul className="risk-domain-findings">{items.slice(visible.length).map(item => <RiskDetail key={riskKey(item)} item={item} onSource={onSource} compact />)}</ul></details>}
+        {domain === 'technical' && <><details className="risk-report-documentation"><summary>Rapportgrunnlag og dekning</summary><ReportEvidence risks={risks} onSource={onSource} /><RiskCoverage risks={risks} /></details>{children}</>}
+      </section>
+    })}
+    <RiskBackground risks={risks} onSource={onSource} />
+  </div>
 }
 
 export function RiskDetails({ risks, onSource }: { risks: PropertyRiskOverview; onSource: (source: RiskSource) => void }) {
@@ -81,11 +82,12 @@ function RiskCoverage({ risks }: { risks: PropertyRiskOverview }) {
 function RiskBackground({ risks, onSource }: { risks: PropertyRiskOverview; onSource: (source: RiskSource) => void }) {
   return risks.background.length > 0 && <details className="risk-background"><summary>Generelle bestemmelser og bakgrunn ({risks.background.length})</summary><p>Generelle forklaringer teller ikke som konkrete risikoforhold.</p><ul>{risks.background.map(item => <RiskDetail key={riskKey(item)} item={item} onSource={onSource} background />)}</ul></details>
 }
-function RiskDetail({ item, onSource, background = false }: { item: PropertyRiskItem; onSource: (source: RiskSource) => void; background?: boolean }) {
+function RiskDetail({ item, onSource, background = false, compact = false }: { item: PropertyRiskItem; onSource: (source: RiskSource) => void; background?: boolean; compact?: boolean }) {
   const pages = [...new Set(item.sources.map(source => source.pdfPage))].sort((a, b) => a - b)
   const members = item.members ?? [item]
   const descriptions = [...new Set(members.map(member => member.description))].filter(description => !item.sources.some(source => source.quote === description))
-  return <li><details className="risk-finding"><summary><strong>{background ? 'Generell lovforklaring' : item.title}{!background && item.displaySubject ? ` · ${item.displaySubject}` : ''}</strong><small>{background ? 'Bakgrunn' : item.domain === 'legal' ? 'Juridisk / praktisk' : <>Teknisk{item.grade && item.sourceQuality !== 'partial-text' && <> · <span className={`technical-grade technical-grade--${item.grade.toLowerCase()}`}>{item.grade}</span></>}{item.evidenceKind === 'summary' ? ' · Oppgitt i sammendrag' : item.evidenceKind === 'detail' ? item.sourceQuality === 'local-visual' ? ' · Lokal bildeanalyse / OCR' : ' · Detaljtekst' : ''}</>}{pages.length ? ` · fysisk PDF-side ${pages.join(', ')}` : ' · kilde må avklares'}{item.sources.length > 1 ? ` · ${item.sources.length} kildebelegg` : ''}{item.sourceQuality === 'partial-text' ? ' · Usikkert tekstgrunnlag · grad ukjent' : item.domain === 'technical' && item.grade === null ? ' · grad ukjent' : ''}</small></summary><div className="risk-finding-body">
+  const preview = compact && item.domain === 'technical' ? descriptions[0]?.split(/(?<=[.!?])\s/)[0] : null
+  return <li className={`risk-item risk-item--${item.status}`}><details className="risk-finding"><summary><strong>{background ? 'Generell lovforklaring' : item.title}{!background && item.displaySubject ? ` · ${item.displaySubject}` : ''}</strong><small>{background ? 'Bakgrunn' : item.domain === 'legal' ? item.status === 'documented' ? 'Dokumentert forhold' : 'Krever avklaring' : <>Teknisk{item.grade && item.sourceQuality !== 'partial-text' && <> · <span className={`technical-grade technical-grade--${item.grade.toLowerCase()}`}>{item.grade}</span></>}{item.evidenceKind === 'summary' ? ' · Oppgitt i sammendrag' : item.evidenceKind === 'detail' ? item.sourceQuality === 'local-visual' ? ' · Lokal bildeanalyse / OCR' : ' · Detaljtekst' : ''}</>}{pages.length ? ` · fysisk PDF-side ${pages.join(', ')}` : ' · kilde må avklares'}{item.sources.length > 1 ? ` · ${item.sources.length} kildebelegg` : ''}{item.sourceQuality === 'partial-text' ? ' · Usikkert tekstgrunnlag · grad ukjent' : item.domain === 'technical' && item.grade === null ? ' · grad ukjent' : ''}</small>{preview && <span className="risk-preview">{preview}</span>}</summary><div className="risk-finding-body">
     {item.reconciliationNote && <p className="technical-summary-note">{item.reconciliationNote}</p>}
     {item.sourceQuality === 'local-visual' && <p>Lokal bildeanalyse kobler grafisk grad til bygningsdel og avviksbeskrivelse. Teksten er OCR-avledet og må etterprøves i originalen; brukerkontroll gjenstår.</p>}
     {item.evidenceKind === 'summary' && <p className="technical-summary-note">Opplysning fra sammendrag. Sammendraget kan avvike fra rapportdetaljene; kontroller rapportens egen grad, avviksbeskrivelse og tiltak. Opplysningen er ikke teknisk kontrollgrunnlag.</p>}

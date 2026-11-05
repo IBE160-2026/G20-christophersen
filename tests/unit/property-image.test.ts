@@ -1,9 +1,20 @@
 import { describe, expect, it } from 'vitest'
-import { largeRasterSize, previewSize, PROPERTY_IMAGE_LIMITS, rasterRgba, PreviewRasterBudget, PREVIEW_BUDGET_ERROR } from '../../src/frontend/investment/property-image-policy.ts'
+import { largeRasterSize, previewSize, PROPERTY_IMAGE_LIMITS, propertyCoverPanel, rasterRgba, PreviewRasterBudget, PREVIEW_BUDGET_ERROR } from '../../src/frontend/investment/property-image-policy.ts'
 import { PreviewWorkerPort } from '../../src/frontend/investment/property-image-port.ts'
 import type { PreviewRawWorker } from '../../src/frontend/investment/property-image-port.ts'
 
 describe('lokal originalbasert bildevisning', () => {
+  it('krever boligopplysninger og et dominerende innfelt forsidepanel, ikke bare et stort raster', () => {
+    const text = 'Testgata 10 2 soverom | 59 kvm | Selveierleilighet'
+    expect(propertyCoverPanel(text, 595.276, 841.89, [520.141, 0, 0, 569, 37.43, 40.89])).toBe(true)
+    expect(propertyCoverPanel(text.replace('kvm', 'm²'), 595.276, 841.89, [520.141, 0, 0, 569, 37.43, 40.89])).toBe(true)
+    for (const caption of ['Eiendomsmegler Test Testesen', 'Testgata 10', text + ' Illustrasjonsbilde', text + ' meglerfullmektig kontakt@example.no']) {
+      expect(propertyCoverPanel(caption, 595.276, 841.89, [520.141, 0, 0, 569, 37.43, 40.89])).toBe(false)
+    }
+    for (const transform of [[100, 0, 0, 140, 40, 40], [595, 0, 0, 842, 0, 0], [520, 1, 0, 569, 37, 41], [NaN, 0, 0, 569, 37, 41]]) {
+      expect(propertyCoverPanel(text, 595.276, 841.89, transform)).toBe(false)
+    }
+  })
   it('utelater små logoer, masker, urimelige dimensjoner og raster over dekodingstaket', () => {
     expect(largeRasterSize(800, 600)).toBe(true)
     for (const [width, height] of [[300, 200], [2000, 100], [3000, 3000], [Infinity, 600], [800.5, 600], [0, 0]]) {

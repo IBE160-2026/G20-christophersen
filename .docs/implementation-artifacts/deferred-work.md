@@ -863,3 +863,16 @@ avgrenser dokumentert testomfang. Dette er ikke lukking av historiske åpne
 saker: individuell markedsleie, full kostnadsdekning og komplett teknisk/juridisk
 undersøkelse er fortsatt ikke dokumentert. Originale oppføringer og historikk
 beholdes.
+
+**PAA-SO2 / PAA-LEIE1, analyseoversikt 2026-11-05 — Status: fortsatt Åpen for generell analyse- og modellkvalitet.**
+
+Konsept A har nå samlet økonomi, separate juridiske/tekniske deler, PDF som eneste
+synlige inngang og konservativt forsidebilde med plassholder ved usikkert grunnlag.
+SSB beholdes internt og i detaljer; publisert romreferanse er gruppestatistikk.
+Spørsmål i egenerklæring blir ikke dokumenterte mangler. Konkrete dokumenterte
+begrensninger og undersøkelsesbehov er tydeliggjort med opprinnelige kilder.
+Dette lukker ingen historisk åpen kvalitetsport. De to ekte originalene har
+fortsatt uavklart TG-kobling, ufullstendig drift og juridisk dekning, og ingen
+individuell markedsleie. Semantisk AI er deaktivert i automatisk PDF-flyt.
+Se [spesifikasjon og reviewtriage](spec-analyseoversikt-2026-11-05.md) og
+[AI-status, faktiske prøver, skjermbildegjennomgang og avgrensning](../process/arbeidsokter/2026-11-05-analyseoversikt.md).

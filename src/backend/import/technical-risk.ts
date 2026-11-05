@@ -14,6 +14,14 @@ function source(basis: ImportBasis, pdfPage: number, start: number, end: number)
 }
 
 const unexaminedPattern = /hulltaking er ikke foretatt|(?:er |har )?ikke (?:vært )?undersøkt|ikke (?:er )?tilgjengelig for (?:kontroll|inspeksjon|undersøkelse)|uten mulighet for inspeksjon/i
+/** Reuse a complete short source statement when it identifies what was not
+ * inspected. Never invent a component or infer a condition grade. */
+function unexaminedTitle(description: string, component?: string) {
+  if (component) return `${component}: ikke undersøkt`
+  const statement = description.replace(/\s+/gu, ' ').replace(/^[•*−\s-]+/u, '').trim()
+  if (statement.length <= 160) return statement.replace(/[.!]$/u, '')
+  return 'Undersøkelse mangler – se kildebeskrivelsen'
+}
 /** Classification of retained wording, never a technical diagnosis. */
 export function deviationStatus(description: string): RiskFinding['status'] | null {
   const statements = description.replace(/\r?\n(?![ \t]*[•*−-])/gu, ' ').split(/(?<=[.!?])\s+|\r?\n|[,;]\s*men\s+|\s+men\s+/iu)
@@ -143,7 +151,7 @@ export function analyzeTechnicalRisks(basis: ImportBasis): RiskAnalysis {
       const component = explicit?.component ?? (namedContext && namedContext.length <= 200 ? namedContext : undefined)
       const contextSources = explicit ? explicit.sources : component && namedLine ? [namedLine, ...(roomLine ? [roomLine] : [])].map(line => source(basis, page.pdfPage, contextStart + line.start, contextStart + line.end)) : []
       const completeDescription = explicit?.sources.length && explicit.sources.length > 1 ? explicit.description : description
-      const title = status === 'not-investigated' ? 'Undersøkelse mangler' : component ?? description.split(/\r?\n/, 1)[0]!.replace(/^[•*−\s-]+/u, '').slice(0, 140)
+      const title = status === 'not-investigated' ? unexaminedTitle(completeDescription, component) : component ?? description.split(/\r?\n/, 1)[0]!.replace(/^[•*−\s-]+/u, '').slice(0, 140)
       if (status === 'not-investigated') unexaminedBlocks.push({ page: page.pdfPage, start: match.index, end })
       add(page.pdfPage, match.index, end, status, title, completeDescription.slice(0, 2000), explicit?.grade ?? null, component, contextSources)
     }
@@ -151,8 +159,9 @@ export function analyzeTechnicalRisks(basis: ImportBasis): RiskAnalysis {
       const description = match[0].trim()
       if (unexaminedBlocks.some(block => block.page === page.pdfPage && match.index >= block.start && match.index < block.end)
         || explicitFindings.some(finding => finding.sources.length > 1 && finding.sources.some(item => item.pdfPage === page.pdfPage && match.index >= item.start && match.index < item.end))) continue
-      if (!description || match[0].length > 2000 || /(?:BYGNINGSSAKKYNDIGE SER|TILSTANDSGRAD|TG IU|KONSTRUKSJONER SOM IKKE ER UNDERSØKT|IKKE UNDERSØKT\/IKKE TILGJENGELIG)/i.test(description)) continue
-      add(page.pdfPage, match.index, match.index + match[0].length, 'not-investigated', 'Undersøkelse mangler', description)
+      if (!description || match[0].length > 2000 || /(?:BYGNINGSSAKKYNDIGE SER|TILSTANDSGRAD|TG\s*IU|KONSTRUKSJONER SOM IKKE ER UNDERSØKT|IKKE UNDERSØKT\/IKKE TILGJENGELIG)/i.test(description)
+        || /^snødekket eller på annen måte utilgjengelige, blir ikke undersøkt\.?$/iu.test(description)) continue
+      add(page.pdfPage, match.index, match.index + match[0].length, 'not-investigated', unexaminedTitle(description), description)
     }
   }
   for (const finding of explicitFindings) {

@@ -1,9 +1,28 @@
 /** Presentation-only limits. A displayed raster never establishes the depicted property. */
-export const PROPERTY_IMAGE_LIMITS = { pages: 3, images: 24, operators: 100_000,
+export const PROPERTY_IMAGE_LIMITS = { pages: 1, images: 24, operators: 100_000,
   decodedPixels: 4_000_000, totalDecodedPixels: 8_000_000, messageNodes: 100_000,
   displayPixels: 1_000_000, displayEdge: 1200, deadlineMs: 10_000 } as const
 
 export const PREVIEW_BUDGET_ERROR = 'paa-preview-image-budget-exceeded' as const
+
+/** Narrow property-cover layout, not image recognition. Unknown covers fail closed.
+ * Requires property facts and a dominant inset photo panel below the heading.
+ * A large decoded portrait, agency page, logo or full-page illustration is insufficient.
+ */
+export function propertyCoverPanel(text: string, pageWidth: number, pageHeight: number, matrix: readonly number[]) {
+  const normalized = text.replace(/\s+/g, ' ').trim()
+  if (normalized.length > 400 || !/\p{L}[\p{L} .-]+\s\d+[\p{L}]?\b/u.test(normalized)
+    || !/\d+\s*(?:soverom|rom)\b/i.test(normalized) || !/\d+\s*(?:kvm\b|m²|m2\b)/i.test(normalized)
+    || !/(?:selveier|eierleilighet|andelsleilighet|borettslag|enebolig|rekkehus)/i.test(normalized)
+    || /(?:eiendomsmegler|meglerfullmektig|telefon|mobil|@|illustrasjon|illustrasjonsbilde|plantegning|portrett)/i.test(normalized)) return false
+  const [width, skewY, skewX, height, x, y] = matrix
+  if (matrix.length !== 6 || !matrix.every(Number.isFinite) || !Number.isFinite(pageWidth) || !Number.isFinite(pageHeight)
+    || pageWidth <= 0 || pageHeight <= 0 || skewX !== 0 || skewY !== 0 || width! <= 0 || height! <= 0) return false
+  const w = width! / pageWidth, h = height! / pageHeight, left = x! / pageWidth, bottom = y! / pageHeight
+  return w >= .75 && w <= .94 && h >= .5 && h <= .75 && w * h >= .45
+    && left >= .025 && left + w <= .975 && bottom >= .02 && bottom <= .12
+    && Math.abs(left - (1 - left - w)) < .04
+}
 
 /** Runs inside the dedicated PDF worker, before postMessage transfers raster ownership.
  * Includes inline rasters nested in operator-stream chunks, not only Image obj messages.

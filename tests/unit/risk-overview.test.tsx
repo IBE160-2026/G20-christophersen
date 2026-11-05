@@ -17,7 +17,7 @@ it('skiller godkjenningsforhold med samme kategoritittel og fysiske side før ra
   const props = { risks, onSource: () => {}, onDetails: () => {} }
   for (const Component of [RiskOverview, RiskDetails]) {
     const markup = renderToStaticMarkup(createElement(Component, props))
-    const summaries = [...markup.matchAll(/<summary>(.*?)<\/summary>/gu)].map(match => match[1])
+    const summaries = [...markup.matchAll(/<summary>(.*?)<\/summary>/gu)].map(match => match[1]).filter(summary => summary!.includes('<strong>'))
     expect(summaries).toHaveLength(3)
     expect(summaries[0]).toContain('Kjeller')
     expect(summaries[1]).toContain('Loft')
@@ -35,8 +35,8 @@ it('teller samlet forhold én gang og holder kilder, bakgrunn og dekning utenfor
   const risks: PropertyRiskOverview = { documented: findings, possible: [], unexamined: [], background: [background], gaps: ['Uavklart rapportdekning.', 'Kommunale dokumenter er ikke kontrollert.'], limitations: [], technicalCoverage: 'Delvis dekning.' }
   const markup = renderToStaticMarkup(createElement(RiskOverview, { risks, onSource: () => {}, onDetails: () => {} }))
   expect(findings[0]?.sources).toHaveLength(2)
-  expect(markup).toContain('Dokumenterte problemer <span>1</span>')
-  expect(markup).toContain('Opplysninger som ikke er undersøkt <span>0</span>')
+  expect((markup.match(/class="risk-item risk-item--documented"/g) ?? []).length).toBe(2) // Ett forhold og én bakgrunnsrad.
+  expect((markup.match(/class="risk-item risk-item--not-investigated"/g) ?? []).length).toBe(0)
   expect(markup).toContain('Generelle bestemmelser og bakgrunn (1)')
   expect(markup).toContain('Generell lovforklaring')
   expect(markup).not.toContain(background.consequence)
@@ -50,9 +50,9 @@ it('viser grad, sammendragsforbehold og fysisk rapportområde uten å hevde komp
     reportEvidence: { documentName: 'teknisk.pdf', ranges: [{ startPage: 8, endPage: 12, certainty: 'ambiguous', source: { ...source, pdfPage: 8 } }], unreadPages: [9, 11] } }
   for (const Component of [RiskOverview, RiskDetails]) {
     const markup = renderToStaticMarkup(createElement(Component, { risks, onSource: () => {}, onDetails: () => {} }))
-    expect(markup).toContain('sammendragsopplysninger vises i tillegg og inngår ikke i antallet over')
+    if (Component === RiskDetails) expect(markup).toContain('sammendragsopplysninger vises i tillegg og inngår ikke i antallet over')
     expect(markup).toContain('sammendrags- og detaljtall skal ikke legges sammen')
-    expect(markup).toContain(Component === RiskOverview ? 'Dokumenterte problemer <span>0</span>' : 'Dokumenterte problemer (0)')
+    expect(markup).toContain(Component === RiskOverview ? 'id="technical-risk"' : 'Dokumenterte problemer (0)')
     expect(markup).toContain('technical-grade--tg3')
     expect(markup).toContain('Oppgitt i sammendrag')
     expect(markup).toContain('fysisk PDF-side 8–12')

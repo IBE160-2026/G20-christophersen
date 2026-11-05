@@ -1,5 +1,4 @@
 import type { ListingClient } from '../analysis/listing-client.ts'
-import { ListingImport } from './ListingImport.tsx'
 import { useEffect, useRef } from 'react'
 import type { Dispatch } from 'react'
 import type { FinancialField, RegisteredFinancialInput } from '../../contracts/financial-input.ts'
@@ -19,7 +18,7 @@ const fields: { id: FinancialField; label: string; description: string; unit: st
   { id: 'Ymin', label: 'Minimumskrav til nettoyield', description: 'Ditt eget avkastningskrav i prosent.', unit: '%' },
 ]
 
-export function FinancialInput({ financial, sources, costItems, dispatch, session, listingClient }: {
+export function FinancialInput({ financial, sources, costItems, dispatch, session }: {
   listingClient?: ListingClient
   financial: RegisteredFinancialInput
   sources: FinancialSources
@@ -62,7 +61,6 @@ export function FinancialInput({ financial, sources, costItems, dispatch, sessio
         <p>Oppgi dine tall for ett boligutleieobjekt. Velg periode og år for leie, drift og gjeldsbetjening.</p>
         <p className="meta">Opplysningene beholdes mens siden er åpen. Oppdatering eller lukking av siden avslutter økten.</p>
       </div>
-      <details className="listing-alternative"><summary id="listing-alternative-toggle">FINN som alternativ</summary><ListingImport session={session} dispatch={dispatch} client={listingClient} /></details>
       {fields.map(({ id, label, description, unit }) => {
         const value = financial[id]
         const visibleIssues = attempted ? attemptValidation.fields[id].issues : []

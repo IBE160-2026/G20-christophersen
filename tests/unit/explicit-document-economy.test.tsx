@@ -22,9 +22,9 @@ it('knytter dokumentert datert null og eksakt kostnadssammensetning til original
   expect(fields.filter(field => field.includedIn === 'commonCosts').map(field => field.amount)).toEqual(['2704', '159', '797'])
   for (const field of fields) for (const source of field.sources) expect(outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
   const markup = renderToStaticMarkup(createElement(DocumentEconomy, { outcome, onSource: () => {} }))
-  expect(markup).toContain('Gjeldsopplysning: Seksjonen har ingen gjeld per. 26.10.2026')
-  expect(markup).toContain('Inngår i felleskostnadene')
-  expect(markup).toContain('Separate beløp er ukjente')
+  expect(markup).toContain('Seksjonen har ingen gjeld per. 26.10.2026')
+  expect(markup).toContain('Inkludert i felleskostnader')
+  expect(markup).toContain('Manglende beløp og dokumentdekning')
 })
 it.each([
   'Ingen lån registrert for sameiet.', 'Seksjonen har ingen gjeld per. 26.10.2026',
@@ -82,7 +82,7 @@ it.each(['privat strøm', 'kommunale avgifter og bygningsforsikring'])('bevarer 
   if (excluded !== 'privat strøm') {
     expect(markup).not.toContain('kommunale avgifter inngår')
     expect(markup).not.toContain('bygningsforsikring inngår')
-  } else expect(markup).toContain('kommunale avgifter inngår og legges ikke til på nytt')
+  } else expect(markup).toContain('kommunale avgifter inngår.')
 })
 it('bevarer varmeavregning inklusive pr. og originalt UTF16-spenn', async () => {
   const heat = 'Det er målere i hver leilighet for varme/varmtvann som\navregnes en gang i året, pr. 31.12.'
@@ -115,7 +115,7 @@ it('tolker eksplisitt men-ikke-klausul uten å påstå at utelatt kategori inng�
   const outcome = await createCodeFirstImport(codeFirstBasis([texts[0]!, text, debt]))
   const markup = renderToStaticMarkup(createElement(DocumentEconomy, { outcome, onSource: () => {} }))
   expect(economySuggestions(importEconomyDraft(outcome), { requireReview: false }).preliminaryOperatingSubtotal).toBe('43920')
-  expect(markup).toContain('kommunale avgifter inngår og legges ikke til på nytt')
+  expect(markup).toContain('kommunale avgifter inngår.')
   expect(markup).not.toContain('bygningsforsikring inngår')
   expect(markup).toContain('Ekskluderte kostnader kommer i tillegg')
 })

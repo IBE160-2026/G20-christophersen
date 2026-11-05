@@ -536,3 +536,104 @@
 .investment-shell .rent-scenario-controls > input[type='range'] { display: block; width: 100%; min-height: 48px; margin-block: 12px; accent-color: var(--investment-accent); cursor: pointer; }
 .investment-shell .rent-scenario-controls > button { min-height: 44px; text-align: left; }
 .investment-shell .hero-upload > .quiet-button { display: block; min-height: 44px; }
+
+/* Analyseoversikt: samme Konsept A, samlet økonomi og kortere leseflate. */
+.investment-shell .hero { min-height: 400px; padding-block: 28px 36px; gap: 44px; }
+.investment-shell .hero-visual { height: 380px; }
+.investment-shell .hero-title { font-size: clamp(42px, 4.1vw, 64px); margin-block: 16px 12px; }
+.investment-shell .property-facts { margin-block: 20px; }
+.investment-shell .property-prices { grid-template-columns: minmax(0, 1fr); margin-top: 18px; }
+.investment-shell .property-prices strong { font-size: 30px; }
+.investment-shell .property-prices > div > span, .investment-shell .property-prices p { color: var(--investment-muted); font-size: 11px; }
+.investment-shell .hero-upload { margin-top: 18px; padding-top: 12px; }
+.investment-shell .hero-upload > a { display: inline-block; min-height: 36px; padding-block: 7px; font-size: 11px; }
+.investment-shell #investment { scroll-margin-top: 20px; }
+.investment-shell .purchase-basis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding-block: 8px 24px; }
+.investment-shell .purchase-basis > div { min-width: 0; }
+.investment-shell .purchase-basis span, .investment-shell .purchase-basis small { display: block; color: var(--investment-muted); font-size: 11px; }
+.investment-shell .purchase-basis strong { display: block; margin-block: 6px 3px; font: 400 clamp(22px, 2.3vw, 30px)/1.3 var(--investment-serif); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.investment-shell .investment-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; padding-block: 20px 24px; border-top: 1px solid var(--investment-line); }
+.investment-shell .investment-kpis .metric-number { font-size: clamp(36px, 3.7vw, 54px); letter-spacing: -1.8px; margin-block: 8px 6px; }
+.investment-shell .economy-critical-note { border-left: 2px solid var(--investment-warning); padding: 10px 14px; margin-top: 16px; color: var(--investment-warning); font-size: 12px; line-height: 1.6; }
+.investment-shell .economy-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; padding-block: 30px; align-items: start; }
+.investment-shell .economy-controls > * { min-width: 0; }
+.investment-shell .economy-controls .rent-estimate { border: 0; padding: 0; }
+.investment-shell .economy-controls .finance-panel { display: block; }
+.investment-shell .economy-controls h3 { font: 400 27px/1.2 var(--investment-serif); margin-block: 4px 18px; }
+.investment-shell .economy-controls .finance-panel { border-left: 1px solid var(--investment-line); padding-left: 40px; }
+.investment-shell .rent-published-references { margin-block: 12px 18px; }
+.investment-shell .rent-published-references > p { font-size: 12px; }
+.investment-shell .rent-published-references > p > span { display: block; color: var(--investment-muted); margin-bottom: 6px; }
+.investment-shell .rent-published-references > p > strong { display: block; font-size: 30px; margin-bottom: 6px; }
+.investment-shell .rent-scenario-controls { margin-block: 18px 0; padding-block: 16px 0; border-bottom: 0; }
+.investment-shell .rent-scenario-controls > h3 { font-family: inherit; font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+.investment-shell .rent-scenario-controls > p { font-size: 12px; line-height: 1.6; margin-block: 8px 12px; }
+.investment-shell .rent-scenario-controls > label { font-size: 12px; }
+.investment-shell .rent-scenario-controls > button { font-size: 12px; }
+.investment-shell .rent-estimate-evidence { font-size: 12px; line-height: 1.65; }
+.investment-shell .rent-estimate-evidence p, .investment-shell .rent-estimate-evidence h4 { margin-block: 12px; }
+.investment-shell .rent-estimate-evidence table { min-width: 560px; }
+.investment-shell .rent-estimate-evidence .rent-estimate-values { grid-template-columns: 1fr; gap: 12px; }
+.investment-shell .rent-estimate-evidence .rent-estimate-values strong { font-size: 22px; }
+.investment-shell .document-economy { padding-block: 20px 26px; }
+.investment-shell .document-economy > h3 { font: 400 25px/1.3 var(--investment-serif); margin-bottom: 5px; }
+.investment-shell .document-economy-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 28px; padding-block: 14px; margin: 0; }
+.investment-shell .document-economy-fields > div { min-width: 0; padding-top: 12px; }
+.investment-shell .document-economy-fields dt { font-size: 12px; margin-bottom: 5px; }
+.investment-shell .document-economy-fields dd { font-size: 12px; }
+.investment-shell .document-economy-fields dd > strong { display: block; font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.investment-shell .document-field-meta { display: block; color: var(--investment-muted); font-size: 11px; }
+.investment-shell .document-economy details { font-size: 12px; margin-block: 6px; }
+.investment-shell .document-economy summary { min-height: 36px; padding-block: 8px; }
+.investment-shell .document-economy-source { font-size: 12px; }
+.investment-shell #investment > .graph-panel { border-top: 1px solid var(--investment-line); padding-top: 24px; }
+.investment-shell .scenario-basis { font-size: 12px; line-height: 1.7; margin-block: 12px 20px; }
+.investment-shell .scenario-basis > p { margin-block: 12px; }
+.investment-shell .assessment-strip { border-top: 1px solid var(--investment-line); padding-block: 20px; align-items: flex-start; }
+.investment-shell .assessment-copy h3 { font-size: 15px; font-weight: 500; color: var(--investment-warning); }
+.investment-shell .risk-summary { font-size: 11px; color: var(--investment-muted); }
+.investment-shell .property-risk { padding-block: 0 20px; border: 0; }
+.investment-shell .risk-domain { padding-block: 12px 20px; scroll-margin-top: 20px; }
+.investment-shell .risk-domain .investment-section-heading { margin-bottom: 0; }
+.investment-shell .property-risk-intro { font-size: 12px; margin-bottom: 16px; }
+.investment-shell .risk-domain-findings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 30px; margin: 0; padding: 0; list-style: none; }
+.investment-shell .risk-item { min-width: 0; border-top: 1px solid var(--investment-line); }
+.investment-shell .risk-item .risk-finding > summary { padding-block: 13px; }
+.investment-shell .risk-item--documented .risk-finding > summary strong { color: var(--investment-ink); }
+.investment-shell .risk-preview { display: block; margin-block: 7px 2px; color: var(--investment-muted); font-size: 12px; line-height: 1.6; }
+.investment-shell .risk-more, .investment-shell .risk-report-documentation { font-size: 12px; color: var(--investment-muted); line-height: 1.7; margin-top: 14px; }
+.investment-shell .risk-more > summary, .investment-shell .risk-report-documentation > summary { min-height: 44px; cursor: pointer; padding-block: 10px; }
+.investment-shell .risk-report-upload { margin-top: 14px; }
+.investment-shell .analysis-documentation > details { margin-block: 14px 20px; font-size: 12px; }
+.investment-shell .analysis-documentation > details > summary { min-height: 44px; padding-block: 10px; cursor: pointer; }
+.investment-shell .analysis-documentation details p { margin-block: 10px; }
+@media (max-width: 900px) {
+  .investment-shell .hero { gap: 28px; }
+  .investment-shell .hero-visual { height: 350px; }
+  .investment-shell .economy-controls { gap: 30px; }
+  .investment-shell .economy-controls .finance-panel { padding-left: 26px; }
+  .investment-shell .investment-kpis { gap: 18px; }
+  .investment-shell .investment-kpis .metric-number { font-size: 38px; }
+}
+@media (max-width: 650px) {
+  .investment-shell .hero { display: flex; flex-direction: column; align-items: stretch; gap: 22px; padding-block: 20px 28px; }
+  .investment-shell .hero-visual { order: 1; height: 250px; }
+  .investment-shell .hero-copy { order: 2; }
+  .investment-shell .hero-title { font-size: 43px; }
+  .investment-shell .purchase-basis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .investment-shell .purchase-basis > div:last-child { grid-column: 1/-1; }
+  .investment-shell .purchase-basis strong { font-size: 25px; }
+  .investment-shell .investment-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 16px; }
+  .investment-shell .investment-kpis .metric-number { font-size: 42px; }
+  .investment-shell .investment-kpis article:last-child { grid-column: auto; padding-top: 0; border-top: 0; }
+  .investment-shell .investment-kpis article:last-child .metric-number { font-size: 42px; }
+  .investment-shell .investment-section-heading { align-items: flex-start; flex-wrap: wrap; gap: 10px; }
+  .investment-shell .investment-section-heading h2 { font-size: 27px; }
+  .investment-shell .economy-controls { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  .investment-shell .economy-controls .finance-panel { border-left: 0; border-top: 1px solid var(--investment-line); padding: 24px 0 0; }
+  .investment-shell .document-economy-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .investment-shell .risk-domain-findings { grid-template-columns: minmax(0, 1fr); }
+  .investment-shell .assessment-strip { flex-direction: column; gap: 14px; }
+  .investment-shell .assessment-copy, .investment-shell .risk-summary { max-width: none; }
+}
+.investment-shell .chart-unavailable { min-height: 100px; padding: 22px; font: 400 15px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }

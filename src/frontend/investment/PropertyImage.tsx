@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { getDocument, OPS, PDFWorker } from 'pdfjs-dist'
-import type { PDFDocumentLoadingTask, PDFPageProxy, RenderTask } from 'pdfjs-dist'
+import type { PDFDocumentLoadingTask, PDFPageProxy } from 'pdfjs-dist'
 import type { SelectedReport } from '../state/report.ts'
-import { largeRasterSize, previewSize, PROPERTY_IMAGE_LIMITS, rasterRgba } from './property-image-policy.ts'
+import { largeRasterSize, previewSize, PROPERTY_IMAGE_LIMITS, propertyCoverPanel, rasterRgba } from './property-image-policy.ts'
 import { PreviewWorkerPort } from './property-image-port.ts'
 import type { PreviewRawWorker } from './property-image-port.ts'
 
-type Preview = { bytes: Uint8Array; hash: string; kind: 'image' | 'page' | 'failed'; page: number; resourceLimit?: boolean }
+type Preview = { bytes: Uint8Array; hash: string; kind: 'image' | 'failed'; page: number; resourceLimit?: boolean }
 type Raster = { width: number; height: number; bitmap?: CanvasImageSource & { width?: number; height?: number; displayWidth?: number; displayHeight?: number }; data?: unknown; kind?: unknown; transferMaps?: unknown }
 
 function rasterCanvas(value: unknown): { canvas: HTMLCanvasElement; pixels: number } | null {
@@ -40,7 +40,7 @@ function rasterCanvas(value: unknown): { canvas: HTMLCanvasElement; pixels: numb
   } catch { canvas.width = 0; canvas.height = 0; return null }
 }
 
-/** Current loaded bytes only. No photo identification, network images, OCR or analysis dispatch. */
+/** Conservative cover-layout selection from current bytes. Unknown layouts use a placeholder. */
 export function PropertyImage({ selected, onOpen }: { selected: SelectedReport | null; onOpen: (page: number) => void }) {
   const holder = useRef<HTMLDivElement>(null)
   const [preview, setPreview] = useState<Preview | null>(null)
@@ -51,7 +51,6 @@ export function PropertyImage({ selected, onOpen }: { selected: SelectedReport |
     target.replaceChildren()
     if (!selected) return
     let active = true, timedOut = false, budgetExceeded = false
-    let render: RenderTask | undefined
     let best: { canvas: HTMLCanvasElement; pixels: number; page: number } | null = null
     let displayed: HTMLCanvasElement | null = null
     const pendingImages = new Set<() => void>()
@@ -67,17 +66,15 @@ export function PropertyImage({ selected, onOpen }: { selected: SelectedReport |
     const fail = () => { if (active) setPreview({ bytes: selected.bytes, hash: selected.hash, kind: 'failed', page: 1, resourceLimit: budgetExceeded }) }
     const timer = window.setTimeout(() => {
       timedOut = true; for (const stop of pendingImages) stop()
-      render?.cancel(); fail(); void destroy()
+      fail(); void destroy()
     }, PROPERTY_IMAGE_LIMITS.deadlineMs)
     const ensureActive = () => { if (!active || timedOut || budgetExceeded || destroyed) throw new Error('preview-stopped') }
-    const publish = (canvas: HTMLCanvasElement, kind: 'image' | 'page', page: number) => {
+    const publish = (canvas: HTMLCanvasElement, kind: 'image', page: number) => {
       ensureActive()
       canvas.className = 'property-document-image__canvas'
       canvas.dataset.previewKind = kind
       canvas.setAttribute('role', 'img')
-      canvas.setAttribute('aria-label', kind === 'image'
-        ? `Raster fra ${selected.file.name}, PDF-side ${page}. Motivet er ikke identifisert.`
-        : `Dokumentforhåndsvisning av ${selected.file.name}, PDF-side ${page}.`)
+      canvas.setAttribute('aria-label', `Boligfoto fra forsiden av ${selected.file.name}, PDF-side ${page}.`)
       displayed = canvas; target.replaceChildren(canvas)
       setPreview({ bytes: selected.bytes, hash: selected.hash, kind, page })
     }
@@ -86,7 +83,7 @@ export function PropertyImage({ selected, onOpen }: { selected: SelectedReport |
         port = new PreviewWorkerPort(new Worker(new URL('./property-image-worker.ts', import.meta.url), { type: 'module' }) as unknown as PreviewRawWorker, limit => {
           budgetExceeded = limit
           for (const stop of pendingImages) stop()
-          render?.cancel(); fail(); void destroy()
+          fail(); void destroy()
         })
         await port.ready
         ensureActive()
@@ -97,7 +94,7 @@ export function PropertyImage({ selected, onOpen }: { selected: SelectedReport |
           wasmUrl: '/pdfjs/wasm/', iccUrl: '/pdfjs/iccs/' })
         const pdf = await task.promise
         ensureActive()
-        let inspected = 0
+        let inspected = 0, eligible = 0
         for (let pageNumber = 1; pageNumber <= Math.min(pdf.numPages, PROPERTY_IMAGE_LIMITS.pages); pageNumber++) {
           const page: PDFPageProxy | null = await pdf.getPage(pageNumber).catch(() => null)
           ensureActive()
@@ -106,10 +103,27 @@ export function PropertyImage({ selected, onOpen }: { selected: SelectedReport |
           const operators = await page.getOperatorList().catch(() => null)
           ensureActive()
           if (!operators || operators.fnArray.length > PROPERTY_IMAGE_LIMITS.operators) continue
+          const content = await page.getTextContent()
+          ensureActive()
+          const text = content.items.map(item => 'str' in item ? item.str : '').join(' ')
+          const [left, bottom, right, top] = page.view
+          let matrix = [1, 0, 0, 1, 0, 0]
+          const stack: number[][] = []
+          let unsupportedForm = false
           for (let index = 0; index < operators.fnArray.length && inspected < PROPERTY_IMAGE_LIMITS.images; index++) {
             const operation = operators.fnArray[index], args = operators.argsArray[index]
+            if (operation === OPS.save) { stack.push([...matrix]); continue }
+            if (operation === OPS.restore) { matrix = stack.pop() ?? [NaN, NaN, NaN, NaN, NaN, NaN]; continue }
+            if (operation === OPS.paintFormXObjectBegin) { unsupportedForm = true; continue }
+            if (operation === OPS.transform) {
+              const [a, b, c, d, e, f] = matrix, [g, h, i, j, k, l] = args as number[]
+              matrix = [a! * g! + c! * h!, b! * g! + d! * h!, a! * i! + c! * j!, b! * i! + d! * j!, a! * k! + c! * l! + e!, b! * k! + d! * l! + f!]
+              continue
+            }
             if (operation !== OPS.paintImageXObject && operation !== OPS.paintInlineImageXObject) continue
             inspected++
+            if (unsupportedForm || page.rotate !== 0 || !propertyCoverPanel(text, right! - left!, top! - bottom!,
+              [matrix[0]!, matrix[1]!, matrix[2]!, matrix[3]!, matrix[4]! - left!, matrix[5]! - bottom!])) continue
             let image: unknown
             if (operation === OPS.paintInlineImageXObject) image = args[0]
             else if (typeof args[0] === 'string') {
@@ -128,29 +142,21 @@ export function PropertyImage({ selected, onOpen }: { selected: SelectedReport |
             }
             ensureActive()
             const candidate = rasterCanvas(image)
-            if (candidate && (!best || candidate.pixels > best.pixels)) {
+            if (candidate && ++eligible > 1) {
+              candidate.canvas.width = 0; candidate.canvas.height = 0
+              throw new Error('ambiguous-cover-panels')
+            }
+            if (candidate) {
               if (best) { best.canvas.width = 0; best.canvas.height = 0 }
               best = { ...candidate, page: pageNumber }
-            } else if (candidate) { candidate.canvas.width = 0; candidate.canvas.height = 0 }
+            }
           }
           } finally { page.cleanup() }
           if (inspected >= PROPERTY_IMAGE_LIMITS.images) break
         }
         ensureActive()
         if (best) publish(best.canvas, 'image', best.page)
-        else {
-          const page = await pdf.getPage(1)
-          ensureActive()
-          const natural = page.getViewport({ scale: 1 })
-          const dimensions = previewSize(natural.width, natural.height)
-          if (!dimensions) throw new Error('invalid-page-size')
-          const canvas = document.createElement('canvas')
-          canvas.width = dimensions.width; canvas.height = dimensions.height
-          render = page.render({ canvas, viewport: page.getViewport({ scale: dimensions.scale }), background: '#ffffff' })
-          await render.promise
-          publish(canvas, 'page', 1)
-          page.cleanup()
-        }
+        else fail()
       } catch { fail() }
       finally {
         window.clearTimeout(timer)
@@ -161,17 +167,17 @@ export function PropertyImage({ selected, onOpen }: { selected: SelectedReport |
     return () => {
       active = false; window.clearTimeout(timer)
       for (const stop of pendingImages) stop()
-      render?.cancel(); void destroy()
+      void destroy()
       target.replaceChildren()
       if (displayed) { displayed.width = 0; displayed.height = 0 }
       if (best && best.canvas !== displayed) { best.canvas.width = 0; best.canvas.height = 0 }
     }
   }, [selected])
 
-  const message = !selected ? 'Last opp en salgsoppgave for å se dokumentet.'
+  const message = !selected ? 'Last opp en salgsoppgave.'
     : current?.resourceLimit ? 'Dokumentforhåndsvisningen nådde ressursgrensen. Åpne originalen.'
-      : current?.kind === 'failed' ? 'Dokumentforhåndsvisning er utilgjengelig. Åpne originalen.'
-      : 'Forbereder lokal dokumentforhåndsvisning …'
+      : current?.kind === 'failed' ? 'Boligfoto kunne ikke identifiseres sikkert.'
+      : 'Ser etter boligfoto fra forsiden …'
   return <figure className="property-document-image">
     <div className="property-document-image__surface" aria-busy={Boolean(selected && !current)}>
       <div ref={holder} hidden={!current || current.kind === 'failed'} />
@@ -179,7 +185,7 @@ export function PropertyImage({ selected, onOpen }: { selected: SelectedReport |
     </div>
     {selected && <figcaption className="property-document-image__caption">
       <span>{current && current.kind !== 'failed'
-        ? `${selected.file.name} · fysisk PDF-side ${current.page}. ${current.kind === 'image' ? 'Raster fra dokumentet; motivet er ikke identifisert.' : 'Originalside, ikke et identifisert eiendomsfoto.'}`
+        ? `Boligfoto fra forsiden · PDF-side ${current.page}`
         : selected.file.name}</span>
       <button className="property-document-image__open" type="button" onClick={() => onOpen(current?.page ?? 1)}>Åpne originaldokument</button>
     </figcaption>}

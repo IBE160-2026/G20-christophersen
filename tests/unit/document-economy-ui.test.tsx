@@ -21,7 +21,7 @@ it('viser alle økonomifelt, manglende grunnlag, kilder og proveniens direkte', 
   expect(markup).toContain('Lokalt dokumentuttrekk')
   expect(markup.replaceAll('\u00a0', ' ')).toContain('3 000 000,00 kr')
   expect(markup).toContain('Lagret analyse ble avvist')
-  expect(markup).toContain('Full drift')
+  expect(markup).toContain('Manglende beløp og dokumentdekning')
   expect(markup).toContain('fysisk PDF-side 1')
   expect(markup).toContain('Åpne originalside')
   for (const field of outcome.economy.fields) expect(markup).toContain(field.label)
@@ -34,8 +34,8 @@ it('motstrid med ukjent hovedbeløp bevarer dokumenterte alternativer og uavklar
   field.status = 'conflict'; field.amount = null; field.period = 'unknown'; field.year = null
   const original = structuredClone(field.alternatives)
   const markup = renderToStaticMarkup(createElement(DocumentEconomy, { outcome, onSource: () => {} }))
-  expect(markup).toContain('Kildene inneholder motstridende opplysninger')
-  expect(markup.replaceAll('\u00a0', ' ')).toContain('Alternativt belegg: 4 000,00 kr · periode ukjent · år ukjent')
+  expect(markup).toContain('Motstrid · krever avklaring')
+  expect(markup.replaceAll('\u00a0', ' ')).toContain('Alternativt belegg: 4 000,00 kr · kontroller periode og år')
   expect(markup).not.toContain('ikke et verifiserbart beløp for kommunale avgifter')
   expect(field.alternatives).toEqual(original)
 })
@@ -49,7 +49,7 @@ it('skjuler ventetid for hjelpemidler og holder statusmeldingen fri for sekunder
 it('bruker ikke hovedbeløpets periode og år som kvalifikatorer for et motstridende alternativ', async () => {
   const outcome = await createCodeFirstImport(codeFirstBasis(['Kommunale avgifter: 4 000 kr per år i 2026\nKommunale avgifter: 4 000 kr per måned i 2027']))
   const markup = renderToStaticMarkup(createElement(DocumentEconomy, { outcome, onSource: () => {} })).replaceAll('\u00a0', ' ')
-  expect(markup).toContain('Alternativt belegg: 4 000,00 kr · periode ukjent · år ukjent')
+  expect(markup).toContain('Alternativt belegg: 4 000,00 kr · kontroller periode og år')
   expect(markup).not.toContain('Alternativt belegg: 4 000,00 kr · per år · 2026')
   expect(markup).toContain('4 000 kr per måned i 2027')
 })

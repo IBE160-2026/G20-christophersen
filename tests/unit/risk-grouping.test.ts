@@ -13,6 +13,16 @@ const basement = () => make('basement', 'Kjelleretasjen er innredet med en utlei
 const singular = () => make('singular', 'Utleid leilighet er ikke godkjent som egen bruksenhet.', 9)
 
 describe('Konservativ visningsgruppering', () => {
+  it('samler samme uttrykkelige døgnbegrensning for hele boligen og bevarer alle kilder', () => {
+    const first = make('limit-1', 'UTLEIE\nKorttidsutleie av hele boligseksjonen er tillatt i inntil 60 døgn per kalenderår.', 12, { category: 'rental-restriction' })
+    const second = make('limit-2', 'Korttidsutleie er tillatt i opptil 60 døgn i året.', 117, { category: 'rental-restriction' })
+    const grouped = groupPropertyRisks([first, second])
+    expect(grouped).toHaveLength(1)
+    expect(grouped[0]!.sources.map(source => source.pdfPage)).toEqual([12, 117])
+    expect(grouped[0]!.members).toHaveLength(2)
+    expect(groupPropertyRisks([first, { ...second, description: second.description.replace('60', '90') }])).toHaveLength(2)
+    expect(groupPropertyRisks([first, { ...second, description: 'Korttidsutleie av kjelleren er tillatt i opptil 60 døgn i året.' }])).toHaveLength(2)
+  })
   it('samler faktisk parserresultat med separate rom- og komponentkilder', () => {
     const text = 'Overflater gulv\nLOFT > BAD - 4M2\nVurdering av avvik:\nDet er påvist skader i gulvet.\nKonsekvens/tiltak:\nKontroller gulvet.'
     const basis = codeFirstBasis([text, text])

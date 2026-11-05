@@ -43,6 +43,7 @@ async function upload(page: Page, bytes: Buffer, name = 'salgsoppgave.pdf'): Pro
   const parsed = ImportHttpResponseSchema.parse(await response.json())
   if (parsed.kind !== 'document-import') throw new Error('import-rejected')
   await expect(page.locator('.document-economy')).toBeVisible()
+  await page.locator('.analysis-documentation > details > summary').click()
   return parsed.outcome
 }
 function localOnly(outcome: DocumentImport, bytes: Buffer) {
@@ -88,7 +89,7 @@ test('ny ukjent fritekst-PDF får ukjente beløp og eksplisitt sperret KI, ingen
   localOnly(outcome, bytes)
   expect(outcome.economy.fields.every(field => field.amount === null && field.sources.length === 0)).toBe(true)
   await expect(page.locator('.hero')).not.toContainText('5 678 901')
-  await expect(page.locator('.document-economy')).toContainText('Opplysninger mangler')
+  await expect(page.locator('.document-economy')).toContainText('Mangler i uttrekket')
   await expect(page.locator('.document-economy')).toContainText('Videre KI-analyse har ikke startet')
   expect(recorded.errors).toEqual([]); expect(recorded.external).toEqual([])
 })
@@ -245,7 +246,7 @@ test('135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI
   await expect(page.locator('.document-economy')).toContainText('Teststub: ny dokumentbundet KI-tolkning')
   await expect(page.getByRole('status').filter({ hasText: 'AI-analyse fullført' })).toBeInViewport()
   await expect(page.locator('.hero')).toContainText('13 990 000')
-  await expect(page.locator('.document-economy')).toContainText('ufullstendig')
+  await expect(page.locator('.risk-summary')).toContainText('ufullstendig')
   expect(recorded.apis.filter(path => path === '/api/document-economy/run')).toHaveLength(1)
   expect(recorded.errors).toEqual([]); expect(recorded.external).toEqual([])
 })
@@ -520,7 +521,7 @@ test('godkjent KI-svar oppdaterer gjeldende eiendom med nye kildebundne tall', a
   await page.getByRole('button', { name: 'Start godkjent KI-analyse', exact: true }).click()
   await expect(page.locator('.hero')).toContainText('5 678 901')
   await expect(page.locator('.document-economy')).toContainText('Ny KI-analyse av dette dokumentet')
-  await expect(page.locator('.document-economy')).toContainText('ufullstendig')
+  await expect(page.locator('.risk-summary')).toContainText('ufullstendig')
   await page.locator('.document-economy details').first().locator('summary').click()
   await expect(page.locator('.document-economy')).toContainText(quote)
   await upload(page, fresh())

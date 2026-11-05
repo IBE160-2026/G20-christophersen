@@ -19,7 +19,7 @@ async function state() {
 }
 function render(session: ReturnType<typeof createInitialSession>) {
   const markup = renderToStaticMarkup(createElement(InvestmentOverview, { session, rent: { status: 'idle', result: null, retry: () => {} }, dispatch: () => {}, importClient: new ImportClient(() => {}), listingClient: new ListingClient(() => {}), onOpen: () => {}, overviewRef: { current: null }, controls: { equity: '', annualInterest: '', months: '' }, onControls: () => {} }))
-  return markup.match(/<section aria-label="Foreløpig netto før finansiering"[\s\S]*?<\/section>/)![0].replaceAll('\u00a0', ' ')
+  return markup.match(/<details class="scenario-basis">[\s\S]*?<\/details>/)![0].replaceAll('\u00a0', ' ')
 }
 it.each(['', 'ugyldig', '0'])('viser kjent årsoverskudd uten prosent eller divisjon når P er %s', async rawValue => {
   const session = sessionReducer(sessionReducer(await state(), { type: 'register-value', field: 'P', rawValue: '1' }), { type: 'register-value', field: 'P', rawValue })
@@ -27,14 +27,14 @@ it.each(['', 'ugyldig', '0'])('viser kjent årsoverskudd uten prosent eller divi
   expect(markup).toContain('182 880 kr/år')
   expect(markup).not.toContain('%')
   expect(markup).not.toContain('kr P × 100')
-  expect(markup).toContain('Yield krever et gyldig prisgrunnlag')
+  expect(markup).not.toMatch(/\/ .* kr × 100/)
 })
 it('viser registrert prisproveniens og gyldig prosent uten å kalle manuell P en dokumentert prisantydning', async () => {
   let session = sessionReducer(await state(), { type: 'register-value', field: 'P', rawValue: '8000000' })
   session = sessionReducer(session, { type: 'register-source', field: 'P', source: { kind: 'assumption', description: 'Mitt planlagte bud', conflict: null } })
   const markup = render(session)
   expect(markup).toContain('2,29 %')
-  expect(markup).toContain('/ 8 000 000 kr P × 100')
+  expect(markup).toContain('/ 8 000 000 kr × 100')
   expect(markup).toContain('Egen forutsetning: Mitt planlagte bud')
   expect(markup).not.toContain('P er prisantydning')
   expect(markup).not.toContain('Dokumentets prisgrunnlag er prisantydning')
@@ -46,13 +46,14 @@ it('utelater bare generert dokumenthash i prisforklaringen og bevarer kildeident
   const description = `Salgsoppgave ${outcome.documentName}, SHA-256 ${outcome.reportHash}. Dokumentets prisantydning med eksplisitt fellesgjeld; ikke avtalt kjøpesum. Kildeutdrag er bevart i importen.`
   session.financial.P.rawValue = '8600000'
   session.sources.P = { kind: 'source', description, conflict: null }
-  const markup = render(session)
+  const priceExplanation = (value: ReturnType<typeof createInitialSession>) => render(value).match(/<p>Prisgrunnlag:[\s\S]*?<\/p>/)![0]
+  const markup = priceExplanation(session)
   expect(markup).not.toContain(outcome.reportHash)
   expect(markup).not.toContain('SHA-256')
   expect(markup).toContain(`Salgsoppgave ${outcome.documentName}`)
   expect(markup).toContain('Dokumentets prisantydning med eksplisitt fellesgjeld; ikke avtalt kjøpesum')
   expect(session.sources.P.description).toBe(description)
   const manual = sessionReducer(session, { type: 'register-source', field: 'P', source: { kind: 'source', description: description + ' Manuell kilde.', conflict: null } })
-  expect(render(manual)).toContain(outcome.reportHash)
-  expect(render(manual)).toContain('Manuell kilde.')
+  expect(priceExplanation(manual)).toContain(outcome.reportHash)
+  expect(priceExplanation(manual)).toContain('Manuell kilde.')
 })

@@ -116,6 +116,12 @@ function boundary(item: PropertyRiskItem) {
     item.id.startsWith('controlled-') ? item.id : null])
 }
 
+function wholePropertyRentalLimit(item: PropertyRiskItem) {
+  if (item.domain !== 'legal' || item.category !== 'rental-restriction' || item.status !== 'documented') return null
+  const match = /^(?:utleie )?korttidsutleie (?:av hele boligseksjonen )?er tillatt i (?:inntil|opptil) (\d+) døgn (?:per kalenderår|i året)\b/u.exec(normalize(item.description))
+  return match?.[1] ?? null
+}
+
 /** Et generisk «Bad» identifiserer ikke et rom. Bare samme eksplisitte,
  * stedfestede komponent og ordrette avvik kan samles på tvers av sider. */
 function technicalIdentity(item: PropertyRiskItem, documents: readonly DocumentContext[]) {
@@ -166,6 +172,8 @@ export function groupPropertyRisks(items: readonly PropertyRiskItem[], documents
       const first = existing[0]!
       if (!entry.document || entry.document !== first.document || boundary(entry.item) !== boundary(first.item)) return false
       if (entry.item.id.startsWith('controlled-') || first.item.id.startsWith('controlled-')) return entry.item.id === first.item.id
+      const limit = wholePropertyRentalLimit(entry.item)
+      if (limit !== null && limit === wholePropertyRentalLimit(first.item)) return true
       if (entry.subject.kind === 'known' && first.subject.kind === 'known' && entry.subject.key !== first.subject.key) return false
       if (entry.item.domain === 'technical' && entry.technicalIdentity && entry.technicalIdentity === first.technicalIdentity
         && entry.subject.kind === 'known' && first.subject.kind === 'known' && entry.subject.key === first.subject.key) return true

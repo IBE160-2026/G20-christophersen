@@ -8,6 +8,7 @@ import type { ScenarioControls } from '../../domain/financial-scenario.ts'
 import type { RentState } from './useRentEstimate.ts'
 import { rentalTypeLabel } from './rental-type-label.ts'
 import { RentEstimatePanel } from './RentEstimatePanel.tsx'
+import { withScenarioRent, monthlyScenarioRent } from './rent-scenario.ts'
 import { useFinancialScenario } from './useFinancialScenario.ts'
 import { selectScenarioBasis } from '../state/scenario.ts'
 import { selectResult } from '../state/result.ts'
@@ -31,14 +32,17 @@ import { formatFinancialDecimal } from '../../presentation/finance.ts'
 const Decimal = Big(); Decimal.strict = true
 const number = (value: string | null, decimals = 0) => value === null ? '—' : formatFinancialDecimal(new Decimal(value).toFixed(decimals, Decimal.roundHalfUp))
 
-export function InvestmentOverview({ rent, session, dispatch, importClient, listingClient, onOpen, overviewRef, controls, onControls }: {
+export function InvestmentOverview({ rent, session, dispatch, importClient, listingClient, onOpen, overviewRef, controls, onControls, rentOverride = null, onScenarioRent }: {
   rent: RentState & { retry: () => void }; session: SessionState; dispatch: Dispatch<SessionAction>; importClient: ImportClient; listingClient: ListingClient
   onOpen: (section?: 'basis' | 'report' | 'result') => void; overviewRef: RefObject<HTMLButtonElement | null>
   controls: ScenarioControls; onControls: (controls: ScenarioControls) => void
+  rentOverride?: string | null; onScenarioRent?: (monthly: string) => void
 }) {
   const property = selectProperty(session), slot = session.prospectus.prospectus
   const risks = selectPropertyRisks(session)
-  const basis = selectScenarioBasis(session, rent.result)
+  const originalBasis = selectScenarioBasis(session, rent.result)
+  const publishedRent = rent.result?.published.references.find(item => item.reference.id === rent.result?.published.selectedReferenceId)?.reference
+  const basis = withScenarioRent(originalBasis, rentOverride, publishedRent)
   const { scenario, pending } = useFinancialScenario(basis, controls)
   const visiblePriceProvenance = property.outcome && !session.listing.manualFields.includes('P')
     && session.sources.P.description.startsWith(`Salgsoppgave ${property.outcome.documentName}, SHA-256 ${property.outcome.reportHash}.`)
@@ -95,14 +99,16 @@ export function InvestmentOverview({ rent, session, dispatch, importClient, list
         <p className="hero-intro">{property.outcome ? `${property.outcome.documentName} · Dokumentuttrekk, ikke bekreftet eiendomsinformasjon.` : 'Fra salgsoppgave til et tydelig investeringsgrunnlag.'}</p>
         <div className="property-facts"><span>{property.ownership}</span><span>{rent.result?.property.area ? `${rent.result.property.area.value} m² ${rent.result.property.area.basis}` : 'Areal ikke oppgitt'}</span><span>{rentalTypeLabel(rent.result?.property.propertyType ?? null)}</span><span>{rent.result?.property.rooms ? `${rent.result.property.rooms.value} rom` : 'Romantall ukjent'}</span></div>
         <div className="property-prices"><div><span>Prisantydning</span><strong>{number(property.price)}{property.price !== null && <small> kr</small>}</strong><p>{property.price !== null ? `${property.priceOrigin} · ubekreftet` : property.priceStatus}</p></div><div><span>Pris inkl. fellesgjeld</span><strong>{number(basis.P)}{basis.P !== null && <small> kr</small>}</strong><p>Uten kjøpsomkostninger</p></div><div><span>Kontantbehov</span><strong>{number(basis.cashRequired)}{basis.cashRequired !== null && <small> kr</small>}</strong><p>Kjøpesum og omkostninger</p></div></div>
-        <div className="hero-upload"><label htmlFor="import-file-prospectus">{property.outcome ? 'Velg ny salgsoppgave (PDF)' : 'Velg salgsoppgave (PDF)'}</label><input id="import-file-prospectus" ref={fileInput} type="file" accept="application/pdf,.pdf" onChange={e => { setDetail(null); void importClient.select(e.currentTarget.files?.[0] ?? null, session.prospectus, 'prospectus') }} />
+        <div className="hero-upload"><label htmlFor="import-file-prospectus">{property.outcome ? 'Velg ny salgsoppgave (PDF)' : 'Velg salgsoppgave (PDF)'}</label><input id="import-file-prospectus" ref={fileInput} type="file" accept="application/pdf,.pdf" onChange={e => { const file = e.currentTarget.files?.[0] ?? null; e.currentTarget.value = ''; if (!file) return; setDetail(null); void importClient.select(file, session.prospectus, 'prospectus', true) }} />
           <p className="metric-caption">PDF med tekstlag · inntil 200 sider / samlet 50 MiB · lokal OCR der tilgjengelig</p>
           <ImportProgress slot={slot} />
+          {slot.status === 'failed' && slot.selected && <button type="button" className="quiet-button" onClick={() => { void importClient.select(slot.selected!.file, session.prospectus, 'prospectus', true) }}>Prøv dokumentimporten på nytt ↺</button>}
+          {slot.status !== 'idle' && !busy && <button type="button" className="quiet-button" onClick={() => { importClient.abort(); dispatch({ type: 'new-analysis' }); setDetail(null); window.scrollTo(0, 0) }}>Start ny analyse</button>}
           {property.outcome && <a href="#document-economy-title">Se dokumentets økonomifelt og kilder ↓</a>}
           {busy && <button className="quiet-button" type="button" onClick={() => { importClient.abort(); dispatch({ type: 'import-abandon' }) }}>Avbryt dokumentimport</button>}
           <details className="finn-alternative"><summary>FINN-lenke · alternativ inngang</summary><ListingImport session={session} dispatch={dispatch} client={listingClient} /></details>
         </div></div><div className="hero-visual"><PropertyImage selected={property.selected} onOpen={page => showOriginal(page)} /></div></section>
-      <RentEstimatePanel rent={rent} session={session} basis={basis} controls={controls} onSource={showRiskSource} />
+      <RentEstimatePanel rent={rent} session={session} basis={basis} scenarioMonthly={monthlyScenarioRent(originalBasis, rentOverride)} scenarioEdited={rentOverride !== null} onScenarioRent={onScenarioRent} onSource={showRiskSource} />
       <section id="investment" aria-labelledby="investment-heading"><div className="investment-section-heading"><div><p className="eyebrow">ØKONOMISK POTENSIAL</p><h2 id="investment-heading">Tallene som betyr noe.</h2></div><p>Scenario · {basis.year ? `årsgrunnlag ${basis.year}` : 'årsgrunnlag mangler'}<br />Før skatt<br /><button type="button" className="quiet-button" onClick={() => show('assumptions')}>Juster leie og drift ↗</button></p></div>
         <div className="investment-kpis" aria-busy={pending} aria-label="Scenarioets økonomiske nøkkeltall"><article><h3>Bruttoyield</h3><p className="metric-number" data-testid="scenario-gross">{number(scenario.grossYield, 2)} <small className="metric-unit">{scenario.grossYield !== null ? '%' : ''}</small></p><p className="metric-caption">{scenario.grossYield === null ? 'Pris eller leiegrunnlag mangler' : 'Årlig leie / pris inkl. fellesgjeld'}</p></article><article><h3>Nettoyield</h3><p className="metric-number" data-testid="scenario-net">{number(scenario.netYield, 2)} <small className="metric-unit">{scenario.netYield !== null ? '%' : ''}</small></p><p className="metric-caption">{scenario.netYield === null ? 'Pris, leie eller full drift mangler' : 'Etter eierbetalt drift · før finansiering'}</p></article><article><h3>Kontantstrøm</h3><p className={`metric-number${scenario.cashFlow?.startsWith('-') ? ' negative' : ''}`} data-testid="scenario-cash">{number(scenario.cashFlow)} <small className="metric-unit">{scenario.cashFlow !== null ? 'kr' : ''}</small></p><p className="metric-caption">{scenario.cashFlow === null ? 'Fullstendig økonomi og finansiering kreves' : `Per år · ${number(new Decimal(scenario.cashFlow).div('12').toFixed(2))} kr per måned`}</p></article></div>
         {scenario.preliminaryNoi !== null && <section aria-label="Foreløpig netto før finansiering" className="source-summary">

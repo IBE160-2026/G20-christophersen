@@ -33,7 +33,13 @@ it('SO-AC1/5/14: faktisk HTTP/barn gir kildebundet økonomi før finansinput, ut
     expect(body.outcome.economy.fields[0]?.amount).toBe('3000000')
     expect(body.outcome.technical.findings.find(f=>f.grade==='TG3')?.source.pdfPage).toBe(10)
     expect(events).toEqual(['started','adapter-permitted','closed'])
-    expect((await upload(app.url)).body).toEqual({kind:'rejected',code:'duplicate-analysis'})
+    const repeated = await upload(app.url)
+    expect(repeated.response.status).toBe(200); expect(repeated.body.kind).toBe('document-import')
+    expect(events).toEqual(['started','adapter-permitted','closed','started','adapter-permitted','closed'])
+    if (repeated.body.kind === 'document-import') {
+      expect(repeated.body.outcome.requestId).not.toBe(body.outcome.requestId)
+      expect(repeated.body.outcome.reportHash).toBe(body.outcome.reportHash)
+    }
     expect((await upload(app.url,'mixed-12.pdf','prospectus',{'X-Import-Mode':'live'})).body).toEqual({kind:'rejected',code:'live-disabled'})
     const config=await fetch(`${app.url}/api/document-import-config`);expect(await config.json()).toMatchObject({liveEnabled:false,mode:'demo',maxPages:200})
   }finally{await app.close()}
@@ -94,13 +100,15 @@ it('SO-AC13: uploadstopp avslutter faktisk mottak før lås frigis',async()=>{
   }finally{await app.close()}
 })
 describe('SO-AC13: foreldrefrist, RSS og terminalcleanup',()=>{
-  it.each(['import-hang-child.ts','import-late-child.ts'])('%s termineres uten retry/sen suksess og markør bevares etter tillatelse',async name=>{
+  it.each(['import-hang-child.ts','import-late-child.ts'])('%s termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup',async name=>{
     const bytes=await readFile(new URL('../fixtures/sales-prospectus/mixed-12.pdf',import.meta.url)),events:string[]=[],markers=new Set<string>()
     const input={bytes,documentName:'mixed-12.pdf',requestId:'deadline',sessionId:'deadline',role:'prospectus' as const,parentHash:null,attachmentId:null}
     let pid:number|undefined
     await expect(runImport(input,new AbortController().signal,markers,{deadlineMs:300,childModule:new URL(`../helpers/${name}`,import.meta.url),onLifecycle:(kind,id)=>{events.push(kind);pid=id}})).rejects.toMatchObject({code:'processing-timeout'})
     expect(events.at(-1)).toBe('closed');expect(()=>process.kill(pid!,0)).toThrow();expect(input.bytes).toHaveLength(0)
-    expect(markers.size).toBe(name==='import-late-child.ts'?1:0)
+    expect(markers.size).toBe(0)
+    const recovered = await runImport({...input,bytes:await readFile(new URL('../fixtures/sales-prospectus/mixed-12.pdf',import.meta.url)),requestId:'retry-after-timeout'},new AbortController().signal,markers)
+    expect(recovered.requestId).toBe('retry-after-timeout');expect(markers.size).toBe(0)
   })
   it('RSS-stopp måles fra forelderen, også ved blokkert child-eventloop',async()=>{
     const bytes=await readFile(new URL('../fixtures/sales-prospectus/mixed-12.pdf',import.meta.url)),events:string[]=[]

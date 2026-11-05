@@ -1,0 +1,124 @@
+{
+  "startedAt": "2026-11-05T12:53:23.410Z",
+  "node": "v24.21.0",
+  "origin": "http://localhost:3000",
+  "mockedResponses": 0,
+  "checks": [
+    {
+      "name": "1 Nøstegaten etter ny oppstart",
+      "status": "passed",
+      "elapsedMs": 20759,
+      "document": "nost",
+      "pages": 152,
+      "http": 200,
+      "visibleResult": true,
+      "sourceSpansVerified": true
+    },
+    {
+      "name": "6a Leieslider og reset desktop",
+      "status": "passed",
+      "elapsedMs": 394,
+      "document": "nost",
+      "monthlySelected": 30108,
+      "resetMonthly": 13891,
+      "grossPercent": "8,92",
+      "preliminaryNetPercent": "8,30"
+    },
+    {
+      "name": "7a Navigasjon desktop",
+      "status": "passed",
+      "elapsedMs": 580,
+      "viewport": "1440x1000",
+      "dialogNavigation": true,
+      "pdfSource": true,
+      "controlWorkspace": true,
+      "overflow": false
+    },
+    {
+      "name": "2 Nøstegaten igjen i samme nettleserøkt",
+      "status": "passed",
+      "elapsedMs": 20043,
+      "document": "nost",
+      "pages": 152,
+      "http": 200,
+      "visibleResult": true,
+      "sourceSpansVerified": true
+    },
+    {
+      "name": "3 Rostockgata i samme nettleserøkt",
+      "status": "passed",
+      "elapsedMs": 14549,
+      "document": "rost",
+      "pages": 170,
+      "http": 200,
+      "visibleResult": true,
+      "sourceSpansVerified": true
+    },
+    {
+      "name": "4 Rostockgata etter ny oppstart",
+      "status": "passed",
+      "elapsedMs": 14697,
+      "document": "rost",
+      "pages": 170,
+      "http": 200,
+      "visibleResult": true,
+      "sourceSpansVerified": true
+    },
+    {
+      "name": "6b Leieslider og reset mobil",
+      "status": "passed",
+      "elapsedMs": 313,
+      "document": "rost",
+      "monthlySelected": 30240,
+      "resetMonthly": 20426,
+      "grossPercent": "4,22",
+      "preliminaryNetPercent": "3,71"
+    },
+    {
+      "name": "7b Navigasjon mobil",
+      "status": "passed",
+      "elapsedMs": 584,
+      "viewport": "390x844",
+      "dialogNavigation": true,
+      "pdfSource": true,
+      "controlWorkspace": true,
+      "overflow": false
+    },
+    {
+      "name": "5a Ytterligere Nøstegaten",
+      "status": "passed",
+      "elapsedMs": 20574,
+      "document": "nost",
+      "pages": 152,
+      "http": 200,
+      "visibleResult": true,
+      "sourceSpansVerified": true
+    },
+    {
+      "name": "5b Ytterligere Rostockgata",
+      "status": "passed",
+      "elapsedMs": 15234,
+      "document": "rost",
+      "pages": 170,
+      "http": 200,
+      "visibleResult": true,
+      "sourceSpansVerified": true
+    },
+    {
+      "name": "8 Reell feil og fungerende nytt forsøk",
+      "status": "passed",
+      "elapsedMs": 21035,
+      "rejectedHttp": 422,
+      "recoveredWithoutRestart": true,
+      "document": "nost",
+      "pages": 152,
+      "http": 200,
+      "visibleResult": true,
+      "sourceSpansVerified": true
+    }
+  ],
+  "pageErrors": [],
+  "externalRequests": [],
+  "status": "passed",
+  "finishedAt": "2026-11-05T12:55:33.538Z"
+}

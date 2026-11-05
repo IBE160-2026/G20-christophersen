@@ -22,8 +22,11 @@ export default function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
   const [client] = useState(() => new ReportClient(dispatch))
   const slot = session.prospectus.prospectus
   const rent = useRentEstimate(selectProperty(session).outcome)
-  const objectKey = slot.status === 'imported' ? slot.selected?.hash ?? `listing:${session.listing.generation}` : slot.status !== 'idle' ? `pending:${session.prospectus.generation}` : `listing:${session.listing.generation}`
+  const objectKey = slot.status === 'imported' ? `document:${slot.selected?.hash}:${session.prospectus.generation}` : slot.status !== 'idle' ? `pending:${session.prospectus.generation}` : `listing:${session.listing.generation}`
   const [scenarioDraft, setScenarioDraft] = useState<{ key: string; controls: ScenarioControls } | null>(null)
+  const rentKey = JSON.stringify([objectKey, session.financial.L, session.sources.L])
+  const [rentDraft, setRentDraft] = useState<{ key: string; monthly: string } | null>(null)
+  const rentOverride = rentDraft?.key === rentKey ? rentDraft.monthly : null
   const controls = scenarioDraft?.key === objectKey ? scenarioDraft.controls : slot.status !== 'idle' ? slot.status === 'imported' ? session.prospectus.financing : { equity: '', annualInterest: '', months: '' } : session.listing.financing
   const overview = useRef<HTMLButtonElement>(null)
   useEffect(() => () => { importClient.abort(); client.abort() }, [importClient, client])
@@ -48,6 +51,6 @@ export default function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
     {controlsOpen ? <>
       <div className="control-heading app-header"><button type="button" className="quiet-button" onClick={() => { setControlsOpen(false); window.scrollTo(0, 0); requestAnimationFrame(() => overview.current?.focus()) }}>← Tilbake til investeringsoversikten</button><span className="meta">{session.prospectus.prospectus.outcome?.manifest || session.prospectus.report.outcome?.manifest ? 'Offline · lokalt dokumentuttrekk' : analysisModeLabel(session.report.mode)}</span></div>
       <ControlWorkspace session={session} dispatch={controlDispatch} importClient={importClient} client={client} listingClient={listingClient} />
-    </> : <InvestmentOverview rent={rent} session={session} dispatch={dispatch} importClient={importClient} listingClient={listingClient} onOpen={open} overviewRef={overview} controls={controls} onControls={controls => setScenarioDraft({ key: objectKey, controls })} />}
+    </> : <InvestmentOverview rent={rent} session={session} dispatch={dispatch} importClient={importClient} listingClient={listingClient} onOpen={open} overviewRef={overview} controls={controls} onControls={controls => setScenarioDraft({ key: objectKey, controls })} rentOverride={rentOverride} onScenarioRent={monthly => setRentDraft({ key: rentKey, monthly })} />}
   </div>
 }

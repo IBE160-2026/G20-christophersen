@@ -32,8 +32,9 @@ async function start() {
   const app = express()
   const server = createServer(app)
   app.disable('x-powered-by')
-  app.use((_request, response, next) => {
+  app.use((request, response, next) => {
     response.setHeader('X-Content-Type-Options', 'nosniff')
+    if (request.path === '/') response.setHeader('Cache-Control', 'no-store')
     next()
   })
 

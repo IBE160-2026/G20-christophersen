@@ -1,0 +1,66 @@
+{
+  "checks": [
+    {
+      "name": "Nøstegaten faktisk opplasting og synlig kilde/risiko",
+      "status": "passed",
+      "ms": 21432,
+      "pages": 152,
+      "visible": true
+    },
+    {
+      "name": "Presis sliderleie, null, feil input og publisert reset",
+      "status": "passed",
+      "ms": 170,
+      "preciseAnnual": 180006,
+      "reset": 13891,
+      "referenceUnchanged": true
+    },
+    {
+      "name": "Kildekontroll, egne kostnader og uavhengig annuitet",
+      "status": "passed",
+      "ms": 1545,
+      "cashRequired": 4152340,
+      "independentMonthly": 18428.27,
+      "independentYearly": 221139.24,
+      "cashFlowHonestlyUnknown": true
+    },
+    {
+      "name": "Bak tallene, ny analyse og ingen statelekkasje",
+      "status": "passed",
+      "ms": 14596,
+      "realSecondProperty": true,
+      "clearedLeaseCostFinance": true
+    },
+    {
+      "name": "Mobil touchslider, reset og navigasjon",
+      "status": "passed",
+      "ms": 657,
+      "selected": 34431,
+      "reset": 20426,
+      "touch": true,
+      "overflow": false
+    },
+    {
+      "name": "Reell PDF-feil, eksplisitt retry og gjenoppretting",
+      "status": "passed",
+      "ms": 21167,
+      "retryReachedRealBackend": true,
+      "validRecovery": true,
+      "serverRestart": false
+    }
+  ],
+  "errors": [],
+  "posts": [
+    "/api/document-import",
+    "/api/rent-estimate",
+    "/api/document-import",
+    "/api/rent-estimate",
+    "/api/document-import",
+    "/api/document-import",
+    "/api/document-import",
+    "/api/rent-estimate"
+  ],
+  "startedAt": "2026-11-05T12:59:00.941Z",
+  "status": "passed",
+  "finishedAt": "2026-11-05T13:00:00.614Z"
+}

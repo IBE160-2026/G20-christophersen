@@ -9,10 +9,12 @@ import { createOfflineImport } from '../import/offline-adapter.ts'
 import { enrichImportWithLocalVisual } from '../documents/visual-import.ts'
 import type { ImportRole } from '../../contracts/document-import.ts'
 import { IMPORT_MAX_RESPONSE_BYTES, IMPORT_MAX_PDF_BYTES } from '../../contracts/document-import.ts'
+import { importRuntimeRevision } from './import-runtime.ts'
 const send = (value: unknown) => new Promise<void>((resolve, reject) => process.send?.(value, error => error ? reject(error) : resolve()))
-process.once('message', async (input: { byteLength: number; documentName: string; requestId: string; role: ImportRole; parentHash: string | null; attachmentId: string | null; measure?: boolean }) => {
+process.once('message', async (input: { byteLength: number; documentName: string; requestId: string; role: ImportRole; parentHash: string | null; attachmentId: string | null; runtimeRevision: string; measure?: boolean }) => {
   let bytes: Uint8Array | undefined
   try {
+    if (input.runtimeRevision !== await importRuntimeRevision()) throw new ImportFailure('server-outdated')
     if (input.measure) setImportMeasurementSink(measurement => { process.send?.({ kind: 'measurement', measurement }) })
     recordImportMeasurement('input', 'start')
     if (!Number.isInteger(input.byteLength) || input.byteLength < 1 || input.byteLength > IMPORT_MAX_PDF_BYTES) throw new ImportFailure('invalid-format')

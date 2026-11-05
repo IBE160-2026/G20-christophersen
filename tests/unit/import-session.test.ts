@@ -132,6 +132,34 @@ it('SO-AC1/12: faktisk klient starter import uten finansinput, gjenbruker samme 
   await client.select(oversized,state.prospectus,'prospectus');expect(read).toBe(false);expect(calls).toBe(1);expect(state.prospectus.prospectus.error).toBe('payload-too-large')
 })
 
+it('ny analyse fra Konsept A laster samme PDF gjennom HTTP igjen og tømmer forrige eiendoms kontrollgrunnlag', async () => {
+  let state = createInitialSession(), calls = 0
+  const client = new ImportClient(action => { state = sessionReducer(state, action) }, {
+    id: () => `fresh-${calls}`, hash: async () => fixture.selected.hash,
+    fetch: async (_url, init) => {
+      calls++
+      const headers = init?.headers as Record<string, string>
+      const correlation = { sessionId: headers['X-Session-Id'], requestId: headers['X-Request-Id'], generation: Number(headers['X-Analysis-Generation']) }
+      return Response.json({ kind: 'document-import', correlation, outcome: { ...fixture.outcome, requestId: correlation.requestId } })
+    },
+  })
+  await client.select(fixture.selected.file, state.prospectus, 'prospectus', true)
+  state = sessionReducer(state, { type: 'register-value', field: 'L', rawValue: '999999' })
+  const oldGeneration = state.prospectus.generation
+  await client.select(fixture.selected.file, state.prospectus, 'prospectus', true)
+  expect(calls).toBe(2)
+  expect(state.prospectus.prospectus.status).toBe('imported')
+  expect(state.prospectus.generation).toBeGreaterThan(oldGeneration)
+  expect(state.financial.L.rawValue).toBe('')
+  expect(state.rentManuallyEdited).toBe(false)
+  expect(state.report.tg3Resolutions).toEqual([])
+  state = sessionReducer(state, { type: 'new-analysis' })
+  expect(state.prospectus.prospectus.selected).toBeNull()
+  expect(state.prospectus.prospectus.outcome).toBeNull()
+  expect(state.financial.P.rawValue).toBe('')
+  expect(state.resultSnapshot).toBeNull()
+})
+
 it('SO-AC5: brukerrettet TG-kilde kan ikke flyttes utenfor rapportområdet eller til ulest side',async()=>{
   for(const name of ['mixed-12.pdf','raster-footer-12.pdf']){
     let state=load(createInitialSession(),await importFixture(name))

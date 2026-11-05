@@ -37,6 +37,7 @@ export interface SessionState {
 }
 
 export type SessionAction = ReportAction | ProspectusAction
+  | { type: 'new-analysis' }
   | { type: 'listing-url'; url: string }
   | { type: 'listing-start'; correlation: ListingCorrelation }
   | { type: 'listing-response'; correlation: ListingCorrelation; body: unknown; ok: boolean }
@@ -134,6 +135,11 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
 }
 
 function reduceSession(state: SessionState, action: SessionAction): SessionState {
+  if (action.type === 'new-analysis') {
+    const clean = createInitialSession(state.report.mode)
+    return { ...clean, prospectus: { ...clean.prospectus, generation: state.prospectus.generation + 1 },
+      listing: { ...clean.listing, generation: state.listing.generation + 1 }, report: { ...clean.report, generation: state.report.generation + 1 } }
+  }
   if (action.type.startsWith('import-')) return reduceImportSession(state, action as ProspectusAction)
   if (action.type === 'listing-url') {
     if (state.listing.status === 'loading' || state.listing.url === action.url) return state

@@ -1,5 +1,7 @@
 # Property Acquisition Agent — IBE160, G20
 
+> **Stabilisering 5. november 2026:** Konsept A støtter ny analyse, gjentatt lokal PDF-import og leieslider med tilbakestilling til publisert romreferanse. [Sluttkontroll med ekte PDF-er og uavhengig QA](.docs/process/arbeidsokter/2026-11-05-paa-stabilisering.md) dokumenterer faktisk testomfang og begrensninger. Full teknisk dekning, full drift og individuell markedsleie krever fortsatt mer grunnlag.
+
 > **Godkjent konsept A, 30. oktober 2026:** Appen åpner nå med en lys eiendoms- og investeringsoversikt: faktisk dokumentbilde, kildebundet identitet/pris, store nøkkeltall og interaktiv finansiering. PDF er hovedinngangen. **Bak tallene** åpner den bevarte kontrollflyten. Scenarier er atskilt fra kontrollert screening. [Implementering og verifikasjon](.docs/implementation-artifacts/konsept-a-verifikasjon.md).
 
 
@@ -124,8 +126,11 @@ ikke rasterrapporten lest. `ambiguous-12.pdf` krever en entydig separat rapport.
 `bounded-200.pdf` beholder 200 sidestatuser, men velger bare økonomi/sammendrag
 og hele rapporten 5–12 til det kombinerte grunnlaget.
 
-Ny salgsoppgavehash tømmer hele det tidligere objektet. Samme hash i samme
-aktive versjons-/moduskontekst gjenbruker vurderingen, også ved nytt filnavn.
+Hvert filvalg i investeringsoversikten starter en ny lokal analyse, også når
+samme PDF velges igjen. **Start ny analyse** tømmer objekt, egne scenarioer og
+tidligere kontroll. **Prøv dokumentimporten på nytt** gjør et nytt gratis lokalt
+forsøk på valgt fil. I den detaljerte kontrollflaten kan samme hash i samme
+aktive versjons-/moduskontekst fortsatt gjenbruke vurderingen.
 Sidelasting avslutter økten. Backend beholder ingen originaler eller tekst mellom
 requests. Lokal OCR for tekniske rapporter er beskrevet over. Ingen automatisk vedleggsutpakking, betalt kall, token-count-tjeneste
 eller live-fallback inngår. Lokal frist er 60 s; tekstgrensene er 128 KiB/side og
@@ -133,6 +138,35 @@ eller live-fallback inngår. Lokal frist er 60 s; tekstgrensene er 128 KiB/side 
 forelderen stopper ved målt RSS over 512 MiB. RSS er best effort, ingen hard
 OS-garanti mot korte native topper. Hele prosessen stenges før behandlingslåsen
 frigis. Ingen tokenbasert live-kapasitet eller reell kildekvalitet er validert.
+
+I **Forventet leie** kan du dra **Juster forventet månedsleie** eller oppgi et
+presist beløp. Årsleie, bruttoyield og tilgjengelig foreløpig netto oppdateres
+med en gang. **Tilbakestill til publisert leiereferanse** bruker den viste
+romreferansen som ubekreftet scenario. SSB-sammenligningen og dokumenterte fakta
+beholdes separat. Full nettoyield og kontantstrøm vises først med tilstrekkelig
+kostnads- og finansieringsgrunnlag. Ingen sliderendring bekrefter en kontrollert
+investeringsanbefaling.
+
+Ved kildekodeoppdatering: avslutt gammel server, bygg og start på nytt med
+Node 24.21.0. Backend og importbarn kontrollerer nå at de bruker samme lokale
+kildeversjon før PDF-behandling. En utdatert prosess får konkret feilmelding;
+API- og inngangssiden caches ikke. En gammel prosess må ikke brukes til å
+godkjenne ny kode.
+
+Hele den ekte sluttprøven kan gjentas med port 3000 ledig og de private
+originalene på sine dokumenterte lokale stier:
+
+```sh
+npm run build
+node tools/finalization/real-prototype.mjs
+```
+
+Prøven starter/stopper egen ekte server på `localhost:3000`, har ingen mockede
+API-svar og feiler dersom en original mangler. Den bruker Playwrights installerte
+Chromium; ved en annen lokal installasjon kan `PAA_BROWSER_EXECUTABLE` oppgis.
+Skjermbilder, synlig tekst og `summary.json` lagres bare under ignorert
+`private/stabilization-2026-11-05/acceptance/`. Prøven starter serveren uten
+API-nøkkel og bruker ingen betalte tjenester.
 
 ### Code-first analyse av ukjente PDF-er
 

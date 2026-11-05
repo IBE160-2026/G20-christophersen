@@ -6,6 +6,9 @@ import { fileURLToPath } from 'node:url'
 import { DocumentImportSchema, IMPORT_VERSION, IMPORT_EXTRACTION_VERSION, IMPORT_PROMPT_VERSION, IMPORT_MODEL, IMPORT_MAX_RESPONSE_BYTES } from '../../contracts/document-import.ts'
 import type { DocumentImport, ImportRole } from '../../contracts/document-import.ts'
 import { LOCAL_PROCESSING_DEADLINE_MS } from './run-pipeline.ts'
+import { createImportRuntimeGuard } from './import-runtime.ts'
+
+const runtime = createImportRuntimeGuard()
 
 export class ImportRejection extends Error {
   readonly code: string; readonly status: number
@@ -15,6 +18,8 @@ export type ImportPipelineInput = { bytes: Buffer; documentName: string; request
 export type ImportPipelineOptions = { onMeasurement?: (measurement: ImportMeasurement) => void; onLifecycle?: (kind: 'started' | 'closed' | 'adapter-permitted', pid?: number) => void; deadlineMs?: number; rssLimitBytes?: number; childModule?: URL }
 export async function runImport(input: ImportPipelineInput, signal: AbortSignal, markers: Set<string>, options: ImportPipelineOptions = {}): Promise<DocumentImport> {
   if (signal.aborted) { input.bytes = Buffer.alloc(0); throw new ImportRejection('processing-failure', 499) }
+  if (!await runtime.current()) { input.bytes = Buffer.alloc(0); throw new ImportRejection('server-outdated', 409) }
+  const runtimeRevision = await runtime.revision
   const hash = createHash('sha256').update(input.bytes).digest('hex')
   const key = JSON.stringify([input.sessionId, hash, input.role, 'demo', IMPORT_MODEL, IMPORT_VERSION, IMPORT_PROMPT_VERSION, IMPORT_EXTRACTION_VERSION])
   if (markers.has(key)) { input.bytes = Buffer.alloc(0); throw new ImportRejection('duplicate-analysis', 409) }
@@ -29,6 +34,7 @@ export async function runImport(input: ImportPipelineInput, signal: AbortSignal,
   let measuredPhase: ImportMeasurement['phase'] = 'input'
   let measuredPage: number | undefined
   let ps: ReturnType<typeof execFile> | undefined
+  let markerReserved = false
   try {
     return await new Promise<DocumentImport>((resolve, reject) => {
       let settled = false, permitted = false
@@ -65,7 +71,7 @@ export async function runImport(input: ImportPipelineInput, signal: AbortSignal,
         }
         if (value.kind === 'adapter-ready' && 'hash' in value && value.hash === hash && !permitted) {
           if (markers.has(key)) { fail('duplicate-analysis', 409); return }
-          markers.add(key); permitted = true; notify('adapter-permitted')
+          markers.add(key); markerReserved = true; permitted = true; notify('adapter-permitted')
           child.send({ kind: 'permit-adapter', remainingMs: Math.max(0, deadline - performance.now()) }, error => { if (error) fail('processing-failure') })
         } else if (value.kind === 'outcome' && 'outcome' in value && permitted) {
           if (Buffer.byteLength(JSON.stringify(value.outcome)) > IMPORT_MAX_RESPONSE_BYTES) { fail('response-limit'); return }
@@ -78,7 +84,7 @@ export async function runImport(input: ImportPipelineInput, signal: AbortSignal,
       })
       const { bytes, ...metadata } = input
       child.stdin?.on('error', () => fail('processing-failure'))
-      child.send({ ...metadata, byteLength: bytes.length, measure: Boolean(options.onMeasurement) }, error => { if (error) fail('processing-failure') })
+      child.send({ ...metadata, byteLength: bytes.length, runtimeRevision, measure: Boolean(options.onMeasurement) }, error => { if (error) fail('processing-failure') })
       child.stdin?.end(bytes, () => { input.bytes = Buffer.alloc(0) })
       if (signal.aborted) abort()
     })
@@ -89,6 +95,12 @@ export async function runImport(input: ImportPipelineInput, signal: AbortSignal,
     signal.removeEventListener('abort', abort)
     child.removeAllListeners('message'); child.removeAllListeners('error'); child.on('error', () => undefined)
     try { if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL') }
-    finally { input.bytes = Buffer.alloc(0); await closed; child.removeAllListeners() }
+    finally {
+      input.bytes = Buffer.alloc(0); await closed; child.removeAllListeners()
+      // This route performs free local extraction only. Reserve while active,
+      // then allow the same PDF again, including recovery after a failed import.
+      // Paid economy/analysis budgets have their own unchanged persistent guards.
+      if (markerReserved) markers.delete(key)
+    }
   }
 }

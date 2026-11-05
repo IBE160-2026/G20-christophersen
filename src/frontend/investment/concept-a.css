@@ -527,3 +527,12 @@
 .investment-shell .rent-published-references th, .investment-shell .rent-published-references td { padding: 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--investment-line); }
 .investment-shell .rent-published-references li { margin-block: 8px; }
 .investment-shell .rent-published-references a { overflow-wrap: anywhere; }
+.investment-shell .rent-scenario-controls { margin-block: 28px; padding-block: 24px; border-block: 1px solid var(--investment-line); max-width: 760px; }
+.investment-shell .rent-scenario-controls > p { font-size: 13px; line-height: 1.7; margin-block: 12px 20px; }
+.investment-shell .rent-scenario-controls > label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 10px; }
+.investment-shell .rent-scenario-input { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.investment-shell .rent-scenario-input input { width: 190px; max-width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #a2b2a8; border-radius: 3px; color: var(--investment-ink); background: #fff; font-size: 18px; }
+.investment-shell .rent-scenario-input output { font-size: 15px; font-variant-numeric: tabular-nums; }
+.investment-shell .rent-scenario-controls > input[type='range'] { display: block; width: 100%; min-height: 48px; margin-block: 12px; accent-color: var(--investment-accent); cursor: pointer; }
+.investment-shell .rent-scenario-controls > button { min-height: 44px; text-align: left; }
+.investment-shell .hero-upload > .quiet-button { display: block; min-height: 44px; }

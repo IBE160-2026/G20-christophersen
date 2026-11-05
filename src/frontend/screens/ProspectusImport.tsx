@@ -26,9 +26,9 @@ export function ProspectusImport({ session, dispatch, client, role }: { session:
   const pageLabels = { readable: 'Lesbar tekst', blank: 'Bekreftet blank', unreadable: 'Uleselig', incomplete: 'Ufullstendig', unknown: 'Uavklart lesbarhet' }
   return <section className="listing-import" aria-labelledby={`import-title-${role}`}>
     <h2 id={`import-title-${role}`}>{role === 'prospectus' ? 'Last opp salgsoppgave' : 'Last opp separat tilstandsrapport'}</h2>
-    <p>Lokal dokumentanalyse og syntetisk demo · PDF med tekstlag, høyst 200 fysiske sider. 50 MiB per fil og samlet for salgsoppgave og separat rapport. Ingen OCR. Live-import er stengt.</p>
+    <p>Lokal dokumentanalyse · PDF med tekstlag, høyst 200 fysiske sider. 50 MiB per fil og samlet for salgsoppgave og separat rapport. Lokal OCR brukes der tilgjengelig; ufullstendig dekning vises. Ingen betalt analyse starter ved opplasting.</p>
     <label htmlFor={`import-file-${role}`}>{role === 'prospectus' ? 'Velg salgsoppgave (PDF)' : 'Velg separat rapport (PDF)'}</label>
-    <input id={`import-file-${role}`} type="file" accept="application/pdf,.pdf" onChange={event => { setView(null); void client.select(event.currentTarget.files?.[0] ?? null, p, role) }} />
+    <input id={`import-file-${role}`} type="file" accept="application/pdf,.pdf" onChange={event => { const file = event.currentTarget.files?.[0] ?? null; event.currentTarget.value = ''; if (!file) return; setView(null); void client.select(file, p, role) }} />
     <p role="status">{slot.status === 'loading' ? 'Leser dokument og forbereder økonomi og rapport …' : slot.status === 'selecting' ? 'Kontrollerer dokumentets hash …' : slot.status === 'imported' ? 'Dokumentuttrekk klart. Import er ubekreftet; kontroller mot originalen.' : slot.error ? importErrorMessage(slot.error) : 'Import starter når du velger fil. Ingen finansverdier kreves først.'}</p>
     {slot.error && <details><summary>Teknisk feilkode</summary><p>{slot.error}</p></details>}
     {['loading', 'selecting'].includes(slot.status) && <button type="button" className="secondary-action" onClick={() => { client.abort(); dispatch({ type: 'import-abandon' }) }}>Avbryt dokumentimport</button>}

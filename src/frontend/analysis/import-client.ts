@@ -14,9 +14,11 @@ export class ImportClient {
   private readonly dispatch: Dispatch<SessionAction>
   private readonly dependencies: Dependencies
   constructor(dispatch: Dispatch<SessionAction>, dependencies: Dependencies = defaults) { this.dispatch = dispatch; this.dependencies = dependencies; this.sessionId = dependencies.id() }
-  async select(file: File | null, state: ProspectusState, role: ImportRole) {
+  async select(file: File | null, state: ProspectusState, role: ImportRole, fresh = false) {
     this.abort()
-    const ticket = ++this.ticket, generation = Math.max(state.generation + 1, ticket)
+    const reset = fresh && role === 'prospectus'
+    const ticket = ++this.ticket, generation = Math.max(state.generation + (reset ? 2 : 1), ticket)
+    if (reset) this.dispatch({ type: 'new-analysis' })
     this.dispatch({ type: 'import-selecting', generation, role })
     const fail = (code: string) => this.dispatch({ type: 'import-error', role, generation, code })
     if (!file) { fail('missing-file'); return }
@@ -27,8 +29,8 @@ export class ImportClient {
       if (this.ticket !== ticket) return
       this.dispatch({ type: 'import-selected', role, generation, selected: { file, bytes, hash } })
       const original = state[role].outcome
-      if (hash === state[role].selected?.hash && currentImportContext(original, role)) return
-      if (hash === state[role].selected?.hash && original) { fail('incompatible-context'); return }
+      if (!reset && hash === state[role].selected?.hash && currentImportContext(original, role)) return
+      if (!reset && hash === state[role].selected?.hash && original) { fail('incompatible-context'); return }
       const controller = this.controller = new AbortController()
       const correlation = { sessionId: this.sessionId, requestId: this.dependencies.id(), generation }
       this.dispatch({ type: 'import-start', role, correlation })

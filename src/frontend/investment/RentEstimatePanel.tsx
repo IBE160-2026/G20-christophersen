@@ -2,15 +2,17 @@ import Big from 'big.js'
 import { rentalTypeLabel } from './rental-type-label.ts'
 import type { RentState } from './useRentEstimate.ts'
 import type { SessionState } from '../state/session.ts'
-import type { ScenarioBasis, ScenarioControls } from '../../domain/financial-scenario.ts'
+import type { ScenarioBasis } from '../../domain/financial-scenario.ts'
+import { RentScenarioControls } from './RentScenarioControls.tsx'
 import type { PdfSource } from '../../contracts/pdf-source.ts'
 import { validateFinancialBasis } from '../../domain/financial-basis.ts'
 import { formatFinancialDecimal } from '../../presentation/finance.ts'
 const Decimal = Big(); Decimal.strict = true
 const number = (value: string | null, decimals = 0) => value === null ? '—' : formatFinancialDecimal(new Decimal(value).toFixed(decimals, Decimal.roundHalfUp))
 
-export function RentEstimatePanel({ rent, session, basis, onSource }: {
-  rent: RentState & { retry: () => void }; session: SessionState; basis: ScenarioBasis; controls: ScenarioControls; onSource: (source: PdfSource) => void
+export function RentEstimatePanel({ rent, session, basis, onSource, scenarioMonthly, scenarioEdited, onScenarioRent }: {
+  rent: RentState & { retry: () => void }; session: SessionState; basis: ScenarioBasis; onSource: (source: PdfSource) => void
+  scenarioMonthly: string; scenarioEdited: boolean; onScenarioRent?: (monthly: string) => void
 }) {
   if (rent.status === 'idle') return null
   const result = rent.result
@@ -55,6 +57,7 @@ export function RentEstimatePanel({ rent, session, basis, onSource }: {
       <p>{automatic ? `Brukes automatisk i ubekreftet økonomiscenario for ${basis.year}.` : 'Referansen erstatter ikke registrert leie eller et manuelt redigert leiegrunnlag.'} Beløpet er i {result.statisticsYear}-nivå uten prisjustering.</p>
 
     </>}
+    {result && onScenarioRent && (basis.L !== null || scenarioEdited) && <RentScenarioControls monthly={scenarioMonthly} edited={scenarioEdited} reference={published?.metric === 'monthly-rent' ? published : null} year={basis.year} onChange={onScenarioRent} />}
     <p className="rent-documented">{actualRegistered ? `${session.financial.L.confirmed ? 'Brukerbekreftet' : 'Ubekreftet'} faktisk leie er registrert med grunnlag: ${session.sources.L.description || 'Kilde mangler.'}` : actualSelected ? 'Faktisk leie er valgt, men registreringen har mangler eller motstrid. Kontroller beløp, periode, år og kilde i økonomigrunnlaget.' : 'Ingen dokumentert faktisk leie er registrert. Oppgitt faktisk leie og forventet leie kontrolleres separat i økonomigrunnlaget.'}</p>
     {result && <div className="rent-document-facts"><h3>Boligopplysninger fra dokumentet</h3><p>Automatisk dokumentuttrekk · kildekontroll kan gjenstå. Disse verdiene er ikke et leieestimat.</p>
       <dl className="source-summary">{fields.map(([label, field]) => <div key={label}><dt>{label}</dt><dd>{field?.value ?? 'Ukjent · ikke entydig gjenkjent'}{field && <small> · fra dokumentet</small>}{field?.sources.map((source, index) => <button type="button" className="quiet-button" key={`${source.pdfPage}-${source.start}-${index}`} onClick={() => onSource(source)}>Se {source.documentName} · PDF-side {source.pdfPage} ↗</button>)}</dd></div>)}</dl>

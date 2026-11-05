@@ -271,7 +271,7 @@ export const DocumentImportSchema = ImportContextSchema.extend({
 })
 export const ImportHttpResponseSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('document-import'), correlation: AnalysisHttpCorrelationSchema, outcome: DocumentImportSchema }),
-  z.strictObject({ kind: z.literal('rejected'), code: z.enum(['invalid-request', 'payload-too-large', 'unsupported-media-type', 'analysis-active', 'duplicate-analysis', 'processing-failure', 'processing-timeout', 'page-limit', 'invalid-format', 'text-limit', 'response-limit', 'memory-limit', 'live-disabled', 'unsupported-synthetic']) }),
+  z.strictObject({ kind: z.literal('rejected'), code: z.enum(['invalid-request', 'payload-too-large', 'unsupported-media-type', 'analysis-active', 'duplicate-analysis', 'processing-failure', 'processing-timeout', 'page-limit', 'invalid-format', 'text-limit', 'response-limit', 'memory-limit', 'live-disabled', 'unsupported-synthetic', 'server-outdated']) }),
 ])
 export type DocumentImport = z.infer<typeof DocumentImportSchema>
 export type EconomyField = z.infer<typeof EconomyFieldSchema>

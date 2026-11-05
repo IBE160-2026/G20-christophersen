@@ -850,3 +850,16 @@ ikke det opprinnelige kalibreringsavviket; generell dokument-/TG-/kostnadsdeknin
 oppgraderes heller ikke. [Spesifikasjon](spec-lokalt-leiegrunnlag.md),
 [kildekontroll og metode](leieagent-lokale-referanser.md),
 [faktiske testresultater og review](../process/arbeidsokter/2026-11-05-lokalt-leiegrunnlag.md).
+
+**PAA-SO2 / PAA-LEIE1, stabilisering 2026-11-05 — Status: fortsatt Åpen for generell dokument-/TG-/kostnads-/modellkvalitet.**
+
+Den rapporterte Nøstegaten-feilen er reprodusert før endring: gammel
+hovedprosess avviste et nytt importbarns kontrakt etter 23,45 s; samme
+umodifiserte kode etter restart fullførte. Kildeversjonsvakt, child-handshake,
+gratis gjentakelse etter prosess-close, ny analyse og leieslider/reset retter
+de konkrete driftshindringene. Ingen betalt budsjettsperre er fjernet.
+[Rotårsak, faktisk nettlesermatrise, regresjoner og uavhengig QA](../process/arbeidsokter/2026-11-05-paa-stabilisering.md)
+avgrenser dokumentert testomfang. Dette er ikke lukking av historiske åpne
+saker: individuell markedsleie, full kostnadsdekning og komplett teknisk/juridisk
+undersøkelse er fortsatt ikke dokumentert. Originale oppføringer og historikk
+beholdes.

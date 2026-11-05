@@ -1,6 +1,7 @@
 import { fork } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import { importRuntimeRevision } from '../../src/backend/http/import-runtime.ts'
 
 // Exercise the real child's bounded stream boundary without parser/HTTP mocks.
 describe('import child byte-stream boundary', () => {
@@ -23,7 +24,7 @@ describe('import child byte-stream boundary', () => {
         child.once('error', reject)
         child.once('exit', () => reject(new Error('Child exited before rejection')))
       })
-      child.send({ byteLength, documentName: 'synthetic.pdf', requestId: 'stream', role: 'prospectus', parentHash: null, attachmentId: null })
+      child.send({ byteLength, documentName: 'synthetic.pdf', requestId: 'stream', role: 'prospectus', parentHash: null, attachmentId: null, runtimeRevision: await importRuntimeRevision() })
       child.stdin?.end(bytes)
       expect(await result).toEqual({ kind: 'rejected', code: 'invalid-format' })
       expect(replies).toHaveLength(1)
@@ -31,5 +32,18 @@ describe('import child byte-stream boundary', () => {
       child.kill('SIGKILL')
       await closed
     }
+  })
+  it('avviser gammel foreldrekontekst før noen PDF-side behandles', async () => {
+    const child = fork(fileURLToPath(new URL('../../src/backend/http/import-child.ts', import.meta.url)), [], {
+      execArgv: ['--max-old-space-size=256'], env: {}, serialization: 'advanced', stdio: ['pipe', 'ignore', 'ignore', 'ipc'],
+    })
+    const closed = new Promise<void>(resolve => child.once('close', () => resolve()))
+    child.stdin?.on('error', () => undefined)
+    try {
+      const result = new Promise<unknown>((resolve, reject) => { child.once('message', resolve); child.once('error', reject) })
+      child.send({ byteLength: 1, documentName: 'synthetic.pdf', requestId: 'old-runtime', role: 'prospectus', parentHash: null, attachmentId: null, runtimeRevision: 'old-parent' })
+      child.stdin?.end(new Uint8Array([1]))
+      expect(await result).toEqual({ kind: 'rejected', code: 'server-outdated' })
+    } finally { child.kill('SIGKILL'); await closed }
   })
 })

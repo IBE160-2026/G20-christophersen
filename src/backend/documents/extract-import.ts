@@ -5,7 +5,7 @@ import { emitImportMeasurement, ImportMeasurementSchema } from './import-measure
 import type { PdfFormatOutcome } from './validate-pdf.ts'
 
 export class ImportFailure extends Error {
-  readonly code: 'text-limit' | 'invalid-format' | 'page-limit' | 'unsupported-synthetic' | 'response-limit' | 'live-disabled' | 'memory-limit'
+  readonly code: 'text-limit' | 'invalid-format' | 'page-limit' | 'unsupported-synthetic' | 'response-limit' | 'live-disabled' | 'memory-limit' | 'server-outdated'
   constructor(code: ImportFailure['code']) { super(code); this.code = code }
 }
 const ReplySchema = z.strictObject({ kind: z.literal('extracted'), pages: z.array(ImportPageSchema).max(200),

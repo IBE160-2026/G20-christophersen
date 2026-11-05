@@ -7,6 +7,8 @@ const errorMessages: Record<string, string> = {
     'processing-timeout': 'Dokumentbehandlingen overskred tidsfristen og er stoppet. Velg et annet støttet dokument.', 'live-disabled': 'Live-import er stengt. Lokale eksplisitte uttrekk kan kontrolleres, men uløst tekst sperrer rapportbekreftelse.',
     'interrupted': 'Importen er avbrutt. Ingen fullføring er bekreftet.', 'transport-failure': 'Forbindelsen til den lokale serveren ble avbrutt. Kontroller at serveren kjører; grunnlaget er ufullført.',
     'incompatible-context': 'Det bevarte uttrekket har en annen analysekontekst. Start en ny vurdering med gjeldende versjon.',
+    'processing-failure': 'Den lokale dokumentbehandlingen stoppet før uttrekket var klart. Prøv dokumentimporten på nytt. Hvis feilen gjentar seg, velg en annen PDF; grunnlaget er ikke fullført.',
+    'server-outdated': 'Appens kode er oppdatert mens den lokale serveren kjører. Start PAA på nytt og last siden på nytt før du prøver igjen.',
   }
 
 export const importErrorMessage = (code: string) => errorMessages[code] ?? 'Dokumentimporten kunne ikke fullføres. Velg en tekstbasert PDF og kontroller det nye grunnlaget.'

@@ -1,6 +1,6 @@
 import { deflateSync } from 'node:zlib'
 import { describe, expect, it, vi } from 'vitest'
-import { extractPage, inspectStreamBytes } from '../../src/backend/documents/pdf-extraction-core.ts'
+import { extractPage, inspectStreamBytes, readBoundedStream } from '../../src/backend/documents/pdf-extraction-core.ts'
 import type { TextChunk } from '../../src/backend/documents/pdf-extraction-core.ts'
 
 type ExtractOptions = { sink: { enqueue(chunk: TextChunk): void } }
@@ -98,4 +98,61 @@ it.each([true, false])('dekodingslimit beholder kjent tap med/uten tekst: %s', a
 it('dekodingslimit skjuler ikke diagnostisert teksttap', async () => {
   const page = pageWith(async ({ sink }) => sink.enqueue({ items: [{ str: 'Delvis' }] }))
   expect(await extractPage(6, page, 'limit', false, {}, {}, () => 'loss')).toMatchObject({ status: 'incomplete', reason: expect.stringContaining('1 MiB') })
+})
+
+
+it('bounds each ASCII85 stage before a following Flate filter can allocate', () => {
+  expect(inspectStreamBytes(Buffer.from('z'.repeat(257) + '~>'), ['ASCII85Decode', 'FlateDecode'], 1024)).toBe('limit')
+  expect(inspectStreamBytes(Buffer.from('z'.repeat(256) + '~>'), ['ASCII85Decode'], 1024)).toBe('empty')
+  expect(inspectStreamBytes(new Uint8Array(1025), [], 1024)).toBe('limit')
+})
+it('reads small DecodeStreams without a 1 MiB eager allocation and borrows the result', () => {
+  const content = new Uint8Array(120)
+  const requests: number[] = []
+  const stream = { pos: 0, reset() { this.pos = 0 }, getBytes(length: number) {
+    requests.push(length)
+    const result = content.subarray(this.pos, this.pos + length)
+    this.pos += result.length
+    return result
+  } }
+  const result = readBoundedStream(stream, 1024 * 1024)
+  expect(result.buffer).toBe(content.buffer)
+  expect(result).toHaveLength(120)
+  expect(Math.max(...requests)).toBeLessThanOrEqual(4096)
+})
+it('detects the first byte beyond the stream limit without silently truncating', () => {
+  const content = new Uint8Array(8193)
+  const stream = { pos: 0, reset() { this.pos = 0 }, getBytes(length: number) {
+    const result = content.subarray(this.pos, this.pos + length); this.pos += result.length; return result
+  } }
+  expect(readBoundedStream(stream, 8192)).toHaveLength(8193)
+})
+
+
+it('streams bounded PDF.js chunk deltas before a later extraction failure with exact offsets', async () => {
+  const text = 'x'.repeat(4095) + '🌊\nTG3', delivered: string[] = []
+  const page = pageWith(async ({ sink }) => {
+    sink.enqueue({ items: [{ str: text }] })
+    expect(delivered.join('')).toBe(text)
+    throw new Error('later extraction failure')
+  })
+  const result = await extractPage(3, page, 'content', false, {}, {}, silent,
+    { pageBytes: 128 * 1024, totalBytes: 1024 * 1024, used: 0 }, chunk => delivered.push(chunk))
+  expect(delivered.every(chunk => chunk.length <= 4096)).toBe(true)
+  expect(delivered.map(chunk => Buffer.byteLength(chunk)).reduce((sum, size) => sum + size, 0)).toBe(Buffer.byteLength(text))
+  expect(result).toMatchObject({ text, status: 'incomplete' })
+  expect(result.text.slice(4095)).toBe('🌊\nTG3')
+})
+
+
+it('keeps per-item text quotas when surrogate halves join in a delivered PDF.js chunk', async () => {
+  const quotas: (number | undefined)[] = []
+  const chunks: string[] = [], budget = { pageBytes: 128 * 1024, totalBytes: 1024 * 1024, used: 0 }
+  const page = pageWith(async ({ sink }) => sink.enqueue({ items: [{ str: '\uD83C' }, { str: '\uDF0A' }] }))
+  const result = await extractPage(1, page, 'content', false, {}, {}, silent, budget, (chunk, quota) => { chunks.push(chunk); quotas.push(quota) })
+  expect(result.text).toBe('🌊')
+  expect(chunks.join('')).toBe(result.text)
+  expect(Buffer.byteLength(chunks.join(''))).toBe(4)
+  expect(budget.used).toBe(6)
+  expect(quotas).toEqual([6])
 })

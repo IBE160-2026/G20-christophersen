@@ -1,6 +1,6 @@
 /** New synthetic text-layer PDF for isolation tests, outside the offline registry.
  * Test values are document content, never replacement application data. */
-export function newProspectusPdf(lines: string[]): Buffer {
+export function newProspectusPdf(lines: string[], options: { optionalContent?: boolean } = {}): Buffer {
   const literal = (line: string) => [...line].map(char => {
     const code = char.charCodeAt(0)
     if (code > 255) throw new Error('Testfont requires WinAnsi text')
@@ -8,12 +8,13 @@ export function newProspectusPdf(lines: string[]): Buffer {
   }).join('')
   const stream = `BT /F1 11 Tf 20 TL 35 755 Td ${lines.map((line, index) => `${index ? 'T* ' : ''}(${literal(line)}) Tj`).join('\n')} ET`
   const objects = [
-    '<< /Type /Catalog /Pages 2 0 R >>',
+    options.optionalContent ? '<< /Type /Catalog /Pages 2 0 R /OCProperties << /OCGs [6 0 R] /D << /Order [6 0 R] /BaseState /ON >> >> >>' : '<< /Type /Catalog /Pages 2 0 R >>',
     '<< /Type /Pages /Count 1 /Kids [4 0 R] >>',
     '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
     '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>',
     `<< /Length ${Buffer.byteLength(stream)} >>\nstream\n${stream}\nendstream`,
   ]
+  if (options.optionalContent) objects.push('<< /Type /OCG /Name (Optional text layer) >>')
   let pdf = '%PDF-1.7\n'; const offsets = [0]
   for (const [index, object] of objects.entries()) { offsets.push(Buffer.byteLength(pdf)); pdf += `${index + 1} 0 obj\n${object}\nendobj\n` }
   const xref = Buffer.byteLength(pdf)

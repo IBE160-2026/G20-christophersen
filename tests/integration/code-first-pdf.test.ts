@@ -1,3 +1,4 @@
+import { newProspectusPdf } from '../helpers/new-prospectus-pdf.ts'
 import { expect, it } from 'vitest'
 import oracle from '../fixtures/sales-prospectus/code-first-oracle.json' with { type: 'json' }
 import { createHash } from 'node:crypto'
@@ -91,3 +92,14 @@ it('samlet tekstgrense består over flere parserlevetider uten å returnere avko
   await expect(extractImport(format)).rejects.toMatchObject({ code: 'text-limit' })
   expect(Buffer.from(format.originalBytes)).toEqual(bytes)
 }, 15000)
+
+
+it('optional content layers retain text but state the unverified visibility explicitly', async () => {
+  const format = await validatePdf(newProspectusPdf(['Bevart tekst'], { optionalContent: true }), 'optional-content.pdf', { maxPages: 200 })
+  if (format.status !== 'format-validated') throw new Error('format')
+  const result = await extractImport(format)
+  expect(result.pages).toHaveLength(1)
+  expect(result.pages[0]).toMatchObject({ pdfPage: 1, text: expect.stringContaining('Bevart tekst'), status: 'unknown',
+    reason: expect.stringContaining('valgfrie innholdslag') })
+  expect(result.pages[0]!.reason).toContain('synlighet og innhold er ikke verifisert')
+})

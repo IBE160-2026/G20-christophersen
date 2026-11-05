@@ -498,11 +498,18 @@ Se [ekte PDF-undersøkelse og testbevis](.docs/process/arbeidsokter/2026-11-04-l
 
 #### Store digitale salgsoppgaver og Nordvik-prøven
 
-Importen isolerer formatparseren og leser digital PDF-tekst i grupper på 20
-sider. Hver parserworker avsluttes før neste gruppe; samlet tekstbudsjett og
-512 MiB RSS-vakt består. OCR brukes som lokalt supplement for manglende/usikker
-tekst og grafiske detaljer; sider uten bildekontroll beholder eksplisitt usikker
-dekning. Originalviseren frigjør avsluttede canvas- og sideressurser.
+Importen strømmer PDF-en til ett eid originalgrunnlag og deler dette lesende
+med parserworkerne. Grupper har høyst 20 sider og avsluttes tidligere ved høyt
+minneforbruk; hver worker avsluttes før neste starter. Parserheapen er begrenset
+til 256 MiB gammel og 16 MiB ung generasjon. Importprosessen beholder sin
+512 MiB RSS-vakt, med et tidligere parservern på 448 MiB. Fullførte sider og
+levert tekst bevares ved parserens ressursgrense; manglende kontroll får fysisk
+side og årsak. Formatkontrollen laster ikke unødvendige systemfonter.
+
+OCR brukes som lokalt supplement for manglende/usikker tekst og grafiske detaljer.
+OCR kjører separat med eget ressursvern; 512 MiB er ikke et samlet budsjett for
+hele prosesstreet. Sider uten bildekontroll beholder eksplisitt usikker dekning.
+Originalviseren frigjør avsluttede canvas- og sideressurser.
 
 Nordvik Rostockgata 96 er prøvd med ekte privat PDF på 170 sider og integrert
 19-siders rapport. Alle bestilte bolig-/økonomifelt hentes med fysiske kilder.
@@ -536,3 +543,28 @@ PAA_E2E_PORT=3001 PAA_TEST_NORDVIK_REQUIRED=1 npx playwright test tests/e2e/rent
 Flagget krever originalen og tillater ikke skip. Prøven bruker faktisk gratis
 SSB-metadata og celler og ingen betalt KI. Uten privat fil hoppes denne enkeltprøven over
 i vanlig regresjon; syntetiske format-, felt- og ressursprøver kjører fortsatt.
+
+
+Nøstegaten 65 A er også kontrollert med privat original: 152 sider og hele
+tekstlaget beholdes. PDF-ens valgfrie innholdslag er foreløpig ikke verifisert;
+derfor vises uavklart lesbarhet, manglende verifiserte økonomifelter/leie og sperret
+teknisk fullstendighet. Dette kan ikke bekreftes bort. Lokal OCR av rapportområdet
+86–101 supplerer tekstgrunnlaget. Se [årsaken, målingene og testutfallene](.docs/process/arbeidsokter/2026-11-05-robust-pdf-minne.md).
+
+For å kreve begge private originaler i nettleserprøven, legg Nøstegaten-filen i
+`private/incoming/nostegaten-65-a.pdf` og kjør:
+
+```bash
+PAA_E2E_PORT=3001 PAA_TEST_NORDVIK_REQUIRED=1 PAA_TEST_NOSTEGATEN_REQUIRED=1 npx playwright test tests/e2e/rent-real-document.spec.ts --grep "ekte Nordvik|ekte Nøstegaten"
+```
+
+Persondatafrie fase-/minnetall og private uttrekk kan gjenskapes lokalt med:
+
+```bash
+node tools/pdf-memory/probe.ts private/incoming/nostegaten-65-a.pdf private/incoming/nordvik-rostockgata-96.pdf --output-dir private/pdf-memory
+```
+
+Verktøyet bruker den faktiske importflyten uten modelltransport og lagrer bare
+under ignorert `private/`, i en ny resultatmappe for hver kjøring. Tidligere filer
+overskrives ikke. Det måler Node og lokal OCR separat og oppgir også
+en samplet RSS-sum; denne summen er ikke dekket av Node-prosessens 512 MiB-vakt.

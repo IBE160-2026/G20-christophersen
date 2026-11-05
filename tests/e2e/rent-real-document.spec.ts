@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { test, expect } from '@playwright/test'
 import type { APIRequestContext, TestInfo } from '@playwright/test'
 import { existsSync } from 'node:fs'
@@ -271,4 +272,61 @@ test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekrefte
   await expect(page.getByTestId('scenario-cash')).toContainText('—')
   await writeFile(info.outputPath('nordvik-import-rent.json'), JSON.stringify({ import: body, rent, expected, errors, paid }, null, 2))
   expect(errors).toEqual([]); expect(paid).toEqual([])
+})
+
+const nostegaten = fileURLToPath(new URL('../../private/incoming/nostegaten-65-a.pdf', import.meta.url))
+test('ekte Nøstegaten: 152 sider bevares og uavklart dokumentgrunnlag vises gjennom hele brukerflyten', async ({ page }, info) => {
+  const required = process.env.PAA_TEST_NOSTEGATEN_REQUIRED === '1'
+  test.skip(!existsSync(nostegaten) && !required, 'Privat original distribueres ikke i Git. PAA_TEST_NOSTEGATEN_REQUIRED=1 krever prøven uten skip.')
+  expect(existsSync(nostegaten)).toBe(true)
+  test.setTimeout(120_000)
+  const paid: string[] = [], errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  for (const endpoint of ['document-economy/run', 'analysis']) await page.route(`**/api/${endpoint}`, route => { paid.push(endpoint); return route.abort() })
+  await page.goto('/')
+  const imported = page.waitForResponse(response => response.url().endsWith('/api/document-import') && response.request().method() === 'POST', { timeout: 90_000 })
+  const rented = page.waitForResponse(response => response.url().endsWith('/api/rent-estimate') && response.request().method() === 'POST', { timeout: 100_000 })
+  await page.locator('#import-file-prospectus').setInputFiles(nostegaten)
+  const [http, rentHttp] = await Promise.all([imported, rented])
+  expect(http.ok()).toBe(true); expect(rentHttp.ok()).toBe(true)
+  const outcome = DocumentImportSchema.parse((await http.json()).outcome), rent = RentEstimateSchema.parse(await rentHttp.json())
+  expect(outcome.reportHash).toBe('f33337aa0f5f2de0b64454541b0bb20bcf7732498755c4078ed1509b3a3f14e8')
+  expect(outcome.pageCount).toBe(152)
+  expect(outcome.pages.map(item => item.pdfPage)).toEqual(Array.from({ length: 152 }, (_, index) => index + 1))
+  // Uavhengig tekstfasit fra baseline-parsing av hele originalen; ingen private sitater versjoneres.
+  expect(createHash('sha256').update(JSON.stringify(outcome.pages.map(({ pdfPage, text }) => ({ pdfPage, text })))).digest('hex')).toBe('6392291608dc91b47cbc91126f74821a7d9a363992b81eb8b2042519ce4b4935')
+  expect(outcome.sections.map(section => [section.startPage, section.endPage])).toEqual([[86, 101]])
+  for (const source of outcome.sections.flatMap(section => section.basis)) {
+    expect(source.documentHash).toBe(outcome.reportHash)
+    expect(outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
+  }
+  expect(outcome.technical.status).toBe('blocked')
+  expect(outcome.coverage.technical.status).toBe('incomplete')
+  expect(outcome.visualAnalysis?.pages.map(item => item.pdfPage)).toEqual(Array.from({ length: 16 }, (_, index) => index + 86))
+  expect(outcome.visualAnalysis?.pages.every(item => item.error === null && item.rasterDigest !== null && item.lines.length > 0)).toBe(true)
+  // Dagens strukturelle lesbarhetskontroll kan ikke sertifisere disse tekstsidene.
+  // Manglende verifiserte beløp og leie må forbli eksplisitte, aldri bli nullverdier.
+  expect(outcome.economy.fields.every(field => field.amount === null)).toBe(true)
+  expect(outcome.pages.every(page => page.reason?.includes('valgfrie innholdslag'))).toBe(true)
+  await expect(page.locator('.document-economy')).toContainText('verifiserbart beløp')
+  await expect(page.locator('.document-economy')).toContainText('PDF-en bruker valgfrie innholdslag.')
+  expect(rent).toMatchObject({ status: 'unavailable', monthly: null, annual: null })
+  const rental = page.getByRole('region', { name: 'Forventet leie.' })
+  await expect(rental).toContainText('Hvorfor markedsestimatet mangler')
+  await expect(page.getByTestId('scenario-net')).toContainText('—')
+  await expect(page.getByTestId('scenario-cash')).toContainText('—')
+  await page.getByRole('button', { name: 'Eiendommen', exact: true }).click()
+  const reportStart = page.getByRole('dialog').getByRole('button', { name: 'Åpne rapportstart ↗', exact: true })
+  await expect(reportStart).toBeVisible()
+  await reportStart.click()
+  await expect(page.locator('[data-pdf-page="86"]')).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect.poll(() => page.workers().length).toBe(0)
+  await page.setViewportSize({ width: 390, height: 844 })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await page.screenshot({ path: info.outputPath('nostegaten-mobile.png'), fullPage: true })
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.screenshot({ path: info.outputPath('nostegaten-desktop.png'), fullPage: true })
+  await writeFile(info.outputPath('nostegaten-import-rent.json'), JSON.stringify({ outcome, rent }, null, 2))
+  expect(paid).toEqual([]); expect(errors).toEqual([])
 })

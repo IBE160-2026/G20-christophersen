@@ -5,7 +5,7 @@ import { findingListAssessment } from '../../src/frontend/state/report.ts'
 import { calculateResultSnapshot, selectResult } from '../../src/frontend/state/result.ts'
 import { ImportClient } from '../../src/frontend/analysis/import-client.ts'
 import { importFixture } from '../helpers/import-fixture.ts'
-import { DocumentImportSchema } from '../../src/contracts/document-import.ts'
+import { DocumentImportSchema, currentImportContext } from '../../src/contracts/document-import.ts'
 import type { ImportRole } from '../../src/contracts/document-import.ts'
 import oracle from '../fixtures/sales-prospectus/extended-expected.json' with { type: 'json' }
 let fixture: Awaited<ReturnType<typeof importFixture>>
@@ -308,4 +308,13 @@ describe('ny dokumentbundet KI-økonomianalyse', () => {
     expect(DocumentImportSchema.safeParse({ ...outcome, economy: { ...outcome.economy,
       analysis: { ...outcome.economy.analysis!, requestDigest: null, selectedPages: [] } } }).success).toBe(false)
   })
+})
+
+
+it('v1 extraction outcomes are historical and cannot reuse the current same-hash context', () => {
+  const old = { ...fixture.outcome, extractionVersion: 'bounded-pdf-text-1' } as unknown as typeof fixture.outcome
+  expect(currentImportContext(fixture.outcome, 'prospectus')).toBe(true)
+  expect(currentImportContext(old, 'prospectus')).toBe(false)
+  expect(DocumentImportSchema.safeParse(old).success).toBe(false)
+  expect(old.pages).toBe(fixture.outcome.pages)
 })

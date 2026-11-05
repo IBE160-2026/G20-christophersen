@@ -12,7 +12,7 @@ export { PdfSourceSchema } from './pdf-source.ts'
 export type { PdfSource } from './pdf-source.ts'
 
 export const IMPORT_VERSION = 'document-import-1' as const
-export const IMPORT_EXTRACTION_VERSION = 'bounded-pdf-text-1' as const
+export const IMPORT_EXTRACTION_VERSION = 'bounded-pdf-text-2' as const
 export const IMPORT_PROMPT_VERSION = 'economy-tg-1' as const
 export const IMPORT_MODEL = 'offline-synthetic-1' as const
 export const CODE_FIRST_PROMPT_VERSION = 'semantic-spans-1' as const

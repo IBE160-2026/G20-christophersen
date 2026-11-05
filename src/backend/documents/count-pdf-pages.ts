@@ -13,8 +13,9 @@ async function terminate(worker: Worker) {
 
 /** Count-independent traversal in the pinned PDF.js parser; never transfers caller bytes. */
 export async function countPdfPages(bytes: Uint8Array): Promise<number | null> {
-  const snapshot = Uint8Array.from(bytes)
-  const worker = new Worker(new URL('./pdf-page-tree-worker.ts', import.meta.url), { workerData: snapshot, transferList: [snapshot.buffer] })
+  const shared = bytes.buffer instanceof SharedArrayBuffer && bytes.byteOffset === 0 && bytes.byteLength === bytes.buffer.byteLength
+  const snapshot = shared ? bytes : Uint8Array.from(bytes)
+  const worker = new Worker(new URL('./pdf-page-tree-worker.ts', import.meta.url), { workerData: snapshot, transferList: shared ? [] : [snapshot.buffer as ArrayBuffer] })
   try {
     return await new Promise<number | null>((resolve, reject) => {
       worker.once('message', (reply: PageCountReply) => {

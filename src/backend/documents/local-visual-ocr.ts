@@ -1,4 +1,5 @@
-import { spawn } from 'node:child_process'
+import { emitImportMeasurement, hasImportMeasurementSink } from './import-measurement.ts'
+import { execFile, spawn } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { chmod, mkdir, readFile, rename, rm, stat } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -75,13 +76,36 @@ export async function extractLocalVisualEvidence(bytes: Uint8Array, documentHash
   try {
     const output = await new Promise<string>(resolve => {
       const child = spawn(executable, [requested.slice(0, maxPages).join(',')], { stdio: ['pipe', 'pipe', 'ignore'], env: { PATH: '/usr/bin:/bin', HOME: process.env.HOME ?? tmpdir() } })
+      // Native Vision/PDFKit owns a separate address space. Its RSS must never
+      // be presented as part of the Node-only RSS guard.
+      let sampling = false, peakRss = 0, finished = false
+      let sample: ReturnType<typeof execFile> | undefined
+      const monitor = hasImportMeasurementSink() ? setInterval(() => {
+        if (finished || sampling || !child.pid) return
+        sampling = true
+        sample = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid)], { timeout: 1000, maxBuffer: 1024, env: {} }, (error, stdout) => {
+          sampling = false
+          if (finished) return
+          if (!error && /^\s*\d+\s*$/.test(stdout)) {
+            const rss = Number(stdout.trim()) * 1024
+            peakRss = Math.max(peakRss, rss)
+            emitImportMeasurement({ process: 'local-ocr', phase: 'visual', point: 'sample', rss })
+          }
+        })
+      }, 100) : undefined
       child.stdin.on('error', () => { /* Avbrutt innlesing gir usikre sider. */ })
       child.stdin.end(bytes)
       let text = '', size = 0
       const decoder = new StringDecoder('utf8')
       const timer = setTimeout(() => child.kill('SIGKILL'), deadlineMs)
       const stop = () => { child.kill('SIGKILL') }
-      const finish = () => { clearTimeout(timer); process.off('exit', stop); resolve(text) }
+      const finish = () => {
+        if (finished) return
+        finished = true
+        clearTimeout(timer); if (monitor) clearInterval(monitor); sample?.kill()
+        if (hasImportMeasurementSink()) emitImportMeasurement({ process: 'local-ocr', phase: 'visual', point: 'end', rss: peakRss })
+        process.off('exit', stop); resolve(text)
+      }
       child.stdout.on('data', (chunk: Buffer) => { size += chunk.length; if (size > outputLimit) child.kill('SIGKILL'); else text += decoder.write(chunk) })
       child.once('error', finish)
       child.once('close', finish)

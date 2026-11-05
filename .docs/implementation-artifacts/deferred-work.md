@@ -788,3 +788,29 @@ kontantstrøm, markedsvalidering og TG-kompletthet gjenstår. Ingen historisk
 oppføring lukkes av denne caseforbedringen. Se
 [spec og review](spec-rostockgata-automatisk-netto.md) og
 [faktiske testresultater og gjenværende grenser](../process/arbeidsokter/2026-11-04-rostockgata-automatisk-netto.md).
+
+**PAA-SO2 / PAA-LEIE1, Nøstegaten og robust PDF-minne 2026-11-05 — Status: fortsatt Åpen for generell format-/TG-/modellkvalitet.**
+
+Minnestoppen er reprodusert med ekte Nøstegaten og rettet uten økt RSS-grense.
+Sluttmålingen bevarer 152/152 sider og 153 005 tegn ved 358,44 MiB Node-RSS;
+Rostockgata bevarer 170/170 sider og 293 168 tegn ved 336,55 MiB, mot tidligere
+448,36 MiB. Fullført tekst/sidekart/kilder bevares ved kontrollert parseravbrudd,
+mens manglende kontroll får fysisk side og årsak. Dette er avgrenset
+minne-/robusthetsarbeid, ikke lukking av PAA-SO2 eller PAA-LEIE1.
+Se [spec og reviewtriage](spec-robust-pdf-minne.md) og
+[årsaks-, måle- og testbevis](../process/arbeidsokter/2026-11-05-robust-pdf-minne.md).
+
+**Konkret gjenstående formatbegrensning — Status: Åpen:** Nøstegaten bruker
+valgfrie PDF-innholdslag (`/OCProperties`). Eksisterende kontroll verifiserer ikke
+lagenes synlighet/innhold, og alle 152 sider forblir strukturelt uavklarte.
+Teksten og rapportområdet 86–101 beholdes; 16 rapportbilder leses lokalt. Verifisert
+økonomigrunnlag/leie mangler og teknisk fullstendighet er sperret. Før en eventuell
+oppgradering kreves eksplisitt lag-/synlighetskontroll og uavhengig fasit;
+minnefiksen alene godkjenner ikke disse sidene.
+
+**Ressursavgrensning — Status: Åpen for et eventuelt samlet prosessbudsjett:**
+Dagens 512 MiB-vakt gjelder Node-importbarnet; native OCR har egen prosess og eget
+vern. Samplet samtidig Node+OCR-RSS i sluttprøven var ca. 544/599 MiB (inkluderer delte
+OS-sider). Ingen samlet 512 MiB-garanti for hele prosesstreet hevdes. Dersom en
+kjøreplattform gir én felles 512 MiB-kvote, kreves et eget samlet budsjett og
+ny reell OCR-/kvalitetsverifikasjon. Dette forholdet fantes også før rettingen.

@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { parentPort, workerData } from 'node:worker_threads'
-import { extractPage, inspectStreamBytes, TextBudgetExceeded } from './pdf-extraction-core.ts'
+import { extractPage, inspectStreamBytes, readBoundedStream, TextBudgetExceeded } from './pdf-extraction-core.ts'
+import { recordImportMeasurement, setImportMeasurementSink } from './import-measurement.ts'
 import type { Inspection, TextPage } from './pdf-extraction-core.ts'
 import type { DocumentBasis } from '../../contracts/document-analysis.ts'
 
@@ -45,6 +46,7 @@ interface Parser {
   stringToPDFString(value: string, keepEscapeSequence?: boolean): string
   setVerbosityLevel(level: number): void
 }
+if (workerData.measure) setImportMeasurementSink(measurement => parentPort?.postMessage({ kind: 'measurement', measurement }))
 let manager: Manager | undefined
 let reply: { kind: 'extracted'; pages: DocumentBasis['pages']; textBytes?: number; attachments?: { id: string; name: string; isPdf: boolean }[] } | { kind: 'unavailable' | 'text-limit' } = { kind: 'unavailable' }
 const startPage: number = workerData.startPage ?? 0
@@ -93,6 +95,7 @@ try {
       attachments.push({ id, name, isPdf: /\.pdf$/i.test(name) })
     }
   }
+  if (bounded) parentPort?.postMessage({ kind: 'attachments', attachments })
   const resolve = (raw: unknown) => {
     const value = xref.fetchIfRef(raw)
     if (raw instanceof parser.Ref && value == null) throw new Error('Unresolved reference')
@@ -121,7 +124,7 @@ try {
         if (resolve(stream.dict.getRaw('DecodeParms') ?? stream.dict.getRaw('DP')) != null) return resultOf('unknown', 'Innholdsstrømmens dekodingsparametre er ikke uavhengig verifisert.')
         const originalPosition = raw.pos
         raw.reset()
-        const inspected = inspectStreamBytes(Uint8Array.from(raw.getBytes()), filters.map(filter => (filter as { name: string }).name), bounded ? 1024 * 1024 : undefined)
+        const inspected = inspectStreamBytes(raw.getBytes(), filters.map(filter => (filter as { name: string }).name), bounded ? 1024 * 1024 : undefined)
         raw.pos = originalPosition
         if (inspected === 'limit') return resultOf('limit', 'Innholdsstrømmens dekoding overskred grensen på 1 MiB.')
         if (inspected === 'damaged') return resultOf(inspected)
@@ -206,7 +209,7 @@ try {
     const position = profile.pos
     try {
       profile.reset()
-      const bytes = profile.getBytes(1024 * 1024 + 1)
+      const bytes = readBoundedStream(profile, 1024 * 1024)
       const n = resolve(profile.dict.getRaw('N'))
       const signature = Buffer.from(bytes.subarray(16, 20)).toString('ascii')
       return bytes.length >= 128 && bytes.length <= 1024 * 1024 && Buffer.from(bytes.subarray(36, 40)).toString('ascii') === 'acsp'
@@ -275,6 +278,7 @@ try {
       }
       const root = xref.getCatalogObj()
       if (!(root instanceof parser.Dict)) return unknown()
+      if (root.has('OCProperties')) return { ...unknown(), reason: 'PDF-en bruker valgfrie innholdslag. Teksten er beholdt, men lagenes synlighet og innhold er ikke verifisert.' }
       const catalogMetadata = new Set(['Type', 'Pages', 'Version', 'PageLabels', 'Names', 'Dests',
         'PageLayout', 'PageMode', 'Outlines', 'ViewerPreferences', 'OpenAction', 'Metadata', 'MarkInfo',
         'StructTreeRoot', 'Lang', 'OutputIntents', 'Perms', 'AcroForm', 'XFA', 'NeedsRendering'])
@@ -309,7 +313,7 @@ try {
       const position = stream.pos
       try {
         stream.reset()
-        const bytes = Uint8Array.from(stream.getBytes(1024 * 1024 + 1))
+        const bytes = readBoundedStream(stream, 1024 * 1024)
         if (bytes.length > 1024 * 1024) return true
         const lexer = new parser.Lexer(new parser.Stream(bytes), parser.EvaluatorPreprocessor.opMap)
         for (let tokens = 0; tokens < 250_000; tokens++) {
@@ -353,37 +357,71 @@ try {
       return false
     } catch { return true }
   }
+  const operation = (phase: 'content-inspection' | 'text' | 'raster' | 'cleanup', point: 'start' | 'end', pdfPage: number) => {
+    if (bounded && point === 'start') parentPort?.postMessage({ kind: 'operation', phase, pdfPage })
+    recordImportMeasurement(phase, point, pdfPage)
+  }
+  const publishPage = (page: typeof pages[number]) => { if (bounded) parentPort?.postMessage({ kind: 'page', page, textBytes: budget!.used }) }
+  let deliveredBytes = budget?.used ?? 0
   const documentMessages = [...messages]
   for (const [pageIndex, [dict, ref]] of leaves) {
     if (pageIndex < startPage || pageIndex >= endPage) continue
     messages = [...documentMessages]
     if (dict instanceof Error) {
-      pages.push({ pdfPage: pageIndex + 1, text: '', status: 'unknown', reason: 'PDF-sidens innhold kunne ikke kontrolleres.' })
+      pages.push({ pdfPage: pageIndex + 1, text: '', status: 'unknown', reason: 'PDF-sidens innhold kunne ikke kontrolleres.', ...(bounded ? { rasterUnprocessed: true } : {}) })
+      publishPage(pages.at(-1)!)
       continue
     }
     const page = new parser.Page({ pdfManager: manager, xref, pageIndex, pageDict: dict, ref,
       globalIdFactory: manager.pdfDocument._globalIdFactory,
       ...Object.fromEntries(['fontCache', 'builtInCMapCache', 'standardFontDataCache', 'globalColorSpaceCache',
         'globalImageCache', 'systemFontCache', 'nonBlendModesSet'].map(key => [key, catalog[key]])) })
+    operation('content-inspection', 'start', pageIndex + 1)
     const inspection = inspectContents(dict)
     const other = otherContent(dict)
+    operation('content-inspection', 'end', pageIndex + 1)
     const task = new parser.WorkerTask(`Extract physical page ${pageIndex + 1}`)
     try {
+      operation('text', 'start', pageIndex + 1)
       const extracted = await extractPage(pageIndex + 1, page, inspection.status, other.content, handler, task, () => {
         if (other.textLoss) return 'loss'
         if (messages.some(message => /ignoring|Invalid stream|not available|failed/i.test(message))) return 'loss'
         return messages.length ? 'uncertain' : null
-      }, budget)
+      }, budget, bounded ? (text, textBytes) => {
+        deliveredBytes = textBytes ?? deliveredBytes + Buffer.byteLength(text)
+        parentPort?.postMessage({ kind: 'chunk', pdfPage: pageIndex + 1, text, textBytes: deliveredBytes })
+      } : undefined)
       // Text-layer reliability and unprocessed raster are independent in the new envelope.
       // A logo must not hide usable economy text; raster inside the report still blocks coverage.
-      if (bounded) Object.assign(extracted, { rasterUnprocessed: raster(dict) })
+      operation('text', 'end', pageIndex + 1)
+      // The original quota counts PDF.js items separately. Joining adjacent
+      // surrogate halves can use fewer UTF-8 bytes; keep that conservative
+      // quota when the next physical page starts streaming.
+      if (budget) deliveredBytes = budget.used
+      if (bounded) {
+        parentPort?.postMessage({ kind: 'text', page: { ...extracted, rasterUnprocessed: true }, textBytes: budget!.used })
+        operation('raster', 'start', pageIndex + 1)
+        Object.assign(extracted, { rasterUnprocessed: raster(dict) })
+        operation('raster', 'end', pageIndex + 1)
+      }
       if (extracted.status === 'readable' && other.uncertainAnnotation) {
         extracted.status = 'unknown'
         extracted.reason = 'Annotasjonens tekstgrunnlag kunne ikke kontrolleres fullstendig.'
       }
       if (extracted.status === 'unknown') extracted.reason = inspection.reason ?? other.reason ?? extracted.reason
       pages.push(extracted)
-    } finally { task.terminate(); task.finish(); await manager.cleanup() }
+      publishPage(extracted)
+    } finally {
+      operation('cleanup', 'start', pageIndex + 1)
+      task.terminate(); task.finish(); await manager.cleanup()
+      operation('cleanup', 'end', pageIndex + 1)
+    }
+    // A new isolate releases accumulated fonts/parser caches. Never start another
+    // page when the current parser is already near its memory budget.
+    if (bounded && pageIndex + 1 < endPage && (process.memoryUsage().heapUsed > 96 * 1024 * 1024 || process.memoryUsage().rss > 360 * 1024 * 1024)) {
+      reply = { kind: 'extracted', pages, attachments, textBytes: budget!.used }
+      break
+    }
   }
   reply = { kind: 'extracted', pages, ...(bounded ? { attachments, textBytes: budget!.used } : {}) }
 } catch (error) {

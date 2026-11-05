@@ -1,0 +1,541 @@
+{
+  "runtime": "Node 24.21.0",
+  "baseline_commit": "9280d8bf8ed15782edb2e8e52a0b13cf81f57f3b",
+  "rss_guard_bytes": 536870912,
+  "method": "Fasesnapshots/operasjoner og ekstern RSS-sampling hvert 100 ms; OCR separat. RSS-sum er konservativ, samplet og inkluderer delte OS-sider.",
+  "cases": [
+    {
+      "case": 1,
+      "status": "imported",
+      "node": "v24.21.0",
+      "durationMs": 19340,
+      "pageCount": 152,
+      "textCharacters": 153005,
+      "pageStatuses": {
+        "unknown": 152
+      },
+      "peakNodeMiB": 358.4375,
+      "peakOcrMiB": 314.96875,
+      "sampledPeakNodeAndOcrMiB": 544.046875,
+      "phases": {
+        "input": 175.453125,
+        "container": 254.40625,
+        "page-tree": 302.96875,
+        "extraction": 299.46875,
+        "content-inspection": 358.4375,
+        "text": 358.4375,
+        "raster": 358.4375,
+        "cleanup": 358.4375,
+        "analysis": 238.109375,
+        "economy": 257.71875,
+        "visual": 258.4375,
+        "serialization": 230.921875
+      },
+      "technical": "blocked",
+      "visualPages": 16,
+      "visualCompleted": 16,
+      "resourceLimitedPages": [],
+      "document": "Nøstegaten 65 A",
+      "nodeHeadroomMiB": 153.5625,
+      "phaseMaxima": [
+        {
+          "phase": "analysis",
+          "rssMiB": 238.109375,
+          "heapUsedMiB": 25.574302673339844,
+          "externalMiB": 9.362777709960938,
+          "arrayBuffersMiB": 45.62571334838867,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "cleanup",
+          "rssMiB": 358.4375,
+          "heapUsedMiB": 87.61612701416016,
+          "externalMiB": 24.925379753112793,
+          "arrayBuffersMiB": 8.555122375488281,
+          "heapLimitMiB": 280.0
+        },
+        {
+          "phase": "container",
+          "rssMiB": 254.40625,
+          "heapUsedMiB": 17.53900909423828,
+          "externalMiB": 22.59269905090332,
+          "arrayBuffersMiB": 59.0006628036499,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "content-inspection",
+          "rssMiB": 358.4375,
+          "heapUsedMiB": 87.6458740234375,
+          "externalMiB": 32.88490581512451,
+          "arrayBuffersMiB": 13.466676712036133,
+          "heapLimitMiB": 280.0
+        },
+        {
+          "phase": "economy",
+          "rssMiB": 257.71875,
+          "heapUsedMiB": 25.57550048828125,
+          "externalMiB": 9.267741203308105,
+          "arrayBuffersMiB": 45.62571334838867,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "extraction",
+          "rssMiB": 299.46875,
+          "heapUsedMiB": 23.95116424560547,
+          "externalMiB": 9.312636375427246,
+          "arrayBuffersMiB": 45.6256628036499,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "input",
+          "rssMiB": 175.453125,
+          "heapUsedMiB": 20.936729431152344,
+          "externalMiB": 22.592350006103516,
+          "arrayBuffersMiB": 59.0006628036499,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "page-tree",
+          "rssMiB": 302.96875,
+          "heapUsedMiB": 17.536338806152344,
+          "externalMiB": 9.21805191040039,
+          "arrayBuffersMiB": 45.6256628036499,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "raster",
+          "rssMiB": 358.4375,
+          "heapUsedMiB": 87.60858917236328,
+          "externalMiB": 24.925379753112793,
+          "arrayBuffersMiB": 8.555122375488281,
+          "heapLimitMiB": 280.0
+        },
+        {
+          "phase": "serialization",
+          "rssMiB": 230.921875,
+          "heapUsedMiB": 27.912673950195312,
+          "externalMiB": 9.268381118774414,
+          "arrayBuffersMiB": 45.626173973083496,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "text",
+          "rssMiB": 358.4375,
+          "heapUsedMiB": 87.6474609375,
+          "externalMiB": 32.88490581512451,
+          "arrayBuffersMiB": 13.466676712036133,
+          "heapLimitMiB": 280.0
+        },
+        {
+          "phase": "visual",
+          "rssMiB": 258.4375,
+          "heapUsedMiB": 27.068511962890625,
+          "externalMiB": 9.268027305603027,
+          "arrayBuffersMiB": 45.626173973083496,
+          "heapLimitMiB": 448.0
+        }
+      ]
+    },
+    {
+      "case": 2,
+      "status": "imported",
+      "node": "v24.21.0",
+      "durationMs": 13891,
+      "pageCount": 170,
+      "textCharacters": 293168,
+      "pageStatuses": {
+        "readable": 123,
+        "unreadable": 2,
+        "unknown": 45
+      },
+      "peakNodeMiB": 336.546875,
+      "peakOcrMiB": 322.671875,
+      "sampledPeakNodeAndOcrMiB": 598.84375,
+      "phases": {
+        "input": 159.953125,
+        "container": 228.46875,
+        "page-tree": 276.75,
+        "extraction": 272.953125,
+        "content-inspection": 327.546875,
+        "text": 336.546875,
+        "raster": 331.640625,
+        "cleanup": 327.546875,
+        "analysis": 268.890625,
+        "economy": 291.09375,
+        "visual": 292.140625,
+        "serialization": 165.171875
+      },
+      "technical": "blocked",
+      "visualPages": 19,
+      "visualCompleted": 19,
+      "resourceLimitedPages": [],
+      "document": "Rostockgata 96",
+      "nodeHeadroomMiB": 175.453125,
+      "phaseMaxima": [
+        {
+          "phase": "analysis",
+          "rssMiB": 268.890625,
+          "heapUsedMiB": 30.336265563964844,
+          "externalMiB": 9.303906440734863,
+          "arrayBuffersMiB": 35.39437675476074,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "cleanup",
+          "rssMiB": 327.546875,
+          "heapUsedMiB": 75.94404602050781,
+          "externalMiB": 41.52338123321533,
+          "arrayBuffersMiB": 25.151450157165527,
+          "heapLimitMiB": 280.0
+        },
+        {
+          "phase": "container",
+          "rssMiB": 228.46875,
+          "heapUsedMiB": 17.15374755859375,
+          "externalMiB": 12.383280754089355,
+          "arrayBuffersMiB": 38.58182621002197,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "content-inspection",
+          "rssMiB": 327.546875,
+          "heapUsedMiB": 75.96306610107422,
+          "externalMiB": 41.52338886260986,
+          "arrayBuffersMiB": 25.15145778656006,
+          "heapLimitMiB": 280.0
+        },
+        {
+          "phase": "economy",
+          "rssMiB": 291.09375,
+          "heapUsedMiB": 41.082794189453125,
+          "externalMiB": 9.439932823181152,
+          "arrayBuffersMiB": 35.59081268310547,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "extraction",
+          "rssMiB": 272.953125,
+          "heapUsedMiB": 17.899818420410156,
+          "externalMiB": 9.253765106201172,
+          "arrayBuffersMiB": 35.39432621002197,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "input",
+          "rssMiB": 159.953125,
+          "heapUsedMiB": 18.214378356933594,
+          "externalMiB": 12.38293170928955,
+          "arrayBuffersMiB": 38.58182621002197,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "page-tree",
+          "rssMiB": 276.75,
+          "heapUsedMiB": 12.787635803222656,
+          "externalMiB": 9.195784568786621,
+          "arrayBuffersMiB": 35.39432621002197,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "raster",
+          "rssMiB": 331.640625,
+          "heapUsedMiB": 75.93768310546875,
+          "externalMiB": 41.52338123321533,
+          "arrayBuffersMiB": 25.151450157165527,
+          "heapLimitMiB": 280.0
+        },
+        {
+          "phase": "serialization",
+          "rssMiB": 165.171875,
+          "heapUsedMiB": 57.98680877685547,
+          "externalMiB": 9.440413475036621,
+          "arrayBuffersMiB": 35.59134006500244,
+          "heapLimitMiB": 448.0
+        },
+        {
+          "phase": "text",
+          "rssMiB": 336.546875,
+          "heapUsedMiB": 75.96463012695312,
+          "externalMiB": 41.52338886260986,
+          "arrayBuffersMiB": 25.15145778656006,
+          "heapLimitMiB": 280.0
+        },
+        {
+          "phase": "visual",
+          "rssMiB": 292.140625,
+          "heapUsedMiB": 56.75763702392578,
+          "externalMiB": 9.440059661865234,
+          "arrayBuffersMiB": 35.59134006500244,
+          "heapLimitMiB": 448.0
+        }
+      ]
+    }
+  ],
+  "baseline": {
+    "Nøstegaten 65 A": {
+      "result": "memory-limit",
+      "firstGroupRssMiB": 515.875,
+      "containerRssMiB": 360.078125,
+      "pageTreeRssMiB": 409.5,
+      "workerHeapAfterPage1MiB": 61.3,
+      "workerHeapAfterPage2MiB": 146.5,
+      "workerHeapAfterPage3MiB": 185.2,
+      "unrestrictedDiagnosticPeakMiB": 600.703125,
+      "pages": 152,
+      "characters": 153005
+    },
+    "Rostockgata 96": {
+      "result": "imported",
+      "peakRssMiB": 448.359375,
+      "durationMs": 13596,
+      "pages": 170,
+      "characters": 293168
+    }
+  },
+  "heap_counter_scope": "Heap-/external-/arrayBuffers-snapshots gjelder isolatet som sender målingen. Faseverdier er største isolatmåling, ikke summen av alle Node-tråder. RSS er prosessens samlede residente minne.",
+  "firstVerifiedRun": [
+    {
+      "case": 1,
+      "status": "imported",
+      "node": "v24.21.0",
+      "durationMs": 19181,
+      "pageCount": 152,
+      "textCharacters": 153005,
+      "pageStatuses": {
+        "unknown": 152
+      },
+      "peakNodeMiB": 363.4375,
+      "peakOcrMiB": 319.203125,
+      "sampledPeakNodeAndOcrMiB": 566.953125,
+      "phases": {
+        "input": 170.859375,
+        "container": 246.4375,
+        "page-tree": 277.765625,
+        "extraction": 311,
+        "content-inspection": 354.90625,
+        "text": 363.4375,
+        "raster": 354.90625,
+        "cleanup": 354.90625,
+        "analysis": 256.03125,
+        "economy": 253.890625,
+        "visual": 254.65625,
+        "serialization": 213.4375
+      },
+      "technical": "blocked",
+      "visualPages": 16,
+      "visualCompleted": 16,
+      "resourceLimitedPages": [],
+      "document": "Nøstegaten 65 A",
+      "nodeHeadroomMiB": 148.5625,
+      "phaseMaxima": [
+        {
+          "phase": "analysis",
+          "rssMiB": 256.03125,
+          "heapUsedMiB": 19.236419677734375,
+          "externalMiB": 9.318123817443848,
+          "arrayBuffersMiB": 45.625545501708984
+        },
+        {
+          "phase": "cleanup",
+          "rssMiB": 354.90625,
+          "heapUsedMiB": 116.49706268310547,
+          "externalMiB": 27.058670043945312,
+          "arrayBuffersMiB": 10.707768440246582
+        },
+        {
+          "phase": "container",
+          "rssMiB": 246.4375,
+          "heapUsedMiB": 17.424461364746094,
+          "externalMiB": 22.573137283325195,
+          "arrayBuffersMiB": 59.000494956970215
+        },
+        {
+          "phase": "content-inspection",
+          "rssMiB": 354.90625,
+          "heapUsedMiB": 90.68392181396484,
+          "externalMiB": 32.86538219451904,
+          "arrayBuffersMiB": 13.466508865356445
+        },
+        {
+          "phase": "economy",
+          "rssMiB": 253.890625,
+          "heapUsedMiB": 19.23846435546875,
+          "externalMiB": 9.248160362243652,
+          "arrayBuffersMiB": 45.625545501708984
+        },
+        {
+          "phase": "extraction",
+          "rssMiB": 311.0,
+          "heapUsedMiB": 17.449935913085938,
+          "externalMiB": 9.268001556396484,
+          "arrayBuffersMiB": 45.625494956970215
+        },
+        {
+          "phase": "input",
+          "rssMiB": 170.859375,
+          "heapUsedMiB": 20.762100219726562,
+          "externalMiB": 22.572826385498047,
+          "arrayBuffersMiB": 59.000494956970215
+        },
+        {
+          "phase": "page-tree",
+          "rssMiB": 277.765625,
+          "heapUsedMiB": 12.713943481445312,
+          "externalMiB": 9.19845199584961,
+          "arrayBuffersMiB": 45.625494956970215
+        },
+        {
+          "phase": "raster",
+          "rssMiB": 354.90625,
+          "heapUsedMiB": 116.49146270751953,
+          "externalMiB": 27.058670043945312,
+          "arrayBuffersMiB": 10.707768440246582
+        },
+        {
+          "phase": "serialization",
+          "rssMiB": 213.4375,
+          "heapUsedMiB": 21.507301330566406,
+          "externalMiB": 9.248774528503418,
+          "arrayBuffersMiB": 45.625999450683594
+        },
+        {
+          "phase": "text",
+          "rssMiB": 363.4375,
+          "heapUsedMiB": 116.47843933105469,
+          "externalMiB": 32.86538219451904,
+          "arrayBuffersMiB": 13.466508865356445
+        },
+        {
+          "phase": "visual",
+          "rssMiB": 254.65625,
+          "heapUsedMiB": 20.66436004638672,
+          "externalMiB": 9.248458862304688,
+          "arrayBuffersMiB": 45.625999450683594
+        }
+      ]
+    },
+    {
+      "case": 2,
+      "status": "imported",
+      "node": "v24.21.0",
+      "durationMs": 13577,
+      "pageCount": 170,
+      "textCharacters": 293168,
+      "pageStatuses": {
+        "readable": 123,
+        "unreadable": 2,
+        "unknown": 45
+      },
+      "peakNodeMiB": 340.34375,
+      "peakOcrMiB": 334.0625,
+      "sampledPeakNodeAndOcrMiB": 567.5,
+      "phases": {
+        "input": 158.65625,
+        "container": 232.0625,
+        "page-tree": 265.09375,
+        "extraction": 297.53125,
+        "content-inspection": 340.34375,
+        "text": 340.34375,
+        "raster": 340.34375,
+        "cleanup": 340.34375,
+        "analysis": 250.515625,
+        "economy": 250.84375,
+        "visual": 250.671875,
+        "serialization": 203
+      },
+      "technical": "blocked",
+      "visualPages": 19,
+      "visualCompleted": 19,
+      "resourceLimitedPages": [],
+      "document": "Rostockgata 96",
+      "nodeHeadroomMiB": 171.65625,
+      "phaseMaxima": [
+        {
+          "phase": "analysis",
+          "rssMiB": 250.515625,
+          "heapUsedMiB": 25.46228790283203,
+          "externalMiB": 9.336742401123047,
+          "arrayBuffersMiB": 35.394208908081055
+        },
+        {
+          "phase": "cleanup",
+          "rssMiB": 340.34375,
+          "heapUsedMiB": 88.49504852294922,
+          "externalMiB": 41.50385761260986,
+          "arrayBuffersMiB": 25.15128231048584
+        },
+        {
+          "phase": "container",
+          "rssMiB": 232.0625,
+          "heapUsedMiB": 17.04285430908203,
+          "externalMiB": 12.23871898651123,
+          "arrayBuffersMiB": 38.456658363342285
+        },
+        {
+          "phase": "content-inspection",
+          "rssMiB": 340.34375,
+          "heapUsedMiB": 88.51266479492188,
+          "externalMiB": 41.503865242004395,
+          "arrayBuffersMiB": 25.15128993988037
+        },
+        {
+          "phase": "economy",
+          "rssMiB": 250.84375,
+          "heapUsedMiB": 26.763824462890625,
+          "externalMiB": 9.225931167602539,
+          "arrayBuffersMiB": 35.394208908081055
+        },
+        {
+          "phase": "extraction",
+          "rssMiB": 297.53125,
+          "heapUsedMiB": 19.544952392578125,
+          "externalMiB": 9.286620140075684,
+          "arrayBuffersMiB": 35.394158363342285
+        },
+        {
+          "phase": "input",
+          "rssMiB": 158.65625,
+          "heapUsedMiB": 20.933189392089844,
+          "externalMiB": 12.238408088684082,
+          "arrayBuffersMiB": 38.456658363342285
+        },
+        {
+          "phase": "page-tree",
+          "rssMiB": 265.09375,
+          "heapUsedMiB": 12.733612060546875,
+          "externalMiB": 9.176222801208496,
+          "arrayBuffersMiB": 35.394158363342285
+        },
+        {
+          "phase": "raster",
+          "rssMiB": 340.34375,
+          "heapUsedMiB": 88.48987579345703,
+          "externalMiB": 41.50385761260986,
+          "arrayBuffersMiB": 25.15128231048584
+        },
+        {
+          "phase": "serialization",
+          "rssMiB": 203.0,
+          "heapUsedMiB": 32.48414611816406,
+          "externalMiB": 9.24383544921875,
+          "arrayBuffersMiB": 35.41377639770508
+        },
+        {
+          "phase": "text",
+          "rssMiB": 340.34375,
+          "heapUsedMiB": 88.5135726928711,
+          "externalMiB": 41.503865242004395,
+          "arrayBuffersMiB": 25.15128993988037
+        },
+        {
+          "phase": "visual",
+          "rssMiB": 250.671875,
+          "heapUsedMiB": 31.256195068359375,
+          "externalMiB": 9.24351978302002,
+          "arrayBuffersMiB": 35.41377639770508
+        }
+      ]
+    }
+  ],
+  "extractionVersion": "bounded-pdf-text-2"
+}

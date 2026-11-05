@@ -10,6 +10,8 @@ import { useRentEstimate } from './investment/useRentEstimate.ts'
 import { selectProperty } from './investment/property.ts'
 import { InvestmentOverview } from './investment/InvestmentOverview.tsx'
 import type { ScenarioControls } from '../domain/financial-scenario.ts'
+import { defaultScenarioFinancing } from '../domain/financing.ts'
+import { selectScenarioBasis } from './state/scenario.ts'
 import './investment/concept-a.css'
 
 export default function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
@@ -30,7 +32,13 @@ export default function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
   const operatingKey = JSON.stringify([objectKey, session.financial.D, session.sources.D, session.costItems])
   const [operatingDraft, setOperatingDraft] = useState<{ key: string; monthly: string } | null>(null)
   const operatingOverride = operatingDraft?.key === operatingKey ? operatingDraft.monthly : null
-  const controls = scenarioDraft?.key === objectKey ? scenarioDraft.controls : slot.status !== 'idle' ? slot.status === 'imported' ? session.prospectus.financing : { equity: '', annualInterest: '', months: '' } : session.listing.financing
+  const registeredFinancing = slot.status === 'imported' ? session.prospectus.financing : session.listing.financing
+  const defaults = defaultScenarioFinancing(selectScenarioBasis(session, rent.result))
+  const controls = scenarioDraft?.key === objectKey ? scenarioDraft.controls : {
+    equity: registeredFinancing.equity || defaults.equity,
+    annualInterest: registeredFinancing.annualInterest || defaults.annualInterest,
+    months: registeredFinancing.months || defaults.months,
+  }
   const overview = useRef<HTMLButtonElement>(null)
   useEffect(() => () => { importClient.abort(); client.abort() }, [importClient, client])
   useEffect(() => {

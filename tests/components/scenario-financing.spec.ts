@@ -33,6 +33,18 @@ for (const basis of [
   { P: '3000000', cashRequired: '2076090', sharedDebt: '1000000' },
 ]) test(`native belåningsslider beholder eksakte endepunkter ved Home, End og dragging: P=${basis.P}`, async ({ page }) => {
   await page.goto(`${origin}/__financing?basis=${encodeURIComponent(JSON.stringify(basis))}`)
+  await page.locator('#scenario-months').evaluate(element => element.closest('details')!.open = true)
+  await page.locator('#scenario-months').fill('18')
+  const term = page.getByRole('slider', { name: 'Juster nedbetalingstid i år' })
+  await expect(term).toHaveValue('1.5')
+  await term.press('ArrowRight')
+  await expect(page.locator('#scenario-months')).toHaveValue('19')
+  await term.press('Home')
+  await expect(page.locator('#scenario-months')).toHaveValue('1')
+  await page.getByRole('button', { name: 'Nullstill scenario' }).click()
+  await expect(page.locator('#scenario-months')).toHaveValue('360')
+  await expect(page.locator('#scenario-rate')).toHaveValue('6')
+  await expect(page.locator('#scenario-leverage')).toHaveValue('80.00')
   const slider = page.getByRole('slider', { name: 'Juster belåningsgrad', exact: true })
   const equity = page.locator('#scenario-equity')
   await slider.focus(); await slider.press('Home')

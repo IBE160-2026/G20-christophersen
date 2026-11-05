@@ -69,7 +69,7 @@ export function economySuggestions(draft: SourceEconomyDraft, options: { require
     const valid = entries.length > 0 && entries.every(field => checked(field.id) && field.status === 'available'
       && field.amount !== null && new Decimal(field.amount).gte('0') && field.debtPart !== null && new Decimal(field.debtPart).gte('0')
       && new Decimal(field.debtPart).lte(field.amount) && field.includedIn !== null && ['month', 'year'].includes(field.period))
-    if (!valid || costYears.size !== 1) return null
+    if (!valid || new Set(entries.map(field => field.year)).size !== 1) return null
     const annual = (field: SourceEconomyField) => new Decimal(field.amount!).times(field.period === 'month' ? '12' : '1')
     const annualDebt = (field: SourceEconomyField) => new Decimal(field.debtPart!).times(field.period === 'month' ? '12' : '1')
     const roots = entries.filter(field => field.includedIn === '')
@@ -83,16 +83,16 @@ export function economySuggestions(draft: SourceEconomyDraft, options: { require
     return roots.length && linksValid ? roots.reduce((sum, field) => sum.plus(annual(field).minus(annualDebt(field))), new Decimal('0')).toFixed() : null
   }
   preliminaryOperatingSubtotal = operatingSubtotal(recurring)
-  // A separate, explicitly labelled scenario may explore an unknown link. It
-  // never edits source facts, supplies full D, or converts absence into evidence.
+  // Ukjent kommunal inkludering summeres aldri automatisk. Behold bare
+  // avklarte røtter og deres underposter; dokumentfakta og full D er uendret.
   let preliminaryCostScenario: { annualCosts: string; assumption: string } | null = null
   const municipal = recurring.find(field => field.id === 'municipalFees')
   const common = recurring.find(field => field.id === 'commonCosts')
   if (preliminaryOperatingSubtotal === null && sharedDebt === '0' && municipal?.includedIn === null && common?.includedIn === ''
     && recurring.every(field => !draft.corrections[field.id] && (field.id === 'municipalFees' || field.includedIn !== null))) {
-    const assumed = operatingSubtotal(recurring.map(field => field.id === 'municipalFees' ? { ...field, includedIn: '' } : field))
+    const assumed = operatingSubtotal(recurring.filter(field => field.id !== 'municipalFees' && field.includedIn !== 'municipalFees'))
     if (assumed !== null) preliminaryCostScenario = { annualCosts: assumed,
-      assumption: 'Forutsetning i dette foreløpige scenarioet: kommunale avgifter kommer i tillegg til felleskostnadene. Beløpene er dokumentert, men eventuell overlapping er ikke avklart. Kostnadsfradraget kan derfor være for høyt. Dokumentets inkludering forblir ukjent; dette er ikke full drift.' }
+      assumption: 'Dokumentert delsum uten kommunale avgifter: eventuell overlapping er ikke avklart. Avgiftene er holdt utenfor inntil inkluderingen er avklart. Øvrig drift kan mangle.' }
   }
   const preliminaryCostYear = costYears.size === 1 ? recurring[0]?.year ?? null : null
   let D: string | null = null, sharedAnnualPayment: string | null = null, year: string | null = null

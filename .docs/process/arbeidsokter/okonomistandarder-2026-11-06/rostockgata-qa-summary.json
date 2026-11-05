@@ -1,0 +1,75 @@
+{
+  "property": "Rostockgata 96",
+  "checks": [
+    {
+      "name": "Original og mangler",
+      "details": {
+        "pages": 170,
+        "initialRent": "18900",
+        "capital": 8816090,
+        "knownCosts": 43920
+      }
+    },
+    {
+      "name": "Uavhengig finansfasit",
+      "details": {
+        "loan": 6880000,
+        "equity": 1936090,
+        "payment": 42249.22,
+        "cashMonthly": -21249.22
+      }
+    },
+    {
+      "name": "Finansgrenser",
+      "details": {
+        "leveragePercent": 95,
+        "negativeCashMonthly": -78124.64,
+        "zeroInterest": true,
+        "cashPurchaseWithoutRate": true,
+        "nativeHomeAndEnd": true,
+        "nativeDragToMaximum": true,
+        "nativeMaximum": {
+          "value": "102.512674418605",
+          "max": "102.51267441860465116279069767441860465116279069767442"
+        }
+      }
+    },
+    {
+      "name": "Mangler og ugyldige inndata"
+    },
+    {
+      "name": "Risiko og kildebelegg",
+      "details": {
+        "technicalFindings": 13,
+        "sourcePage": 26,
+        "authoritativeTg2Tg3": 0,
+        "technicalStatus": "blocked"
+      }
+    },
+    {
+      "name": "Mobil og tastatur",
+      "details": {
+        "width": 390,
+        "height": 844,
+        "noOverflow": true
+      }
+    },
+    {
+      "name": "Gjentatt opplasting og eiendomsbytte",
+      "details": {
+        "imports": 3,
+        "finalProperty": "Nøstegaten 65 A"
+      }
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "posts": [
+    "/api/document-import",
+    "/api/rent-estimate",
+    "/api/document-import",
+    "/api/rent-estimate",
+    "/api/document-import",
+    "/api/rent-estimate"
+  ]
+}

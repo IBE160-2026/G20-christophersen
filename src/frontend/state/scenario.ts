@@ -80,7 +80,7 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
       preliminaryCostAssumption = suggested.preliminaryOperatingSubtotal === null ? suggested.preliminaryCostScenario!.assumption : null
       if (preliminaryCostAssumption) issues.push(preliminaryCostAssumption)
       preliminaryCostYear = suggested.preliminaryCostYear
-      issues.push(`${preliminaryCostAssumption ? 'Foreløpig drift bruker en uttrykkelig kostnadsforutsetning.' : 'Foreløpig drift er bare en kjent delsum.'} Kostnadsår: ${preliminaryCostYear ?? 'ukjent'}. Leieår/-nivå: ${effectiveRentYear ?? 'ukjent'}; blandede prisnivåer uten prisjustering. Manglende kostnader er ikke null.`)
+      issues.push(`Foreløpig drift er bare en kjent delsum. Kostnadsår: ${preliminaryCostYear ?? 'ukjent'}. Leieår/-nivå: ${effectiveRentYear ?? 'ukjent'}; blandede prisnivåer uten prisjustering. Manglende kostnader er ikke null.`)
     }
     // A different manual price cannot borrow purchase funding from the original listing.
     const priceMatches = P !== null && suggested.P !== null && new Decimal(P).eq(suggested.P)

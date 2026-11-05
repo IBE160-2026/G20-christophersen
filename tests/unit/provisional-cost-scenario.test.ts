@@ -18,7 +18,7 @@ it('viser bare en merket kostnadsforutsetning når kommunal inkludering er ukjen
   for (const completeOperatingCosts of [false, true]) {
     const suggested = economySuggestions(importEconomyDraft(outcome, {}, completeOperatingCosts), { requireReview: false })
     expect(suggested).toMatchObject({ P: '4050000', D: null, preliminaryOperatingSubtotal: null,
-      preliminaryCostScenario: { annualCosts: '25197' }, sharedAnnualPayment: '0' })
+      preliminaryCostScenario: { annualCosts: '12240' }, sharedAnnualPayment: '0' })
     expect(suggested.preliminaryCostScenario!.assumption).toContain('eventuell overlapping er ikke avklart')
   }
   let session = createInitialSession()
@@ -27,9 +27,9 @@ it('viser bare en merket kostnadsforutsetning når kommunal inkludering er ukjen
   session.financial.L = { rawValue: '144000', period: 'year', year: '2025', confirmed: false }
   session.sources.L = { kind: 'assumption', description: 'Uavhengig regnefasit', conflict: null, rentNature: 'expected' }
   const basis = selectScenarioBasis(session)
-  expect(basis.preliminaryCostAssumption).toContain('Forutsetning')
+  expect(basis.preliminaryCostAssumption).toContain('Dokumentert delsum')
   expect(calculateFinancialScenario(basis, { equity: '', annualInterest: '', months: '' })).toMatchObject({
-    preliminaryNoi: '118803', netYield: null, noi: null, cashFlow: null,
+    preliminaryNoi: '131760', netYield: null, noi: null, cashFlow: null,
   })
   // Brukerens arbeid har forrang, også når den nye verdien ikke er gyldig.
   session = sessionReducer(session, { type: 'register-value', field: 'D', rawValue: 'ugyldig' })
@@ -63,5 +63,12 @@ it('gir ingen kostnadsforutsetning ved beløps-/gjeldskonflikt eller ukjent peri
   }
   const outcome = await createCodeFirstImport(codeFirstBasis(pages))
   outcome.economy.fields.find(field => field.id === 'municipalFees')!.period = 'unknown'
-  expect(economySuggestions(importEconomyDraft(outcome), { requireReview: false }).preliminaryCostScenario).toBeNull()
+  expect(economySuggestions(importEconomyDraft(outcome), { requireReview: false }).preliminaryCostScenario).toMatchObject({ annualCosts: '12240' })
+})
+
+it('utelatte avgifters år blokkerer ikke dokumentert felleskostnad', async () => {
+  const outcome = await createCodeFirstImport(codeFirstBasis(pages))
+  outcome.economy.fields.find(field => field.id === 'commonCosts')!.year = '2025'
+  outcome.economy.fields.find(field => field.id === 'municipalFees')!.year = '2026'
+  expect(economySuggestions(importEconomyDraft(outcome), { requireReview: false }).preliminaryCostScenario).toMatchObject({ annualCosts: '12240' })
 })

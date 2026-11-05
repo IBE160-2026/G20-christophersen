@@ -3,6 +3,16 @@ import { parseFinancialDecimal } from './validation.ts'
 const Decimal = Big()
 Decimal.strict = true
 Decimal.DP = 50
+import type { ScenarioBasis, ScenarioControls } from './financial-scenario.ts'
+
+/** 20 % av prisgrunnlaget samt omkostninger. Fellesgjeld finansieres ikke igjen. */
+export function defaultScenarioFinancing(basis: ScenarioBasis): ScenarioControls {
+  const result = equityForLeverage({ price: basis.P, cashRequired: basis.cashRequired, sharedDebt: basis.sharedDebt ?? null, leverage: '80' })
+  // Hvis fellesgjeld alene overstiger 80 %, er kontantkjøp nærmeste mulige nivå.
+  const equity = result.equity ?? (basis.P !== null && basis.sharedDebt != null && basis.cashRequired !== null && new Decimal(basis.sharedDebt).gt(new Decimal(basis.P).times('0.8')) ? basis.cashRequired : '')
+  return { equity, annualInterest: '6', months: '360' }
+}
+
 export interface FinancingInput { cashRequired: string | null; equity: string; annualInterest: string; months: string; sharedAnnualPayment: string | null }
 /** Invers belåningsberegning. Avrundede endepunkter identifiseres eksplisitt
  * slik at brukerflaten kan forklare at hele kontantbehovet/ingen egenkapital er valgt. */

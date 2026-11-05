@@ -10,7 +10,7 @@ test.use({ hasTouch: true })
 // Private originaler er valgfrie i offentlig regresjon, obligatoriske i sluttprøven.
 // Ingen rutestubbing eller produksjonsberegning brukes til denne fasiten.
 const cases = [
-  { id: 'nostegaten', file: 'nostegaten-65-a.pdf', title: 'Nøstegaten 65 A', price: 4_050_000, capital: 4_152_340, initialRent: 12_000, reference: 13_891, knownCosts: 25_197, pages: 152, hash: 'f33337aa0f5f2de0b64454541b0bb20bcf7732498755c4078ed1509b3a3f14e8', monthlyRent: 16_000, sourcePage: 12 },
+  { id: 'nostegaten', file: 'nostegaten-65-a.pdf', title: 'Nøstegaten 65 A', price: 4_050_000, capital: 4_152_340, initialRent: 12_000, reference: 13_891, knownCosts: 12_240, pages: 152, hash: 'f33337aa0f5f2de0b64454541b0bb20bcf7732498755c4078ed1509b3a3f14e8', monthlyRent: 16_000, sourcePage: 12 },
   { id: 'rostockgata', file: 'nordvik-rostockgata-96.pdf', title: 'Rostockgata 96', price: 8_600_000, capital: 8_816_090, initialRent: 18_900, reference: 20_426, knownCosts: 43_920, pages: 170, hash: '3e2dd467c11785c1de7c8c79b8e5f58f786e87416f7dc9b14f7a2d713ec6cb70', monthlyRent: 24_000, sourcePage: 26 },
 ] as const
 const fixture = (name: string) => fileURLToPath(new URL(`../../private/incoming/${name}`, import.meta.url))
@@ -74,8 +74,19 @@ for (const item of cases) test(`ekte investeringsverktøy: ${item.title}, finans
     await expect(page.getByTestId('scenario-capital')).toContainText(amount(item.capital))
     await expect(page.getByTestId('scenario-gross')).toContainText(amount(item.initialRent * 12 / item.price * 100, 2))
     await expect(page.getByTestId('scenario-preliminary-net')).toContainText(amount((item.initialRent * 12 - item.knownCosts) / item.price * 100, 2))
-    await expect(page.getByTestId('scenario-net')).toContainText('—')
-    await expect(page.getByTestId('scenario-cash')).toContainText('—')
+    await expect(page.locator('#scenario-equity')).toHaveValue((item.capital - item.price * 0.8).toFixed(2))
+    await expect(page.locator('#scenario-leverage')).toHaveValue('80.00')
+    await expect(page.locator('#scenario-rate')).toHaveValue('6')
+    await expect(page.locator('#scenario-years')).toHaveValue('30')
+    await expect(page.locator('#scenario-operating-monthly')).toHaveValue(String(item.knownCosts / 12))
+    for (const name of ['Juster egenkapital', 'Juster belåningsgrad', 'Juster rente', 'Juster nedbetalingstid i år']) {
+      await expect(page.getByRole('slider', { name, exact: true })).toBeVisible()
+      await expect(page.getByRole('slider', { name, exact: true })).toBeEnabled()
+    }
+    await expect(page.getByTestId('scenario-loan')).toContainText(amount(item.price * 0.8))
+    await expect(page.getByTestId('scenario-loan-monthly')).toContainText(amount(annuity(item.price * 0.8, 6, 360)))
+    await expect(page.getByTestId('scenario-net')).toContainText(amount((item.initialRent * 12 - item.knownCosts) / item.price * 100, 2))
+    await expect(page.getByTestId('scenario-cash')).toContainText(amount(item.initialRent - item.knownCosts / 12 - annuity(item.price * 0.8, 6, 360)))
     checks.push({ name: 'Original og mangler', details: { pages: outcome.pageCount, initialRent: rent.monthly, capital: item.capital, knownCosts: item.knownCosts } })
   })
 
@@ -261,18 +272,19 @@ for (const item of cases) test(`ekte investeringsverktøy: ${item.title}, finans
     await expect(page.getByTestId('scenario-cash')).toContainText('—')
     const repeated = await upload(page, original)
     expect(repeated.outcome.reportHash).toBe(item.hash)
-    await expect(page.locator('#scenario-equity')).toHaveValue('')
-    await expect(page.locator('#scenario-leverage')).toHaveValue('')
-    await expect(page.locator('#scenario-operating-monthly')).toHaveValue('')
-    await expect(page.getByTestId('scenario-cash')).toContainText('—')
+    await expect(page.locator('#scenario-equity')).toHaveValue((item.capital - item.price * 0.8).toFixed(2))
+    await expect(page.locator('#scenario-leverage')).toHaveValue('80.00')
+    await expect(page.locator('#scenario-operating-monthly')).toHaveValue(String(item.knownCosts / 12))
+    await expect(page.getByTestId('scenario-cash')).not.toContainText('—')
     await expect(page.locator('#scenario-rent-monthly')).toHaveValue(String(item.initialRent))
     const other = cases.find(candidate => candidate.id !== item.id)!
     const changed = await upload(page, fixture(other.file))
     expect(changed.outcome.reportHash).toBe(other.hash)
     await expect(page.locator('h1')).toContainText(other.title)
     await expect(page.getByTestId('scenario-capital')).toContainText(amount(other.capital))
-    await expect(page.locator('#scenario-operating-monthly')).toHaveValue('')
-    await expect(page.getByTestId('scenario-cash')).toContainText('—')
+    await expect(page.locator('#scenario-operating-monthly')).toHaveValue(String(other.knownCosts / 12))
+    await expect(page.locator('#scenario-equity')).toHaveValue((other.capital - other.price * 0.8).toFixed(2))
+    await expect(page.getByTestId('scenario-cash')).not.toContainText('—')
     checks.push({ name: 'Gjentatt opplasting og eiendomsbytte', details: { imports: 3, finalProperty: other.title } })
   })
 

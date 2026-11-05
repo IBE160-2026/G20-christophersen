@@ -169,3 +169,13 @@ eller faktisk leie har forrang. Ukjent fellesgjeld, full drift og teknisk
 rapportdekning oppgraderes ikke av estimatet.
 
 Etter review normaliseres nummerert bydel bare ved verifisert kommune/nummer/navn-par i et uttrykkelig merket Oslo-register for 2004–2027-inndelingen. Uavklarte par beholdes med ordrett kilde og blokkerende issue. Dette er ikke en konvertering til kommende bydeler. Den ekte Nordvik-nettprøven henter uavhengige ferske metadata/celleverdier og kalenderår; historiske 2025-beløp er fortsatt deterministiske unit-fasiter. [Individuell reviewtriage og verifikasjon](spec-rostockgata-leieestimat.md).
+
+
+## Någjeldende drift fra 5. november 2026
+
+`local-rent-1` erstatter nett- og cacheatferden beskrevet historisk over med
+uendrede lokale 2025-råresponser. Prosentmarginene er fjernet; sonespenn er bare
+geografisk variasjon og avrunding. SSB beholdes separat fra et lite nytt
+Hybel-/Utleiemegleren-utdrag. Individuell markedsleie er eksplisitt utilgjengelig.
+Se [någjeldende metode og kildekontroll](leieagent-lokale-referanser.md) og
+[faktiske boligprøver](../process/arbeidsokter/2026-11-05-lokalt-leiegrunnlag.md).

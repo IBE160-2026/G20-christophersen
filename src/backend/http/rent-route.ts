@@ -5,7 +5,7 @@ import { RentEstimateSchema } from '../../contracts/rent-estimate.ts'
 import { extractRentalProperty } from '../../domain/rental-property.ts'
 import { estimateRent } from '../rent/ssb-rent.ts'
 
-/** Gratis statistikksteg, uavhengig av dokument-/modellprosessen. Dokumentet forlater aldri lokalserveren. */
+/** Lokalt statistikksteg, uavhengig av dokument-/modellprosessen. Dokumentet forlater aldri lokalserveren. */
 export function createRentRouter(options: { estimate?: typeof estimateRent } = {}) {
   const router = Router()
   const input = z.strictObject({ outcome: DocumentImportSchema })

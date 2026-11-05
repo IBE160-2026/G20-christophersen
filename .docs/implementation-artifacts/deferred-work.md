@@ -835,3 +835,18 @@ eller ikke kan inspiseres, er fortsatt uverifiserte. Historiske åpne oppføring
 over bevares; ingen generell post lukkes av dette caseutfallet. Se
 [spec med individuell reviewtriage](spec-nostegaten-automatisk-okonomi.md) og
 [kildefasit, testbevis og begrensninger](../process/arbeidsokter/2026-11-05-nostegaten-okonomi.md).
+
+
+**PAA-LEIE1, lokalt referansegrunnlag 2026-11-05 — Status: fortsatt Åpen for individuell markedsleie og empirisk usikkerhet.**
+
+`local-rent-1` erstatter gjentatte SSB-nettforespørsler med et statisk snapshot og
+20 manuelt kildekontrollerte publiserte observasjoner fra Hybel/Menon og
+Utleiemegleren/NTB. Kontraktstyper, annonser, perioder og geografiske avgrensninger
+vises separat. Tidligere udokumenterte prosentmarginer er fjernet. Ekte
+Nøstegaten og Rostockgata gir relevante romreferanser og selvstendig SSB-
+sammenligning, men ingen påstått individuell markedsleie eller validert
+individuelt usikkerhetsintervall. Denne metode- og driftsforbedringen lukker
+ikke det opprinnelige kalibreringsavviket; generell dokument-/TG-/kostnadsdekning
+oppgraderes heller ikke. [Spesifikasjon](spec-lokalt-leiegrunnlag.md),
+[kildekontroll og metode](leieagent-lokale-referanser.md),
+[faktiske testresultater og review](../process/arbeidsokter/2026-11-05-lokalt-leiegrunnlag.md).

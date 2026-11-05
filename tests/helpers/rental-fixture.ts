@@ -5,12 +5,9 @@ import { extractImport } from '../../src/backend/documents/extract-import.ts'
 import { createCodeFirstImport } from '../../src/backend/import/semantic-adapter.ts'
 import { estimateRent } from '../../src/backend/rent/ssb-rent.ts'
 import { extractRentalProperty } from '../../src/domain/rental-property.ts'
-import metadata from '../fixtures/ssb/09897-metadata.json' with { type: 'json' }
-import data from '../fixtures/ssb/09897-2025.json' with { type: 'json' }
 import type { DocumentImport } from '../../src/contracts/document-import.ts'
 
 export const rentalLines = ['Adresse: Fasitveien 4, 4005 Stavanger', 'Kommune: Stavanger', 'Boligtype: Leilighet', 'BRA-i: 50 m2', 'Antall rom: 2', 'Prisantydning: 3 000 000 kr', 'Fellesgjeld: 0 kr', 'Omkostninger: 75 000 kr']
-export const ssbFixtureFetch: typeof fetch = async url => new Response(JSON.stringify(String(url).includes('/metadata?') ? metadata : data), { headers: { 'Content-Type': 'application/json' } })
 export async function rentalDocument(lines = rentalLines) {
   const bytes = newProspectusPdf(lines), name = 'syntetisk-leilighet.pdf'
   const format = await validatePdf(new Uint8Array(bytes), name, { maxPages: 200 })
@@ -21,5 +18,5 @@ export async function rentalDocument(lines = rentalLines) {
   return { outcome, selected: { bytes: new Uint8Array(bytes), hash, file: new File([new Uint8Array(bytes)], name) } }
 }
 export function fixtureRent(outcome: DocumentImport) {
-  return estimateRent(extractRentalProperty(outcome), { fetch: ssbFixtureFetch, now: () => new Date('2026-11-04T12:00:00Z') })
+  return estimateRent(extractRentalProperty(outcome), { now: () => new Date('2026-11-04T12:00:00Z') })
 }

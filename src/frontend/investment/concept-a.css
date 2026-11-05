@@ -519,3 +519,11 @@
 .investment-shell .rent-document-facts .quiet-button { display: block; font-size: 12px; }
 .investment-shell .rent-document-facts small { color: var(--investment-muted); }
 .investment-shell .rent-blockers { padding: 18px; border-left: 3px solid var(--investment-accent); background: #edf1eb; line-height: 1.6; }
+
+.investment-shell .rent-published-references { margin-block: 22px; line-height: 1.6; }
+.investment-shell .rent-published-references > p > strong { font: 400 clamp(24px, 2.5vw, 34px)/1.25 var(--investment-serif); }
+.investment-shell .rent-published-references summary { cursor: pointer; min-height: 44px; padding-block: 10px; }
+.investment-shell .rent-published-references table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 13px; }
+.investment-shell .rent-published-references th, .investment-shell .rent-published-references td { padding: 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--investment-line); }
+.investment-shell .rent-published-references li { margin-block: 8px; }
+.investment-shell .rent-published-references a { overflow-wrap: anywhere; }

@@ -429,50 +429,42 @@ Private originaler hører til Git-ignorert `private/`. `.env`/`.env.*`, avhengig
 
 Gruppeprosjekt i **IBE160 Programmering med KI**, Høgskolen i Molde, høsten 2026. Medlem: Mads Semb Christophersen. Startstrukturen er tilpasset [Vites offisielle react-ts-starter](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).
 
-### Automatisk leieestimat i Konsept A
+### Lokale leiereferanser i Konsept A
 
-Etter opplasting forsøker appen automatisk å lese adresse, kommune, internt areal,
-rom og boligtype fra det eksisterende tekstlaget. Leieagenten bruker SSBs åpne
-PxWebApi v2, tabell 09897, uten nøkkel eller betaling. Lokalserveren må ha
-internettilgang til `https://data.ssb.no`; bare statistikkoder sendes dit.
-Dokumentet og adressen behandles lokalt. PDF/OCR/TG-løpet og kostnadsportene
-for eventuell modellbruk er uendret.
+Etter PDF-opplasting leses adresse, kommune, bydel når dokumentert, internt areal,
+rom og boligtype fra eksisterende dokumentgrunnlag. Leieagenten bruker et lite,
+versjonert lokalt utdrag fra Utleiemegleren/NTB og Hybel/Menon, samt et separat
+SSB-snapshot fra tabell 09897. **Ingen internettilgang, API-nøkkel eller betalt
+modell trengs for leieberegningen.** Lenker til originalkildene åpnes bare når
+brukeren klikker. PDF/OCR/TG-løpet og kostnadsportene for eventuell modellbruk
+beholdes.
 
-Første versjon støtter enkeltleiligheter i Oslo, Bergen, Trondheim, Stavanger,
-Kristiansand, Tromsø, Bærum, Nesodden og Lørenskog, med eksplisitt kommune i
-tekstlaget. Ukjent bydel i de tre første byene gir et grovere spenn over alle
-aktuelle bysoner. Andre geografier, flerboligobjekter, uklare opplysninger og
-areal mer enn 2 m² utenfor SSBs publiserte ytterpunkter gir en synlig begrensning. Rom er ikke
-samme opplysning som soverom. BRA-i foretrekkes; BRA/P-ROM merkes som svakere
-grunnlag. Dokumentoppsett som ikke gjenkjennes må fortsatt kontrolleres.
+20 manuelt kontrollerte observasjoner har kilde, publiseringsdato,
+observasjonsperiode, geografi, boligtype, pris og kontrakts-/annonsegrunnlag.
+Hybels Q3 2026-data gir romreferanser for Bergen, Oslo og Gamle Oslo.
+Utleiemeglerens eldre kronebeløp har blandet annonse-/porteføljegrunnlag; nyere
+vekstprosenter vises bare som kontekst. Aktive kontrakter, nye kontrakter og
+annonser blandes ikke til én pris. Kommune gir bare grov bytilordning; bydel
+utledes ikke fra adressen. Arealfordeling og individuelle sammenligningsobjekter
+mangler, så **individuell markedsleie er uttrykkelig ikke beregnet**.
 
-Agenten henter nyeste publiserte år, interpolerer mellom arealpunkter for samme
-romgruppe og viser råceller, formel, kilder og avrunding. Inntil og med 2 m²
-utenfor et ytterpunkt brukes nærmeste publiserte verdi uendret før vanlig
-avrunding, tydelig merket ytterpunktstilnærming med dokument- og referanseareal.
-Ingen lineær ekstrapolasjon utføres. Data fra SSB er
-områdestatistikk, ikke dokumentert leie for leiligheten eller dagens annonserte
-markedsleie. Konservativt scenariointervall er en foreløpig produktregel:
-grunnmargin ±25 %, +10 prosentpoeng ved ukjent bydel, +5 ved alternativ
-arealbasis, +5 per år etter statistikkåret og +5 ved ytterpunktstilnærming. Det er **ikke** et statistisk
-konfidens-/prediksjonsintervall og er ikke empirisk kalibrert. Ingen automatisk
-prisvekst, kvalitets- eller etasjepåslag gjøres. Data eldre enn tre år brukes
-ikke. Offentlig statistikk mellomlagres i minnet i 15 minutter; ingen
-leilighetsopplysninger lagres i denne cachen.
+SSB vises som selvstendig statistisk sammenligning i 2025-nivå, med råceller,
+formel og kilder. Eksisterende interpolasjon mellom arealpunkter og tydelig
+merket ytterpunktstilnærming høyst 2 m² utenfor beholdes. Større avstand,
+ukjent område, flerboligobjekt og motstrid gir en synlig begrensning.
+Rom og soverom holdes adskilt; BRA-i foretrekkes. Tidligere prosentmarginer er
+fjernet. Sonespennet viser bare geografiske forskjeller i de brukte SSB-cellene,
+ikke individuell usikkerhet. Ingen prisvekst-, standard-, etasje- eller
+beliggenhetsjustering gjøres. SSB eldre enn tre kalenderår avvises.
 
-Forventet leie brukes i ubekreftet økonomiscenario bare når registrert
-leiegrunnlag er tomt og ikke manuelt redigert. Registrert faktisk/forventet
-leie og kildekonflikter overstyres aldri. Årsleie er 12 × månedsleie før ledighet,
-kostnader og skatt. Full drift, gjeldsbetaling, samme år og manuell kontroll
-kreves fremdeles der økonomireglene krever dem. Automatisk scenario beholder
-SSBs statistikkår; hentetidspunkt gjør ikke eldre leie sammenlignbar med drift
-fra et nytt år. En eksplisitt egen forventning kan registreres for ønsket år.
-Leieoppslaget bekrefter ingen
-felt og endrer ingen kontrollert screeninganbefaling. SSB-feil stopper ikke
-PDF-importen; «Prøv leieoppslaget på nytt» gjentar bare det gratis oppslaget.
+Bare urørt leiegrunnlag kan bruke SSB-referansen i et ubekreftet økonomiscenario.
+Manuell/faktisk leie og konflikter overstyres aldri. Årsleie er 12 × månedsleie
+før ledighet, kostnader og skatt. Statistikkåret beholdes; beregningstid gjør
+ikke eldre leie sammenlignbar med drift fra et annet år. Full drift,
+gjeldsbetaling og screeningbekreftelse har fortsatt egne kontrollporter.
 
-Se [SSB-undersøkelsen og reproduserbare API-kall](.docs/implementation-artifacts/leieagent-ssb-research.md)
-og [implementasjonsspesifikasjonen](.docs/implementation-artifacts/spec-automatisk-leieestimering.md).
+Se [kilder, faktiske tabeller, metode og manuelt vedlikehold](.docs/implementation-artifacts/leieagent-lokale-referanser.md)
+og [spesifikasjon og verifikasjon](.docs/implementation-artifacts/spec-lokalt-leiegrunnlag.md).
 
 #### Ekte megleroppsett og modellgrenser
 
@@ -490,9 +482,8 @@ ingen ekstrapolering eller automatisk bruk av en etasje som en
 selvstendig leilighet skjer. Ukjent faktisk leie beholdes som ukjent.
 
 `tests/e2e/rent-real-document.spec.ts` inneholder en valgfri privat PDF-prøve
-og en eksplisitt gratis SSB-nettprøve. Nettprøven aktiveres med
-`PAA_TEST_SSB_NETWORK=1`; vanlig regresjon bruker offentlige, lagrede SSB-svar
-og krever ikke nett. Private PDF-er, råresponser og bilder distribueres ikke.
+og en syntetisk prøve av lokale leiereferanser. Alle leieprøvene bruker
+offentlige, lagrede SSB-svar og krever ikke nett. Private PDF-er, råresponser og bilder distribueres ikke.
 Se [ekte PDF-undersøkelse og testbevis](.docs/process/arbeidsokter/2026-11-04-leieagent-ekte-pdf.md).
 
 
@@ -515,9 +506,10 @@ Nordvik Rostockgata 96 er prøvd med ekte privat PDF på 170 sider og integrert
 19-siders rapport. Alle bestilte bolig-/økonomifelt hentes med fysiske kilder.
 Eksplisitt «Bydel: 1 Gamle Oslo» på fysisk PDF-side 117 velger prissone 01.02.
 For 59 m² og 3 rom brukes den publiserte 60 m²-cellen (3.060) som tydelig
-merket tilnærming: 18 900 kr/mnd, 226 800 kr/år i 2025-nivå. Det foreløpige,
-ukalibrerte scenariointervallet er 12 200–25 600 kr/mnd (35 % margin). Dette er
-ikke en direkte SSB-prediksjon for 59 m² eller en dokumentert markedsleie.
+merket tilnærming: 18 900 kr/mnd, 226 800 kr/år i 2025-nivå. Bare én SSB-sone er valgt, så sonespennet er 18 900–18 900 kr/mnd uten
+påstått individuell usikkerhet. Hybels treromsreferanse for aktive kontrakter i
+Gamle Oslo er separat 20 426 kr/mnd i Q3 2026. Individuell markedsleie er ikke
+beregnet; 59→60 er heller ikke en direkte SSB-prediksjon for 59 m².
 Dokumentert null fellesgjeld per 26.10.2026 (fysisk side 28) gir automatisk
 prisgrunnlag 8 600 000 kr. Fellesutgifter 3 660 kr/mnd (side 26) gir kjent
 årsdrift 43 920 kr, uten å telle de inkluderte delpostene på nytt. Med
@@ -540,8 +532,8 @@ npm run build
 PAA_E2E_PORT=3001 PAA_TEST_NORDVIK_REQUIRED=1 npx playwright test tests/e2e/rent-real-document.spec.ts --grep "ekte Nordvik"
 ```
 
-Flagget krever originalen og tillater ikke skip. Prøven bruker faktisk gratis
-SSB-metadata og celler og ingen betalt KI. Uten privat fil hoppes denne enkeltprøven over
+Flagget krever originalen og tillater ikke skip. Prøven bruker lokale, publiserte
+referanser og arkiverte SSB-celler, uten eksterne leieoppslag eller betalt KI. Uten privat fil hoppes denne enkeltprøven over
 i vanlig regresjon; syntetiske format-, felt- og ressursprøver kjører fortsatt.
 
 
@@ -556,8 +548,11 @@ Den automatiske brede Bergen-modellen gir 12 000 kr/mnd i SSB 2025-nivå,
 144 000 kr/år, brutto 3,56 % og foreløpig 2,93 % ved et kostnadsfradrag
 på 25 197 kr/år. Sistnevnte forutsetter at kommunale avgifter kommer i tillegg
 til felleskostnadene. Beløpene er dokumentert, men eventuell overlapping er
-uavklart; forutsetningen vises særskilt, og dokumentfeltet forblir ukjent. Bydel er uavklart; begge Bergen-soner inngår. Intervallet
-6 700–17 700 kr/mnd er et ukalibrert produktvalg. Kostnadsår, øvrige utgifter,
+uavklart; forutsetningen vises særskilt, og dokumentfeltet forblir ukjent.
+Bydel er uavklart; begge Bergen-soner inngår. Sonespennet er 11 300–12 600
+kr/mnd uten prosentmargin. Hybels toromsreferanse for Bergen er separat
+13 891 kr/mnd for aktive kontrakter i Q3 2026. Individuell markedsleie og
+individuelt usikkerhetsintervall er ikke beregnet. Kostnadsår, øvrige utgifter,
 finansiering og full netto er fortsatt uavklart; ingen prisjustering eller
 fullstendig kostnadsdekning påstås. Teknisk fullstendighet er fortsatt sperret.
 Lokal rapport-OCR 86–101 er separat fra økonomiens tekstkilder.

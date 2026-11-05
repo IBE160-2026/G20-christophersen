@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import type { DocumentImport } from '../../src/contracts/document-import.ts'
 import { RentalPropertySchema, RentEstimateSchema } from '../../src/contracts/rent-estimate.ts'
 import type { RentEstimate } from '../../src/contracts/rent-estimate.ts'
+import { assessPublishedReferences } from '../../src/backend/rent/published-references.ts'
 import { extractRentalProperty } from '../../src/domain/rental-property.ts'
 import { importFixture } from '../helpers/import-fixture.ts'
 
@@ -12,7 +13,9 @@ function document(text: string): DocumentImport {
 }
 const apartment = 'Adresse: Fasitveien 4, 0001 Testby\nKommune: Oslo\nBydel: Sagene\nBoligtype: Leilighet\nBRA-i: 65,5 m²\nAntall rom: 3'
 function estimate(): RentEstimate {
-  return { version: 'ssb-rent-2', documentHash: fixture.reportHash, property: extractRentalProperty(document(apartment)),
+  return { version: 'local-rent-1', kind: 'statistical-reference', snapshotDate: '2026-11-04',
+    published: assessPublishedReferences(extractRentalProperty(document(apartment)), new Date('2026-11-05T12:00:00Z')),
+    marketEstimate: { status: 'unavailable', monthly: null, reason: 'Manglende individuelt grunnlag' }, documentHash: fixture.reportHash, property: extractRentalProperty(document(apartment)),
     status: 'estimated', monthly: '12000.01', low: '9000', high: '15000', annual: '144000.12', statisticsYear: '2025',
     fetchedAt: '2026-11-04T10:00:00.000Z', sourceUrl: 'https://www.ssb.no/statbank/table/09897/', method: 'Lineær interpolasjon',
     limitations: ['Usikkerhetsbåndet er en modellforutsetning.'], observations: [{ zoneCode: '01.02', zoneLabel: 'Oslo', sizeCode: '3.060', area: 60, monthly: '11500' }, { zoneCode: '01.02', zoneLabel: 'Oslo', sizeCode: '3.070', area: 70, monthly: '12500' }],
@@ -161,7 +164,7 @@ describe('Leieagentens kildebundne boligopplysninger', () => {
     expect(extractRentalProperty(document('Adresse: 7. juni-plassen 4, 4005 Stavanger')).address?.value).toBe('7. juni-plassen 4, 4005 Stavanger')
   })
   it('leiekontrakten avviser ugyldige beløp og struktur', () => {
-    expect(RentEstimateSchema.safeParse({ version: 'ssb-rent-2', monthly: '-2' }).success).toBe(false)
+    expect(RentEstimateSchema.safeParse({ version: 'local-rent-1', monthly: '-2' }).success).toBe(false)
     expect(extractRentalProperty(document('BRA-i: 0 m²\nAntall rom: 0')).area).toBeNull()
     expect(extractRentalProperty(document('Adressen er Kontorveien 2\nKommunen er Oslo')).address).toBeNull()
     expect(extractRentalProperty(document('Adressen er Kontorveien 2\nKommunen er Oslo')).municipality).toBeNull()

@@ -1,10 +1,11 @@
 import { createHash } from 'node:crypto'
 import { test, expect } from '@playwright/test'
-import type { APIRequestContext, TestInfo } from '@playwright/test'
+import type { TestInfo } from '@playwright/test'
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { writeFile } from 'node:fs/promises'
 import { RentEstimateSchema } from '../../src/contracts/rent-estimate.ts'
+import ssbSnapshot from '../fixtures/ssb/09897-2025.json' with { type: 'json' }
 import { DocumentImportSchema } from '../../src/contracts/document-import.ts'
 
 const original = fileURLToPath(new URL('../../private/incoming/new-salgsoppgave.pdf', import.meta.url))
@@ -37,7 +38,7 @@ test('ekte PDF: dokumentopplysninger leses automatisk og enebolig får ærlig mo
   const panel = page.getByRole('region', { name: 'Forventet leie.' })
   await expect(panel.getByRole('heading', { name: 'Boligopplysninger fra dokumentet' })).toBeVisible()
   await expect(panel).toContainText('196 m² BRA-i'); await expect(panel).toContainText('Enebolig')
-  await expect(panel.getByRole('heading', { name: 'Hvorfor markedsestimatet mangler' })).toBeVisible()
+  await expect(panel.getByRole('heading', { name: 'Hvorfor SSB-sammenligningen mangler' })).toBeVisible()
   await expect(panel).toContainText('ingen SSB-celle brukes som leie for hele objektet')
   await expect(page.getByTestId('rent-monthly')).toHaveCount(0)
   await expect(page.getByTestId('scenario-gross')).toContainText('—')
@@ -48,7 +49,7 @@ test('ekte PDF: dokumentopplysninger leses automatisk og enebolig får ærlig mo
   await expect(page.locator(`[data-pdf-page="${sourcePage}"]`)).toBeVisible()
   await page.keyboard.press('Escape')
   await page.setViewportSize({ width: 390, height: 844 })
-  await expect(panel.getByRole('heading', { name: 'Hvorfor markedsestimatet mangler' })).toBeVisible()
+  await expect(panel.getByRole('heading', { name: 'Hvorfor SSB-sammenligningen mangler' })).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   await page.screenshot({ path: info.outputPath('ekte-leiegrunnlag-mobile.png'), fullPage: true })
   await page.setViewportSize({ width: 1440, height: 1000 })
@@ -57,8 +58,7 @@ test('ekte PDF: dokumentopplysninger leses automatisk og enebolig får ærlig mo
   expect(paid).toEqual([]); expect(errors).toEqual([])
 })
 
-test('gratis SSB-nettprøve: støttet kompakt leilighet gir synlig estimat gjennom faktisk HTTP-rute', async ({ page }, info) => {
-  test.skip(process.env.PAA_TEST_SSB_NETWORK !== '1', 'Sett PAA_TEST_SSB_NETWORK=1 for eksplisitt gratis nettprøve. Deterministiske tester krever ikke SSB-nett.')
+test('lokalt leiegrunnlag: støttet kompakt leilighet gir synlig referanse gjennom faktisk HTTP-rute', async ({ page }, info) => {
   test.setTimeout(90_000)
   const { newProspectusPdf } = await import('../helpers/new-prospectus-pdf.ts')
   const paid: string[] = []
@@ -77,63 +77,37 @@ test('gratis SSB-nettprøve: støttet kompakt leilighet gir synlig estimat gjenn
   await expect(panel.getByTestId('rent-monthly')).toBeVisible()
   await expect(page.getByTestId('scenario-gross')).not.toContainText('—')
   await expect(panel).toContainText('fra dokumentet'); await expect(panel).toContainText('ikke dokumentert leie')
-  await panel.locator('summary').click(); await expect(panel).toContainText(rent.statisticsYear!)
+  await panel.locator('.rent-published-references summary').click()
+  await expect(panel.locator('.rent-published-references td').first()).toContainText('Aktive kontrakter')
+  await panel.locator('.rent-estimate-evidence > summary').click(); await expect(panel).toContainText(rent.statisticsYear!)
+  await page.setViewportSize({ width: 390, height: 844 })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await panel.screenshot({ path: info.outputPath('lokale-referanser-mobil.png') })
   await page.screenshot({ path: info.outputPath('ekte-ssb-syntetisk-leilighet.png'), fullPage: true })
   await writeFile(info.outputPath('ekte-ssb-syntetisk-leilighet.json'), JSON.stringify(rent, null, 2))
   expect(paid).toEqual([])
 })
 
 const nordvik = fileURLToPath(new URL('../../private/incoming/nordvik-rostockgata-96.pdf', import.meta.url))
-type LiveSsb = { updated: string; id: string[]; size: number[]; value: (number | null)[];
-  dimension: Record<string, { category: { index: Record<string, number>; label: Record<string, string> } }> }
 const displayedAmount = (value: number) => new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 }).format(value).replaceAll('\u00a0', ' ')
 
-/** Independent live oracle: selected public cell + documented integer-percent arithmetic, no production estimator. */
-async function nordvikLiveExpected(request: APIRequestContext, info: TestInfo) {
-  const observedAt = new Date(), currentYear = observedAt.getUTCFullYear()
-  const metadataUrl = 'https://data.ssb.no/api/pxwebapi/v2/tables/09897/metadata?lang=no'
-  const metadataResponse = await request.get(metadataUrl, { timeout: 15_000, headers: { 'Cache-Control': 'no-cache' } })
-  expect(metadataResponse.ok()).toBe(true)
-  const metadataRaw = await metadataResponse.text()
-  await writeFile(info.outputPath('nordvik-expected-ssb-metadata.json'), metadataRaw)
-  const metadata = JSON.parse(metadataRaw) as LiveSsb
-  const year = Object.keys(metadata.dimension.Tid!.category.index).filter(year => /^\d{4}$/.test(year) && Number(year) <= currentYear).sort().at(-1)!
-  expect(year).toBeTruthy()
-  const age = currentYear - Number(year)
-  expect(age).toBeGreaterThanOrEqual(0); expect(age).toBeLessThanOrEqual(3)
-  expect(metadata.dimension.AntRomBRA!.category.index['3.060']).toBeDefined()
-  const coordinates = { Soner2: '01.02', AntRomBRA: '3.060', ContentsCode: 'Husleie', Tid: year }
-  const dataUrl = new URL('https://data.ssb.no/api/pxwebapi/v2/tables/09897/data')
-  dataUrl.searchParams.set('lang', 'no')
-  for (const [dimension, code] of Object.entries(coordinates)) dataUrl.searchParams.set(`valueCodes[${dimension}]`, code)
-  const dataResponse = await request.get(dataUrl.href, { timeout: 15_000, headers: { 'Cache-Control': 'no-cache' } })
-  expect(dataResponse.ok()).toBe(true)
-  const dataRaw = await dataResponse.text()
-  await writeFile(info.outputPath('nordvik-expected-ssb-data.json'), dataRaw)
-  const data = JSON.parse(dataRaw) as LiveSsb
-  expect(data.updated).toBe(metadata.updated)
-  expect([...data.id].sort()).toEqual(Object.keys(coordinates).sort())
-  expect(data.size).toEqual([1, 1, 1, 1])
-  for (const [dimension, code] of Object.entries(coordinates)) expect(data.dimension[dimension]!.category.index).toEqual({ [code]: 0 })
-  const raw = data.value[0]!
-  expect(data.value).toHaveLength(1); expect(raw).not.toBeNull(); expect(Number.isInteger(raw)).toBe(true); expect(raw).toBeGreaterThan(0)
-  const marginPercent = Math.min(75, 25 + age * 5 + 5)
+/** Uavhengig fasit: arkivert originalcelle, ingen produksjonsberegning eller nett. */
+async function nordvikLocalExpected(info: TestInfo) {
+  const raw = ssbSnapshot.value[ssbSnapshot.dimension.Soner2.category.index['01.02'] * 25 + ssbSnapshot.dimension.AntRomBRA.category.index['3.060']]!
+  expect(raw).toBe(18900)
   const monthly = Math.round(raw / 100) * 100, annual = monthly * 12
-  // Integer percentages avoid floating point rounding at exact hundred-kr boundaries.
-  const low = Math.floor(raw * (100 - marginPercent) / 10_000) * 100, high = Math.ceil(raw * (100 + marginPercent) / 10_000) * 100
-  const expected = { observedAt: observedAt.toISOString(), currentYear, metadataUrl, dataUrl: dataUrl.href, sourceUpdated: data.updated,
-    coordinates, year, age, raw, marginPercent, margin: String(marginPercent / 100), monthly, annual, low, high,
+  const expected = { year: '2025', sourceUpdated: ssbSnapshot.updated, raw, monthly, annual, low: monthly, high: monthly,
     grossYield: new Intl.NumberFormat('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(annual / 8_600_000 * 100) }
-  await writeFile(info.outputPath('nordvik-expected-ssb-audit.json'), JSON.stringify(expected, null, 2))
+  await writeFile(info.outputPath('nordvik-expected-local-audit.json'), JSON.stringify(expected, null, 2))
   return expected
 }
 
-test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekreftet økonomi gjennom HTTP', async ({ page, request }, info) => {
+test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekreftet økonomi gjennom HTTP', async ({ page }, info) => {
   const required = process.env.PAA_TEST_NORDVIK_REQUIRED === '1'
   test.skip(!existsSync(nordvik) && !required, 'Privat original distribueres ikke i Git. PAA_TEST_NORDVIK_REQUIRED=1 krever denne prøven uten skip.')
   expect(existsSync(nordvik), 'Obligatorisk Nordvik-original må være tilgjengelig lokalt').toBe(true)
   test.setTimeout(120_000)
-  const expected = await nordvikLiveExpected(request, info)
+  const expected = await nordvikLocalExpected(info)
   const errors: string[] = [], paid: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   for (const endpoint of ['document-economy/run', 'analysis']) await page.route(`**/api/${endpoint}`, route => { paid.push(endpoint); return route.abort() })
@@ -172,13 +146,17 @@ test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekrefte
     areaMethod: { kind: 'nearest-boundary', documentArea: 59, lowerArea: 60, upperArea: 60, weight: '0' } })
   expect(rent.observations).toEqual([expect.objectContaining({ zoneCode: '01.02', sizeCode: '3.060', area: 60, monthly: String(expected.raw) })])
   expect(rent.formula).toContain('59 → 60 m²; referanseverdi uendret')
-  expect(rent.limitations.join(' ')).toContain(`±${expected.marginPercent} %`)
+  expect(rent.limitations.join(' ')).toContain('Ingen prosentmargin')
+  expect(rent.marketEstimate).toMatchObject({ status: 'unavailable', monthly: null })
+  expect(rent.published.selectedReferenceId).toBe('hybel-q3-2026-gamle-oslo-3')
   const panel = page.getByRole('region', { name: 'Forventet leie.' })
   await expect(panel).toContainText('Selveierleilighet')
   await expect(panel).toContainText('59 m² BRA-i')
   await expect(panel.getByTestId('rent-area-approximation')).toContainText('59 → 60 m²')
   await expect(panel.getByTestId('rent-area-approximation')).toContainText('ikke en direkte SSB-prediksjon for 59 m²')
-  await expect(panel.getByTestId('rent-area-approximation')).toContainText('ikke empirisk kalibrert')
+  await expect(panel.getByTestId('rent-area-approximation')).toContainText('Individuell usikkerhet er ikke tallfestet')
+  await expect(panel.getByTestId('rent-published-monthly')).toHaveText('20 426 kr/mnd')
+  await expect(panel.getByRole('heading', { name: 'Individuell markedsleie: Ikke beregnet' })).toBeVisible()
   await expect(panel.getByTestId('rent-monthly')).toHaveText(`${displayedAmount(expected.monthly)} kr`)
   await expect(panel.getByTestId('rent-interval')).toHaveText(`${displayedAmount(expected.low)}–${displayedAmount(expected.high)} kr/mnd`)
   await expect(panel).toContainText('01.02'); await expect(panel).toContainText(`Brukes automatisk i ubekreftet økonomiscenario for ${expected.year}`)
@@ -187,9 +165,12 @@ test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekrefte
   await expect(page.getByTestId('scenario-preliminary-formula')).toContainText(displayedAmount(expected.annual - 43920))
   await expect(page.getByTestId('scenario-preliminary-formula')).toContainText('43 920')
   await expect(page.getByRole('region', { name: 'Foreløpig netto før finansiering' })).toContainText('Kostnadsår: ukjent')
-  await panel.locator('summary').click()
-  await expect(panel).toContainText('3.060'); await expect(panel).toContainText(`${expected.raw} × (1 − ${expected.margin})`)
-  await expect(panel.getByRole('link', { name: /Hent det samme datagrunnlaget/ })).toHaveAttribute('href', new RegExp(`valueCodes%5BTid%5D=${expected.year}`))
+  await panel.locator('.rent-published-references summary').click()
+  await expect(panel.locator('.rent-published-references')).toContainText('15 510 kr/mnd')
+  await expect(panel.locator('.rent-published-references')).toContainText('bare kontekst')
+  await panel.locator('.rent-estimate-evidence > summary').click()
+  await expect(panel).toContainText('3.060'); await expect(panel).toContainText('Ingen prosentmargin')
+  await expect(panel.getByRole('link', { name: /Se SSBs opprinnelige datagrunnlag/ })).toHaveAttribute('href', new RegExp(`valueCodes%5BTid%5D=${expected.year}`))
   // Urørt dokumentøkonomi gir automatisk P og bare en avgrenset foreløpig netto.
   expect(outcome.economy.fields.find(field => field.id === 'sharedDebt')).toMatchObject({ status: 'available', amount: '0' })
   await expect(page.locator('.document-economy')).toContainText('Seksjonen har ingen gjeld per. 26.10.2026')
@@ -243,6 +224,7 @@ test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekrefte
   await expect(panel.getByTestId('rent-monthly')).toHaveText(`${displayedAmount(expected.monthly)} kr`)
   await expect(panel.getByTestId('rent-area-approximation')).toContainText('59 → 60 m²')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await panel.screenshot({ path: info.outputPath('nordvik-references-mobile.png') })
   await page.screenshot({ path: info.outputPath('nordvik-mobile.png'), fullPage: true })
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.screenshot({ path: info.outputPath('nordvik-desktop.png'), fullPage: true })
@@ -274,49 +256,23 @@ test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekrefte
   expect(errors).toEqual([]); expect(paid).toEqual([])
 })
 
-/** Independent two-zone oracle for the exact documented 40 m² / 2-room cell. */
-async function nostegatenLiveExpected(request: APIRequestContext, info: TestInfo) {
-  const metadataUrl = 'https://data.ssb.no/api/pxwebapi/v2/tables/09897/metadata?lang=no'
-  const response = await request.get(metadataUrl, { timeout: 15_000, headers: { 'Cache-Control': 'no-cache' } })
-  expect(response.ok()).toBe(true)
-  const metadata = await response.json() as LiveSsb
-  const currentYear = new Date().getUTCFullYear()
-  const year = Object.keys(metadata.dimension.Tid!.category.index).filter(value => /^\d{4}$/.test(value) && Number(value) <= currentYear).sort().at(-1)!
-  expect(metadata.dimension.AntRomBRA!.category.index['2.040']).toBeDefined()
-  const age = currentYear - Number(year)
-  expect(age).toBeGreaterThanOrEqual(0); expect(age).toBeLessThanOrEqual(3)
-  const values: number[] = [], evidence: unknown[] = []
-  for (const zone of ['03.01', '03.02']) {
-    const coordinates = { Soner2: zone, AntRomBRA: '2.040', ContentsCode: 'Husleie', Tid: year }
-    const url = new URL('https://data.ssb.no/api/pxwebapi/v2/tables/09897/data')
-    url.searchParams.set('lang', 'no')
-    for (const [dimension, code] of Object.entries(coordinates)) url.searchParams.set(`valueCodes[${dimension}]`, code)
-    const result = await request.get(url.href, { timeout: 15_000, headers: { 'Cache-Control': 'no-cache' } })
-    expect(result.ok()).toBe(true)
-    const cell = await result.json() as LiveSsb
-    expect(cell.updated).toBe(metadata.updated); expect(cell.size).toEqual([1, 1, 1, 1])
-    for (const [dimension, code] of Object.entries(coordinates)) expect(cell.dimension[dimension]!.category.index).toEqual({ [code]: 0 })
-    expect(cell.value).toHaveLength(1)
-    const value = cell.value[0]!
-    expect(Number.isInteger(value)).toBe(true); expect(value).toBeGreaterThan(0)
-    values.push(value as number); evidence.push({ url: url.href, cell })
-  }
-  const raw = (values[0]! + values[1]!) / 2, marginPercent = Math.min(75, 35 + age * 5)
-  const monthly = Math.round(raw / 100) * 100, annual = monthly * 12
-  const expected = { year, sourceUpdated: metadata.updated, values, monthly, annual, marginPercent,
-    low: Math.floor(Math.min(...values) * (100 - marginPercent) / 10000) * 100,
-    high: Math.ceil(Math.max(...values) * (100 + marginPercent) / 10000) * 100 }
-  await writeFile(info.outputPath('nostegaten-independent-ssb.json'), JSON.stringify({ metadata, evidence, expected }, null, 2))
+/** Uavhengige tosoners originalceller for dokumentert 40 m² / 2 rom. */
+async function nostegatenLocalExpected(info: TestInfo) {
+  const values = ['03.01', '03.02'].map(zone => ssbSnapshot.value[ssbSnapshot.dimension.Soner2.category.index[zone as '03.01' | '03.02'] * 25 + ssbSnapshot.dimension.AntRomBRA.category.index['2.040']]!)
+  expect(values).toEqual([12600, 11300])
+  const monthly = Math.round((values[0]! + values[1]!) / 2 / 100) * 100
+  const expected = { year: '2025', sourceUpdated: ssbSnapshot.updated, values, monthly, annual: monthly * 12, low: Math.min(...values), high: Math.max(...values) }
+  await writeFile(info.outputPath('nostegaten-independent-local.json'), JSON.stringify(expected, null, 2))
   return expected
 }
 
 const nostegaten = fileURLToPath(new URL('../../private/incoming/nostegaten-65-a.pdf', import.meta.url))
-test('ekte Nøstegaten: 152 sider, dokumentøkonomi og automatisk SSB-leie med foreløpig avkastning', async ({ page, request }, info) => {
+test('ekte Nøstegaten: 152 sider, dokumentøkonomi og automatisk SSB-leie med foreløpig avkastning', async ({ page }, info) => {
   const required = process.env.PAA_TEST_NOSTEGATEN_REQUIRED === '1'
   test.skip(!existsSync(nostegaten) && !required, 'Privat original distribueres ikke i Git. PAA_TEST_NOSTEGATEN_REQUIRED=1 krever prøven uten skip.')
   expect(existsSync(nostegaten)).toBe(true)
   test.setTimeout(120_000)
-  const expected = await nostegatenLiveExpected(request, info)
+  const expected = await nostegatenLocalExpected(info)
   const paid: string[] = [], errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   for (const endpoint of ['document-economy/run', 'analysis']) await page.route(`**/api/${endpoint}`, route => { paid.push(endpoint); return route.abort() })
@@ -356,6 +312,8 @@ test('ekte Nøstegaten: 152 sider, dokumentøkonomi og automatisk SSB-leie med f
     property: { area: { value: 40, basis: 'BRA-i' }, rooms: { value: 2 }, bedrooms: { value: 1 }, propertyType: { value: 'apartment' }, issues: [] } })
   expect(rent.property.municipality?.value.toLowerCase()).toBe('bergen')
   expect(rent.property.district).toBeNull()
+  expect(rent.published.selectedReferenceId).toBe('hybel-q3-2026-bergen-2')
+  expect(rent.marketEstimate).toMatchObject({ status: 'unavailable', monthly: null })
   for (const field of [rent.property.address, rent.property.municipality, rent.property.area, rent.property.rooms, rent.property.bedrooms, rent.property.propertyType]) {
     expect(field?.sources.length).toBeGreaterThan(0)
     for (const source of field!.sources) {
@@ -368,6 +326,11 @@ test('ekte Nøstegaten: 152 sider, dokumentøkonomi og automatisk SSB-leie med f
   expect(rent.observations.map(item => [item.zoneCode, item.sizeCode, item.monthly])).toEqual([['03.01', '2.040', String(expected.values[0])], ['03.02', '2.040', String(expected.values[1])]])
   const rental = page.getByRole('region', { name: 'Forventet leie.' })
   await expect(rental.getByTestId('rent-monthly')).toHaveText(`${displayedAmount(expected.monthly)} kr`)
+  await expect(rental.getByTestId('rent-published-monthly')).toHaveText('13 891 kr/mnd')
+  await expect(rental.getByRole('heading', { name: 'Individuell markedsleie: Ikke beregnet' })).toBeVisible()
+  await rental.locator('.rent-published-references summary').click()
+  await expect(rental.locator('.rent-published-references')).toContainText('Annonser og portefølje')
+  await expect(rental.locator('.rent-published-references')).toContainText('13 900 kr/mnd')
   const percent = (value: number) => new Intl.NumberFormat('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)
   await expect(page.getByTestId('scenario-gross')).toContainText(percent(expected.annual / 4050000 * 100))
   await expect(page.getByTestId('scenario-preliminary-net')).toContainText(percent((expected.annual - 25197) / 4050000 * 100))
@@ -397,9 +360,10 @@ test('ekte Nøstegaten: 152 sider, dokumentøkonomi og automatisk SSB-leie med f
   await expect.poll(() => page.workers().length).toBe(0)
   await page.setViewportSize({ width: 390, height: 844 })
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await rental.screenshot({ path: info.outputPath('nostegaten-references-mobile.png') })
   await page.screenshot({ path: info.outputPath('nostegaten-mobile.png'), fullPage: true })
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.screenshot({ path: info.outputPath('nostegaten-desktop.png'), fullPage: true })
-  await writeFile(info.outputPath('nostegaten-import-rent.json'), JSON.stringify({ outcome, rent, expected }, null, 2))
+  await writeFile(info.outputPath('nostegaten-import-rent.json'), JSON.stringify({ outcome, rent, expected, errors, paid }, null, 2))
   expect(paid).toEqual([]); expect(errors).toEqual([])
 })

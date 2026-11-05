@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import Big from 'big.js'
 import { ReportHashSchema } from './document-analysis.ts'
+import { PublishedRentAssessmentSchema } from './rent-reference.ts'
 import { PdfSourceSchema } from './pdf-source.ts'
 
 const Decimal = Big(); Decimal.strict = true
@@ -19,7 +20,10 @@ export const RentalPropertySchema = z.strictObject({
 })
 
 export const RentEstimateSchema = z.strictObject({
-  version: z.literal('ssb-rent-2'), documentHash: ReportHashSchema, property: RentalPropertySchema,
+  version: z.literal('local-rent-1'),
+  kind: z.literal('statistical-reference'), snapshotDate: z.literal('2026-11-04'),
+  published: PublishedRentAssessmentSchema,
+  marketEstimate: z.strictObject({ status: z.literal('unavailable'), monthly: z.null(), reason: z.string().min(1).max(2000) }), documentHash: ReportHashSchema, property: RentalPropertySchema,
   status: z.enum(['estimated', 'unavailable']), monthly: amount.nullable(), low: amount.nullable(), high: amount.nullable(), annual: amount.nullable(),
   statisticsYear: z.string().regex(/^\d{4}$/).nullable(), fetchedAt: z.iso.datetime().max(40), sourceUrl: z.string().url().max(2048).nullable(),
   method: z.string().min(1).max(500), limitations: z.array(z.string().min(1).max(2000)).max(100),
@@ -30,6 +34,11 @@ export const RentEstimateSchema = z.strictObject({
 }).superRefine((value, context) => {
   const fail = (message: string) => context.addIssue({ code: 'custom', message })
   if (value.documentHash !== value.property.documentHash) fail('Leieestimatet må gjelde samme dokument som boliggrunnlaget.')
+  const selected = value.published.references.find(item => item.reference.id === value.published.selectedReferenceId)
+  const normalize = (text: string) => text.toLocaleLowerCase('nb-NO').replace(/\s+kommune\s*$/, '').trim()
+  if (selected && (value.property.issues.length > 0 || value.property.propertyType?.value !== 'apartment' || !value.property.area || !value.property.address
+    || selected.reference.rooms !== value.property.rooms?.value || normalize(selected.reference.municipality) !== normalize(value.property.municipality?.value ?? '')
+    || (selected.reference.district !== null && normalize(selected.reference.district) !== normalize(value.property.district?.value ?? '')))) fail('Valgt publisert referanse må samsvare med dokumentert boligtype, rom og geografi uten blokkerende opplysninger.')
   const amounts = [value.monthly, value.low, value.high, value.annual]
   if (value.status === 'unavailable') {
     if (amounts.some(amount => amount !== null) || value.observations.length > 0 || value.formula !== null || value.areaMethod !== null) fail('Utilgjengelig leieestimat skal ikke inneholde beløp, observasjoner, arealmetode eller formel.')

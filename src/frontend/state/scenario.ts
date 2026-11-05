@@ -48,8 +48,8 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
   const rentYear = automaticRent ? rent.statisticsYear : null
   if (automaticRent) {
     L = rent.annual
-    provenance.L = `SSB-estimat · tabell 09897 · ${rent.statisticsYear}-nivå · ubekreftet`
-    issues.push(`Automatisk forventet leie er et estimat, ikke dokumentert leie. Scenarioår ${rentYear}; SSB-nivå ${rent.statisticsYear} uten prisjustering. Ledighet og eierbetalt drift er ikke trukket fra.`)
+    provenance.L = `SSB-referanse · tabell 09897 · ${rent.statisticsYear}-nivå · ubekreftet`
+    issues.push(`Automatisk leieforutsetning er en statistisk SSB-referanse, ikke dokumentert leie eller individuell markedsleie. Scenarioår ${rentYear}; SSB-nivå ${rent.statisticsYear} uten prisjustering. Ledighet og eierbetalt drift er ikke trukket fra.`)
   }
   const yearFor = (field: RecurringField) => independent.fields[field].normalization?.year ?? null
   const effectiveRentYear = rentYear ?? yearFor('L')

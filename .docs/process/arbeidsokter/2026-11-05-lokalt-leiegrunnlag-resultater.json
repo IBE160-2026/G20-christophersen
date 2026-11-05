@@ -1,0 +1,179 @@
+{
+  "baseline": "eab51511fb961bac03874a5ecd4e15485434e9e3",
+  "date": "2026-11-05",
+  "method": "local-rent-1",
+  "cases": [
+    {
+      "documentHash": "3e2dd467c11785c1de7c8c79b8e5f58f786e87416f7dc9b14f7a2d713ec6cb70",
+      "pages": 170,
+      "facts": {
+        "address": {
+          "value": "Rostockgata 96, 0194 OSLO",
+          "pdfPages": [
+            22
+          ]
+        },
+        "municipality": {
+          "value": "Oslo",
+          "pdfPages": [
+            22,
+            117
+          ]
+        },
+        "district": {
+          "value": "Gamle Oslo",
+          "pdfPages": [
+            117
+          ]
+        },
+        "area": {
+          "value": 59,
+          "pdfPages": [
+            4,
+            5,
+            22
+          ]
+        },
+        "rooms": {
+          "value": 3,
+          "pdfPages": [
+            4
+          ]
+        },
+        "bedrooms": {
+          "value": 2,
+          "pdfPages": [
+            4,
+            22
+          ]
+        }
+      },
+      "selectedPublishedReference": {
+        "id": "hybel-q3-2026-gamle-oslo-3",
+        "monthly": "20426",
+        "population": "active-contracts",
+        "period": "Q3 2026",
+        "sourceUrl": "https://boligutleie.hybel.no/hubfs/Husleiebarometeret%20Q3%202026%20kl.%2012_00.pdf?hsLang=nb"
+      },
+      "ssb": {
+        "monthly": "18900",
+        "annual": "226800",
+        "low": "18900",
+        "high": "18900",
+        "statisticsYear": "2025",
+        "snapshotDate": "2026-11-04",
+        "areaMethod": {
+          "kind": "nearest-boundary",
+          "documentArea": 59,
+          "lowerArea": 60,
+          "upperArea": 60,
+          "weight": "0"
+        },
+        "observations": [
+          {
+            "zoneCode": "01.02",
+            "zoneLabel": "Oslo - Grünerløkka, Gamle Oslo, Sagene, Nordre Aker og Vestre Aker",
+            "sizeCode": "3.060",
+            "area": 60,
+            "monthly": "18900"
+          }
+        ]
+      },
+      "individualMarketEstimate": {
+        "status": "unavailable",
+        "monthly": null,
+        "reason": "Materialet gir statistiske gruppereferanser, men mangler individuelle sammenligningsobjekter og dokumentert areal-, standard- og beliggenhetsjustering. Individuell markedsleie er ikke beregnet."
+      },
+      "technicalCoverage": "incomplete",
+      "evidenceFile": "private/incoming/local-rent-2026-11-05-results/rent-real-document-ekte-No-0c871-reftet-økonomi-gjennom-HTTP/nordvik-import-rent.json",
+      "evidenceSha256": "fb8fb7ab7bad2f320fad4035a24f46e3f06ce9fa5bff40c9271856009a339945",
+      "runtimeErrorsAssertedEmpty": true,
+      "paidCallsAssertedEmpty": true
+    },
+    {
+      "documentHash": "f33337aa0f5f2de0b64454541b0bb20bcf7732498755c4078ed1509b3a3f14e8",
+      "pages": 152,
+      "facts": {
+        "address": {
+          "value": "Nøstegaten 65 A, 5011 Bergen",
+          "pdfPages": [
+            8
+          ]
+        },
+        "municipality": {
+          "value": "Bergen",
+          "pdfPages": [
+            116
+          ]
+        },
+        "district": null,
+        "area": {
+          "value": 40,
+          "pdfPages": [
+            9
+          ]
+        },
+        "rooms": {
+          "value": 2,
+          "pdfPages": [
+            8
+          ]
+        },
+        "bedrooms": {
+          "value": 1,
+          "pdfPages": [
+            8
+          ]
+        }
+      },
+      "selectedPublishedReference": {
+        "id": "hybel-q3-2026-bergen-2",
+        "monthly": "13891",
+        "population": "active-contracts",
+        "period": "Q3 2026",
+        "sourceUrl": "https://boligutleie.hybel.no/hubfs/Husleiebarometeret%20Q3%202026%20kl.%2012_00.pdf?hsLang=nb"
+      },
+      "ssb": {
+        "monthly": "12000",
+        "annual": "144000",
+        "low": "11300",
+        "high": "12600",
+        "statisticsYear": "2025",
+        "snapshotDate": "2026-11-04",
+        "areaMethod": {
+          "kind": "exact",
+          "documentArea": 40,
+          "lowerArea": 40,
+          "upperArea": 40,
+          "weight": "0"
+        },
+        "observations": [
+          {
+            "zoneCode": "03.01",
+            "zoneLabel": "Bergen - Bergenhus",
+            "sizeCode": "2.040",
+            "area": 40,
+            "monthly": "12600"
+          },
+          {
+            "zoneCode": "03.02",
+            "zoneLabel": "Bergen - øvrige bydeler",
+            "sizeCode": "2.040",
+            "area": 40,
+            "monthly": "11300"
+          }
+        ]
+      },
+      "individualMarketEstimate": {
+        "status": "unavailable",
+        "monthly": null,
+        "reason": "Materialet gir statistiske gruppereferanser, men mangler individuelle sammenligningsobjekter og dokumentert areal-, standard- og beliggenhetsjustering. Individuell markedsleie er ikke beregnet."
+      },
+      "technicalCoverage": "incomplete",
+      "evidenceFile": "private/incoming/local-rent-2026-11-05-results/rent-real-document-ekte-Nø-d18c4-ie-med-foreløpig-avkastning/nostegaten-import-rent.json",
+      "evidenceSha256": "aad181ab6159c08f7933a4d8fc1a0c1e116518bcb81900698f483c22a490a86d",
+      "runtimeErrorsAssertedEmpty": true,
+      "paidCallsAssertedEmpty": true
+    }
+  ]
+}

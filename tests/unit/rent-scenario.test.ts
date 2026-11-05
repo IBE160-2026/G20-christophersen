@@ -49,7 +49,7 @@ it('kobler gratis estimat automatisk til ubekreftet økonomi med prisår og uten
 it('overstyrer aldri manuell leie, oppgitt faktisk leie, konflikt eller ugyldig input', () => {
   for (const raw of ['99999', '-1', 'feil']) {
     const session = sessionReducer(state(), { type: 'register-value', field: 'L', rawValue: raw })
-    expect(selectScenarioBasis(session, rent).provenance.L).not.toContain('SSB-estimat')
+    expect(selectScenarioBasis(session, rent).provenance.L).not.toContain('SSB-referanse')
   }
   const conflict = state(); conflict.sources.L.conflict = { rawValue: '200000', description: 'Annen kilde' }
   expect(selectScenarioBasis(conflict, rent).L).toBeNull()

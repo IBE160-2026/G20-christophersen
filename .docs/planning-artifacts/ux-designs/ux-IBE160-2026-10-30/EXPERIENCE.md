@@ -3,7 +3,7 @@ name: Property Acquisition Agent
 description: Felles investeringsflyt for to alternative visuelle konsepter.
 status: approved-concept-a
 revision: 3
-updated: 2026-10-30
+updated: 2026-11-06
 paired_with: DESIGN.md
 implementation_authorized: true
 sources:
@@ -148,3 +148,14 @@ kjøpssignal. Funksjonalitet skjules ikke bak det visuelle uttrykket.
 
 Ny separat scenariokontrakt, bildestøtte og presise amortiserings-/grafregler
 avklares først etter valg av retning. Ingen implementering er startet.
+
+
+## Autorisert videreføring 2026-11-05
+
+Investeringsoversikten beholder Konsept A. Samlet kapitalbehov, prisgrunnlag
+og kjent kostnadsdelsum vises over yield og månedlig kontantstrøm. Leie,
+samlet månedlig drift, egenkapital/belåningsgrad, rente og løpetid kan justeres
+direkte. Dokumentkilder, graf og metode foldes ut; juridisk og teknisk risiko
+følger under økonomien. Mangler, negativ kontantstrøm og høy belåning får
+tekstlig status. Scenarioer endrer ingen kontrollert screening.
+Se [implementeringsspec](../../../implementation-artifacts/spec-paa-investeringsverktoy.md).

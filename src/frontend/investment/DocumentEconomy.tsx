@@ -25,9 +25,9 @@ export function DocumentEconomy({ outcome, onSource }: { outcome: DocumentImport
       </details>
     </dd></div>
   }
-  return <section className="document-economy" aria-labelledby="document-economy-title"><h3 id="document-economy-title">Beløp og kildegrunnlag.</h3><p className="metric-caption">{analysis?.provenance === 'saved-same-document' ? 'Lagret analyse av samme dokument' : analysis?.provenance === 'live-document' ? 'KI-analyse av dette dokumentet' : 'Lokalt dokumentuttrekk'} · ubekreftet</p>
+  return <section className="document-economy" aria-labelledby="document-economy-title"><details><summary><h3 id="document-economy-title">Beløp og kildegrunnlag.</h3></summary><p className="metric-caption">{analysis?.provenance === 'saved-same-document' ? 'Lagret analyse av samme dokument' : analysis?.provenance === 'live-document' ? 'KI-analyse av dette dokumentet' : 'Lokalt dokumentuttrekk'} · ubekreftet</p>
     <dl className="document-economy-fields">{known.map(renderField)}</dl>
     <details><summary>Manglende beløp og dokumentdekning ({missing.length})</summary><dl className="document-economy-fields">{missing.map(renderField)}</dl><p>{analysis?.reason ?? 'Videre KI-analyse har ikke startet.'}</p><ul>{outcome.coverage.economy.reasons.map(reason => <li key={reason}>{reason}</li>)}</ul></details>
     {(analysis?.observations.length || analysis?.limitations.length) ? <details><summary>Økonomiske observasjoner og originaltekst</summary>{analysis?.observations.map((item, index) => <article key={index}><h4>{kinds[item.kind] ?? 'Kildeobservasjon'}</h4>{sources(item.sources)}</article>)}{analysis?.limitations.map((item, index) => <article key={`limitation:${index}`}><h4>Originalutdrag til kontroll</h4>{sources(item.sources)}</article>)}</details> : null}
-  </section>
+  </details></section>
 }

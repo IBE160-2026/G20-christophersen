@@ -27,6 +27,9 @@ export default function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
   const rentKey = JSON.stringify([objectKey, session.financial.L, session.sources.L])
   const [rentDraft, setRentDraft] = useState<{ key: string; monthly: string } | null>(null)
   const rentOverride = rentDraft?.key === rentKey ? rentDraft.monthly : null
+  const operatingKey = JSON.stringify([objectKey, session.financial.D, session.sources.D, session.costItems])
+  const [operatingDraft, setOperatingDraft] = useState<{ key: string; monthly: string } | null>(null)
+  const operatingOverride = operatingDraft?.key === operatingKey ? operatingDraft.monthly : null
   const controls = scenarioDraft?.key === objectKey ? scenarioDraft.controls : slot.status !== 'idle' ? slot.status === 'imported' ? session.prospectus.financing : { equity: '', annualInterest: '', months: '' } : session.listing.financing
   const overview = useRef<HTMLButtonElement>(null)
   useEffect(() => () => { importClient.abort(); client.abort() }, [importClient, client])
@@ -51,6 +54,6 @@ export default function App({ mode = 'demo' }: { mode?: 'demo' | 'live' }) {
     {controlsOpen ? <>
       <div className="control-heading app-header"><button type="button" className="quiet-button" onClick={() => { setControlsOpen(false); window.scrollTo(0, 0); requestAnimationFrame(() => overview.current?.focus()) }}>← Tilbake til investeringsoversikten</button><span className="meta">{session.prospectus.prospectus.outcome?.manifest || session.prospectus.report.outcome?.manifest ? 'Offline · lokalt dokumentuttrekk' : analysisModeLabel(session.report.mode)}</span></div>
       <ControlWorkspace session={session} dispatch={controlDispatch} importClient={importClient} client={client} listingClient={listingClient} />
-    </> : <InvestmentOverview rent={rent} session={session} dispatch={dispatch} importClient={importClient} listingClient={listingClient} onOpen={open} overviewRef={overview} controls={controls} onControls={controls => setScenarioDraft({ key: objectKey, controls })} rentOverride={rentOverride} onScenarioRent={monthly => setRentDraft({ key: rentKey, monthly })} />}
+    </> : <InvestmentOverview rent={rent} session={session} dispatch={dispatch} importClient={importClient} listingClient={listingClient} onOpen={open} overviewRef={overview} controls={controls} onControls={controls => setScenarioDraft({ key: objectKey, controls })} rentOverride={rentOverride} onScenarioRent={monthly => setRentDraft({ key: rentKey, monthly })} operatingOverride={operatingOverride} onScenarioOperating={monthly => setOperatingDraft({ key: operatingKey, monthly })} />}
   </div>
 }

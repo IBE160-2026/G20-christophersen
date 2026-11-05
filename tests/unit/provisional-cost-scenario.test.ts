@@ -18,7 +18,7 @@ it('viser bare en merket kostnadsforutsetning når kommunal inkludering er ukjen
   for (const completeOperatingCosts of [false, true]) {
     const suggested = economySuggestions(importEconomyDraft(outcome, {}, completeOperatingCosts), { requireReview: false })
     expect(suggested).toMatchObject({ P: '4050000', D: null, preliminaryOperatingSubtotal: null,
-      preliminaryCostScenario: { annualCosts: '25197' } })
+      preliminaryCostScenario: { annualCosts: '25197' }, sharedAnnualPayment: '0' })
     expect(suggested.preliminaryCostScenario!.assumption).toContain('eventuell overlapping er ikke avklart')
   }
   let session = createInitialSession()
@@ -35,6 +35,26 @@ it('viser bare en merket kostnadsforutsetning når kommunal inkludering er ukjen
   session = sessionReducer(session, { type: 'register-value', field: 'D', rawValue: 'ugyldig' })
   expect(selectScenarioBasis(session).preliminaryOperatingSubtotal).toBeNull()
   expect(municipal.includedIn).toBeNull()
+})
+it('dokumentert null gjeld holdes uavhengig av drift, men konkrete motbevis sperrer gjeldsbetaling', async () => {
+  const outcome = await createCodeFirstImport(codeFirstBasis(pages))
+  const originalDraft = importEconomyDraft(outcome)
+  const suggested = () => economySuggestions(originalDraft, { requireReview: false })
+  expect(suggested()).toMatchObject({ sharedAnnualPayment: '0', D: null })
+  const common = originalDraft.original.fields.find(field => field.id === 'commonCosts')!
+  common.debtPart = '100'
+  expect(suggested().sharedAnnualPayment).toBeNull()
+  common.debtPart = '0'
+  const payment = originalDraft.original.fields.find(field => field.id === 'sharedDebtPayment')!
+  payment.amount = '100'
+  expect(suggested().sharedAnnualPayment).toBeNull()
+  payment.amount = null
+  payment.status = 'conflict'
+  expect(suggested().sharedAnnualPayment).toBeNull()
+  payment.status = 'missing'
+  expect(suggested().sharedAnnualPayment).toBe('0')
+  originalDraft.original.fields.find(field => field.id === 'sharedDebt')!.status = 'missing'
+  expect(suggested().sharedAnnualPayment).toBeNull()
 })
 it('gir ingen kostnadsforutsetning ved beløps-/gjeldskonflikt eller ukjent periode', async () => {
   for (const extra of ['Felleskostnader: 2 000 kr per måned', 'Fellesgjeld er ukjent']) {

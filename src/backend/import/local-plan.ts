@@ -72,7 +72,9 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
       if (propertyIdentity.length >= 20) { residual(page.pdfPage, 'Identitetsgrensen er nådd; ytterligere belegg er uavklart.'); continue }
       propertyIdentity.push({ kind: 'address', value, source })
     }
-    for (const match of page.text.matchAll(/Eierform\s*:\s*(eierseksjon|borettslag)/gi)) {
+    const ownershipExpression = options.legacyEconomy ? /Eierform\s*:\s*(eierseksjon|borettslag)/gi
+      : /^[ \t]*Eierform[ \t]*:?[ \t]*(?:\r?\n[ \t]*)?(eierseksjon|borettslag)[ \t]*$/gim
+    for (const match of page.text.matchAll(ownershipExpression)) {
       ownershipValues.add(match[1]!.toLowerCase() as 'eierseksjon' | 'borettslag')
       const source = sourceFor(basis, page.pdfPage, match.index, match.index + match[0].length)
       if (ownershipSources.some(item => repeatedEvidence(item, source))) continue

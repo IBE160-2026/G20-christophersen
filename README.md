@@ -1,5 +1,7 @@
 # Property Acquisition Agent — IBE160, G20
 
+> **Investeringsverktøy 6. november 2026:** Oversikten viser totalt kapitalbehov, egenkapital, samlet gjeld/belåningsgrad, justerbar finansiering, brutto-/nettoyield og månedlig kontantstrøm. Leie og samlet drift justeres direkte. [Spesifikasjon og avgrensning](.docs/implementation-artifacts/spec-paa-investeringsverktoy.md).
+
 > **Analyseoversikt 5. november 2026:** PDF er eneste synlige inngang. Bolig, samlet økonomi, juridiske forhold, teknisk tilstand og dokumentasjon følger i leserekkefølge. Konsept A er bevart. Se [endringer, AI-status og sluttprøve](.docs/process/arbeidsokter/2026-11-05-analyseoversikt.md).
 
 > **Stabilisering 5. november 2026:** Konsept A støtter ny analyse, gjentatt lokal PDF-import og leieslider med tilbakestilling til publisert romreferanse. [Sluttkontroll med ekte PDF-er og uavhengig QA](.docs/process/arbeidsokter/2026-11-05-paa-stabilisering.md) dokumenterer faktisk testomfang og begrensninger. Full teknisk dekning, full drift og individuell markedsleie krever fortsatt mer grunnlag.
@@ -53,11 +55,15 @@ Oppskriften er egenprøvd på macOS 26.6.2 arm64; andre plattformer er ikke egen
 
 Last opp din salgsoppgave. Analyse starter lokalt uten innledende finansverdier. Ukjent adresse, areal, byggeår og økonomi vises eksplisitt; ingen eksempeleiendom eller illustrasjonsverdier fyller hullene. Hovedbildet velges konservativt fra første PDF-side når et dominerende fotopanel støttes av adresse og boligopplysninger i et gjenkjent forsideoppsett. Megler-/kontaktsider, små raster, helsideillustrasjoner og ukjente oppsett får nøytral plassholder. Det gjøres ingen generell motivgjenkjenning. Originalen og fysisk side er tilgjengelige; bildet godkjenner ikke dokumentets innhold.
 
-**Juster leie og drift** registrerer egne årsforutsetninger med et uttrykkelig oppgitt år. Disse erstatter bare feltene du fyller ut og blir ubekreftet. **Egenkapital**, **rente** og **nedbetalingstid** oppdaterer et separat scenario. Presis løpetid kan oppgis i hele måneder. Kontantbehov, totalpris og betaling av fellesgjeld beholder eksisterende avstemmingskrav; en kjent driftssubtotal blir ikke full drift. Rente påvirker kontantstrøm, ikke yield.
+Juster **forventet månedsleie** med tekstfelt eller slider. Oppgi **samlet eierbetalt drift per måned**, inkludert kjente kostnader, øvrige eierutgifter og vedlikehold; renter og avdrag føres under finansiering. Dette er din egen totalforutsetning og erstatter driftsgrunnlaget i scenarioet. Dokumentets delsum legges ikke til på nytt. Blank drift gir ukjent netto og kontantstrøm. Beløpene gjelder scenarioåret som vises over økonomien; et statistisk utgangspunkt er ingen dokumentert leieavtale.
 
-Grafene viser akkumulert konstant kontantstrøm, restgjeld på privat lån og årlig kontantstrøm ved ulike renter. Kontantstrømgrafen inkluderer ikke innskutt egenkapital, salg, skatt eller verdiendring og er ikke totalavkastning. Alle grafdata finnes i tabell. Velg faner med piltaster/Home/End og utforsk punkter med grafens slider. Beregning skjer i lokale, avbrytbare workere; krevende beregninger stoppes etter 15 sekunder for hovedscenario og 30 sekunder for rentegraf, med en synlig melding.
+Oppgi **egenkapital** eller **belåningsgrad**, **nominell årsrente** og **nedbetalingstid** for et privat annuitetslån. Alle avhengige tall oppdateres uten lagringsknapp. Presis løpetid kan oppgis i hele måneder. Kontantkjøp trenger ingen rente/løpetid; eventuell betaling på fellesgjeld beholdes. Høy belåning og negativ kontantstrøm vises uttrykkelig. Ingen lånemulighet godkjennes av appen. **Juster leie og drift** åpner dessuten registrering av egne årsverdier i det separate kontrollgrunnlaget; direkte scenariojusteringer endrer ingen bekreftelser.
 
-**Juridiske forhold** og **Teknisk tilstand** følger etter den samlede økonomien. Funn viser dokumentert forhold eller kontrollbehov, fysisk side og eventuell TG-grad; detaljer foldes ut. Lokale tekstregler søker etter manglende godkjenning av utleieenheter, brukstillatelser, servitutter og utleiebegrensninger. Tekniske avvik og eksplisitte TG2/TG3-funn beholder originalkilder og fysisk PDF-side. Åpne **Se alle funn og kilder** for beskrivelser, betydning, neste steg og original PDF. En separat tilstandsrapport kan lastes opp direkte herfra; **Bruk integrert rapport igjen** går tilbake til salgsoppgavens rapportgrunnlag. Funnene grupperes konservativt etter samme problem og identifiserte enhet/sted. Flere omtaler gir én rad med alle kildene; ulike eller uavklarte sammenhenger holdes adskilt. Hver rad kan utvides direkte for detaljer og originalkilder. Generelle juridiske forklaringer og dekningsmangler vises separat og inngår ikke i risikotelleren. Se [grupperingsspesifikasjon](.docs/implementation-artifacts/spec-unike-risikoforhold.md).
+Totalt kapitalbehov = kontantbehov (kjøpesum og omkostninger) + fellesgjeld. Privat lån = kontantbehov − egenkapital. Belåningsgrad = (privat lån + fellesgjeld) / pris inklusive fellesgjeld, uten omkostninger. Bruttoyield = årsleie / samme prisgrunnlag. Nettoyield = (årsleie − samlet årsdrift) / prisgrunnlaget. Månedlig kontantstrøm = (årsleie − årsdrift − samlet årlig rente-/avdragsbetaling) / 12, før skatt. Yield er før finansiering og beskriver ikke avkastning på egenkapital. Rente påvirker kontantstrøm, ikke yield. Manglende eller motstridende kjøps-/gjeldsgrunnlag gir ukjente avhengige tall.
+
+Åpne **Utforsk kontantstrøm, lån og rente** for grafene. De viser akkumulert konstant kontantstrøm, restgjeld på privat lån og årlig kontantstrøm ved ulike renter. Kontantstrømgrafen inkluderer ikke innskutt egenkapital, salg, skatt eller verdiendring og er ikke totalavkastning. Alle grafdata finnes i tabell. Velg faner med piltaster/Home/End og utforsk punkter med grafens slider. Beregning skjer i lokale, avbrytbare workere; krevende beregninger stoppes etter 15 sekunder for hovedscenario og 30 sekunder for rentegraf, med en synlig melding.
+
+**Beløp og kildegrunnlag** kan foldes ut for dokumentbeløp og originalkilder. **Juridiske forhold** og **Teknisk tilstand** følger etter den samlede økonomien. Funn viser dokumentert forhold eller kontrollbehov, fysisk side og eventuell TG-grad; detaljer foldes ut. Lokale tekstregler søker etter manglende godkjenning av utleieenheter, brukstillatelser, servitutter og utleiebegrensninger. Tekniske avvik og eksplisitte TG2/TG3-funn beholder originalkilder og fysisk PDF-side. Åpne **Se alle funn og kilder** for beskrivelser, betydning, neste steg og original PDF. En separat tilstandsrapport kan lastes opp direkte herfra; **Bruk integrert rapport igjen** går tilbake til salgsoppgavens rapportgrunnlag. Funnene grupperes konservativt etter samme problem og identifiserte enhet/sted. Flere omtaler gir én rad med alle kildene; ulike eller uavklarte sammenhenger holdes adskilt. Hver rad kan utvides direkte for detaljer og originalkilder. Generelle juridiske forklaringer og dekningsmangler vises separat og inngår ikke i risikotelleren. Se [grupperingsspesifikasjon](.docs/implementation-artifacts/spec-unike-risikoforhold.md).
 
 Risikoanalysen er gratis og lokal og har alltid delvis dekning. Den verifiserer ikke kommunens byggesaksarkiv eller grunnbok. Grafiske grader gjettes aldri. Bevart tekst fra sider med ufullstendig eller usikker lesing kan bare gi **mulige forhold**, tydelig merket med ufullstendig tekstgrunnlag og uten fastslått TG. Uleste sider, vedlegg og usikre rapportgrenser sperrer fortsatt komplett rapportdekning. Fravær av treff er ingen friskmelding. Risikomodulen endrer ikke finansreglene eller den kontrollerte screeninganbefalingen.
 
@@ -608,3 +614,23 @@ Verktøyet bruker den faktiske importflyten uten modelltransport og lagrer bare
 under ignorert `private/`, i en ny resultatmappe for hver kjøring. Tidligere filer
 overskrives ikke. Det måler Node og lokal OCR separat og oppgir også
 en samplet RSS-sum; denne summen er ikke dekket av Node-prosessens 512 MiB-vakt.
+
+
+### Ekte sluttprøve av investeringsverktøyet
+
+Private originaler lagres lokalt som `private/incoming/nostegaten-65-a.pdf` og
+`private/incoming/nordvik-rostockgata-96.pdf`; de distribueres ikke i Git. Med
+prosjektets Node/npm-versjon, tilgjengelig lokal OCR og ledig port 3000:
+
+```sh
+npm run build
+PAA_TEST_INVESTMENT_REQUIRED=1 npx playwright test tests/e2e/investment-tool-real.spec.ts
+```
+
+Prøven bruker ekte backend og begge originaler, egen økonomisk fasit,
+direkte justeringer, negativ kontantstrøm, høy belåning, nullrente, kontantkjøp,
+mangler, kilder, graf, mobil og gjentatt opplasting. Ingen API-svar stubbes.
+Uten private originaler blir disse to private casene hoppet over i ordinær
+regresjon; flagget over krever at de faktisk kjøres.
+[Prosess og faktiske resultater](.docs/process/arbeidsokter/2026-11-05-investeringsverktoy.md)
+og [uavhengig QA](.docs/process/arbeidsokter/2026-11-05-investeringsverktoy-uavhengig-qa.md).

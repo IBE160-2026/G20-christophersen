@@ -128,6 +128,21 @@ export function economySuggestions(draft: SourceEconomyDraft, options: { require
     }
   }
   if (!validBreakdown) sharedAnnualPayment = null
+  // Dokumentert null fellesgjeld avhenger ikke av om kommunale avgifter er
+  // inkludert i drift. Bevar likevel alle konkrete motbevis om gjeldsbetaling.
+  if (sharedDebt === '0') {
+    const originalPayment = draft.original.fields.find(field => field.id === 'sharedDebtPayment')
+    const paymentEvidence = debtPayment?.status === 'available' && checked('sharedDebtPayment') && debtPayment.amount !== null
+      ? [debtPayment.amount] : [debtPayment?.amount ?? null, originalPayment?.amount ?? null]
+    const debtEvidence = recurring.flatMap(field => {
+      const original = draft.original.fields.find(item => item.id === field.id)!
+      return field.status === 'available' && checked(field.id) && field.debtPart !== null
+        ? [field.debtPart] : [field.debtPart, original.debtPart]
+    })
+    const noDebtConflict = debtPayment?.status !== 'conflict'
+      && [...paymentEvidence, ...debtEvidence].every(value => value === null || new Decimal(value).eq('0'))
+    sharedAnnualPayment = noDebtConflict ? '0' : null
+  }
   if (D === null) issues.push('Full D krever komplett, kontrollert kostnadsinnhold med kjent fordeling, inkludering, periode og år.')
   if (sharedAnnualPayment === null) issues.push('Full J krever kjent betaling av fellesgjeld.')
   return { P, D, year, cashRequired, sharedAnnualPayment, knownOperatingSubtotal, preliminaryOperatingSubtotal, preliminaryCostScenario, preliminaryCostYear, issues }

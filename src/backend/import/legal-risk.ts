@@ -15,6 +15,13 @@ const rules: Rule[] = [
     action: 'Kontroller godkjent bruk og enhetsinndeling mot kommunens byggesak og avklar konsekvensene før leieinntekten legges til grunn.',
   },
   {
+    category: 'use-approval', title: 'Rombruk: godkjenning mangler', status: 'documented',
+    pattern: /\b(?:rom(?:met)?|soverom\w*|loftstue\w*|kjellerrom\w*|bod\w*)\b.{0,100}ikke\s+(?:er\s+)?godkjent\s+(?:for|som|til)\s+(?:varig opphold|soverom|boligformål|beboelse)/i,
+    exclude: /ikke\s+(?:dokumentert|kjent)|ingen\s+dokumentasjon|kan\s+ikke\s+bekrefte/i,
+    consequence: 'Dokumentet beskriver manglende godkjenning for den oppgitte rombruken. Det fastslår ikke at hele boligen er ulovlig eller at all utleie er forbudt.',
+    action: 'Kontroller godkjente tegninger og rombruk i kommunens byggesak. Avklar konsekvensene for planlagt bruk og leiegrunnlaget.',
+  },
+  {
     category: 'use-approval', title: 'Bruk eller tiltak er omtalt som ulovlig', status: 'documented',
     pattern: /(?:avvikene|forholdet|tiltaket|bruken|utleien|boenheten).{0,100}(?:anses som lovlighetsmang|er (?:en )?lovlighetsmang|er ulovlig)|(?:avdekket|påvist|registrert)\s+ulovlig\s+(?:bruk|utleie|tiltak)/i,
     consequence: 'Dokumentet beskriver et konkret lovlighetsavvik. Omfang, godkjenning og eventuelle tiltak må avklares.',
@@ -66,6 +73,10 @@ function legalTitle(rule: Rule, clause: string, uncertain: boolean) {
   const room = names.length === 1 ? capitalized(names[0]!) : null
   if (rule.category === 'rental-approval' && room) return `${room}: ${uncertain ? 'godkjenning er uavklart' : 'ikke godkjent'}`
   if (rule.category === 'use-approval') {
+    if (/ikke\s+(?:er\s+)?godkjent\s+(?:for|som|til)\s+(?:varig opphold|soverom|boligformål|beboelse)/iu.test(clause)) {
+      const use = /godkjent\s+(?:for|som|til)\s+(varig opphold|soverom|boligformål|beboelse)/iu.exec(clause)![1]!
+      return `${room ? `${room}: ` : 'Rombruk: '}${uncertain ? 'godkjenning er uavklart' : `ikke godkjent for ${use}`}`
+    }
     if (/gjenstår\s+(?:[\p{L}-]+\s+){0,8}arbeider\s+før\s+ferdigattest/iu.test(clause)) return rule.title
     const qualifier = room ? `${room}: ` : ''
     if (/lovlighetsmang|ulovlig/iu.test(clause)) return `${qualifier}${uncertain ? 'mulig lovlighetsavvik' : 'dokumentert lovlighetsavvik'}`
@@ -114,7 +125,7 @@ export function analyzeLegalRisks(basis: ImportBasis): RiskAnalysis {
       for (const rule of rules) {
         const matched = clauses.find(clause => rule.pattern.test(clause) && !rule.exclude?.test(clause)
           && !/ikke\s+(?:slik|tilfellet)\s+at|ikke\s+(?:påvist|avdekket|registrert)\s+ulovlig/i.test(clause))
-        if (!matched || approvedLater && rule.category === 'rental-approval') continue
+        if (!matched || approvedLater && (rule.category === 'rental-approval' || rule.title === 'Rombruk: godkjenning mangler')) continue
         if (text.length > 2000 || findings.length >= 200) { overflow = true; continue }
         const uncertain = /\b(?:hvis|dersom|mulig|usikkert)\b|kan\s+(?:være|foreligge)|kan ikke garantere/i.test(matched)
         const id = 'legal-' + createHash('sha256').update(`${basis.hash}:${page.pdfPage}:${start}:${rule.category}`).digest('hex').slice(0, 24)

@@ -2,10 +2,12 @@
 title: "Product Brief: Property Acquisition Agent"
 status: complete
 created: 2026-09-15
-updated: 2026-10-08
+updated: 2026-11-06
 ---
 
 # Product Brief: Property Acquisition Agent
+
+> **Autorisert utvidelse 2026-11-05:** Brukeren har bestilt en samlet investeringsoversikt med kapitalbehov, egenkapital/belåningsgrad, annuitetsfinansiering og direkte leie-/driftsscenario. Dette utvider de opprinnelige v1-avgrensningene nedenfor, uten å endre yielddefinisjonene, kildekravene eller skillet mellom scenario og kontrollert screening. Ingen betalt AI eller ny ekstern integrasjon inngår. Se [gjeldende implementeringsspec](../../../implementation-artifacts/spec-paa-investeringsverktoy.md). Den opprinnelige briefteksten bevares som historikk.
 
 > **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
 > FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.

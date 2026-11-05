@@ -13,6 +13,8 @@ async function assertAnalysisLayout(page: Page, coverPhoto: boolean) {
   await expect(page.locator('#investment .document-economy')).toBeVisible()
   await expect(page.locator('#investment .finance-panel')).toBeVisible()
   expect(await page.locator('main').innerText()).not.toContain('SSB')
+  const documentDetails = page.locator('.document-economy > details')
+  if (await documentDetails.getAttribute('open') === null) await documentDetails.locator(':scope > summary').click()
   expect(await page.evaluate(() => {
     const nodes = ['.hero', '#investment', '#legal-risk', '#technical-risk', '.analysis-documentation'].map(selector => document.querySelector(selector)!)
     return nodes.every((node, index) => index === 0 || Boolean(nodes[index - 1]!.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING))

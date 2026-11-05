@@ -12,7 +12,7 @@ export function isTechnicalComponent(text: string) {
   const value = text.trim()
   if (!value || value.length > 200 || /[.!?:]$/u.test(value) || /\b(?:er|har|kan|bør|må|skal|anbefales|påvist|registrert|tilfredsstiller|grunnet|basert|mangler|lekker|finnes|foreligger|viser|medfører|fører|svikter|fungerer)\b/iu.test(value)) return false
   const part = value.split(/\s+[>\-−–—‑]\s+/u).at(-1)!.trim()
-  const heading = /^(?:tak(?:et|tekking|konstruksjon(?:er)?|vindu(?:er)?|renner)?|loft|nedløp|beslag|skorstein(?:er)?|yttervegger?|veggkonstruksjon|kledning|vinduer?|ytterdører?|dører?|balkongdør|balkong|altan|terrasse|rekkverk|etasjeskiller|bærende konstruksjoner|innvendige dører|overflater|vanntett sjikt|membran|sluk|ventilasjon|avtrekk|sanitærutstyr|innredning|fuktsikring|drenering|grunnmur|fundamenter|utvendige vann|innvendige vann|vannledninger|avløp|elektrisk anlegg|varmtvannsbereder|branntekniske forhold|helse, miljø og sikkerhet|tilliggende konstruksjoner|bad(?:et)?)(?:\b|[ /,])/iu
+  const heading = /^(?:tak(?:et|tekking|konstruksjon(?:er)?|vindu(?:er)?|renner)?|loft|nedløp|beslag|skorstein(?:er)?|yttervegger?|veggkonstruksjon|kledning|vinduer?|ytterdører?|dører?|balkongdør|balkong|altan|terrasse|rekkverk|etasjeskiller|bærende konstruksjoner|innvendige dører|overflater|vanntett sjikt|membran|sluk|ventilasjon|avtrekk|sanitærutstyr|innredning|fuktsikring|drenering|grunnmur|fundamenter|utvendige vann|innvendige vann|vannledninger|avløp|elektrisk anlegg|varmtvannsbereder|varmesentral|vannbåren varme|radon|branntekniske forhold|helse, miljø og sikkerhet|tilliggende konstruksjoner|bad(?:et)?)(?:\b|[ /,])/iu
   return heading.test(value) || heading.test(part)
 }
 function isOtherHeading(text: string) {

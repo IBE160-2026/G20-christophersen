@@ -152,6 +152,88 @@ describe('local technical risk evidence', () => {
     expect(analyzeTechnicalRisks(basis).findings).toEqual([])
     expect(analyzeTechnicalRisks(codeFirstBasis(['Taket er snødekket og er ikke undersøkt.'])).findings).toHaveLength(1)
   })
+
+  it.each(['TG2 Bad øst', 'TG 3 Tak'])('kobler et eksplisitt gradsymbol foran komponenten uten å arve en forklaringsgrad: %s', heading => {
+    const basis = codeFirstBasis([`${heading}\nVurdering av avvik:\n• Det er påvist lekkasje.\nKonsekvens/tiltak\nUtbedre lekkasjen.\nTilstandsrapport\n`])
+    const finding = extractExplicitTechnicalFindings(basis)[0]!
+    expect(finding).toMatchObject({ grade: heading.includes('2') ? 'TG2' : 'TG3', component: heading.includes('Bad') ? 'Bad øst' : 'Tak', description: '• Det er påvist lekkasje.' })
+    expect(analyzeTechnicalRisks(basis).findings[0]).toMatchObject({ grade: finding.grade, component: finding.component })
+    expect(extractExplicitTechnicalFindings(codeFirstBasis(['TG2 Vesentlige avvik\nVurdering av avvik:\nDette er en generell forklaring.\nKonsekvens/tiltak\nKontroller.']))).toEqual([])
+  })
+
+  it('bevarer rapportens foreslåtte vedlikeholdstiltak som eget kildebelagt utdrag', () => {
+    const basis = codeFirstBasis(['Bygningsdel: Tak\nTilstandsgrad: TG3\nVurdering av avvik:\n• Beslaget er skadet.\nKonsekvens/tiltak:\nSkift skadet beslag. Innhent tilbud fra blikkenslager.\nVinduer\nVinduer er nye.'])
+    const finding = analyzeTechnicalRisks(basis).findings[0]!
+    expect(finding.action).toBe('Rapportens foreslåtte tiltak (utdrag): Skift skadet beslag. Innhent tilbud fra blikkenslager.')
+    expect(finding.description).toBe('• Beslaget er skadet.')
+    expect(finding.sources.at(-1)!.quote).toContain('Konsekvens/tiltak:\nSkift skadet beslag.')
+    expect(finding.sources.at(-1)!.quote).not.toContain('Vinduer')
+    for (const item of finding.sources) expect(basis.pages[0]!.text.slice(item.start, item.end)).toBe(item.quote)
+  })
+
+  it('tar ikke med et uavgrenset tiltak fra sidekanten eller ukontrollert tekst', () => {
+    const text = 'Bad\nVurdering av avvik:\n• Sluket er skadet.\nKonsekvens/tiltak\nKontroller membranen.'
+    const basis = codeFirstBasis([text])
+    expect(analyzeTechnicalRisks(basis).findings[0]!.action).not.toContain('Rapportens foreslåtte tiltak')
+    basis.pages[0]!.status = 'unknown'
+    expect(analyzeTechnicalRisks(basis).findings[0]!.action).toContain('Kontroller original')
+  })
+
+  it('knytter linjebrutt manglende kontroll til komponent og nærmeste rom uten å hevde skade', async () => {
+    const basis = codeFirstBasis(['ETASJE > BAD\nVanntett sjikt, membran og sluk\nMembran og øvrige tettesjikt er skjult bak flislagte overflater og er\nderfor ikke mulig å kontrollere visuelt i sin helhet.\nBeskrivelse\nVarmesentral\nFelles varmesentral ligger utenfor leiligheten og er ikke nærmere\nkontrollert.\n'])
+    const risk = analyzeTechnicalRisks(basis)
+    expect(risk.findings).toHaveLength(2)
+    expect(risk.findings[0]).toMatchObject({ component: 'ETASJE > BAD · Vanntett sjikt, membran og sluk', status: 'not-investigated', grade: null })
+    expect(risk.findings[0]!.description).toContain('Membran og øvrige tettesjikt')
+    expect(risk.findings[1]!.description).toContain('Felles varmesentral ligger utenfor leiligheten')
+    expect(risk.findings[1]!.component).toBe('Varmesentral')
+    expect(risk.findings[1]!.title).not.toContain('BAD')
+    expect(risk.findings.every(item => item.grade === null)).toBe(true)
+    for (const finding of risk.findings) for (const item of finding.sources) expect(basis.pages[0]!.text.slice(item.start, item.end)).toBe(item.quote)
+    basis.pages[0]!.status = 'unknown'
+    const outcome = await createCodeFirstImport(basis)
+    expect(outcome.propertyRisk!.technical.findings.every(item => item.status === 'possible' && item.sourceQuality === 'partial-text' && item.grade === null)).toBe(true)
+  })
+
+  it.each(['Beskrivelse', 'TEKNISKE INSTALLASJONER', 'Membran\nMembranen er kontrollert.'])('arver ikke rom gjennom en mellomliggende blokk: %s', separator => {
+    const basis = codeFirstBasis([`ETASJE > BAD\n${separator}\nVarmesentral\nFelles varmesentral ligger utenfor leiligheten og er ikke nærmere kontrollert.`])
+    expect(analyzeTechnicalRisks(basis).findings[0]!.component).toBe('Varmesentral')
+  })
+
+  it('bevarer rom umiddelbart etter komponenten med egne ordrette kildebelegg', () => {
+    const basis = codeFirstBasis(['Overflater gulv\nLOFT > BAD - 4M2\nVurdering av avvik:\nDet er påvist skader i gulvet.\nKonsekvens/tiltak:\nKontroller gulvet.'])
+    const finding = analyzeTechnicalRisks(basis).findings[0]!
+    expect(finding.component).toBe('LOFT > BAD - 4M2 · Overflater gulv')
+    expect(finding.sources.map(item => item.quote)).toEqual(expect.arrayContaining(['Overflater gulv', 'LOFT > BAD - 4M2']))
+    for (const item of finding.sources) expect(basis.pages[0]!.text.slice(item.start, item.end)).toBe(item.quote)
+  })
+
+  it('velger ikke ett av motstridende rom på hver side av samme komponent', () => {
+    const basis = codeFirstBasis(['LOFT > BAD\nOverflater gulv\nKJELLER > BAD\nVurdering av avvik:\nDet er påvist skader i gulvet.\nKonsekvens/tiltak:\nKontroller gulvet.'])
+    expect(analyzeTechnicalRisks(basis).findings[0]!.component).toBe('Overflater gulv')
+  })
+
+  it('bevarer hele radonomtalen med nyanser og avklaringsbehov fremfor å hevde høy målt radon', async () => {
+    const text = 'Radon\nOmrådet har meget høy radonaktsomhet.\nDet er ikke fremlagt dokumentasjon på utførte radonmålinger i\nleiligheten.\nLeiligheten ligger høyt, og risikoen vurderes som vesentlig lavere enn for boliger på grunn.\nBeskrivelse\nInnvendige dører\nDørene er malte.'
+    const basis = codeFirstBasis([text]), finding = analyzeTechnicalRisks(basis).findings[0]!
+    expect(finding).toMatchObject({ title: 'Radon: målinger er ikke dokumentert', component: 'Radon', grade: null, status: 'not-investigated' })
+    expect(finding.description).toContain('vesentlig lavere')
+    expect(finding.description).not.toContain('Dørene')
+    expect(finding.consequence).toContain('ikke et måleresultat')
+    expect(finding.sources[0]!.quote).toBe(text.slice(finding.sources[0]!.start, finding.sources[0]!.end))
+    basis.pages[0]!.status = 'unknown'
+    const outcome = await createCodeFirstImport(basis)
+    expect(outcome.propertyRisk!.technical.findings[0]).toMatchObject({ grade: null, status: 'possible', sourceQuality: 'partial-text' })
+    expect(outcome.coverage.technical.status).toBe('incomplete')
+  })
+
+  it.each([
+    'Radon\nDet er fremlagt dokumentasjon på utførte radonmålinger i leiligheten.\nBeskrivelse',
+    'Lukkede konstruksjoner, skjulte tekniske installasjoner, tildekkede overflater og utilgjengelige områder er ikke kontrollert utover det som fremgår av rapporten.',
+    'Det er ikke undersøkt hvilke finansieringsvilkår kjøper kan oppnå.',
+  ])('lager ikke et teknisk kontrollfunn fra dokumentert måling eller generell tekst: %s', text => {
+    expect(analyzeTechnicalRisks(codeFirstBasis([text])).findings).toEqual([])
+  })
 })
 
 describe('eksplisitte avviksfortsettelser mellom fysiske sider', () => {

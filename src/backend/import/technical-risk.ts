@@ -13,7 +13,40 @@ function source(basis: ImportBasis, pdfPage: number, start: number, end: number)
     quote: page.text.slice(start, end), printedPage: null, method: 'pdf-text' }
 }
 
-const unexaminedPattern = /hulltaking er ikke foretatt|(?:er |har )?ikke (?:vært )?undersøkt|ikke (?:er )?tilgjengelig for (?:kontroll|inspeksjon|undersøkelse)|uten mulighet for inspeksjon/i
+const unexaminedPattern = /hulltaking\s+er\s+ikke\s+foretatt|(?:er\s+|har\s+)?ikke\s+(?:vært\s+)?undersøkt|ikke\s+(?:er\s+)?tilgjengelig\s+for\s+(?:kontroll|inspeksjon|undersøkelse)|uten\s+mulighet\s+for\s+inspeksjon|ikke\s+(?:(?:nærmere|fullstendig)\s+)?(?:kontrollert|vurdert)(?:\b|[.!])|ikke\s+mulig\s+å\s+kontrollere/i
+const roomPattern = /^[A-ZÆØÅ0-9 .-]+\s*>\s*[A-ZÆØÅ0-9 .-]+$/u
+
+/** Only a bounded, explicit heading supplies a component. A room must be
+ * adjacent to its component, never inherited across an unrelated paragraph. */
+function technicalContext(basis: ImportBasis, pdfPage: number, before: number) {
+  const text = basis.pages[pdfPage - 1]!.text, contextStart = Math.max(0, before - 1200)
+  const lines = technicalLines(text.slice(contextStart, before), pdfPage)
+  const previousBoundary = Math.max(...lines.filter(line => /Vurdering av avvik|Konsekvens\s*\/\s*tiltak/iu.test(line.text)).map(line => line.start), -1)
+  const namedLine = [...lines].reverse().find(line => line.start > previousBoundary && !roomPattern.test(line.text.trim()) && isTechnicalComponent(line.text))
+  // PDF text can place the room immediately before OR after its component.
+  // Another component, body prose or a new section always breaks adjacency;
+  // conflicting headings on both sides never supply a room identity.
+  const adjacentRooms = namedLine ? [lines[lines.indexOf(namedLine) - 1], lines[lines.indexOf(namedLine) + 1]]
+    .filter(line => line && line.start > previousBoundary && roomPattern.test(line.text.trim())) : []
+  const roomLine = adjacentRooms.length === 1 ? adjacentRooms[0] : undefined
+  const component = namedLine ? [roomLine?.text.trim(), namedLine.text.trim()].filter(Boolean).join(' · ') : undefined
+  return component && component.length <= 200 && namedLine && !/[,(/-]\s*$/u.test(namedLine.text) ? { component,
+    headingEnd: contextStart + Math.max(namedLine.end, roomLine?.end ?? 0),
+    sources: [namedLine, ...(roomLine ? [roomLine] : [])].map(line => source(basis, pdfPage, contextStart + line.start, contextStart + line.end)) } : undefined
+}
+
+/** Keep only the report's bounded measure paragraph. It is source wording,
+ * never a repair estimate or an assertion that every measure is captured. */
+function reportMeasures(basis: ImportBasis, pdfPage: number, after: number) {
+  const text = basis.pages[pdfPage - 1]!.text
+  if (basis.pages[pdfPage - 1]!.status !== 'readable') return null
+  const label = /^\s*Konsekvens\s*\/\s*tiltak\s*:?[ \t]*(?:\r?\n)/iu.exec(text.slice(after))
+  if (!label) return null
+  const start = after + label[0].length
+  const parsed = readTechnicalDeviation(text, start, pdfPage)
+  if (!parsed.description || parsed.description.length > 1600 || !parsed.bounded || !/[.!?)]\s*$/u.test(parsed.description)) return null
+  return { text: parsed.description, source: source(basis, pdfPage, after + label[0].search(/Konsekvens/iu), parsed.end) }
+}
 /** Reuse a complete short source statement when it identifies what was not
  * inspected. Never invent a component or infer a condition grade. */
 function unexaminedTitle(description: string, component?: string) {
@@ -69,11 +102,14 @@ export function extractExplicitTechnicalFindings(basis: ImportBasis): DocumentIm
     /^[ \t]*Tilstandsgrad[ \t]*:[ \t]*T[ \t]*G[ \t]*([23])[ \t]*\r?\nBygningsdel[ \t]*:[ \t]*([^\r\n]+)\r?\n(?:[ \t]*Vurdering av avvik[ \t]*:[ \t]*\r?\n)?/gim,
     /^[ \t]*Bygningsdel[ \t]*:[ \t]*([^\r\n]+)\r?\n[ \t]*Tilstandsgrad[ \t]*:[ \t]*(?:T[ \t]*G[ \t]*)?([23])[ \t]*\r?\n[ \t]*Vurdering av avvik[ \t]*:[ \t]*\r?\n/gim,
     /^[ \t]*([^\r\n:]{1,200}?)[ \t]+[-–—|][ \t]*TG[ \t]*([23])[ \t]*\r?\n[ \t]*Vurdering av avvik[ \t]*:[ \t]*\r?\n/gim,
+    /^[ \t]*TG[ \t]*([23])[ \t]+([^\r\n:]{1,200})\r?\n[ \t]*Vurdering av avvik[ \t]*:[ \t]*\r?\n/gim,
   ]
   for (const page of basis.pages) {
     if (page.status !== 'readable') continue
     for (const [format, pattern] of patterns.entries()) for (const match of page.text.matchAll(pattern)) {
-      const component = match[format === 0 ? 2 : 1]!.trim(), bodyStart = match.index + match[0].length
+      const gradeFirst = format === 0 || format === 3
+      const component = match[gradeFirst ? 2 : 1]!.trim(), bodyStart = match.index + match[0].length
+      if (format === 3 && !isTechnicalComponent(component)) continue
       const parsed = readTechnicalDeviation(page.text, bodyStart, page.pdfPage)
       const continuation = readExplicitContinuation(basis, page.pdfPage, match.index, bodyStart, component)
       const { end } = parsed, description = continuation?.description ?? parsed.description
@@ -87,7 +123,7 @@ export function extractExplicitTechnicalFindings(basis: ImportBasis): DocumentIm
       const sourceEnd = legacy && page.text[end - 1] !== '\n' && page.text[end] === '\n' ? end + 1 : end
       const sources = continuation?.sources ?? [source(basis, page.pdfPage, match.index, sourceEnd)]
       const findingId = legacy ? 'local-' + createHash('sha256').update(`${basis.hash}:${page.pdfPage}:${match.index}`).digest('hex').slice(0, 24) : 'local-technical-' + identifier(basis, page.pdfPage, match.index, 'explicit')
-      const grade = `TG${match[format === 0 ? 1 : 2]}` as 'TG2' | 'TG3'
+      const grade = `TG${match[gradeFirst ? 1 : 2]}` as 'TG2' | 'TG3'
       const origin = { documentName: basis.name, reportHash: basis.hash, pdfPage: page.pdfPage }
       findings.push({ kind: 'checkable', findingId, conditionId: findingId, component, description, grade, sources,
         source: origin, original: { findingId, description, grade, source: origin, uncertainties: [] } })
@@ -141,33 +177,52 @@ export function analyzeTechnicalRisks(basis: ImportBasis): RiskAnalysis {
       if (explicit && explicit.source.pdfPage !== page.pdfPage) continue
       const status = deviationStatus(explicit?.description ?? description)
       if (status === null) continue
-      const contextStart = Math.max(0, match.index - 1200)
-      const contextLines = technicalLines(page.text.slice(contextStart, match.index), page.pdfPage)
-      const previousBoundary = Math.max(...contextLines.filter(line => /Vurdering av avvik|Konsekvens\s*\/\s*tiltak/iu.test(line.text)).map(line => line.start), -1)
-      const roomPattern = /^[A-ZÆØÅ0-9 .-]+\s*>\s*[A-ZÆØÅ0-9 .-]+$/u
-      const namedLine = [...contextLines].reverse().find(line => line.start > previousBoundary && !roomPattern.test(line.text.trim()) && isTechnicalComponent(line.text))
-      const roomLine = namedLine && contextLines.find(line => line.start > previousBoundary && roomPattern.test(line.text.trim()))
-      const namedContext = namedLine ? [roomLine?.text.trim(), namedLine.text.trim()].filter(Boolean).join(' · ') : undefined
-      const component = explicit?.component ?? (namedContext && namedContext.length <= 200 ? namedContext : undefined)
-      const contextSources = explicit ? explicit.sources : component && namedLine ? [namedLine, ...(roomLine ? [roomLine] : [])].map(line => source(basis, page.pdfPage, contextStart + line.start, contextStart + line.end)) : []
+      const context = technicalContext(basis, page.pdfPage, match.index)
+      const component = explicit?.component ?? context?.component
+      const contextSources = explicit ? explicit.sources : context?.sources ?? []
       const completeDescription = explicit?.sources.length && explicit.sources.length > 1 ? explicit.description : description
       const title = status === 'not-investigated' ? unexaminedTitle(completeDescription, component) : component ?? description.split(/\r?\n/, 1)[0]!.replace(/^[•*−\s-]+/u, '').slice(0, 140)
       if (status === 'not-investigated') unexaminedBlocks.push({ page: page.pdfPage, start: match.index, end })
       add(page.pdfPage, match.index, end, status, title, completeDescription.slice(0, 2000), explicit?.grade ?? null, component, contextSources)
     }
-    for (const match of page.text.matchAll(/[^\r\n]*(?:hulltaking er ikke foretatt|(?:er |har )?ikke (?:vært )?undersøkt|ikke (?:er )?tilgjengelig for (?:kontroll|inspeksjon|undersøkelse)|uten mulighet for inspeksjon)[^\r\n]*/gi)) {
-      const description = match[0].trim()
-      if (unexaminedBlocks.some(block => block.page === page.pdfPage && match.index >= block.start && match.index < block.end)
-        || explicitFindings.some(finding => finding.sources.length > 1 && finding.sources.some(item => item.pdfPage === page.pdfPage && match.index >= item.start && match.index < item.end))) continue
-      if (!description || match[0].length > 2000 || /(?:BYGNINGSSAKKYNDIGE SER|TILSTANDSGRAD|TG\s*IU|KONSTRUKSJONER SOM IKKE ER UNDERSØKT|IKKE UNDERSØKT\/IKKE TILGJENGELIG)/i.test(description)
-        || /^snødekket eller på annen måte utilgjengelige, blir ikke undersøkt\.?$/iu.test(description)) continue
-      add(page.pdfPage, match.index, match.index + match[0].length, 'not-investigated', unexaminedTitle(description), description)
+    for (const match of page.text.matchAll(/[^.!?]+(?:[.!?](?=\s|$)|$)/gu)) {
+      const indicator = unexaminedPattern.exec(match[0])
+      if (!indicator) continue
+      const indicatorStart = match.index + indicator.index
+      if (unexaminedBlocks.some(block => block.page === page.pdfPage && indicatorStart >= block.start && indicatorStart < block.end)
+        || explicitFindings.some(finding => finding.sources.some(item => item.pdfPage === page.pdfPage && indicatorStart >= item.start && indicatorStart < item.end))) continue
+      const context = technicalContext(basis, page.pdfPage, indicatorStart)
+      const start = context && context.headingEnd > match.index ? context.headingEnd : match.index
+      const raw = page.text.slice(start, match.index + match[0].length), leading = raw.length - raw.trimStart().length
+      const description = raw.trim()
+      if (!description || description.length > 1900 || /(?:BYGNINGSSAKKYNDIGE SER|TILSTANDSGRAD|TG\s*IU|KONSTRUKSJONER SOM IKKE ER UNDERSØKT|IKKE UNDERSØKT\/IKKE TILGJENGELIG)/i.test(description)
+        || /^(?:snødekket eller på annen måte|Flater eller bygningsdeler som|Lukkede konstruksjoner,|(?:Alle )?(?:skjulte|tildekkede) (?:flater|bygningsdeler|konstruksjoner))/iu.test(description)
+        || !/tak|bad|våtrom|varm|anlegg|membran|tettesjikt|rør|avløp|konstruksjon|hulltaking|radon|el-|elektrisk|ventilasj|balkong|vindu|dør/iu.test([context?.component, description].join(' '))) continue
+      add(page.pdfPage, start + leading, start + leading + description.length, 'not-investigated', unexaminedTitle(description, context?.component), description, null, context?.component, context?.sources)
+    }
+    for (const match of page.text.matchAll(/^[ \t]*Radon[ \t]*\r?\n([\s\S]{1,1800}?)(?=\r?\n(?:Beskrivelse|Tilstandsrapport|Oppdragsnr|Innvendige dører)\b|(?![\s\S]))/gim)) {
+      const description = match[1]!.trim()
+      if (!/(?:ikke|ingen)\s+(?:fremlagt\s+)?(?:dokumentasjon\s+på\s+)?(?:utførte\s+)?radonmålinger/iu.test(description.replace(/\s+/gu, ' '))) continue
+      const count = findings.length
+      add(page.pdfPage, match.index, match.index + match[0].length, 'not-investigated', 'Radon: målinger er ikke dokumentert', description, null, 'Radon')
+      if (findings.length > count) {
+        findings.at(-1)!.consequence = 'Manglende målinger avklarer ikke radonnivået i boligen. Områdeaktsomhet er ikke et måleresultat for leiligheten.'
+        findings.at(-1)!.action = 'Kontroller hele omtalen i originalen og innhent eventuelle radonmålinger for boligen før utleiegrunnlaget vurderes.'
+      }
     }
   }
   for (const finding of explicitFindings) {
     if (findings.some(item => item.sources.some(itemSource => finding.sources.some(findingSource => itemSource.pdfPage === findingSource.pdfPage && itemSource.start >= findingSource.start && itemSource.start < findingSource.end)))) continue
     const first = finding.sources[0]!
     add(first.pdfPage, first.start, first.end, 'documented', finding.component, finding.description, finding.grade, finding.component, finding.sources.slice(1))
+  }
+  for (const finding of findings) {
+    if (finding.sourceQuality !== 'readable-text' || finding.status !== 'documented') continue
+    const last = [...finding.sources].sort((a, b) => b.pdfPage - a.pdfPage || b.end - a.end)[0]
+    const measures = last && reportMeasures(basis, last.pdfPage, last.end)
+    if (!measures || finding.sources.length >= 12) continue
+    finding.action = `Rapportens foreslåtte tiltak (utdrag): ${measures.text}`
+    finding.sources.push(measures.source)
   }
   const summaries = extractTechnicalSummary(basis).flatMap(item => {
     const status = deviationStatus(item.description)

@@ -4,6 +4,20 @@ const Decimal = Big()
 Decimal.strict = true
 Decimal.DP = 50
 export interface FinancingInput { cashRequired: string | null; equity: string; annualInterest: string; months: string; sharedAnnualPayment: string | null }
+/** Invers belåningsberegning. Avrundede endepunkter identifiseres eksplisitt
+ * slik at brukerflaten kan forklare at hele kontantbehovet/ingen egenkapital er valgt. */
+export function equityForLeverage(input: { price: string | null; cashRequired: string | null; sharedDebt: string | null; leverage: string }) {
+  const parsed = [input.price, input.cashRequired, input.sharedDebt, input.leverage].map(value => value === null ? null : parseFinancialDecimal(value))
+  if (parsed.some(value => value === null)) return { equity: null, roundedBoundary: null }
+  const [price, cash, shared, requested] = parsed.map(value => new Decimal(value!))
+  if (price!.lte('0') || cash!.lt('0') || shared!.lt('0')) return { equity: null, roundedBoundary: null }
+  const min = shared!.times('100').div(price!), max = cash!.plus(shared!).times('100').div(price!)
+  const displayedMin = min.toFixed(2), displayedMax = max.toFixed(2)
+  if (displayedMin !== displayedMax && requested!.eq(displayedMin)) return { equity: cash!.toFixed(), roundedBoundary: requested!.eq(min) ? null : 'minimum' as const }
+  if (displayedMin !== displayedMax && requested!.eq(displayedMax)) return { equity: '0', roundedBoundary: requested!.eq(max) ? null : 'maximum' as const }
+  if (requested!.lt(min) || requested!.gt(max)) return { equity: null, roundedBoundary: null }
+  return { equity: cash!.plus(shared!).minus(price!.times(requested!).div('100')).toFixed(2), roundedBoundary: null }
+}
 /** Separat brukerforutsetning. Måneden øreavrundes før årsbetalingen beregnes. */
 export function financingSuggestion(input: FinancingInput) {
   const cash = input.cashRequired === null ? null : parseFinancialDecimal(input.cashRequired)
@@ -11,11 +25,14 @@ export function financingSuggestion(input: FinancingInput) {
   const validMoney = (value: string | null) => value !== null && new Decimal(value).gte('0')
   if (!validMoney(cash) || !validMoney(equity) || new Decimal(equity!).gt(cash!)) return { loan: null, monthly: null, annual: null, J: null, error: 'Oppgi egenkapital mellom 0 og kontantbehovet.' }
   const loan = new Decimal(cash!).minus(equity!).toFixed()
+  const shared = input.sharedAnnualPayment === null ? null : parseFinancialDecimal(input.sharedAnnualPayment)
+  // Uten privat lån finnes ingen rente eller løpetid som må forutsettes.
+  // Eventuell betaling av fellesgjeld er fortsatt en egen avhengighet.
+  if (loan === '0') return { loan, monthly: '0.00', annual: '0.00', J: validMoney(shared) ? new Decimal(shared!).toFixed(2) : null, error: null }
   if (!validMoney(interest) || new Decimal(interest!).gt('100') || !/^[1-9]\d{0,3}$/.test(input.months) || Number(input.months) > 1200) return { loan, monthly: null, annual: null, J: null, error: 'Oppgi rente fra 0 til 100 % og løpetid fra 1 til 1200 hele måneder.' }
   const r = new Decimal(interest!).div('1200')
   const monthly = loan === '0' ? '0.00' : r.eq('0') ? new Decimal(loan).div(input.months).toFixed(2, Decimal.roundHalfUp)
     : new Decimal(loan).times(r).div(new Decimal('1').minus(new Decimal('1').plus(r).pow(-Number(input.months)))).toFixed(2, Decimal.roundHalfUp)
   const annual = new Decimal(monthly).times('12').toFixed(2)
-  const shared = input.sharedAnnualPayment === null ? null : parseFinancialDecimal(input.sharedAnnualPayment)
   return { loan, monthly, annual, J: validMoney(shared) ? new Decimal(annual).plus(shared!).toFixed(2) : null, error: null }
 }

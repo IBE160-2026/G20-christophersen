@@ -3,6 +3,23 @@ import { analyzeLegalRisks } from '../../src/backend/import/legal-risk.ts'
 import { codeFirstBasis } from '../helpers/code-first.ts'
 
 describe('lokalt juridisk risikosøk', () => {
+  it.each([
+    'Soverommet i kjeller er ikke godkjent for varig opphold.',
+    'Loftstuen er ikke godkjent som soverom.',
+    'Boden er ikke godkjent til beboelse.',
+  ])('viser eksplisitt manglende godkjenning av rombruk uten å påstå forbud mot all utleie: %s', text => {
+    const finding = analyzeLegalRisks(codeFirstBasis([text])).findings[0]!
+    expect(finding).toMatchObject({ category: 'use-approval', status: 'documented', grade: null })
+    expect(finding.title).toContain('ikke godkjent for')
+    expect(finding.sources[0]!.quote).toBe(text)
+    expect(finding.consequence).toContain('ikke at hele boligen')
+  })
+  it('bevarer hypotetisk romgodkjenning som uavklart og filtrerer eksplisitt senere godkjenning', () => {
+    const text = 'Dersom loftstuen ikke er godkjent som soverom, må bruken avklares.'
+    expect(analyzeLegalRisks(codeFirstBasis([text])).findings[0]).toMatchObject({ category: 'use-approval', status: 'possible', title: 'Loftstuen: godkjenning er uavklart' })
+    expect(analyzeLegalRisks(codeFirstBasis(['Loftstuen var ikke godkjent som soverom, men er nå godkjent av kommunen.'])).findings).toEqual([])
+    expect(analyzeLegalRisks(codeFirstBasis(['Loftstuen er godkjent som soverom.'])).findings).toEqual([])
+  })
   it('bevarer fysisk side og ordrett kilde for utleieenhet uten å utlede utleieforbud', () => {
     const texts = Array.from({ length: 58 }, () => '')
     texts[57] = 'Utleiedelen i underetasjen er ikke\ngodkjent som egen boenhet. Kjøper må undersøke videre bruk.'

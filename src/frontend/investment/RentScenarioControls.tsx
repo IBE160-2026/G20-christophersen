@@ -14,7 +14,7 @@ export function RentScenarioControls({ monthly, edited, reference, year, onChang
     valid && new Decimal(parsed).lte('1000000000') ? Number(parsed) : 0)
   return <div className="rent-scenario-controls" role="group" aria-labelledby="rent-scenario-title">
     <h3 id="rent-scenario-title">Månedsleie i scenarioet</h3>
-    <p id="rent-scenario-help">{edited ? 'Egen forutsetning' : 'Statistisk utgangspunkt'} · juster for å oppdatere økonomien.</p>
+    <p id="rent-scenario-help">{edited ? 'Egen forutsetning' : valid ? 'Gjeldende leiegrunnlag' : 'Leieforutsetning mangler'} · juster for å oppdatere økonomien.</p>
     <label htmlFor="scenario-rent-monthly">Forventet månedsleie i scenarioet (kr)</label>
     <div className="rent-scenario-input"><input id="scenario-rent-monthly" inputMode="decimal" value={monthly} onChange={event => onChange(event.target.value)} aria-describedby="rent-scenario-help rent-scenario-value" />
       <output id="rent-scenario-value" data-testid="scenario-rent-annual">{valid ? `${money(new Decimal(parsed).times('12').toFixed())} kr/år` : 'Ugyldig månedsleie'}</output></div>

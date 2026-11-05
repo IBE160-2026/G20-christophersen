@@ -68,12 +68,13 @@ describe('avgrenset teknisk avviksprosa', () => {
     expect(deviationStatus('Hulltaking er ikke foretatt da det ikke er fysisk mulig pga tilliggende\nkonstruksjoner.')).toBe('not-investigated')
     expect(deviationStatus('Det er ikke registrert skader.\nDet er påvist lekkasje.')).toBe('documented')
   })
-  it('stopper før neste komponent og har ordrett belegg for komponent og rom', () => {
+  it('stopper før neste komponent og arver ikke rom som står etter bygningsdelen i tekstordenen', () => {
     const basis = codeFirstBasis(['Overflater gulv\nGulvet er flislagt.\nLOFT > BAD - 4M2\nBeskrivelse\nVurdering av avvik:\n• Det er påvist skader.\nInnvendige dører\nDørene er malte.\nBeskrivelse\nVurdering av avvik:\n• Det er påvist skjevheter.\nKonsekvens/tiltak\nJuster dører.\n'])
     const risk = analyzeTechnicalRisks(basis)
     expect(risk.findings).toHaveLength(2)
-    expect(risk.findings[0]).toMatchObject({ component: 'LOFT > BAD - 4M2 · Overflater gulv', description: '• Det er påvist skader.' })
-    expect(risk.findings[0]!.sources.map(source => source.quote)).toEqual(expect.arrayContaining(['Overflater gulv', 'LOFT > BAD - 4M2']))
+    expect(risk.findings[0]).toMatchObject({ component: 'Overflater gulv', description: '• Det er påvist skader.' })
+    expect(risk.findings[0]!.sources.map(source => source.quote)).toContain('Overflater gulv')
+    expect(risk.findings[0]!.sources.map(source => source.quote)).not.toContain('LOFT > BAD - 4M2')
     expect(risk.findings[1]).toMatchObject({ component: 'Innvendige dører', description: '• Det er påvist skjevheter.' })
   })
   it('arver ikke en eldre komponent gjennom et tidligere avvik', () => {

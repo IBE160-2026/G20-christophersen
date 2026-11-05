@@ -29,7 +29,7 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
   const independent = validateFinancialBasis(input, [])
   const issues: string[] = []
   const fieldIssues: Partial<Record<'P' | 'L' | 'D', string[]>> = {}
-  const provenance: Record<ScenarioValue, string> = { P: 'Ukjent', L: 'Ukjent', D: 'Ukjent', cashRequired: 'Ukjent', sharedAnnualPayment: 'Ukjent' }
+  const provenance: Record<ScenarioValue, string> & Partial<Record<'sharedDebt' | 'purchaseCosts', string>> = { P: 'Ukjent', L: 'Ukjent', D: 'Ukjent', cashRequired: 'Ukjent', sharedAnnualPayment: 'Ukjent' }
   const value = (field: 'P' | 'L' | 'D'): string | null => {
     const validated = independent.fields[field]
     const blocking = validated.issues.filter(issue => !onlyControlPending(issue))
@@ -61,6 +61,7 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
   let preliminaryOperatingSubtotal: string | null = null, preliminaryCostYear: string | null = null
   let preliminaryCostAssumption: string | null = null
   let cashRequired: string | null = null, sharedAnnualPayment: string | null = null
+  let sharedDebt: string | null = null, purchaseCosts: string | null = null
   const outcome = slot.status === 'imported' && slot.selected?.hash === slot.outcome?.reportHash ? slot.outcome : null
   const listing = session.listing.status === 'ready' ? listingDraft : null
   const draft = outcome ? importEconomyDraft(outcome, session.prospectus.corrections, session.prospectus.completeOperatingCosts) : listing
@@ -88,7 +89,17 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
       sharedAnnualPayment = suggested.sharedAnnualPayment
       provenance.cashRequired = label
       provenance.sharedAnnualPayment = label
-      const debt = effectiveEconomyFields(draft).find(field => field.id === 'sharedDebtPayment')
+      const fields = effectiveEconomyFields(draft)
+      const available = (id: string) => {
+        const field = fields.find(item => item.id === id)
+        const reviewed = draft.corrections[id]?.reviewed === true || (!draft.corrections[id] && field?.source !== null)
+        return field?.status === 'available' && reviewed && field.amount !== null && new Decimal(field.amount).gte('0') ? field.amount : null
+      }
+      sharedDebt = available('sharedDebt')
+      purchaseCosts = available('purchaseCosts')
+      provenance.sharedDebt = label
+      provenance.purchaseCosts = label
+      const debt = fields.find(field => field.id === 'sharedDebtPayment')
       if (sharedAnnualPayment !== null && sharedAnnualPayment !== '0' && (year === null || debt?.year !== year)) {
         sharedAnnualPayment = null
         issues.push('Fellesgjeldsbetaling må gjelde samme år som scenarioets leie og drift.')
@@ -99,5 +110,5 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
   }
   // Missing values remain null. This selector never dispatches, changes a revision or confirms a field.
   for (const [field, amount] of Object.entries({ P, L, D })) if (amount === null) issues.push(...(fieldIssues[field as 'P' | 'L' | 'D'] ?? []))
-  return { P, L, D, cashRequired, sharedAnnualPayment, preliminaryOperatingSubtotal, preliminaryCostYear, preliminaryCostAssumption, year, issues: [...new Set(issues)], provenance }
+  return { P, L, D, cashRequired, sharedAnnualPayment, sharedDebt, purchaseCosts, preliminaryOperatingSubtotal, preliminaryCostYear, preliminaryCostAssumption, year, issues: [...new Set(issues)], provenance }
 }

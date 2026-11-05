@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { withScenarioRent } from '../../src/frontend/investment/rent-scenario.ts'
+import { withScenarioRent, withScenarioOperatingCosts } from '../../src/frontend/investment/rent-scenario.ts'
 import { calculateFinancialScenario } from '../../src/domain/financial-scenario.ts'
 import type { ScenarioBasis } from '../../src/domain/financial-scenario.ts'
 
@@ -28,4 +28,31 @@ it('prøvd leie og publisert reset gir uavhengig kontrollert matematikk uten å 
 it.each(['', '-1', 'feil'])('ugyldig leie %s fjerner berørte tall uten å gjeninnføre tidligere leie', monthly => {
   const result = calculateFinancialScenario(withScenarioRent(basis, monthly), controls)
   expect(result.grossYield).toBeNull(); expect(result.preliminaryNoi).toBeNull()
+})
+
+it('samlet drift erstatter kjente kostnader uten dobbelttelling eller endring av dokumentgrunnlag', () => {
+  const before = structuredClone(basis)
+  const edited = withScenarioOperatingCosts(basis, '3000,50')
+  const result = calculateFinancialScenario(edited, controls)
+  expect(edited.D).toBe('36006')
+  expect(result.noi).toBe('107994')
+  expect(Number(result.netYield)).toBeCloseTo(107994 / 4050000 * 100, 12)
+  expect(result.preliminaryNoi).toBe('118803')
+  expect(edited.provenance.D).toContain('Erstatter')
+  expect(basis).toEqual(before)
+  expect(withScenarioOperatingCosts(basis, null)).toBe(basis)
+})
+
+it.each(['', '-1', 'feil'])('ugyldig/blank totaldrift %s blir ukjent mens bruttoyield beholdes', monthly => {
+  const result = calculateFinancialScenario(withScenarioOperatingCosts({ ...basis, D: '10000' }, monthly), controls)
+  expect(result.grossYield).not.toBeNull()
+  expect(result.noi).toBeNull(); expect(result.netYield).toBeNull(); expect(result.cashFlow).toBeNull()
+})
+
+it('gyldige scenarioforutsetninger viser egne mangler uten foreldede kontrollmangler for leie og drift', () => {
+  const incomplete = { ...basis, issues: ['L: Verdien mangler.', 'D: Perioden mangler.', 'Rapportdekning er ufullstendig.'] }
+  const complete = withScenarioOperatingCosts(withScenarioRent(incomplete, '16000'), '3000')
+  expect(complete.issues.join(' ')).not.toMatch(/L:|D:/)
+  expect(complete.issues).toContain('Rapportdekning er ufullstendig.')
+  expect(incomplete.issues).toContain('D: Perioden mangler.')
 })

@@ -876,3 +876,16 @@ fortsatt uavklart TG-kobling, ufullstendig drift og juridisk dekning, og ingen
 individuell markedsleie. Semantisk AI er deaktivert i automatisk PDF-flyt.
 Se [spesifikasjon og reviewtriage](spec-analyseoversikt-2026-11-05.md) og
 [AI-status, faktiske prøver, skjermbildegjennomgang og avgrensning](../process/arbeidsokter/2026-11-05-analyseoversikt.md).
+
+**PAA-SO2 / PAA-LEIE1, investeringsverktøy 2026-11-05 — Status: fortsatt Åpen for generell dokument-/TG-/juridisk-/markedsdekning.**
+
+Samlet økonomi er utvidet med kapital, egenkapital/belåning, annuitetsfinansiering
+og direkte totaldrift. Kildeavstemte omkostninger inngår én gang, og et
+brukerscenario erstatter aldri dokumentfakta eller kontrollert screening.
+Konkrete undersøkelsesbegrensninger og kildebundne TG-tekstformater er
+forbedret; generelle graderingsforklaringer blir ikke TG-avvik. De to ekte
+rapportene har fortsatt ufullstendig maskinell dekning. Semantisk AI forblir
+sperret. Ingen historisk oppføring lukkes av et lokalt scenario eller disse
+caseforbedringene. [Spec og reviewtriage](spec-paa-investeringsverktoy.md),
+[faktiske feil, rettinger og verifikasjon](../process/arbeidsokter/2026-11-05-investeringsverktoy.md)
+og [uavhengig sluttkontroll](../process/arbeidsokter/2026-11-05-investeringsverktoy-uavhengig-qa.md).

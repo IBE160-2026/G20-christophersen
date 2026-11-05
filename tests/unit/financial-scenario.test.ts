@@ -16,6 +16,28 @@ describe('Isolert finansscenario med ordinære finansregler', () => {
     expect(result.series.at(-1)).toMatchObject({ month: 300, year: '25', balance: '0.00', cumulativeCashFlow: '977304.00' })
     expect(result.sensitivity).toEqual([]) // Expensive alternatives are opt-in and run in the UI's worker.
   })
+  it('samler kapital og gjeld uten å finansiere fellesgjeld eller omkostninger to ganger', () => {
+    const result = calculateFinancialScenario({ ...basis, sharedDebt: '200000', purchaseCosts: '75000' }, controls)
+    expect(result).toMatchObject({ capitalRequired: '3275000', loan: '2075000', totalDebt: '2275000', leverage: '71.09375', monthlyCashFlow: '3257.68' })
+    // Manuell balanse: 1 000 000 egenkapital + 2 075 000 privat + 200 000 felles = 3 275 000.
+    expect(result.grossYield).toBe('7.875')
+    expect(result.netYield).toBe('6.375')
+    expect(calculateFinancialScenario(basis, controls)).toMatchObject({ capitalRequired: null, totalDebt: null, leverage: null })
+  })
+  it('høy belåning og negativ månedlig kontantstrøm bevares med fortegn', () => {
+    // Uavhengig Python Decimal-fasit: 95 % × 4 050 000 = 3 847 500 i privat lån.
+    const result = calculateFinancialScenario({ ...basis, P: '4050000', cashRequired: '4152540', sharedDebt: '0', sharedAnnualPayment: '0', L: '180000', D: '36000' },
+      { equity: '305040', annualInterest: '6', months: '300' })
+    expect(result).toMatchObject({ capitalRequired: '4152540', totalDebt: '3847500', leverage: '95', monthly: '24789.50', monthlyCashFlow: '-12789.5' })
+    const fullyBorrowed = calculateFinancialScenario({ ...basis, sharedDebt: '200000' }, { ...controls, equity: '0' })
+    expect(fullyBorrowed.leverage).toBe('102.34375')
+  })
+  it('kontantkjøp med tom rente og løpetid har korrekt kontantstrøm og ingen ugyldig låneplan', () => {
+    const result = calculateFinancialScenario({ ...basis, sharedDebt: '200000' }, { equity: '3075000', annualInterest: '', months: '' }, { includeSensitivity: true })
+    expect(result).toMatchObject({ loan: '0', monthly: '0.00', J: '12000.00', leverage: '6.25', cashFlow: '192000', monthlyCashFlow: '16000' })
+    expect(result.series).toEqual([{ month: 0, year: '0', balance: '0', cumulativeCashFlow: '0', interest: '0', principal: '0' }])
+    expect(result.sensitivity.every(point => point.cashFlow === '192000')).toBe(true)
+  })
   it.each([{ annualInterest: '9' }, { equity: '2000000' }, { months: '120' }])('endret finansiering %j endrer ikke yield', changed => {
     const result = calculateFinancialScenario(basis, { ...controls, ...changed })
     expect(result.grossYield).toBe('7.875'); expect(result.netYield).toBe('6.375')

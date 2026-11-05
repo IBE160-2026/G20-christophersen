@@ -32,7 +32,7 @@ export function RentEstimatePanel({ rent, session, basis, onSource, scenarioMont
     <p className="eyebrow">LEIEFORUTSETNING</p><h3 id="rent-estimate-title">Leieinntekt</h3>
     {(rent.status === 'loading' || rent.status === 'failed') && <p role="status">{rent.status === 'loading' ? 'Henter leiegrunnlag …' : 'Leieoppslaget er utilgjengelig. Dokumentanalysen er beholdt.'}</p>}
     {published && <div className="rent-published-references"><p><span>Statistisk leiereferanse · {published.rooms} rom</span><strong data-testid="rent-published-monthly">{number(published.value)} kr/mnd</strong></p><p>{published.publisher} · {published.geography} · {published.period}</p><p className="metric-caption">Gruppenivå · individuell markedsleie er ikke beregnet.</p></div>}
-    {result && onScenarioRent && (basis.L !== null || scenarioEdited) && <RentScenarioControls monthly={scenarioMonthly} edited={scenarioEdited} reference={published?.metric === 'monthly-rent' ? published : null} year={basis.year} onChange={onScenarioRent} />}
+    {onScenarioRent && <RentScenarioControls monthly={scenarioMonthly} edited={scenarioEdited} reference={published?.metric === 'monthly-rent' ? published : null} year={basis.year} onChange={onScenarioRent} />}
     {result && !published && <p className="metric-caption">Ingen relevant publisert romreferanse. Individuell markedsleie er ikke beregnet.</p>}
     {result && <details className="rent-estimate-evidence"><summary>Leiekilder og metode</summary>
       <p data-testid="rent-market-status">{result.marketEstimate.reason}</p>

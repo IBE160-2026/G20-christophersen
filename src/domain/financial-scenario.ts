@@ -11,8 +11,9 @@ export type ScenarioValue = 'P' | 'L' | 'D' | 'cashRequired' | 'sharedAnnualPaym
 export interface ScenarioBasis {
   P: string | null; L: string | null; D: string | null
   cashRequired: string | null; sharedAnnualPayment: string | null
+  sharedDebt?: string | null; purchaseCosts?: string | null
   preliminaryOperatingSubtotal?: string | null; preliminaryCostYear?: string | null; preliminaryCostAssumption?: string | null
-  year: string | null; issues: string[]; provenance: Record<ScenarioValue, string>
+  year: string | null; issues: string[]; provenance: Record<ScenarioValue, string> & Partial<Record<'sharedDebt' | 'purchaseCosts', string>>
 }
 export interface ScenarioControls { equity: string; annualInterest: string; months: string }
 export interface ScenarioPoint {
@@ -23,6 +24,7 @@ export interface ScenarioSensitivity { annualInterest: string; cashFlow: string 
 export interface FinancialScenario {
   basis: ScenarioBasis; controls: ScenarioControls
   loan: string | null; monthly: string | null; annual: string | null; J: string | null
+  capitalRequired: string | null; totalDebt: string | null; leverage: string | null; monthlyCashFlow: string | null
   grossYield: string | null; netYield: string | null; noi: string | null; cashFlow: string | null
   preliminaryNoi: string | null; preliminaryNetYield: string | null
   issues: string[]; series: ScenarioPoint[]; sensitivity: ScenarioSensitivity[]
@@ -37,6 +39,7 @@ function nonnegative(value: string | null): string | null {
 export function calculateFinancialScenario(basis: ScenarioBasis, controls: ScenarioControls, options: { includeSensitivity?: boolean } = {}): FinancialScenario {
   const P = nonnegative(basis.P), L = nonnegative(basis.L), D = nonnegative(basis.D)
   const cash = nonnegative(basis.cashRequired), shared = nonnegative(basis.sharedAnnualPayment)
+  const sharedDebt = nonnegative(basis.sharedDebt ?? null)
   const issues = [...basis.issues]
   const price = P !== null && new Decimal(P).gt('0') ? P : null
   const grossYield = price !== null && L !== null ? new Decimal(L).times('100').div(price).toFixed() : null
@@ -53,11 +56,17 @@ export function calculateFinancialScenario(basis: ScenarioBasis, controls: Scena
   if (cash === null) issues.push('Kontantbehov ved kjøp er ukjent. Det settes ikke lik totalpris inklusive fellesgjeld.')
   if (financing.error) issues.push(financing.error)
   const cashFlow = noi !== null && financing.J !== null ? new Decimal(noi).minus(financing.J).toFixed() : null
+  const monthlyCashFlow = cashFlow === null ? null : new Decimal(cashFlow).div('12').toFixed()
+  // P inkluderer fellesgjeld. Kontantbehovet inkluderer derimot omkostninger,
+  // men ikke fellesgjelden som allerede følger boligen. Ingen dobbeltfinansiering.
+  const capitalRequired = cash !== null && sharedDebt !== null ? new Decimal(cash).plus(sharedDebt).toFixed() : null
+  const totalDebt = financing.loan !== null && sharedDebt !== null ? new Decimal(financing.loan).plus(sharedDebt).toFixed() : null
+  const leverage = totalDebt !== null && price !== null ? new Decimal(totalDebt).times('100').div(price).toFixed() : null
   const series: ScenarioPoint[] = []
   const sensitivity: ScenarioSensitivity[] = []
   if (financing.loan !== null && financing.monthly !== null) {
-    const months = Number(controls.months)
-    const r = new Decimal(parseFinancialDecimal(controls.annualInterest)!).div('1200')
+    const months = /^[1-9]\d{0,3}$/.test(controls.months) && Number(controls.months) <= 1200 ? Number(controls.months) : 0
+    const r = financing.loan === '0' ? new Decimal('0') : new Decimal(parseFinancialDecimal(controls.annualInterest)!).div('1200')
     let balance = new Decimal(financing.loan), annualInterest = new Decimal('0'), annualPrincipal = new Decimal('0')
     series.push({ month: 0, year: '0', balance: balance.toFixed(), cumulativeCashFlow: cashFlow === null ? null : '0', interest: '0', principal: '0' })
     for (let month = 1; month <= months; month++) {
@@ -79,8 +88,8 @@ export function calculateFinancialScenario(basis: ScenarioBasis, controls: Scena
       }
     }
     const rates = options.includeSensitivity ? Array.from({ length: 21 }, (_, step) => new Decimal('2').plus(new Decimal(String(step)).times('0.5')).toFixed()) : []
-    const selectedRate = parseFinancialDecimal(controls.annualInterest)!
-    if (options.includeSensitivity && new Decimal(selectedRate).gte('2') && new Decimal(selectedRate).lte('12') && !rates.includes(selectedRate)) rates.push(selectedRate)
+    const selectedRate = parseFinancialDecimal(controls.annualInterest)
+    if (options.includeSensitivity && selectedRate !== null && new Decimal(selectedRate).gte('2') && new Decimal(selectedRate).lte('12') && !rates.includes(selectedRate)) rates.push(selectedRate)
     rates.sort((left, right) => new Decimal(left).cmp(right))
     for (const annualInterest of rates) {
       const alternative = financingSuggestion({ ...controls, annualInterest, cashRequired: cash, sharedAnnualPayment: shared })
@@ -88,6 +97,6 @@ export function calculateFinancialScenario(basis: ScenarioBasis, controls: Scena
     }
   }
   return { basis: structuredClone(basis), controls: { ...controls }, loan: financing.loan, monthly: financing.monthly,
-    annual: financing.annual, J: financing.J, grossYield, netYield, noi, cashFlow, preliminaryNoi, preliminaryNetYield,
+    annual: financing.annual, J: financing.J, capitalRequired, totalDebt, leverage, monthlyCashFlow, grossYield, netYield, noi, cashFlow, preliminaryNoi, preliminaryNetYield,
     issues: [...new Set(issues)], series, sensitivity }
 }

@@ -41,8 +41,9 @@ describe('Scenarioadapter fra faktisk aktivt grunnlag', () => {
     const state = createInitialSession()
     state.prospectus.prospectus = { ...state.prospectus.prospectus, status: 'imported', selected: fixture.selected, outcome: fixture.outcome }
     const basis = selectScenarioBasis(state)
-    expect(basis).toMatchObject({ P: '3200000', L: null, D: null, cashRequired: '3075000' })
+    expect(basis).toMatchObject({ P: '3200000', L: null, D: null, cashRequired: '3075000', sharedDebt: '200000', purchaseCosts: '75000' })
     expect(basis.provenance.P).toContain('mixed-12.pdf')
+    expect(basis.provenance.sharedDebt).toContain('mixed-12.pdf')
     expect(Object.values(state.financial).every(field => !field.confirmed)).toBe(true)
   })
   it('avvikende manuell pris får ikke dokumentets kontantbehov eller tilbakefylt importpris', () => {

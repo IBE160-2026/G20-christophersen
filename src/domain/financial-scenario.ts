@@ -11,7 +11,7 @@ export type ScenarioValue = 'P' | 'L' | 'D' | 'cashRequired' | 'sharedAnnualPaym
 export interface ScenarioBasis {
   P: string | null; L: string | null; D: string | null
   cashRequired: string | null; sharedAnnualPayment: string | null
-  preliminaryOperatingSubtotal?: string | null; preliminaryCostYear?: string | null
+  preliminaryOperatingSubtotal?: string | null; preliminaryCostYear?: string | null; preliminaryCostAssumption?: string | null
   year: string | null; issues: string[]; provenance: Record<ScenarioValue, string>
 }
 export interface ScenarioControls { equity: string; annualInterest: string; months: string }

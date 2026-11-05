@@ -59,6 +59,7 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
     issues.push('Leie og driftskostnader gjelder ulike år. Nettoyield og kontantstrøm kan ikke beregnes.')
   }
   let preliminaryOperatingSubtotal: string | null = null, preliminaryCostYear: string | null = null
+  let preliminaryCostAssumption: string | null = null
   let cashRequired: string | null = null, sharedAnnualPayment: string | null = null
   const outcome = slot.status === 'imported' && slot.selected?.hash === slot.outcome?.reportHash ? slot.outcome : null
   const listing = session.listing.status === 'ready' ? listingDraft : null
@@ -73,10 +74,12 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
     const untouchedDrift = session.financial.D.rawValue.trim() === '' && session.financial.D.period === '' && session.financial.D.year === ''
       && session.sources.D.kind === '' && session.sources.D.description.trim() === '' && !session.sources.D.conflict
       && !session.listing.manualFields.includes('D') && session.costItems.length === 0
-    if (untouchedDrift && suggested.preliminaryOperatingSubtotal !== null) {
-      preliminaryOperatingSubtotal = suggested.preliminaryOperatingSubtotal
+    if (untouchedDrift && (suggested.preliminaryOperatingSubtotal !== null || suggested.preliminaryCostScenario !== null)) {
+      preliminaryOperatingSubtotal = suggested.preliminaryOperatingSubtotal ?? suggested.preliminaryCostScenario!.annualCosts
+      preliminaryCostAssumption = suggested.preliminaryOperatingSubtotal === null ? suggested.preliminaryCostScenario!.assumption : null
+      if (preliminaryCostAssumption) issues.push(preliminaryCostAssumption)
       preliminaryCostYear = suggested.preliminaryCostYear
-      issues.push(`Foreløpig drift er bare en kjent delsum. Kostnadsår: ${preliminaryCostYear ?? 'ukjent'}. Leieår/-nivå: ${effectiveRentYear ?? 'ukjent'}; blandede prisnivåer uten prisjustering. Manglende kostnader er ikke null.`)
+      issues.push(`${preliminaryCostAssumption ? 'Foreløpig drift bruker en uttrykkelig kostnadsforutsetning.' : 'Foreløpig drift er bare en kjent delsum.'} Kostnadsår: ${preliminaryCostYear ?? 'ukjent'}. Leieår/-nivå: ${effectiveRentYear ?? 'ukjent'}; blandede prisnivåer uten prisjustering. Manglende kostnader er ikke null.`)
     }
     // A different manual price cannot borrow purchase funding from the original listing.
     const priceMatches = P !== null && suggested.P !== null && new Decimal(P).eq(suggested.P)
@@ -96,5 +99,5 @@ export function selectScenarioBasis(session: SessionState, rent: RentEstimate | 
   }
   // Missing values remain null. This selector never dispatches, changes a revision or confirms a field.
   for (const [field, amount] of Object.entries({ P, L, D })) if (amount === null) issues.push(...(fieldIssues[field as 'P' | 'L' | 'D'] ?? []))
-  return { P, L, D, cashRequired, sharedAnnualPayment, preliminaryOperatingSubtotal, preliminaryCostYear, year, issues: [...new Set(issues)], provenance }
+  return { P, L, D, cashRequired, sharedAnnualPayment, preliminaryOperatingSubtotal, preliminaryCostYear, preliminaryCostAssumption, year, issues: [...new Set(issues)], provenance }
 }

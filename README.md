@@ -545,11 +545,24 @@ SSB-metadata og celler og ingen betalt KI. Uten privat fil hoppes denne enkeltpr
 i vanlig regresjon; syntetiske format-, felt- og ressursprøver kjører fortsatt.
 
 
-Nøstegaten 65 A er også kontrollert med privat original: 152 sider og hele
-tekstlaget beholdes. PDF-ens valgfrie innholdslag er foreløpig ikke verifisert;
-derfor vises uavklart lesbarhet, manglende verifiserte økonomifelter/leie og sperret
-teknisk fullstendighet. Dette kan ikke bekreftes bort. Lokal OCR av rapportområdet
-86–101 supplerer tekstgrunnlaget. Se [årsaken, målingene og testutfallene](.docs/process/arbeidsokter/2026-11-05-robust-pdf-minne.md).
+Nøstegaten 65 A bruker privat original med 152 sider og uendret tekstlag.
+Lagkontrollen vurderer hver side; faktiske valgfrie lag og uavklart struktur
+sperres fortsatt. Økonomisidene dokumenterer 4 050 000 kr, 40 m² BRA-i,
+2 rom / 1 soverom, null fellesgjeld og **1 020 kr/mnd** i fellesutgifter
+(FINN-tallet 1 019 bekreftes ikke). Kommunale avgifter er 12 957 kr/år,
+inkludert eiendomsskatt. Dokumentet varsler uvisse økninger for fasade og heis.
+
+Den automatiske brede Bergen-modellen gir 12 000 kr/mnd i SSB 2025-nivå,
+144 000 kr/år, brutto 3,56 % og foreløpig 2,93 % ved et kostnadsfradrag
+på 25 197 kr/år. Sistnevnte forutsetter at kommunale avgifter kommer i tillegg
+til felleskostnadene. Beløpene er dokumentert, men eventuell overlapping er
+uavklart; forutsetningen vises særskilt, og dokumentfeltet forblir ukjent. Bydel er uavklart; begge Bergen-soner inngår. Intervallet
+6 700–17 700 kr/mnd er et ukalibrert produktvalg. Kostnadsår, øvrige utgifter,
+finansiering og full netto er fortsatt uavklart; ingen prisjustering eller
+fullstendig kostnadsdekning påstås. Teknisk fullstendighet er fortsatt sperret.
+Lokal rapport-OCR 86–101 er separat fra økonomiens tekstkilder.
+Se [årsaker, fysisk kildefasit og faktiske testutfall](.docs/process/arbeidsokter/2026-11-05-nostegaten-okonomi.md)
+og [tidligere minneverifikasjon](.docs/process/arbeidsokter/2026-11-05-robust-pdf-minne.md).
 
 For å kreve begge private originaler i nettleserprøven, legg Nøstegaten-filen i
 `private/incoming/nostegaten-65-a.pdf` og kjør:

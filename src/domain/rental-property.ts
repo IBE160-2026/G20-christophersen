@@ -32,7 +32,7 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
     const existing = list.find(item => {
       if (list !== address) return key(item.value) === key(value)
       const left = addressParts(String(item.value)), right = addressParts(String(value))
-      return left && right && key(left.street) === key(right.street)
+      return left && right && key(left.street!.replace(/(\d)[ \t]+(?=[\p{L}]$)/u, '$1')) === key(right.street!.replace(/(\d)[ \t]+(?=[\p{L}]$)/u, '$1'))
         && (!left.postal || !right.postal || (left.postal === right.postal && key(left.place) === key(right.place)))
     })
     if (existing) {
@@ -78,7 +78,7 @@ export function extractRentalProperty(outcome: DocumentImport): RentalProperty {
       pdfPage: page.pdfPage, start: match.index!, end: match.index! + match[0].length, quote: match[0], method: 'pdf-text', printedPage: null })
     // Etikett/verdi kan stå på hver sin linje, men en tom etikett får ikke sluke en ny etikett.
     const gap = '(?:[ \\t]*:[ \\t]*(?:\\r?\\n[ \\t]*)?|[ \\t]+|[ \\t]*\\r?\\n[ \\t]*)'
-    for (const [label, list] of [['(?:Eiendommens adresse|Adresse og betegnelse|Adresse)', address], ['Bydel', district]] as const) {
+    for (const [label, list] of [['(?:Eiendommens adresse|Adresse og betegnelse|Adresse|Eiendom)', address], ['Bydel', district]] as const) {
       const pattern = new RegExp(`^[ \\t]*${label}${gap}([^\\r\\n:]{2,250})[ \\t]*$`, 'gim')
       for (const match of page.text.matchAll(pattern)) {
         const value = normalize(match[1]!)

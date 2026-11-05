@@ -87,17 +87,17 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
       const aliases: Partial<Record<EconomyField['id'], string>> = {
         price: '(?:Prisantydning|Total prisantydning eksklusiv omkostninger)',
         totalPrice: '(?:Totalpris|Total ink\\. omk\\.)',
-        commonCosts: '(?:Felleskostnader|Fellesutgifter)',
+        commonCosts: '(?:Felleskostnad(?:er)?|Fellesutgifter)',
       }
       const label = aliases[field.id] ?? labels[field.id as keyof typeof labels]
       const number = '(\\d[\\d. \\u00a0\\u202f]*(?:,\\d{1,2}|,[-\\u2011\\u2013])?)'
       const gap = '[ \\t\\u00a0\\u202f]*'
       const separator = `${gap}:?${gap}(?:\\r?\\n${gap})?`
       const lineGap = `${gap}(?:\\r?\\n${gap})?`
-      const qualifier = `(?:${lineGap}(?:per|pr\\.?)${gap}(måned|år)|${lineGap}for${gap}år${gap}(\\d{4}))?(?:${lineGap}i${gap}(\\d{4}))?`
+      const qualifier = `(?:${lineGap}(?:per|pr\\.?)${gap}(måned|mnd\\.?|år)|${lineGap}for${gap}år${gap}(\\d{4}))?(?:${lineGap}i${gap}(\\d{4}))?`
       const expressions = [
-        new RegExp(`^${gap}${label}${separator}(?:kr|NOK)${gap}${number}${qualifier}\\.?${gap}$`, 'gim'),
-        new RegExp(`^${gap}${label}${separator}${number}${gap}(?:kr|NOK)${qualifier}\\.?${gap}$`, 'gim'),
+        new RegExp(`^${gap}${label}${separator}(?:kr\\.?|NOK)${gap}${number}${qualifier}\\.?${gap}$`, 'gim'),
+        new RegExp(`^${gap}${label}${separator}${number}${gap}(?:kr\\.?|NOK)${qualifier}\\.?${gap}$`, 'gim'),
       ]
       // Norwegian listings also use the explicit monetary suffix ",-" instead
       // of a currency word. Bare digits remain insufficient financial evidence.
@@ -107,17 +107,18 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
         const monthly = `(?:per|pr\\.?)${gap}(?:måned|mnd\\.?)`
         // One amount capture per expression keeps the original source offsets
         // and excludes amounts lacking both currency and the monetary suffix.
-        for (const amount of [`(?:kr|NOK)${gap}${number}`, `${moneySuffix}${gap}(?:kr|NOK)?`, `${number}${gap}(?:kr|NOK)`]) {
+        for (const amount of [`(?:kr\\.?|NOK)${gap}${number}`, `${moneySuffix}${gap}(?:kr\\.?|NOK)?`, `${number}${gap}(?:kr\\.?|NOK)`]) {
           expressions.push(new RegExp(`^${gap}${label}${gap}${monthly}${separator}${amount}${gap}$`, 'gim'),
             new RegExp(`^${gap}${label}${separator}${amount}${gap}${monthly}${gap}$`, 'gim'))
         }
       }
       const ledgerLabels: Partial<Record<EconomyField['id'], string>> = {
         documentTax: 'Dokumentavgift(?: \\(\\d+(?:,\\d+)? %\\))?',
-        purchaseCosts: 'Omkostninger totalt',
-        totalPrice: 'Totalpris\\. inkl\\. omkostninger',
+        purchaseCosts: 'Omkostninger totalt(?: ved prisantydning)?',
+        sharedDebt: 'Andel av fellesgjeld',
+        totalPrice: 'Totalpris\\.? inkl\\.? omkostninger',
       }
-      if (ledgerLabels[field.id]) expressions.push(new RegExp(`^${gap}(?:kr|NOK)${gap}${number}${gap}\\(${ledgerLabels[field.id]}\\)${gap}$`, 'gim'))
+      if (ledgerLabels[field.id]) expressions.push(new RegExp(`^${gap}(?:kr\\.?|NOK)${gap}${number}${gap}\\(${ledgerLabels[field.id]}\\)${gap}$`, 'gim'))
       if (options.legacyEconomy) {
         // Historical request regeneration only: preserve the original grammar,
         // whitespace spans and integral-only behaviour for integrity-pinned replay.
@@ -129,7 +130,7 @@ export function createLocalPlan(basis: ImportBasis, options: { legacyEconomy?: b
         if (match[0].length > 2000 || amount.length > 80) { residual(page.pdfPage, 'Langt økonomibelegg er uavklart.'); continue }
         const source = sourceFor(basis, page.pdfPage, match.index, match.index + match[0].length)
         if (field.sources.some(item => repeatedEvidence(item, source))) continue
-        const period = match[2] === 'måned' || field.id === 'commonCosts' && /(?:per|pr\.?)[ \t]*(?:måned|mnd\.?)\b/i.test(match[0]) ? 'month' : match[2] === 'år' || !options.legacyEconomy && match[3] ? 'year' : field.category === 'recurring' ? 'unknown' : 'once'
+        const period = match[2] === 'måned' || /^mnd\.?$/i.test(match[2] ?? '') || field.id === 'commonCosts' && /(?:per|pr\.?)[ \t]*(?:måned|mnd\.?)\b/i.test(match[0]) ? 'month' : match[2] === 'år' || !options.legacyEconomy && match[3] ? 'year' : field.category === 'recurring' ? 'unknown' : 'once'
         const year = match[3] ?? match[4] ?? null
         if (field.amount === null) Object.assign(field, { amount, period, year, status: 'available', nature: 'fact', originalText: source.quote })
         else if (field.amount !== amount || field.period !== period || field.year !== year) {

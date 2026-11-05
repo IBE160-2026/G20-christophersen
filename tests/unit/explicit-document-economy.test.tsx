@@ -119,3 +119,63 @@ it('tolker eksplisitt men-ikke-klausul uten å påstå at utelatt kategori inng�
   expect(markup).not.toContain('bygningsforsikring inngår')
   expect(markup).toContain('Ekskluderte kostnader kommer i tillegg')
 })
+
+const ledger = 'Prisantydning\n4 050 000 kr\nkr 0,- (Andel av fellesgjeld)\nkr 102 340,- (Omkostninger totalt ved prisantydning)\nkr 4 152 340,- (Totalpris inkl omkostninger)\nFELLESKOSTNAD\nKr. 1 020 pr. mnd.\nKOMMUNALE AVGIFTER\nKr. 12 957 pr. år.'
+const separateCosts = 'Eiendomsskatten er beregnet til kr. 3.942,- i følge Testby\nKommune og er inkluddert i de kommunale avgiftene.\nKommunale avgifter utgjør kr. 12 957,- pr. år.\nFellesutgiftene utgjør kr. 1 020,- pr. mnd. og inkluderer:\nFelles byggforsikring, drift og vedlikehold, bank, strøm i\nfellesareal, brann- og sprinklerkontroll.\nI følge styreleder kan der forekomme økning i felleskostnadene\nda det er planer om å skifte fasadepanel og fikse en heis som er\ni ustand. Omfanget av kostnadene er uvisst per dags dato.'
+it('avstemmer kildebelagt nullgjeld og skatt innen kommunale avgifter, og beholder ukjente økninger', async () => {
+  const outcome = await createCodeFirstImport(codeFirstBasis([ledger, separateCosts, 'Sameiet har ikke lån.']))
+  const suggestion = economySuggestions(importEconomyDraft(outcome), { requireReview: false })
+  expect(suggestion).toMatchObject({ P: '4050000', preliminaryOperatingSubtotal: null, D: null, preliminaryCostYear: null })
+  expect(outcome.economy.fields.find(field => field.id === 'propertyTax')).toMatchObject({ amount: '3942', includedIn: 'municipalFees', period: 'year' })
+  const markup = renderToStaticMarkup(createElement(DocumentEconomy, { outcome, onSource: () => {} }))
+  expect(markup).toContain('bygningsforsikring inngår')
+  const common = outcome.economy.fields.find(field => field.id === 'commonCosts')!
+  expect(common.sources.some(item => /Omfanget av kostnadene er uvisst/.test(item.quote))).toBe(true)
+  for (const field of outcome.economy.fields) for (const source of field.sources) expect(outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
+})
+it.each([
+  [ledger.replace('kr 0,- (Andel av fellesgjeld)', ''), separateCosts, 'Sameiet har ikke lån.'],
+  [ledger, separateCosts.replace('inkluddert i de kommunale avgiftene', 'betalt separat'), 'Sameiet har ikke lån.'],
+  [ledger, separateCosts, 'Sameiet har lån på kr 100 000.'],
+  [ledger, separateCosts.replace('Felles byggforsikring', 'kommunale avgifter, Felles byggforsikring'), 'Sameiet har ikke lån.'],
+  [ledger, separateCosts + '\nFelleskostnader: 2 000 kr per måned', 'Sameiet har ikke lån.'],
+  [ledger, separateCosts + '\nFelleskostnadene inkluderer kommunale avgifter.', 'Sameiet har ikke lån.'],
+  [ledger, separateCosts.replace('Felles byggforsikring, drift og vedlikehold, bank, strøm i\nfellesareal, brann- og sprinklerkontroll.', 'Uavklart innhold.'), 'Sameiet har ikke lån.'],
+])('sperrer manglende gjeld, ukjent inkludering, overlapp eller motstrid', async (...pages) => {
+  const outcome = await createCodeFirstImport(codeFirstBasis(pages))
+  expect(economySuggestions(importEconomyDraft(outcome), { requireReview: false }).preliminaryOperatingSubtotal).toBeNull()
+})
+
+it('aksepterer eksplisitt etikett med Kr.-prefiks uten falsk gjeldskonflikt', async () => {
+  const outcome = await createCodeFirstImport(codeFirstBasis(['Prisantydning: Kr. 3 000 000', 'Fellesgjeld: Kr. 0']))
+  expect(economySuggestions(importEconomyDraft(outcome), { requireReview: false }).P).toBe('3000000')
+})
+
+it.each(['ikke inkludert', 'inkludert per måned', 'inkludert pr. kvartal'])('sperrer negert eller ukjent periode for eiendomsskatt: %s', clause => {
+  const plan = createLocalPlan(codeFirstBasis([ledger, separateCosts.replace('inkluddert', clause), 'Sameiet har ikke lån.']))
+  const field = plan.fields.find(field => field.id === 'propertyTax')!
+  expect(field.status).not.toBe('available')
+  expect(field.includedIn).toBeNull()
+})
+it('skatt får ikke årsperiode uten dokumentert årlig kommunal rot og beholder årskilden', () => {
+  const missing = createLocalPlan(codeFirstBasis([separateCosts.replace(/Kommunale avgifter utgjør[^\n]+/, '')]))
+  expect(missing.fields.find(field => field.id === 'propertyTax')!.period).toBe('unknown')
+  const annual = createLocalPlan(codeFirstBasis([ledger, separateCosts]))
+  expect(annual.fields.find(field => field.id === 'propertyTax')!.sources.some(source => source.quote.includes('12 957'))).toBe(true)
+})
+it('inline ukjent gjeld kan ikke overstyres av null-ledger', () => {
+  const plan = createLocalPlan(codeFirstBasis([ledger, 'Sameiet har ikke lån.\nOpplysninger: Fellesgjeld er ukjent']))
+  expect(plan.fields.find(field => field.id === 'sharedDebt')!.status).toBe('conflict')
+})
+it('forklarer valgfri total separat og sperrer uforklart avvikende prosa-total', async () => {
+  const qualified = 'kr 4 165 330,- (Totalpris inkl omk og valgfrie omkostninger)'
+  const prose = 'Totalpris inkl omkostninger og fellesgjeld kr. 4 165 330'
+  const outcome = await createCodeFirstImport(codeFirstBasis([ledger, qualified, prose]))
+  expect(economySuggestions(importEconomyDraft(outcome), { requireReview: false }).P).toBe('4050000')
+  const optional = outcome.economy.fields.find(field => field.category === 'informational' && field.label.includes('valgfrie'))!
+  expect(optional).toMatchObject({ amount: '4165330', status: 'available' })
+  expect(optional.sources.map(source => source.quote)).toEqual([qualified, prose])
+  const unexplained = await createCodeFirstImport(codeFirstBasis([ledger, prose]))
+  expect(unexplained.economy.fields.find(field => field.id === 'totalPrice')!.status).toBe('conflict')
+  expect(economySuggestions(importEconomyDraft(unexplained), { requireReview: false }).P).toBeNull()
+})

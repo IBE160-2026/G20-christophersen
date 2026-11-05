@@ -814,3 +814,24 @@ vern. Samplet samtidig Node+OCR-RSS i sluttprøven var ca. 544/599 MiB (inkluder
 OS-sider). Ingen samlet 512 MiB-garanti for hele prosesstreet hevdes. Dersom en
 kjøreplattform gir én felles 512 MiB-kvote, kreves et eget samlet budsjett og
 ny reell OCR-/kvalitetsverifikasjon. Dette forholdet fantes også før rettingen.
+
+**PAA-SO2 / PAA-LEIE1, Nøstegaten automatisk økonomi 2026-11-05 — Status: fortsatt Åpen for generell format-, kostnads- og modellkvalitet.**
+
+Den konkrete katalogsperren er avgrenset med per-side kontroll av faktisk brukte
+innholdslag; dokumenterte økonomisider kan nå brukes uten å godkjenne skjult
+innhold. Ekte152-sidersflyt finner4050000kr,40m²BRA-i,2rom/1soverom,
+1020kr/mnd i fellesutgifter og eksplisitt nullgjeld. FINN1019 brukes ikke som
+PDF-fakta. Gratis SSB2025 gir12000kr/mnd og brutto3,56% med bred Bergen-modell.
+
+Foreløpig2,93% bruker scenariofradraget25197kr/år, **forutsatt** at dokumenterte
+kommunale avgifter12957kr/år kommer utenfor felleskostnadene. Eventuell
+overlapping er ikke dokumentert avklart. Feltets inkludering forblir ukjent,
+fullD/netto/kontantstrøm er sperret og forutsetningen vises ved beregningen.
+Eiendomsskatt3942 inngår i kommunale avgifter og telles ikke igjen.
+
+Uvisse fasade-/heiskostnader, øvrige eierutgifter, kostnadsår, markedsvalidering,
+eksakt bydel og teknisk fullstendighet gjenstår. Sider som faktisk bruker OC
+eller ikke kan inspiseres, er fortsatt uverifiserte. Historiske åpne oppføringer
+over bevares; ingen generell post lukkes av dette caseutfallet. Se
+[spec med individuell reviewtriage](spec-nostegaten-automatisk-okonomi.md) og
+[kildefasit, testbevis og begrensninger](../process/arbeidsokter/2026-11-05-nostegaten-okonomi.md).

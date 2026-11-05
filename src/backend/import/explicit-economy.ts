@@ -15,14 +15,65 @@ export function enrichExplicitEconomy(basis: ImportBasis, fields: EconomyField[]
   const debt = fields.find(field => field.id === 'sharedDebt')!, common = fields.find(field => field.id === 'commonCosts')!
   const zero: PdfSource[] = [], corroboration: PdfSource[] = [], adverse: PdfSource[] = []
   const compositions: { sources: PdfSource[]; amounts: string[] }[] = []
+  const municipal = fields.find(field => field.id === 'municipalFees')!, tax = fields.find(field => field.id === 'propertyTax')!
+  const commonLists: PdfSource[] = [], taxInMunicipal: PdfSource[] = []
+  const taxCandidates: { amount: string; evidence: PdfSource; supported: boolean }[] = []
+  const optionalTotals: { amount: string; evidence: PdfSource }[] = [], proseTotals: { amount: string; evidence: PdfSource }[] = []
+  const record = (field: EconomyField, amount: string, period: EconomyField['period'], evidence: PdfSource) => {
+    if (field.amount === null && field.status !== 'conflict') Object.assign(field, { amount, period, status: 'available', nature: 'fact', originalText: evidence.quote })
+    else if (field.amount !== amount || field.period !== period) {
+      field.status = 'conflict'
+      field.alternatives.push({ amount, source: evidence })
+    }
+    field.sources.push(evidence)
+  }
   for (const page of basis.pages.filter(page => page.status === 'readable')) {
     for (const match of page.text.matchAll(/Seksjonen har ingen gjeld per\.?[ \t]{0,80}([\d.]{1,40})(?![\d.\p{L}])/giu)) {
       const evidence = source(page.pdfPage, match.index, match.index + match[0].length)
       ;(validDate(match[1]!.replace(/\.$/, '')) ? zero : adverse).push(evidence)
     }
     for (const match of page.text.matchAll(/Ingen lån registrert for sameiet\./gi)) corroboration.push(source(page.pdfPage, match.index, match.index + match[0].length))
-    for (const match of page.text.matchAll(/(?:Seksjonen har (?!ingen gjeld per\.?\s*\d)[^\n.]{0,120}(?:gjeld|lån)[^\n.]{0,120}|(?:Fellesgjeld|Sameiet har (?:gjeld|lån))[^\n]{0,120}(?:ukjent|uavklart|ikke oppgitt|kr\.?\s*\d)[^\n]{0,80}|(?:Fellesgjeld|Felleskostnader)[^\n]{0,50}-\s*\d[^\n]{0,80})/gi)) adverse.push(source(page.pdfPage, match.index, match.index + match[0].length))
+    for (const match of page.text.matchAll(/(?:Seksjonen har (?!ingen gjeld per\.?\s*\d)[^\n.]{0,120}(?:gjeld|lån)[^\n.]{0,120}|(?:Fellesgjeld|Sameiet har (?:gjeld|lån))[^\n]{0,120}(?:ukjent|uavklart|ikke oppgitt|kr\.?\s*\d)[^\n]{0,80}|(?:Fellesgjeld|Felleskostnader)[^\n]{0,50}-\s*\d[^\n]{0,80})/gim)) {
+      // A complete labelled monetary entry has already been reconciled by the
+      // amount grammar. Prose/unknown debt outside such entries stays adverse.
+      const lineStart = page.text.lastIndexOf('\n', match.index) + 1
+      const lineEnd = page.text.indexOf('\n', match.index)
+      const line = page.text.slice(lineStart, lineEnd < 0 ? page.text.length : lineEnd)
+      if (/^[ \t]*Totalpris inkl\.? omkostninger og fellesgjeld[ \t]+kr\.?[ \t]+\d[\d. \u00a0]*(?:,\d{1,2}|,[-–‑])?[ \t]*$/i.test(line)) continue
+      if (!debt.sources.some(item => item.pdfPage === page.pdfPage && item.start <= match.index && item.end >= match.index + match[0].length)) adverse.push(source(page.pdfPage, match.index, match.index + match[0].length))
+    }
     for (const match of page.text.matchAll(/Sameiet har (?:gjeld|lån)[^\n.]{0,200}/gi)) adverse.push(source(page.pdfPage, match.index, match.index + match[0].length))
+    for (const match of page.text.matchAll(/Sameiet har ikke lån\./gi)) corroboration.push(source(page.pdfPage, match.index, match.index + match[0].length))
+    for (const match of page.text.matchAll(/Kommunale avgifter utgjør kr\.?[ \t]*(\d[\d. \u00a0]*,[-–‑]) pr\. år\./gi)) {
+      const amount = parseNorwegianMoney(match[1]!).amount
+      if (amount !== null) record(municipal, amount, 'year', source(page.pdfPage, match.index, match.index + match[0].length))
+    }
+    for (const match of page.text.matchAll(/Eiendomsskatten er beregnet til kr\.?[ \t]*(\d[\d. \u00a0]*,[-–‑])[\s\S]{0,240}?i de kommunale avgiftene\./gi)) {
+      const amount = parseNorwegianMoney(match[1]!).amount
+      if (amount === null) continue
+      const evidence = source(page.pdfPage, match.index, match.index + match[0].length)
+      const supported = /inklud(?:ert|dert) i de kommunale avgiftene/i.test(match[0])
+        && !/\b(?:ikke|ekskludert|måned|mnd|kvartal|termin|halvår|uke|dag)\b/i.test(match[0])
+      taxCandidates.push({ amount, evidence, supported })
+    }
+    for (const match of page.text.matchAll(/^[ \t]*kr\.?[ \t]*(\d[\d. \u00a0]*(?:,\d{1,2}|,[-–‑])?)[ \t]*\(Totalpris inkl\.? omk\.? og valgfrie omkostninger\)[ \t]*$/gim)) {
+      const amount = parseNorwegianMoney(match[1]!).amount
+      if (amount !== null) optionalTotals.push({ amount, evidence: source(page.pdfPage, match.index, match.index + match[0].length) })
+    }
+    for (const match of page.text.matchAll(/^[ \t]*Totalpris(?:[ \t]+(?:inkl\.? omkostninger(?: og fellesgjeld)?|er))?[ \t]*:?[ \t]+kr\.?[ \t]*(\d[\d. \u00a0]*(?:,\d{1,2}|,[-–‑])?)[ \t]*$/gim)) {
+      const amount = parseNorwegianMoney(match[1]!).amount
+      if (amount !== null) proseTotals.push({ amount, evidence: source(page.pdfPage, match.index, match.index + match[0].length) })
+    }
+    for (const match of page.text.matchAll(/Fellesutgiftene utgjør kr\.?[ \t]*(\d[\d. \u00a0]*,[-–‑]) pr\. mnd\. og inkluderer:\s*([^.]*(?:\.[^\n]*)?)/gi)) {
+      const amount = parseNorwegianMoney(match[1]!).amount
+      if (amount === null || match[0].length > 2000) continue
+      const evidence = source(page.pdfPage, match.index, match.index + match[0].length)
+      record(common, amount, 'month', evidence)
+      commonLists.push(evidence)
+    }
+    for (const match of page.text.matchAll(/I følge styreleder[^.]{0,500}\.[^]{0,200}?Omfanget av kostnadene er uvisst[^.]{0,100}\./gi)) {
+      if (match[0].length <= 2000) common.sources.push(source(page.pdfPage, match.index, match.index + match[0].length))
+    }
     const pattern = /Inkluderer:[ \t]*Felleskostnader:[ \t]*(\d[\d \u00a0]*,[-–‑])\s*\nInternett:[ \t]*(\d[\d \u00a0]*,[-–‑])\s*\nA-konto fyring:[ \t]*(\d[\d \u00a0]*,[-–‑])/gi
     for (const match of page.text.matchAll(pattern)) {
       const amounts = match.slice(1).map(value => parseNorwegianMoney(value!).amount)
@@ -37,6 +88,31 @@ export function enrichExplicitEconomy(basis: ImportBasis, fields: EconomyField[]
       if (/gjeldsandel|rentedel/i.test(match[0])) common.status = 'conflict'
     }
   }
+  const total = fields.find(field => field.id === 'totalPrice')!
+  for (const item of proseTotals) {
+    const qualified = optionalTotals.filter(optional => optional.amount === item.amount)
+    if (qualified.length) continue
+    record(total, item.amount, 'once', item.evidence)
+  }
+  for (const item of optionalTotals) {
+    const related = proseTotals.filter(prose => prose.amount === item.amount)
+    fields.push({ ...total, id: `optionalTotalPrice${fields.length}`, label: 'Totalpris inkludert valgfrie omkostninger', category: 'informational', amount: item.amount, period: 'once', status: 'available', nature: 'fact', originalText: item.evidence.quote,
+      sources: [item.evidence, ...related.map(prose => prose.evidence)], alternatives: [], includedIn: null, debtPart: null })
+  }
+  for (const item of taxCandidates) {
+    const annualParent = municipal.status === 'available' && municipal.period === 'year' && municipal.amount !== null
+    if (!item.supported) {
+      tax.sources.push(item.evidence)
+      tax.status = 'conflict'
+      tax.alternatives.push({ amount: item.amount, source: item.evidence })
+      continue
+    }
+    record(tax, item.amount, annualParent ? 'year' : 'unknown', item.evidence)
+    if (annualParent) {
+      tax.sources.push(...municipal.sources)
+      taxInMunicipal.push(item.evidence)
+    }
+  }
   if (commonCostContent(common.sources.map(item => item.quote)).conflict) common.status = 'conflict'
   if (zero.length && corroboration.length) {
     if (debt.amount !== null && debt.amount !== '0') debt.status = 'conflict'
@@ -46,6 +122,22 @@ export function enrichExplicitEconomy(basis: ImportBasis, fields: EconomyField[]
   if (adverse.length) {
     debt.sources.push(...adverse)
     debt.status = 'conflict'
+  }
+  // An explicit ledger zero is sufficient; independent no-loan prose adds
+  // corroboration but is never inferred from missing debt information.
+  debt.sources.push(...corroboration)
+  if (debt.status === 'available' && debt.amount === '0' && corroboration.length && commonLists.length
+    && commonLists.every(item => /inkluderer:\s*Felles byggforsikring, drift og vedlikehold, bank, strøm i\s*fellesareal, brann- og sprinklerkontroll\./i.test(item.quote))
+    && common.status === 'available' && municipal.status === 'available' && tax.status === 'available' && taxInMunicipal.length) {
+    const includesMunicipal = commonCostContent(common.sources.map(item => item.quote)).included.has('kommunale avgifter')
+    // Tax is an explanatory child, never added on top of its municipal parent.
+    municipal.includedIn = includesMunicipal ? 'commonCosts' : commonCostContent(common.sources.map(item => item.quote)).excluded.has('kommunale avgifter') ? '' : null
+    municipal.debtPart = '0'
+    municipal.sources.push(...taxInMunicipal, ...commonLists)
+    tax.includedIn = 'municipalFees'
+    tax.debtPart = '0'
+    common.includedIn = ''
+    common.debtPart = '0'
   }
   if (compositions.length) {
     common.sources.push(...compositions.flatMap(item => item.sources))

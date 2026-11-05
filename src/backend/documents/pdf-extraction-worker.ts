@@ -37,6 +37,7 @@ interface Parser {
   Name: new (...args: never[]) => { name: string }
   BaseStream: new (...args: never[]) => Stream
   Stream: new (bytes: Uint8Array) => Stream
+  Parser: new (options: object) => { getObj(): unknown }
   Lexer: new (stream: Stream, commands: object) => { getObj(): unknown }
   EvaluatorPreprocessor: { opMap: object }
   Cmd: new (...args: never[]) => { cmd: string }
@@ -61,7 +62,7 @@ console.warn = console.info = (...args: unknown[]) => { messages.push(args.map(S
 try {
   const source = await readFile(new URL(import.meta.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs')), 'utf8')
   if (createHash('sha256').update(source).digest('hex') !== WORKER_SHA256) throw new Error('Incompatible parser')
-  const moduleUrl = 'data:text/javascript;base64,' + Buffer.from(source + '\nexport { LocalPdfManager, Page, Dict, Ref, Name, BaseStream, Stream, DefaultPartialEvaluatorOptions, WorkerTask, setVerbosityLevel, Lexer, Cmd, EOF, EvaluatorPreprocessor, stringToPDFString };\n').toString('base64')
+  const moduleUrl = 'data:text/javascript;base64,' + Buffer.from(source + '\nexport { LocalPdfManager, Page, Dict, Ref, Name, BaseStream, Stream, DefaultPartialEvaluatorOptions, WorkerTask, setVerbosityLevel, Lexer, Parser, Cmd, EOF, EvaluatorPreprocessor, stringToPDFString };\n').toString('base64')
   const parser = await import(moduleUrl) as Parser
   parser.setVerbosityLevel(5)
   const handler = {
@@ -217,6 +218,117 @@ try {
         && signature === (n === 1 ? 'GRAY' : n === 3 ? 'RGB ' : 'CMYK')
     } finally { profile.pos = position }
   }
+  // Catalog OC configuration says nothing about an individual page. Certify only
+  // pages whose actual streams and reachable appearance resources are layer-free.
+  // Never use PDF.js's default-visible fallback for an unregistered group.
+  let detectedLayers = false
+  function layerFree(dict: Dict): boolean {
+    detectedLayers = false
+    const hasLayers = (value: Dict) => { if (!value.has('OC')) return false; detectedLayers = true; return true }
+    const active = new Set<unknown>()
+    let objects = 0, tokens = 0, bytes = 0
+    const operandsSafe = (raw: unknown, depth = 0, seen = new Set<unknown>()): boolean => {
+      if (depth > 16) return false
+      const item = resolve(raw)
+      if (item instanceof parser.Name) { if (item.name !== 'OC') return true; detectedLayers = true; return false }
+      if (item instanceof parser.BaseStream) return !hasLayers(item.dict)
+      if (!(item instanceof parser.Dict) && !Array.isArray(item)) return true
+      if (seen.has(item)) return false
+      seen.add(item)
+      if (Array.isArray(item)) return item.every(value => operandsSafe(value, depth + 1, seen))
+      return !hasLayers(item) && item.getKeys().every(key => operandsSafe(item.getRaw(key), depth + 1, seen))
+    }
+    const streamSafe = (stream: Stream, resources: Dict | null, depth: number): boolean => {
+      if (depth > 16 || ++objects > 10_000 || active.has(stream) || hasLayers(stream.dict)) return false
+      active.add(stream)
+      const position = stream.pos
+      try {
+        stream.reset()
+        const data = readBoundedStream(stream, 1024 * 1024)
+        bytes += data.length
+        if (bytes > 1024 * 1024) return false
+        const lexer = new parser.Lexer(new parser.Stream(data), parser.EvaluatorPreprocessor.opMap)
+        const contentParser = new parser.Parser({ lexer, xref })
+        let operands: unknown[] = []
+        while (++tokens <= 250_000) {
+          const token = contentParser.getObj()
+          if (token === parser.EOF) return true
+          // The pinned parser consumes inline image bytes as one stream.
+          if (!operandsSafe(token)) return false
+          if (token instanceof parser.Cmd) {
+            const previous = operands.at(-1)
+            // Only invoked painting resources affect this page. Unused fonts,
+            // patterns and graphic states may be shared by unrelated pages.
+            if (['Tf', 'gs', 'scn', 'SCN'].includes(token.cmd)) {
+              const name = token.cmd === 'Tf' ? operands.at(-2) : previous
+              if (name instanceof parser.Name) {
+                const category = token.cmd === 'Tf' ? 'Font' : token.cmd === 'gs' ? 'ExtGState' : 'Pattern'
+                const entries = resources ? resolve(resources.getRaw(category)) : null
+                if (!(entries instanceof parser.Dict) || !entries.has(name.name)) return false
+                const item = resolve(entries.getRaw(name.name))
+                if (category === 'Pattern') return false // Tiling/shading traversal is unverified.
+                if (!(item instanceof parser.Dict) || hasLayers(item)) return false
+                // gs can select a font without Tf; its glyph programs need a
+                // separately verified traversal before this path is trusted.
+                if (category === 'ExtGState' && item.has('Font')) return false
+                const subtype = resolve(item.getRaw('Subtype'))
+                if (subtype instanceof parser.Name && subtype.name === 'Type3') return false
+                if (item.has('SMask')) {
+                  const mask = resolve(item.getRaw('SMask'))
+                  if (!(mask instanceof parser.Name && mask.name === 'None')) {
+                    if (!(mask instanceof parser.Dict) || hasLayers(mask)) return false
+                    const group = resolve(mask.getRaw('G'))
+                    if (!(group instanceof parser.BaseStream)) return false
+                    const nested = group.dict.has('Resources') ? resolve(group.dict.getRaw('Resources')) : resources
+                    if (!(nested instanceof parser.Dict) || !streamSafe(group, nested, depth + 1)) return false
+                  }
+                }
+              } else if (token.cmd === 'Tf' || token.cmd === 'gs') return false
+            }
+            if (token.cmd === 'Do') {
+              if (!(previous instanceof parser.Name) || !resources) return false
+              const xobjects = resolve(resources.getRaw('XObject'))
+              if (!(xobjects instanceof parser.Dict) || !xobjects.has(previous.name)) return false
+              const object = resolve(xobjects.getRaw(previous.name))
+              if (!(object instanceof parser.BaseStream) || hasLayers(object.dict)) return false
+              const subtype = resolve(object.dict.getRaw('Subtype'))
+              if (!(subtype instanceof parser.Name)) return false
+              if (subtype.name === 'Form') {
+                const nested = object.dict.has('Resources') ? resolve(object.dict.getRaw('Resources')) : resources
+                if (!(nested instanceof parser.Dict) || !streamSafe(object, nested, depth + 1)) return false
+              } else if (subtype.name !== 'Image') return false
+            }
+            operands = []
+          } else { if (operands.length >= 64) return false; operands.push(token) }
+        }
+        return false
+      } finally { stream.pos = position; active.delete(stream) }
+    }
+    try {
+      // Resources are inherited as a whole, not merged with unused ancestor
+      // dictionaries. Only invoked XObjects paint this physical page.
+      let current: Dict | null = dict, resources: Dict | null = null
+      const parents = new Set<Dict>()
+      while (current) {
+        if (parents.has(current) || hasLayers(current)) return false
+        parents.add(current)
+        if (!resources && current.has('Resources')) {
+          const value = resolve(current.getRaw('Resources'))
+          if (!(value instanceof parser.Dict)) return false
+          resources = value
+        }
+        const parent = current.has('Parent') ? resolve(current.getRaw('Parent')) : null
+        if (parent !== null && !(parent instanceof parser.Dict)) return false
+        current = parent as Dict | null
+      }
+      const contents = dict.has('Contents') ? resolve(dict.getRaw('Contents')) : []
+      for (const raw of Array.isArray(contents) ? contents : [contents]) {
+        const stream = resolve(raw)
+        if (!(stream instanceof parser.BaseStream) || !streamSafe(stream, resources, 0)) return false
+      }
+      return true
+    } catch { return false }
+  }
   function otherContent(dict: Dict): { content: boolean | null; textLoss: boolean; uncertainAnnotation: boolean; reason: string | null } {
     let content = false
     let textLoss = false
@@ -254,7 +366,7 @@ try {
             if (value.length === 0) continue
             for (const item of value) {
               const annotation = resolve(item)
-              if (!(annotation instanceof parser.Dict)) return unknown()
+              if (!(annotation instanceof parser.Dict) || annotation.has('OC')) return unknown()
               const subtype = resolve(annotation.getRaw('Subtype'))
               // Any uninspected appearance can carry selectable PDF text, not
               // just FreeText. Widget types/values may also be inherited.
@@ -278,10 +390,10 @@ try {
       }
       const root = xref.getCatalogObj()
       if (!(root instanceof parser.Dict)) return unknown()
-      if (root.has('OCProperties')) return { ...unknown(), reason: 'PDF-en bruker valgfrie innholdslag. Teksten er beholdt, men lagenes synlighet og innhold er ikke verifisert.' }
+      if (!layerFree(dict)) return { ...unknown(), reason: detectedLayers ? 'PDF-en bruker valgfrie innholdslag. Teksten er beholdt, men lagenes synlighet og innhold er ikke verifisert.' : 'Sideinnholdet kunne ikke inspiseres fullstendig og pålitelig.' }
       const catalogMetadata = new Set(['Type', 'Pages', 'Version', 'PageLabels', 'Names', 'Dests',
         'PageLayout', 'PageMode', 'Outlines', 'ViewerPreferences', 'OpenAction', 'Metadata', 'MarkInfo',
-        'StructTreeRoot', 'Lang', 'OutputIntents', 'Perms', 'AcroForm', 'XFA', 'NeedsRendering'])
+        'StructTreeRoot', 'Lang', 'OutputIntents', 'Perms', 'AcroForm', 'XFA', 'NeedsRendering', 'OCProperties'])
       if (root.getKeys().some(key => !catalogMetadata.has(key))) return unknown()
       if (root.has('XFA')) return unknown() // Global XFA has no trustworthy physical-page mapping.
       if (root.has('NeedsRendering') && resolve(root.getRaw('NeedsRendering')) !== false) return unknown()

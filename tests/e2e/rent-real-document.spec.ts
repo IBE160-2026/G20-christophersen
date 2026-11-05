@@ -274,12 +274,49 @@ test('ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekrefte
   expect(errors).toEqual([]); expect(paid).toEqual([])
 })
 
+/** Independent two-zone oracle for the exact documented 40 m² / 2-room cell. */
+async function nostegatenLiveExpected(request: APIRequestContext, info: TestInfo) {
+  const metadataUrl = 'https://data.ssb.no/api/pxwebapi/v2/tables/09897/metadata?lang=no'
+  const response = await request.get(metadataUrl, { timeout: 15_000, headers: { 'Cache-Control': 'no-cache' } })
+  expect(response.ok()).toBe(true)
+  const metadata = await response.json() as LiveSsb
+  const currentYear = new Date().getUTCFullYear()
+  const year = Object.keys(metadata.dimension.Tid!.category.index).filter(value => /^\d{4}$/.test(value) && Number(value) <= currentYear).sort().at(-1)!
+  expect(metadata.dimension.AntRomBRA!.category.index['2.040']).toBeDefined()
+  const age = currentYear - Number(year)
+  expect(age).toBeGreaterThanOrEqual(0); expect(age).toBeLessThanOrEqual(3)
+  const values: number[] = [], evidence: unknown[] = []
+  for (const zone of ['03.01', '03.02']) {
+    const coordinates = { Soner2: zone, AntRomBRA: '2.040', ContentsCode: 'Husleie', Tid: year }
+    const url = new URL('https://data.ssb.no/api/pxwebapi/v2/tables/09897/data')
+    url.searchParams.set('lang', 'no')
+    for (const [dimension, code] of Object.entries(coordinates)) url.searchParams.set(`valueCodes[${dimension}]`, code)
+    const result = await request.get(url.href, { timeout: 15_000, headers: { 'Cache-Control': 'no-cache' } })
+    expect(result.ok()).toBe(true)
+    const cell = await result.json() as LiveSsb
+    expect(cell.updated).toBe(metadata.updated); expect(cell.size).toEqual([1, 1, 1, 1])
+    for (const [dimension, code] of Object.entries(coordinates)) expect(cell.dimension[dimension]!.category.index).toEqual({ [code]: 0 })
+    expect(cell.value).toHaveLength(1)
+    const value = cell.value[0]!
+    expect(Number.isInteger(value)).toBe(true); expect(value).toBeGreaterThan(0)
+    values.push(value as number); evidence.push({ url: url.href, cell })
+  }
+  const raw = (values[0]! + values[1]!) / 2, marginPercent = Math.min(75, 35 + age * 5)
+  const monthly = Math.round(raw / 100) * 100, annual = monthly * 12
+  const expected = { year, sourceUpdated: metadata.updated, values, monthly, annual, marginPercent,
+    low: Math.floor(Math.min(...values) * (100 - marginPercent) / 10000) * 100,
+    high: Math.ceil(Math.max(...values) * (100 + marginPercent) / 10000) * 100 }
+  await writeFile(info.outputPath('nostegaten-independent-ssb.json'), JSON.stringify({ metadata, evidence, expected }, null, 2))
+  return expected
+}
+
 const nostegaten = fileURLToPath(new URL('../../private/incoming/nostegaten-65-a.pdf', import.meta.url))
-test('ekte Nøstegaten: 152 sider bevares og uavklart dokumentgrunnlag vises gjennom hele brukerflyten', async ({ page }, info) => {
+test('ekte Nøstegaten: 152 sider, dokumentøkonomi og automatisk SSB-leie med foreløpig avkastning', async ({ page, request }, info) => {
   const required = process.env.PAA_TEST_NOSTEGATEN_REQUIRED === '1'
   test.skip(!existsSync(nostegaten) && !required, 'Privat original distribueres ikke i Git. PAA_TEST_NOSTEGATEN_REQUIRED=1 krever prøven uten skip.')
   expect(existsSync(nostegaten)).toBe(true)
   test.setTimeout(120_000)
+  const expected = await nostegatenLiveExpected(request, info)
   const paid: string[] = [], errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   for (const endpoint of ['document-economy/run', 'analysis']) await page.route(`**/api/${endpoint}`, route => { paid.push(endpoint); return route.abort() })
@@ -304,15 +341,51 @@ test('ekte Nøstegaten: 152 sider bevares og uavklart dokumentgrunnlag vises gje
   expect(outcome.coverage.technical.status).toBe('incomplete')
   expect(outcome.visualAnalysis?.pages.map(item => item.pdfPage)).toEqual(Array.from({ length: 16 }, (_, index) => index + 86))
   expect(outcome.visualAnalysis?.pages.every(item => item.error === null && item.rasterDigest !== null && item.lines.length > 0)).toBe(true)
-  // Dagens strukturelle lesbarhetskontroll kan ikke sertifisere disse tekstsidene.
-  // Manglende verifiserte beløp og leie må forbli eksplisitte, aldri bli nullverdier.
-  expect(outcome.economy.fields.every(field => field.amount === null)).toBe(true)
-  expect(outcome.pages.every(page => page.reason?.includes('valgfrie innholdslag'))).toBe(true)
-  await expect(page.locator('.document-economy')).toContainText('verifiserbart beløp')
-  await expect(page.locator('.document-economy')).toContainText('PDF-en bruker valgfrie innholdslag.')
-  expect(rent).toMatchObject({ status: 'unavailable', monthly: null, annual: null })
+  for (const pdfPage of [1, 124, 125, 126, 127, 128, 129, 130, 131, 133, 141, 152]) expect(outcome.pages[pdfPage - 1]!.status).not.toBe('readable')
+  for (const pdfPage of [8, 9, 10, 11]) expect(outcome.pages[pdfPage - 1]!.status).toBe('readable')
+  for (const [id, amount, period] of [['price', '4050000', 'once'], ['sharedDebt', '0', 'once'], ['commonCosts', '1020', 'month'], ['municipalFees', '12957', 'year'], ['propertyTax', '3942', 'year']] as const) {
+    const field = outcome.economy.fields.find(field => field.id === id)!
+    expect(field).toMatchObject({ amount, period, status: 'available' })
+    expect(field.sources.length).toBeGreaterThan(0)
+  }
+  for (const field of outcome.economy.fields) for (const source of field.sources) {
+    expect(outcome.pages[source.pdfPage - 1]!.status).toBe('readable')
+    expect(outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
+  }
+  expect(rent).toMatchObject({ status: 'estimated', monthly: String(expected.monthly), annual: String(expected.annual), low: String(expected.low), high: String(expected.high), statisticsYear: expected.year, sourceUpdated: expected.sourceUpdated,
+    property: { area: { value: 40, basis: 'BRA-i' }, rooms: { value: 2 }, bedrooms: { value: 1 }, propertyType: { value: 'apartment' }, issues: [] } })
+  expect(rent.property.municipality?.value.toLowerCase()).toBe('bergen')
+  expect(rent.property.district).toBeNull()
+  for (const field of [rent.property.address, rent.property.municipality, rent.property.area, rent.property.rooms, rent.property.bedrooms, rent.property.propertyType]) {
+    expect(field?.sources.length).toBeGreaterThan(0)
+    for (const source of field!.sources) {
+      expect(source.documentHash).toBe(outcome.reportHash)
+      expect(source.documentName).toBe(outcome.documentName)
+      expect(outcome.pages[source.pdfPage - 1]!.status).toBe('readable')
+      expect(outcome.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
+    }
+  }
+  expect(rent.observations.map(item => [item.zoneCode, item.sizeCode, item.monthly])).toEqual([['03.01', '2.040', String(expected.values[0])], ['03.02', '2.040', String(expected.values[1])]])
   const rental = page.getByRole('region', { name: 'Forventet leie.' })
-  await expect(rental).toContainText('Hvorfor markedsestimatet mangler')
+  await expect(rental.getByTestId('rent-monthly')).toHaveText(`${displayedAmount(expected.monthly)} kr`)
+  const percent = (value: number) => new Intl.NumberFormat('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)
+  await expect(page.getByTestId('scenario-gross')).toContainText(percent(expected.annual / 4050000 * 100))
+  await expect(page.getByTestId('scenario-preliminary-net')).toContainText(percent((expected.annual - 25197) / 4050000 * 100))
+  await expect(page.getByTestId('scenario-preliminary-formula')).toContainText(displayedAmount(expected.annual - 25197))
+  await expect(page.getByTestId('scenario-preliminary-formula')).toContainText('25 197')
+  await expect(page.getByTestId('scenario-cost-assumption')).toContainText('eventuell overlapping er ikke avklart')
+  expect(outcome.economy.fields.find(field => field.id === 'municipalFees')!.includedIn).toBeNull()
+  await expect(page.getByRole('region', { name: 'Foreløpig netto før finansiering' })).toContainText('Kostnadsår: ukjent')
+  const commonRow = page.locator('.document-economy-fields > div').filter({ has: page.locator('dt', { hasText: /^Felleskostnader$/ }) })
+  await commonRow.locator('summary').click()
+  await expect(commonRow).toContainText('Omfanget av kostnadene er uvisst')
+  await commonRow.getByRole('button', { name: 'Åpne originalside ↗', exact: true }).first().click()
+  await expect(page.locator('[data-pdf-page="8"]')).toBeVisible()
+  await page.keyboard.press('Escape')
+  const areaRow = rental.locator('.source-summary > div').filter({ has: page.locator('dt', { hasText: /^Areal$/ }) })
+  await areaRow.getByRole('button', { name: /PDF-side/ }).first().click()
+  await expect(page.locator(`[data-pdf-page="${rent.property.area!.sources[0]!.pdfPage}"]`)).toBeVisible()
+  await page.keyboard.press('Escape')
   await expect(page.getByTestId('scenario-net')).toContainText('—')
   await expect(page.getByTestId('scenario-cash')).toContainText('—')
   await page.getByRole('button', { name: 'Eiendommen', exact: true }).click()
@@ -327,6 +400,6 @@ test('ekte Nøstegaten: 152 sider bevares og uavklart dokumentgrunnlag vises gje
   await page.screenshot({ path: info.outputPath('nostegaten-mobile.png'), fullPage: true })
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.screenshot({ path: info.outputPath('nostegaten-desktop.png'), fullPage: true })
-  await writeFile(info.outputPath('nostegaten-import-rent.json'), JSON.stringify({ outcome, rent }, null, 2))
+  await writeFile(info.outputPath('nostegaten-import-rent.json'), JSON.stringify({ outcome, rent, expected }, null, 2))
   expect(paid).toEqual([]); expect(errors).toEqual([])
 })

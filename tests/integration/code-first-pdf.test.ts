@@ -94,12 +94,44 @@ it('samlet tekstgrense består over flere parserlevetider uten å returnere avko
 }, 15000)
 
 
-it('optional content layers retain text but state the unverified visibility explicitly', async () => {
-  const format = await validatePdf(newProspectusPdf(['Bevart tekst'], { optionalContent: true }), 'optional-content.pdf', { maxPages: 200 })
+it('global OC catalog does not taint a proven layer-free page or change its text', async () => {
+  const results = []
+  for (const optionalContent of [false, true]) {
+    const format = await validatePdf(newProspectusPdf(['Bevart tekst'], { optionalContent }), 'optional-content.pdf', { maxPages: 200 })
+    if (format.status !== 'format-validated') throw new Error('format')
+    results.push(await extractImport(format))
+  }
+  expect(results[1]!.pages[0]).toMatchObject({ pdfPage: 1, text: 'Bevart tekst', status: 'readable' })
+  expect(results[1]!.pages[0]!.text).toBe(results[0]!.pages[0]!.text)
+})
+
+const unsafeFinance = ['Bevart tekst', 'Prisantydning: 3 000 000 kr', 'Fellesgjeld: 0 kr', 'Felleskostnader: 1 000 kr per måned']
+it.each([false, true])('unsafe page finance stays unusable, catalog present=%s', async optionalContent => {
+  for (const layerUse of ['text', 'form', 'orphan-form', 'unresolved', 'cycle', 'image'] as const) {
+    const format = await validatePdf(newProspectusPdf(unsafeFinance, { optionalContent, layerUse }), 'layer.pdf', { maxPages: 200 })
+    if (format.status !== 'format-validated') throw new Error('format')
+    const result = await extractImport(format)
+    expect(result.pages[0]!.status).not.toBe('readable')
+    expect(result.pages[0]!.reason).toMatch(/valgfrie innholdslag|referanse|tekst|innhold/i)
+    const outcome = await createCodeFirstImport({ hash: format.reportHash, name: 'layer.pdf', role: 'prospectus', requestId: 'layers', parentHash: null, attachmentId: null, ...result })
+    expect(outcome.economy.fields.every(field => field.amount === null)).toBe(true)
+  }
+})
+it('the same recognizable finance is usable on the layer-free control page', async () => {
+  const format = await validatePdf(newProspectusPdf(unsafeFinance), 'control.pdf', { maxPages: 200 })
   if (format.status !== 'format-validated') throw new Error('format')
   const result = await extractImport(format)
-  expect(result.pages).toHaveLength(1)
-  expect(result.pages[0]).toMatchObject({ pdfPage: 1, text: expect.stringContaining('Bevart tekst'), status: 'unknown',
-    reason: expect.stringContaining('valgfrie innholdslag') })
-  expect(result.pages[0]!.reason).toContain('synlighet og innhold er ikke verifisert')
+  const outcome = await createCodeFirstImport({ hash: format.reportHash, name: 'control.pdf', role: 'prospectus', requestId: 'control', parentHash: null, attachmentId: null, ...result })
+  expect(outcome.economy.fields.find(field => field.id === 'price')).toMatchObject({ amount: '3000000', status: 'available' })
+  expect(outcome.economy.fields.find(field => field.id === 'sharedDebt')).toMatchObject({ amount: '0', status: 'available' })
+  expect(outcome.economy.fields.find(field => field.id === 'commonCosts')).toMatchObject({ amount: '1000', status: 'available' })
+})
+it.each(['pattern', 'type3', 'soft-mask', 'gstate-font'] as const)('only invoked unsupported %s painting paths prevent certification', async paintingPath => {
+  for (const invokePaintingPath of [false, true]) {
+    const format = await validatePdf(newProspectusPdf(unsafeFinance, { paintingPath, invokePaintingPath }), 'painting-path.pdf', { maxPages: 200 })
+    if (format.status !== 'format-validated') throw new Error('format')
+    const result = await extractImport(format)
+    if (invokePaintingPath) expect(result.pages[0]!.status).not.toBe('readable')
+    else expect(result.pages[0]).toMatchObject({ text: expect.stringContaining('Prisantydning'), status: 'readable' })
+  }
 })

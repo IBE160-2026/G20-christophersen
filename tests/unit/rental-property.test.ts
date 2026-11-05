@@ -345,3 +345,17 @@ it.each(['-1', '2,5', '3.5', '21', '200'])('ugyldig soveromsverdi %s skjules ikk
   for (const source of property.bedrooms!.sources) expect(input.pages[source.pdfPage - 1]!.text.slice(source.start, source.end)).toBe(source.quote)
   expect(extractRentalProperty(document('Antall soverom: 0')).bedrooms?.value).toBe(0)
 })
+
+it('samler husbokstav med og uten mellomrom, men bevarer reell adressekonflikt', () => {
+  const same = extractRentalProperty(document(apartment.replace('Fasitveien 4, 0001 Testby', 'Fasitveien 4 A') + '\nAdresse: Fasitveien 4A, 0001 Testby'))
+  expect(same.address?.value).toBe('Fasitveien 4A, 0001 Testby')
+  expect(same.address?.sources).toHaveLength(2)
+  const conflict = extractRentalProperty(document(apartment.replace('Fasitveien 4, 0001 Testby', 'Fasitveien 4 A') + '\nAdresse: Fasitveien 4B'))
+  expect(conflict.address).toBeNull()
+})
+
+it('leser konkret EIENDOM-adresse, uten å utlede kommune fra poststedet', () => {
+  const property = extractRentalProperty(document(apartment.replace('Adresse: Fasitveien 4, 0001 Testby', 'EIENDOM\nFasitveien 4 A, 0001 Testby').replace('Kommune: Oslo\n', '')))
+  expect(property.address?.value).toBe('Fasitveien 4 A, 0001 Testby')
+  expect(property.municipality).toBeNull()
+})

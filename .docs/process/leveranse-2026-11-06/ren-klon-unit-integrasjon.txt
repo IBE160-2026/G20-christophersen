@@ -1,0 +1,414 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.4 [39m[90m/private/tmp/paa-leveranse-6392918-20261106[39m
+
+ [32m✓[39m tests/unit/complete-screening.test.ts [2m([22m[2m72 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m tests/unit/result-snapshot.test.ts [2m([22m[2m62 tests[22m[2m)[22m[32m 110[2mms[22m[39m
+ [32m✓[39m tests/unit/code-first-import.test.ts [2m([22m[2m52 tests[22m[2m)[22m[32m 277[2mms[22m[39m
+ [32m✓[39m tests/unit/rental-property.test.ts [2m([22m[2m111 tests[22m[2m)[22m[33m 687[2mms[22m[39m
+ [32m✓[39m tests/unit/finance.test.ts [2m([22m[2m67 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32m✓[39m tests/unit/document-analysis.test.ts [2m([22m[2m107 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/unit/finding-control.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m tests/unit/thresholds.test.ts [2m([22m[2m83 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+ [32m✓[39m tests/unit/technical-risk.test.ts [2m([22m[2m45 tests[22m[2m)[22m[32m 108[2mms[22m[39m
+ [32m✓[39m tests/unit/report-session.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 192[2mms[22m[39m
+ [32m✓[39m tests/unit/visual-technical.test.ts [2m([22m[2m57 tests[22m[2m)[22m[32m 90[2mms[22m[39m
+ [32m✓[39m tests/unit/property-risk.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 3729[2mms[22m[39m
+   [32m✓[39m Risikooversiktens aktuelle og etterprøvbare grunnlag [2m(13)[22m
+     [33m[2m✓[22m[39m skjuler tidligere funn ved nytt salgsoppgavevalg og ved uferdig separat rapport[33m 554[2mms[22m[39m
+     [33m[2m✓[22m[39m viser juridiske treffsikkerhetsgrupper og eksplisitt ikke undersøkt med kilder[33m 508[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer rapportkilden og viser ikke avviste funn eller rettinger som dokumenterte fakta[33m 519[2mms[22m[39m
+     [33m[2m✓[22m[39m sier ufullstendig selv om deluttrekk har tekniske funn[33m 521[2mms[22m[39m
+     [33m[2m✓[22m[39m viser identitetskonflikt også for integrert rapport[33m 499[2mms[22m[39m
+     [33m[2m✓[22m[39m samler juridiske funn fra separat rapport med riktig originaldokument[33m 503[2mms[22m[39m
+     [33m[2m✓[22m[39m viser alvorlig TG3 og utleiegodkjenning før andre godkjenningsspørsmål og TG2[33m 540[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-presentation.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+ [32m✓[39m tests/unit/risk-grouping.test.ts [2m([22m[2m45 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m tests/unit/ssb-rent.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-basis.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/unit/representative-oracle.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m tests/integration/pdf-format.test.ts [2m([22m[2m42 tests[22m[2m)[22m[33m 6339[2mms[22m[39m
+   [32m✓[39m Story 2.2 AC1 – faktiske bytes og sidegrense (RT-1 formatdel / RT-2) [2m(22)[22m
+     [33m[2m✓[22m[39m traverserer også nestede Kids selv når både root og gren underrapporterer Count[33m 316[2mms[22m[39m
+     [33m[2m✓[22m[39m sidetretraverseringen avviser skadet referanse også når den ligger etter deklarert siste side[33m 318[2mms[22m[39m
+   [32m✓[39m Story 2.2 AC2 – SHA-256 gjelder originalbytes, navn er metadata [2m(3)[22m
+     [33m[2m✓[22m[39m gir identiske bytes samme hash under ulike og stilignende navn[33m 317[2mms[22m[39m
+     [33m[2m✓[22m[39m gir endrede, fortsatt gyldige PDF-bytes ny hash ved samme navn[33m 317[2mms[22m[39m
+   [32m✓[39m Story 2.2 AC3 – format er delutfall, ingen lesbarhet eller analysefullføring [2m(11)[22m
+     [33m[2m✓[22m[39m rydder ekte PDF.js-workers ved suksess, sideavvisning og parserfeil[33m 354[2mms[22m[39m
+     [33m[2m✓[22m[39m avslutter den faktiske sidetre-workeren ved suksess, sidegrense og skadet tre[33m 465[2mms[22m[39m
+ [32m✓[39m tests/unit/explicit-document-economy.test.tsx [2m([22m[2m40 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-result-renewal.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 68[2mms[22m[39m
+ [32m✓[39m tests/unit/screening.test.ts [2m([22m[2m36 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/unit/economy-compact.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m tests/unit/listing-session.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/unit/live-preflight.test.ts [2m([22m[2m26 tests[22m[2m)[22m[33m 679[2mms[22m[39m
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mforbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+[22m[39m{"event":"economy-run-started","at":"2026-11-06T10:35:27.608Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mforbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+[22m[39m{"event":"economy-provider-attempted","at":"2026-11-06T10:35:27.623Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mforbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+[22m[39m{"event":"economy-provider-responded","at":"2026-11-06T10:35:27.623Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805","status":200}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mforbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+[22m[39m{"event":"economy-run-completed","at":"2026-11-06T10:35:27.657Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mforbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+[22m[39m{"event":"economy-run-started","at":"2026-11-06T10:35:28.374Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mforbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+[22m[39m{"event":"economy-run-failed","at":"2026-11-06T10:35:28.376Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805","error":"local-economy-budget-margin"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst
+[22m[39m{"event":"economy-run-started","at":"2026-11-06T10:35:29.116Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst
+[22m[39m{"event":"economy-provider-attempted","at":"2026-11-06T10:35:29.126Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst
+[22m[39m{"event":"economy-run-failed","at":"2026-11-06T10:35:29.137Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805","error":"economy-provider-connection"}
+
+ [32m✓[39m tests/unit/economy-trial.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 2030[2mms[22m[39m
+   [33m[2m✓[22m[39m ekte offline PDF-preflight krever separat fasit- og betalt godkjenning, pris/telling/historikk[33m 1953[2mms[22m[39m
+ [32m✓[39m tests/unit/finding-list-control.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m tests/unit/import-session.test.ts [2m([22m[2m37 tests[22m[2m)[22m[33m 13218[2mms[22m[39m
+   [32m✓[39m SO-AC1/11/12: importøkt og manuelt eierskap [2m(8)[22m
+     [33m[2m✓[22m[39m ny salgsoppgavehash nullstiller hele objektet, finansiering, retting, rapportkontroll og resultat[33m 508[2mms[22m[39m
+     [33m[2m✓[22m[39m separat rapport bevarer økonomi; ukjent tilhørighet krever begge originaler, TG3 overføres aldri[33m 484[2mms[22m[39m
+     [33m[2m✓[22m[39m feil/uleselig/manglende område kan ikke overstyres med avkrysning eller tom liste[33m 1493[2mms[22m[39m
+     [33m[2m✓[22m[39m kjent identitetsmotstrid lar seg ikke bekrefte bort[33m 3618[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC5: brukerrettet TG-kilde kan ikke flyttes utenfor rapportområdet eller til ulest side[33m 1014[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC12: FINN-objektbytte nullstiller importen og avviser sen respons/reapply fra gammel salgsoppgave[33m 491[2mms[22m[39m
+   [33m[2m✓[22m[39m review: integrert intern identitetskonflikt bevarer økonomi og sperrer kontroll[33m 530[2mms[22m[39m
+   [33m[2m✓[22m[39m review: separat rapport kan fjernes lokalt, med økonomi bevart og sen retur avvist[33m 471[2mms[22m[39m
+   [33m[2m✓[22m[39m review: aktiv respons med fremmed correlation-session installeres ikke[33m 468[2mms[22m[39m
+   [33m[2m✓[22m[39m review: aktiv respons med fremmed correlation-request installeres ikke[33m 543[2mms[22m[39m
+   [33m[2m✓[22m[39m review: aktiv respons med fremmed correlation-generation installeres ikke[33m 479[2mms[22m[39m
+   [33m[2m✓[22m[39m review: aktiv respons med fremmed hash installeres ikke[33m 470[2mms[22m[39m
+   [33m[2m✓[22m[39m review: aktiv respons med fremmed name installeres ikke[33m 471[2mms[22m[39m
+   [33m[2m✓[22m[39m review: aktiv respons med fremmed role installeres ikke[33m 472[2mms[22m[39m
+   [33m[2m✓[22m[39m review: aktiv respons med fremmed requestId installeres ikke[33m 475[2mms[22m[39m
+   [33m[2m✓[22m[39m review: aktiv respons med fremmed parentHash installeres ikke[33m 502[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-validation.test.ts [2m([22m[2m51 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m tests/unit/live-adapter.test.ts [2m([22m[2m42 tests[22m[2m)[22m[33m 2215[2mms[22m[39m
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mstenging venter på pågående transport og journalavslutning
+[22m[39m{"event":"economy-run-started","at":"2026-11-06T10:35:36.002Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mstenging venter på pågående transport og journalavslutning
+[22m[39m{"event":"economy-provider-attempted","at":"2026-11-06T10:35:36.016Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805"}
+
+[90mstdout[2m | tests/integration/uploaded-economy-http.test.ts[2m > [22m[2mstenging venter på pågående transport og journalavslutning
+[22m[39m{"event":"economy-run-failed","at":"2026-11-06T10:35:36.036Z","documentHash":"cec98ec53ab005f20a83220e8e632f6cbcb052fd063658b588510201b99d7bd6","requestDigest":"3613727b36a9fd90d0c763e6982665a80be18f2d934b5bd90b4df08fd9458805","error":"economy-provider-connection"}
+
+ [32m✓[39m tests/integration/uploaded-economy-http.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 10299[2mms[22m[39m
+   [33m[2m✓[22m[39m forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall[33m 1634[2mms[22m[39m
+   [33m[2m✓[22m[39m ukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst[33m 764[2mms[22m[39m
+   [33m[2m✓[22m[39m fire gjentatte gratis forberedelser av samme dokument/økt erstatter pakken uten å fylle minnet[33m 3511[2mms[22m[39m
+   [33m[2m✓[22m[39m tidsavbrudd lukker en stanset multipart-opplasting og frigir låsen for neste forberedelse[33m 2440[2mms[22m[39m
+   [33m[2m✓[22m[39m stenging venter på pågående transport og journalavslutning[33m 945[2mms[22m[39m
+   [33m[2m✓[22m[39m HTTP-feil fra leverandøren får trygg kategori og audit uten nøkkel, utdrag eller rå feiltekst[33m 991[2mms[22m[39m
+ [32m✓[39m tests/unit/tg3-resolution.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m tests/unit/import-worker-lifecycle.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m tests/unit/report-result-renewal.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m tests/integration/live-analysis.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 3810[2mms[22m[39m
+   [32m✓[39m Story 4.2 — faktisk PDF → live SDK (offline) → samme kontroll/finans/screening [2m(4)[22m
+     [33m[2m✓[22m[39m F1: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 939[2mms[22m[39m
+     [33m[2m✓[22m[39m F2: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 523[2mms[22m[39m
+     [33m[2m✓[22m[39m F3: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 544[2mms[22m[39m
+     [33m[2m✓[22m[39m F4: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 568[2mms[22m[39m
+   [33m[2m✓[22m[39m serializes complete property-cases/text-30-pages.pdf in one attempt[33m 663[2mms[22m[39m
+   [33m[2m✓[22m[39m serializes complete pdf-readability/readable-blank.pdf in one attempt[33m 572[2mms[22m[39m
+ [32m✓[39m tests/unit/economy-references.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m tests/unit/token-count.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 253[2mms[22m[39m
+ [32m✓[39m tests/integration/representative-intake.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 13217[2mms[22m[39m
+   [33m[2m✓[22m[39m private intake preserves bytes and physical pages while every human expectation remains pending[33m 1773[2mms[22m[39m
+   [33m[2m✓[22m[39m simulated complete review freezes immutable hashes and prepares private offline requests without keys or calls[33m 2988[2mms[22m[39m
+   [33m[2m✓[22m[39m changed frozen review bytes cannot be consumed and altered source snapshots cannot be frozen[33m 3449[2mms[22m[39m
+   [33m[2m✓[22m[39m rejects path escapes, forced tracked private paths and symlink files before private output can escape[33m 1014[2mms[22m[39m
+   [33m[2m✓[22m[39m compares controlled SDK output against actually frozen and loaded simulated expectations before corrections[33m 3959[2mms[22m[39m
+ [32m✓[39m tests/integration/pdf-extraction.test.ts [2m([22m[2m44 tests[22m[2m)[22m[33m 16491[2mms[22m[39m
+   [32m✓[39m Story 2.3 AC1/AC2 – ekte parser og fysisk kilde [2m(11)[22m
+     [33m[2m✓[22m[39m F1-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter[33m 620[2mms[22m[39m
+     [33m[2m✓[22m[39m F2-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter[33m 392[2mms[22m[39m
+     [33m[2m✓[22m[39m F3-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter[33m 534[2mms[22m[39m
+     [33m[2m✓[22m[39m F4-tilstandsrapport.pdf bevarer hele F1–F4-fasiten før adapter[33m 540[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer tabellrader, kolonneblokker, norske tegn og blandet tekst/bilde fra separat fasit[33m 426[2mms[22m[39m
+     [33m[2m✓[22m[39m beholder alle 30 sider i text-30-pages.pdf[33m 578[2mms[22m[39m
+     [33m[2m✓[22m[39m beholder alle 30 sider i text-30-pages-object-stream.pdf[33m 511[2mms[22m[39m
+     [33m[2m✓[22m[39m beholder alle 30 sider i text-30-pages-linearized.pdf[33m 559[2mms[22m[39m
+     [33m[2m✓[22m[39m bruker faktisk bladrekkefølge når både rot og nestet gren har feil Count[33m 455[2mms[22m[39m
+     [33m[2m✓[22m[39m ukjent fysisk mapping blir aldri godkjent som readable og alle 2.2-posisjoner beholdes[33m 382[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer snapshot, originalhash og navn når parseren får kopi av en Buffer-slice[33m 448[2mms[22m[39m
+   [32m✓[39m Story 2.3 AC3/AC4 – konservativ blankregel og fullføringssperre [2m(15)[22m
+     [33m[2m✓[22m[39m blank-variants.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 425[2mms[22m[39m
+     [33m[2m✓[22m[39m textless-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 431[2mms[22m[39m
+     [33m[2m✓[22m[39m mixed-status.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 408[2mms[22m[39m
+     [33m[2m✓[22m[39m uncertain-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 462[2mms[22m[39m
+     [33m[2m✓[22m[39m structural-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 401[2mms[22m[39m
+     [33m[2m✓[22m[39m catalog-form.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 384[2mms[22m[39m
+     [33m[2m✓[22m[39m catalog-xfa.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 339[2mms[22m[39m
+     [33m[2m✓[22m[39m catalog-empty-form.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 359[2mms[22m[39m
+     [33m[2m✓[22m[39m catalog-empty-dict.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 364[2mms[22m[39m
+     [33m[2m✓[22m[39m encrypted-content.pdf følger forhåndsskrevet sidestatusfasit og bevarer feilgrunnlaget[33m 384[2mms[22m[39m
+     [33m[2m✓[22m[39m blank alene blokkerer ikke sammen med lesbar rapporttekst[33m 359[2mms[22m[39m
+     [33m[2m✓[22m[39m beholder alle uleste fysiske sider og kjente årsaker etter en blank side[33m 400[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer kjent delvis tekst når en senere innholdsstrøm er skadet[33m 358[2mms[22m[39m
+     [33m[2m✓[22m[39m den eksisterende vektorfixturen blir aldri blank[33m 369[2mms[22m[39m
+   [32m✓[39m Story 2.3 – workeropprydding og trygge driftsfeil [2m(9)[22m
+     [33m[2m✓[22m[39m avslutter den faktiske uttrekksworkeren etter layout.pdf[33m 397[2mms[22m[39m
+     [33m[2m✓[22m[39m avslutter den faktiske uttrekksworkeren etter mixed-status.pdf[33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m avslutter den faktiske uttrekksworkeren etter blank-variants.pdf[33m 404[2mms[22m[39m
+     [33m[2m✓[22m[39m ryddet tråd og trygg melding når siste terminate avvises[33m 437[2mms[22m[39m
+   [32m✓[39m Story 2.3 review – faktisk PDF-regresjon [2m(9)[22m
+     [33m[2m✓[22m[39m annotated-xfa.pdf beholder tekst, status og fullføringssperre[33m 385[2mms[22m[39m
+     [33m[2m✓[22m[39m annotated-uncertain.pdf beholder tekst, status og fullføringssperre[33m 378[2mms[22m[39m
+     [33m[2m✓[22m[39m annotation-text-loss.pdf beholder tekst, status og fullføringssperre[33m 364[2mms[22m[39m
+     [33m[2m✓[22m[39m parser-diagnostics.pdf beholder tekst, status og fullføringssperre[33m 371[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer tilstøtende TG3-fragmenter gjennom fontbytte[33m 344[2mms[22m[39m
+     [33m[2m✓[22m[39m laster sammensatt fonts innebygde CMaps fra lokal PDF.js-pakke[33m 386[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer radvis kolonnerekkefølge og avgrenser readable til digital tekst over skann[33m 375[2mms[22m[39m
+     [33m[2m✓[22m[39m bevarer trygt kjent årsakskategori for uavklart dekoding og referanse[33m 351[2mms[22m[39m
+ [32m✓[39m tests/integration/live-preflight.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 3844[2mms[22m[39m
+   [33m[2m✓[22m[39m offline preparation reproduces exact SDK packet with zero external calls and actual blockers[33m 623[2mms[22m[39m
+   [33m[2m✓[22m[39m known durable empty history removes only that blocker; preparation reads no API key and uses no global fetch[33m 519[2mms[22m[39m
+   [33m[2m✓[22m[39m schema/source validated untouched controlled output matches independent conditions, relations and physical sources[33m 517[2mms[22m[39m
+   [33m[2m✓[22m[39m ownership and debt-part relation require their independently frozen exact source coverage[33m 618[2mms[22m[39m
+   [33m[2m✓[22m[39m uncertain usage, technical limitations and incomplete analysis each independently fail comparison[33m 525[2mms[22m[39m
+   [33m[2m✓[22m[39m oracle rejects omitted/extra/wrong grades and source-backed but wrong semantic findings[33m 546[2mms[22m[39m
+   [33m[2m✓[22m[39m oracle rejects wrong original, malformed source, economic values, periods, years, inclusion, debt-part and invented zero[33m 495[2mms[22m[39m
+ [32m✓[39m tests/unit/technical-summary.test.ts [2m([22m[2m36 tests[22m[2m)[22m[32m 110[2mms[22m[39m
+ [32m✓[39m tests/integration/document-import.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 14907[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC1/5/14: faktisk HTTP/barn gir kildebundet økonomi før finansinput, uten nøkkel og med stengt live[33m 1641[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC2: separat rapport 31 går via ny profil og egen fysisk original[33m 1114[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC2: separat rapport 200 går via ny profil og egen fysisk original[33m 3568[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC2: separat rapport 201 går via ny profil og egen fysisk original[33m 560[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC2: inclusive 50 MiB og samlet rapportbudsjett/bytte uten AI over grensen[33m 897[2mms[22m[39m
+   [32m✓[39m SO-AC13: foreldrefrist, RSS og terminalcleanup [2m(3)[22m
+     [33m[2m✓[22m[39m import-hang-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup[33m 1111[2mms[22m[39m
+     [33m[2m✓[22m[39m import-late-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup[33m 1143[2mms[22m[39m
+   [33m[2m✓[22m[39m ukjent originalhash får generell lokal plan med stengt semantisk port[33m 965[2mms[22m[39m
+   [33m[2m✓[22m[39m review: faktisk PDF-worker/HTTP stopper per-page-tekstgrensen før adapter og frigir låsen[33m 1611[2mms[22m[39m
+   [33m[2m✓[22m[39m review: faktisk PDF-worker/HTTP stopper aggregate-tekstgrensen før adapter og frigir låsen[33m 1898[2mms[22m[39m
+ [32m✓[39m tests/unit/limitation-review.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32m✓[39m tests/unit/demo-analysis.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-confirmation.test.ts [2m([22m[2m52 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m tests/unit/listing.test.ts [2m([22m[2m56 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m tests/unit/legal-risk.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/unit/listing-backend.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 1630[2mms[22m[39m
+   [32m✓[39m FINN-2 process lifetime attempt and concurrency ownership [2m(4)[22m
+     [33m[2m✓[22m[39m abort leaves abort-ignoring transport busy until actual settlement[33m 1003[2mms[22m[39m
+ [32m✓[39m tests/unit/document-import.test.ts [2m([22m[2m30 tests[22m[2m)[22m[33m 17633[2mms[22m[39m
+   [32m✓[39m SO-AC2: separat støtteprofil; fysiske sider og legacy 30 består [2m(8)[22m
+     [33m[2m✓[22m[39m 30 fysiske sider[33m 735[2mms[22m[39m
+     [33m[2m✓[22m[39m 31 fysiske sider[33m 432[2mms[22m[39m
+     [33m[2m✓[22m[39m 200 fysiske sider[33m 342[2mms[22m[39m
+     [33m[2m✓[22m[39m 201 fysiske sider[33m 304[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC3/4: ulest foto utenfor rapport tillater bare eksplisitt rapportdekning; raster/bunntekst inni sperrer[33m 1162[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC4: manglende og vedlagt rapport har økonomi, men aldri komplett teknisk grunnlag[33m 1113[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC4: flere rapporter er eksplisitt uklart og kan ikke bli completed[33m 572[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC5/6: fysisk10/trykt6, separat3/trykt1; samme tak har to belegg, to ulike bad består[33m 512[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC7/8/10: konflikt, ukjent gjeld/eierform/avgift/estimat og ukjent metadata forblir ukjent[33m 567[2mms[22m[39m
+   [33m[2m✓[22m[39m selektivt kombinert 200-sidersgrunnlag beholder hele kort rapport og alle sidestatuser[33m 3681[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC12: kjent eiendomsmotstrid blokkeres selv med ellers komplett rapport[33m 4123[2mms[22m[39m
+   [33m[2m✓[22m[39m SO-AC3: rasterlogo på økonomisiden skjuler ikke eksakt lesbart tekstlag eller kjent pris[33m 594[2mms[22m[39m
+   [33m[2m✓[22m[39m review: inline BI/ID/EI raster beholder økonomitekst, men sperrer teknisk rapport[33m 540[2mms[22m[39m
+   [33m[2m✓[22m[39m review: intern identitetsmotstrid har ekte belegg i integrert original[33m 495[2mms[22m[39m
+   [33m[2m✓[22m[39m review: economy kan ikke utelate, duplisere eller finne på oppdagede vedlegg[33m 463[2mms[22m[39m
+   [33m[2m✓[22m[39m review: technical kan ikke utelate, duplisere eller finne på oppdagede vedlegg[33m 500[2mms[22m[39m
+ [32m✓[39m tests/unit/saved-economy.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 85[2mms[22m[39m
+ [32m✓[39m tests/unit/economy-local-budget.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 271[2mms[22m[39m
+ [32m✓[39m tests/unit/pdf-extraction.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/unit/report-detection.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32m✓[39m tests/integration/demo-screening.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1769[2mms[22m[39m
+   [32m✓[39m Story 5.1 AC1/2/4 — faktisk PDF → demoadapter → kontroll → finans/screening [2m(4)[22m
+     [33m[2m✓[22m[39m F1: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 589[2mms[22m[39m
+     [33m[2m✓[22m[39m F2: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 385[2mms[22m[39m
+     [33m[2m✓[22m[39m F3: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 401[2mms[22m[39m
+     [33m[2m✓[22m[39m F4: samlet uavhengig fasit, korrekt kilde, kontrollport og ett adapterkall[33m 392[2mms[22m[39m
+ [32m✓[39m tests/unit/technical-interpretation.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+ [32m✓[39m tests/unit/risk-overview.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/unit/economy-money.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/integration/demo-analysis.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 6766[2mms[22m[39m
+   [32m✓[39m Story 2.4 AC1/AC3 – ekte PDF-pipeline og lokale lagrede svar [2m(8)[22m
+     [33m[2m✓[22m[39m standard demo virker i ny prosess uten miljønøkler og med nettfunksjoner sperret[33m 734[2mms[22m[39m
+     [33m[2m✓[22m[39m F1-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit[33m 596[2mms[22m[39m
+     [33m[2m✓[22m[39m F2-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit[33m 383[2mms[22m[39m
+     [33m[2m✓[22m[39m F3-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit[33m 386[2mms[22m[39m
+     [33m[2m✓[22m[39m F4-tilstandsrapport.pdf følger kontrakt og uavhengig side-/funnfasit[33m 380[2mms[22m[39m
+     [33m[2m✓[22m[39m samme PDF gir identisk resultat ved gjentakelse og etter mutert retur[33m 390[2mms[22m[39m
+     [33m[2m✓[22m[39m samme adapter holder samtidige F1/F4-kall og returmutasjoner adskilt[33m 754[2mms[22m[39m
+     [33m[2m✓[22m[39m identiske bytes med nytt navn finner samme hash uten å skrive om originalkilden[33m 395[2mms[22m[39m
+   [32m✓[39m Story 2.4 AC2 – riktig rapport, ingen cache fra annen PDF [2m(6)[22m
+     [33m[2m✓[22m[39m F2 under F1-navn får F2-hash og aldri F1-uttrekket[33m 401[2mms[22m[39m
+     [33m[2m✓[22m[39m F1-tilstandsrapport-endret.pdf gir manglende demosvar selv under F1-navn[33m 506[2mms[22m[39m
+     [33m[2m✓[22m[39m text-30-pages.pdf gir manglende demosvar selv under F1-navn[33m 526[2mms[22m[39m
+     [33m[2m✓[22m[39m mixed-status.pdf stanser før demooppslag og bevarer dokumentfeil[33m 519[2mms[22m[39m
+     [33m[2m✓[22m[39m uncertain-content.pdf stanser før demooppslag og bevarer dokumentfeil[33m 415[2mms[22m[39m
+     [33m[2m✓[22m[39m blank-variants.pdf stanser før demooppslag og bevarer dokumentfeil[33m 377[2mms[22m[39m
+ [32m✓[39m tests/unit/published-rent-references.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 4779[2mms[22m[39m
+   [33m[2m✓[22m[39m Nøstegaten-felt velger Bergen toroms uten å gjette bydel eller skalere gjennomsnittsareal[33m 656[2mms[22m[39m
+   [33m[2m✓[22m[39m Rostockgata-felt velger Gamle Oslo treroms, og holder blandet nykontraktsnivå og SSB separat[33m 663[2mms[22m[39m
+   [33m[2m✓[22m[39m beholder romreferanse uten individuell arealpris når SSB mangler arealdekning[33m 587[2mms[22m[39m
+   [33m[2m✓[22m[39m velger ikke leilighetsreferanse ved manglende, motstridende eller feil boligtype[33m 1618[2mms[22m[39m
+   [33m[2m✓[22m[39m oppdaterer aldri statiske verdier via nett, muterte resultater, datalder eller kildevekst[33m 641[2mms[22m[39m
+   [33m[2m✓[22m[39m avviser ugyldige kildeadresser og blandet boligtype som romreferanse uten parserunntak[33m 610[2mms[22m[39m
+ [32m✓[39m tests/unit/visual-import.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 80[2mms[22m[39m
+ [32m✓[39m tests/unit/financial-scenario.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 3131[2mms[22m[39m
+   [32m✓[39m Isolert finansscenario med ordinære finansregler [2m(17)[22m
+     [33m[2m✓[22m[39m treffer uavhengig fasit, bruker eget kontantbehov og bevarer eksakt yield[33m 354[2mms[22m[39m
+     [33m[2m✓[22m[39m samler kapital og gjeld uten å finansiere fellesgjeld eller omkostninger to ganger[33m 647[2mms[22m[39m
+     [33m[2m✓[22m[39m høy belåning og negativ månedlig kontantstrøm bevares med fortegn[33m 408[2mms[22m[39m
+     [33m[2m✓[22m[39m endret finansiering {"equity":"2000000"} endrer ikke yield[33m 316[2mms[22m[39m
+     [33m[2m✓[22m[39m ukjent leie er ikke null, men lånegrafen er fortsatt tilgjengelig[33m 360[2mms[22m[39m
+ [32m✓[39m tests/unit/rent-scenario.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1179[2mms[22m[39m
+   [33m[2m✓[22m[39m 59→60-estimat fyller bare urørt L, bevarer ukjent fellesgjeld og viker for manuell og dokumentert leie[33m 578[2mms[22m[39m
+ [32m✓[39m tests/unit/property-image.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [2m[90m↓[39m[22m tests/integration/local-visual-native.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m7 skipped[39m[2m)[22m
+ [32m✓[39m tests/unit/live-pipeline-phases.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m tests/unit/backend-config.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m tests/unit/property-risk-import.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 722[2mms[22m[39m
+   [32m✓[39m integrert lokal eiendomsrisiko [2m(12)[22m
+     [33m[2m✓[22m[39m bevarer syntetisk demofasit og legger til lokal risiko[33m 641[2mms[22m[39m
+ [32m✓[39m tests/integration/listing-http.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 152[2mms[22m[39m
+ [32m✓[39m tests/unit/scenario-basis.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 685[2mms[22m[39m
+ [32m✓[39m tests/integration/code-first-pdf.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 19840[2mms[22m[39m
+   [33m[2m✓[22m[39m real PDF.js original offsets reach official stubbed SDK and existing economy boundary[33m 566[2mms[22m[39m
+   [33m[2m✓[22m[39m real parser and SDK result require human source/financial/list control before unchanged screening can go forward[33m 533[2mms[22m[39m
+   [33m[2m✓[22m[39m real 200-page near-1MiB profile retains >1000 residual entries, every candidate and partial local economy[33m 3742[2mms[22m[39m
+   [33m[2m✓[22m[39m samlet tekstgrense består over flere parserlevetider uten å returnere avkortede sider[33m 2620[2mms[22m[39m
+   [33m[2m✓[22m[39m global OC catalog does not taint a proven layer-free page or change its text[33m 946[2mms[22m[39m
+   [33m[2m✓[22m[39m unsafe page finance stays unusable, catalog present=false[33m 3218[2mms[22m[39m
+   [33m[2m✓[22m[39m unsafe page finance stays unusable, catalog present=true[33m 3409[2mms[22m[39m
+   [33m[2m✓[22m[39m the same recognizable finance is usable on the layer-free control page[33m 565[2mms[22m[39m
+   [33m[2m✓[22m[39m only invoked unsupported pattern painting paths prevent certification[33m 1036[2mms[22m[39m
+   [33m[2m✓[22m[39m only invoked unsupported type3 painting paths prevent certification[33m 1056[2mms[22m[39m
+   [33m[2m✓[22m[39m only invoked unsupported soft-mask painting paths prevent certification[33m 1056[2mms[22m[39m
+   [33m[2m✓[22m[39m only invoked unsupported gstate-font painting paths prevent certification[33m 1093[2mms[22m[39m
+ [32m✓[39m tests/unit/code-first-budget.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 114[2mms[22m[39m
+[90mstderr[2m | tests/unit/import-review-ui.test.tsx
+[22m[39mWarning: Please use the `legacy` build in Node.js environments.
+
+ [32m✓[39m tests/integration/live-http.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 9561[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3 AC1/3: real HTTP/process/SDK offline empty.pdf, durable duplicate and safe mode metadata[33m 1771[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3 AC1/3: real HTTP/process/SDK offline transport.pdf, durable duplicate and safe mode metadata[33m 1592[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3 AC1/3: real HTTP/process/SDK offline invalid.pdf, durable duplicate and safe mode metadata[33m 1565[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3 AC1/3: real HTTP/process/SDK offline incomplete.pdf, durable duplicate and safe mode metadata[33m 1499[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3 AC3: production missing key is safe live failure after document gate, never fallback[33m 729[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3 AC5: abort terminates actual live child before lock release and marker survives[33m 1535[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3 AC2: production HTTP/SDK preserves nonempty findings and source uncertainty[33m 868[2mms[22m[39m
+ [32m✓[39m tests/unit/provisional-cost-scenario.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+ [32m✓[39m tests/unit/local-prospectus-layout.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+ [32m✓[39m tests/unit/import-review-ui.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 5102[2mms[22m[39m
+   [33m[2m✓[22m[39m review: integrert eiendoms-/områdebelegg er synlig under kontroll og motstrid har samme sperrestatus[33m 530[2mms[22m[39m
+   [33m[2m✓[22m[39m review: separat kontroll viser begge originalers belegg og lokal gjenoppretting[33m 3903[2mms[22m[39m
+ [32m✓[39m tests/unit/session.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/unit/preliminary-net-ui.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+ [32m✓[39m tests/unit/rent-panel.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1517[2mms[22m[39m
+   [33m[2m✓[22m[39m holder statistisk gruppereferanse synlig og SSB-tilnærming, prissone og metode i detaljer[33m 498[2mms[22m[39m
+   [33m[2m✓[22m[39m viser dokumenterte husopplysninger og synlig modellgrense uten numerisk markedsleie[33m 479[2mms[22m[39m
+ [32m✓[39m tests/unit/http-pipeline-races.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/unit/technical-reconciliation.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/unit/merge-uploaded-economy.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m tests/unit/combined-import-budget.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 3313[2mms[22m[39m
+   [32m✓[39m SO-AC13/14: kombinert request og stengt lokal token-preflight [2m(10)[22m
+     [33m[2m✓[22m[39m faktisk kombinert 200-sidersrequest velger bare relevant økonomi og hele rapporten, med modell-/schemabundet digest[33m 3308[2mms[22m[39m
+ [32m✓[39m tests/integration/http-analysis-review.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 911[2mms[22m[39m
+   [32m✓[39m Story 2.5 – uavhengige HTTP-/ressursprøver i review [2m(2)[22m
+     [33m[2m✓[22m[39m to reelle prosesser som når samme markør får bare én adaptertillatelse og begge termineres[33m 829[2mms[22m[39m
+ [32m✓[39m tests/unit/http-receive-pdf.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 899[2mms[22m[39m
+   [32m✓[39m HTTP strømparser – eksakte metadata- og chunkgrenser [2m(5)[22m
+     [33m[2m✓[22m[39m fragmentert stor metadata skannes én gang og små filchunks samles i faste blokker[33m 816[2mms[22m[39m
+ [32m✓[39m tests/unit/document-economy-ui.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m tests/unit/financing.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/integration/server-mode.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 3098[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3: actual server entry with ANALYSIS_MODE=(unset)[33m 1550[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3: actual server entry with ANALYSIS_MODE=live[33m 1254[2mms[22m[39m
+ [32m✓[39m tests/unit/purchase-ledger.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m tests/integration/live-pipeline-wiring.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 807[2mms[22m[39m
+   [33m[2m✓[22m[39m 4.3 R1: actual production child grants a full transport deadline after initialization[33m 806[2mms[22m[39m
+ [32m✓[39m tests/integration/preparation-count-intake.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 591[2mms[22m[39m
+   [33m[2m✓[22m[39m preparation binds both real SDK serializations without treating the count stub as an actual count[33m 549[2mms[22m[39m
+ [32m✓[39m tests/integration/economy-pdf-status.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 13409[2mms[22m[39m
+   [33m[2m✓[22m[39m gyldig kjent metadata skjuler ikke vanlig tekst: /PieceInfo << /Producer << /LastModified <feff0044003a00320030003200360031003000330030003100320030003000300030005a> >> >>[33m 557[2mms[22m[39m
+   [33m[2m✓[22m[39m gyldig kjent metadata skjuler ikke vanlig tekst: /PieceInfo << /Producer << /LastModified (D:20261030120000Z) /Private << /Version (1) >> >> >>[33m 474[2mms[22m[39m
+   [33m[2m✓[22m[39m gyldig kjent metadata skjuler ikke vanlig tekst: /PieceInfo << /InDesign << /LastModified (D:20261030120000Z) /DocumentID (synthetic) /OriginalDocumentID (synthetic-original) /NumberofPages 1 /PageTransformationMatrixList << /0 [1 0 0 1 0 0] >> /PageUIDList << /0 42 >> /PageWidthList << /0 600 >> >> >>[33m 488[2mms[22m[39m
+   [33m[2m✓[22m[39m gyldig kjent metadata skjuler ikke vanlig tekst: /Group << /Type /Group /S /Transparency /CS /DeviceRGB /I false /K false >>[33m 515[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo << /Producer << /LastModified <feff0044003a00320030003200360031003000330030003100320030003000300030005a00> >> >>[33m 512[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo << /Producer << /LastModified <feff0044003ad800> >> >>[33m 485[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo << /Producer << /LastModified (not-a-date) >> >>[33m 508[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo << /Producer << /LastModified (D:20261030120000Z) /Extra true >> >>[33m 468[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo << /Producer << /LastModified (D:20261030120000Z) /Private << /AP true >> >> >>[33m 560[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo << /InDesign << /LastModified (D:20261030120000Z) /DocumentID 42 >> >>[33m 538[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo << /InDesign << /LastModified (D:20261030120000Z) /PageTransformationMatrixList << /0 [1 0 0 1 0] >> >> >>[33m 489[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo << /InDesign << /LastModified (D:20261030120000Z) /PageUIDList << /0 999 0 R >> >> >>[33m 492[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /PieceInfo 999 0 R[33m 466[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /Group << /S /Wrong >>[33m 466[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /Group << /S /Transparency /Extra true >>[33m 480[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /Group << /S /Transparency /CS [/ICCBased 6 0 R] >>[33m 483[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /AP << >>[33m 466[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /XFA (unknown)[33m 480[2mms[22m[39m
+   [33m[2m✓[22m[39m feil metadata/ukjent struktur forblir sperret med tekst: /UnknownKey true[33m 482[2mms[22m[39m
+   [33m[2m✓[22m[39m gyldig faktisk ICC stream/N støttes, feil profil forblir ukjent[33m 1069[2mms[22m[39m
+   [33m[2m✓[22m[39m side-AP uten tekst beholder unreadable, med tekst forblir unknown[33m 1000[2mms[22m[39m
+   [33m[2m✓[22m[39m ukjent metadata blir aldri blankbevis og rasteradvarsel bevares[33m 961[2mms[22m[39m
+   [33m[2m✓[22m[39m flate over 1 MiB bevarer fysisk side med konkret grenseårsak, korrupt strøm er fortsatt skadet[33m 969[2mms[22m[39m
+ [32m✓[39m tests/unit/rent-slider.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/screening-result-navigation.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [2m[90m↓[39m[22m tests/integration/saved-economy-real.test.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+ [32m✓[39m tests/unit/analysis-budget-status.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 226[2mms[22m[39m
+ [32m✓[39m tests/unit/local-visual-ocr.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/unit/scenario-chart.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/http-pipeline-initialization.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/local-visual-lifecycle.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/unit/pdf-source.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/unit/scenario-worker.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32m✓[39m tests/integration/rent-http.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1196[2mms[22m[39m
+   [33m[2m✓[22m[39m faktisk HTTP-rute utleder dokumentgrunnlag, bruker kun lokale statistikkfiler og validerer respons[33m 1195[2mms[22m[39m
+ [32m✓[39m tests/unit/analysis-http.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/unit/scenario-defaults.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m tests/unit/scenario-financing.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/integration/import-input.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1534[2mms[22m[39m
+   [32m✓[39m import child byte-stream boundary [2m(6)[22m
+     [33m[2m✓[22m[39m rejects invalid length or incomplete/excess input: 2[33m 310[2mms[22m[39m
+ [32m✓[39m tests/unit/economy-api-response.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/unit/import-runtime.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/unit/economy-schema.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/unit/investment-property.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1230[2mms[22m[39m
+   [32m✓[39m Eiendomsidentitet i konsept A [2m(3)[22m
+     [33m[2m✓[22m[39m bruker bare én unik adresse, gjeldende hash og tilgjengelig dokumentpris[33m 701[2mms[22m[39m
+     [33m[2m✓[22m[39m nytt filvalg viser ingen gammel identitet eller bilde mens kontrollen pågår[33m 527[2mms[22m[39m
+ [32m✓[39m tests/unit/playwright-environment.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 215[2mms[22m[39m
+ [32m✓[39m tests/integration/import-worker-heap.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 574[2mms[22m[39m
+   [33m[2m✓[22m[39m the actual extraction worker keeps the parent 256 MiB old-space cap and bounded young space[33m 573[2mms[22m[39m
+ [32m✓[39m tests/integration/http-analysis.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 82018[2mms[22m[39m
+   [32m✓[39m Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp [2m(22)[22m
+     [33m[2m✓[22m[39m F1 følger faktisk PDF og uavhengig fasit med ett adapterkall[33m 1495[2mms[22m[39m
+     [33m[2m✓[22m[39m F2 følger faktisk PDF og uavhengig fasit med ett adapterkall[33m 1382[2mms[22m[39m
+     [33m[2m✓[22m[39m F3 følger faktisk PDF og uavhengig fasit med ett adapterkall[33m 1382[2mms[22m[39m
+     [33m[2m✓[22m[39m F4 følger faktisk PDF og uavhengig fasit med ett adapterkall[33m 1438[2mms[22m[39m
+     [33m[2m✓[22m[39m navn og MIME er bare metadata, feil signatur/container er dokumentfeil[33m 1194[2mms[22m[39m
+     [33m[2m✓[22m[39m PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked[33m 1564[2mms[22m[39m
+     [33m[2m✓[22m[39m vilkårlige chunks og falsk boundary bevarer originalbytehash[33m 741[2mms[22m[39m
+     [33m[2m✓[22m[39m aktiv lås gjelder under upload med andre requestId/generasjon og slipper etter abort[33m 789[2mms[22m[39m
+     [33m[2m✓[22m[39m http-adapter-failure.ts gir trygg feil uten retry og beholder markør[33m 1390[2mms[22m[39m
+     [33m[2m✓[22m[39m http-adapter-invalid.ts gir trygg feil uten retry og beholder markør[33m 1388[2mms[22m[39m
+     [33m[2m✓[22m[39m aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon[33m 847[2mms[22m[39m
+     [33m[2m✓[22m[39m without-text-layer.pdf blir dokumentfeil uten adaptertillatelse eller varig markør[33m 1286[2mms[22m[39m
+     [33m[2m✓[22m[39m text-31-pages.pdf blir dokumentfeil uten adaptertillatelse eller varig markør[33m 1205[2mms[22m[39m
+     [33m[2m✓[22m[39m cleanup-feil i parser eier fortsatt workertråder som termineres med prosessen[33m 320[2mms[22m[39m
+     [33m[2m✓[22m[39m klientabort under parser stopper synkront heng og lar samme session starte igjen[33m 518[2mms[22m[39m
+     [33m[2m✓[22m[39m én reell 60 s-frist stopper parserheng, adapterheng og sen retur etter flere steg[33m 60639[2mms[22m[39m
+     [33m[2m✓[22m[39m eide inputbytes tømmes ved suksess, adapterfeil, duplikatavvisning og abort[33m 2468[2mms[22m[39m
+     [33m[2m✓[22m[39m serverstopp venter på faktisk cleanup av en request med hengende adapter[33m 623[2mms[22m[39m
+     [33m[2m✓[22m[39m klientabort under adapter terminerer prosessen og beholder duplikatsperre[33m 1238[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m110 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (112)[39m
+[2m      Tests [22m [1m[32m2237 passed[39m[22m[2m | [22m[33m8 skipped[39m[90m (2245)[39m
+[2m   Start at [22m 11:35:18
+[2m   Duration [22m 82.62s[2m (tests 96%, import 3%, transform 1%)[22m
+

@@ -1,8 +1,8 @@
 # Backend og I/O
 
-Gjeldende leveransestatus 2026-10-27: 4.1–4.4 er done, med faktiske originale
+Historisk leveransestatus 2026-10-27: 4.1–4.4 er done, med faktiske originale
 live-/S2-bevis. 4.5 har aksepterte avvik S5-W1 og formell in-progress; videre
-S5-måling er ikke autorisert. S6 er ikke gjennomført. Se [kjøreoppskrift](../../README.md#valgfri-live-kjøring)
+S5-måling er ikke autorisert. S6 er ikke gjennomført. Se [gjeldende nøkkelfri kjøreoppskrift](../../README.md#installer-og-start)
 og [leveringskontroll](../../.docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md).
 Kapitlene nedenfor dokumenterer de enkelte storyenes leveranser; utsagn om
 senere arbeid beskriver tidspunktet i den aktuelle storyen.
@@ -10,6 +10,8 @@ senere arbeid beskriver tidspunktet i den aktuelle storyen.
 Denne grensen eier HTTP, dokumentbehandling og analyseadaptere etter
 AD-1/AD-9. HTTP bruker dokument-/analysekomponenter og felles contracts.
 Backend leverer dokument-/analyseutfall; finans og anbefaling eies av domain.
+
+Gjeldende status 2026-11-06: [lokal import, KI-grenser, lagring og arkitektur](../../.docs/process/leveranse-2026-11-06/produkt-og-sporbarhet.md). Generell semantisk import er deaktivert; eldre eksplisitte live-/økonomihjelpere er bevart. Ingen slik betalt kjøring inngår i sensoroppskriften.
 
 ## Lokal klientkonfigurasjon — Story 4.1
 

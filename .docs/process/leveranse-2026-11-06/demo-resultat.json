@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-06",
+  "passed": true,
+  "runtime": "v24.21.0",
+  "checks": [
+    "Nøkkelfri oppstart og faktisk syntetisk PDF-import",
+    "README-fasit: brutto 7,88 %, netto 6,38 %, kontantstrøm ca. 3258 kr/mnd",
+    "Originalside og Esc/fokusretur",
+    "390 px: ingen horisontal sidescroll; økonomi visuelt dokumentert",
+    "Bak tallene åpner Tallgrunnlag fra dagens oversikt",
+    "Feil fil og ny import nullstiller gammelt grunnlag"
+  ],
+  "externalBrowserRequests": [],
+  "browserErrors": [],
+  "limitation": "Programmatisk browsernett-sperre, ikke OS-brannmur. Privat mappe og API-nøkkel inngår ikke i klonen. Ingen annen-person-S6.",
+  "output": "/tmp/paa-readme-proof-awQTDB"
+}

@@ -10,9 +10,10 @@ updated: 2026-10-10
 > **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
 > FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
 > Se [Correct Course, endringsforslag og implementeringsspec](../../sprint-change-proposal-2026-10-28.md).
-> Retningen er besluttet; PDF-/OCR-/AI-valgene D1–D3 avventer avklaring før
-> produktimplementering. Teksten nedenfor bevarer tidligere versjonsgrunnlag;
-> finans-/screeningregler og historiske S5/S6-bevis endres ikke.
+> Dette banneret beskrev beslutningsstatus 28. oktober. D1–D3 ble senere
+> behandlet gjennom lokale PDF-/OCR-leveranser og en stengt generell semantisk KI-port.
+> **Gjeldende status 6. november 2026:** se [leveranseavstemming, arkitektur og krav–kode–test](../../../process/leveranse-2026-11-06/produkt-og-sporbarhet.md).
+> Teksten nedenfor bevarer det opprinnelige versjonsgrunnlaget; historiske S5/S6-bevis endres ikke.
 
 ## Formål og arbeidsstatus
 

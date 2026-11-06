@@ -1,0 +1,10 @@
+{
+  "baseline": "639291814886a6058a24adf95c69e8633b645944",
+  "runtimeSourceFiles": 173,
+  "method": "Sorted tracked src paths excluding Markdown; SHA256(path + NUL + SHA256(filebytes)) concatenated in tree order.",
+  "baselineDigest": "39bbfd74245a1312b4bb312010caf0a48fc7eb5cc5f0f0e0b685eac125e671d2",
+  "workingDigest": "39bbfd74245a1312b4bb312010caf0a48fc7eb5cc5f0f0e0b685eac125e671d2",
+  "runtimeSourceUnchanged": true,
+  "unchangedPackageFiles": true,
+  "testChange": "Only tests/e2e/new-document-import.spec.ts localOnly reason asserts; no product or financial oracle change."
+}

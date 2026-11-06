@@ -1,0 +1,13 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/integration/local-visual-native.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  11:15:14
+   Duration  10.39s (tests 99%, import 1%)
+

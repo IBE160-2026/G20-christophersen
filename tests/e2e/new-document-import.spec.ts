@@ -51,7 +51,11 @@ async function upload(page: Page, bytes: Buffer, name = 'salgsoppgave.pdf'): Pro
 function localOnly(outcome: DocumentImport, bytes: Buffer) {
   expect(outcome.reportHash).toBe(sha(bytes))
   expect(outcome.economy.analysis?.provenance).toBe('local-only')
-  expect(outcome.economy.analysis?.reason).toContain('Ingen lagret analyse for dette dokumentet')
+  // Manglende arkiv og arkiv for en annen PDF har ulike, gyldige årsaker.
+  // Den felles kontrakten skal gjelde også uten utviklerens private cache.
+  for (const status of ['kun lokalt uttrekk vises', 'Videre KI-analyse har ikke startet', 'Ingen nye KI-API-kall er utført']) {
+    expect(outcome.economy.analysis?.reason).toContain(status)
+  }
   expect(outcome.economy.analysis?.requestDigest).toBeNull()
   expect(outcome.economy.analysis?.observations).toEqual([])
   expect(outcome.economy.analysis?.selectedPages).toEqual([])

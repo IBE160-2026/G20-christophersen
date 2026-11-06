@@ -7,6 +7,27 @@ eksplisitt lukking regnes som åpne. Lukking krever dato, relevant commit og
 dokumentert løsning med godkjent relevant test/review; story-status alene
 er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 
+## Gjeldende lesestart 2026-11-06
+
+Leveransekontrollen endrer ingen tidligere lukking. Tabellen er en datert indeks
+til den bevarte historikken nedenfor; dette er fortsatt eneste sentrale oversikt.
+«Funksjonelt ferdig» betyr ferdig innen avgrenset bachelorprototype, ikke at alle
+historiske forsknings-/kvalitetsmål er oppfylt.
+
+| Punkt | Eksplisitt nåstatus | Kilde / gjenstående grense |
+| --- | --- | --- |
+| FINN-1 | **Åpen, utsatt** | Tilgang/live er ikke verifisert/åpnet. PDF er valgt hovedinngang; FINN-felt er fjernet. Se opprinnelig FINN-1 nedenfor og [endringsvedtak](../planning-artifacts/sprint-change-proposal-2026-10-28.md). |
+| PAA-SO2 | **Åpen** | Generell dokument-/TG-/juridisk dekning og representativ kvalitetsfasit er ikke bevist. Lokale forbedringer og private originalprøver lukker ikke dette; [gjeldende bevisavstemming](../process/leveranse-2026-11-06/produkt-og-sporbarhet.md). |
+| PAA-AI-20261031-1 | **Åpen** | Opprinnelig KI-forsøk har ukjent belastning; lokal test gir ikke kontofasit. Se [AI-statusbevis](spec-ai-analyse-status.md) og originalregistreringen nedenfor. |
+| PAA-LEIE1 | **Åpen** | Lokale statistiske referanser er levert; individuell markedsleie, empirisk usikkerhet og bred kalibrering er ikke levert. [Metode](leieagent-lokale-referanser.md). |
+| Formatfortsettelser / samlet prosessminne | **Åpne avgrensninger under PAA-SO2** | Se 5. november-registreringene nedenfor: ukjent «Oppsummering av avvik»-format og ingen samlet maksimal RSS-kvote for Node + OCR. |
+| Story 4.5 / S5-W1 | **Akseptert avvik; ikke rettet** | Mads avsluttet målearbeidet. Formell AC-akseptanse og validert tidsbesparelse mangler; [waiver](story-4-5-s5-waiver-2026-10-27.md). Ingen nye målinger startet. |
+| R4-S6 / Story 5.4 | **Åpen** | Annen person har ikke gjennomført hele README/demo/test i rent miljø. AI-klonetesten er et separat teknisk bevis, ikke lukking. Se datert registrering nederst. |
+
+PAA-SO1 og PAA-SO3 har eksplisitte avgrensede lukkinger i historikken. Eldre
+B8/B1/B2/B3/C2/D1/PG1–PG5 beholdes med sine opprinnelige bevis og datoer.
+Ingen øvrige forhold tolkes som lukket bare fordi en senere spec sier `done`.
+
 ## Status kontrollert 2026-10-27
 
 | Punkt | Status | Grunnlag |
@@ -889,3 +910,19 @@ sperret. Ingen historisk oppføring lukkes av et lokalt scenario eller disse
 caseforbedringene. [Spec og reviewtriage](spec-paa-investeringsverktoy.md),
 [faktiske feil, rettinger og verifikasjon](../process/arbeidsokter/2026-11-05-investeringsverktoy.md)
 og [uavhengig sluttkontroll](../process/arbeidsokter/2026-11-05-investeringsverktoy-uavhengig-qa.md).
+
+## R4-S6 / Story 5.4 — annen-person-prøve, samlet registrering 2026-11-06
+
+**Status: Åpen.** Forholdet var allerede eksplisitt uutført i
+[forberedelsen](story-5-4-forberedelse-2026-10-27.md) og
+[sprintstatus](sprint-status.yaml). Leveransekontrollen fant at det manglet en
+samlet, tydelig oppføring her. Historisk S6-eksport er et annet punkt.
+
+- source_spec: `spec-leveransekontroll-2026-11-06.md`
+  summary: Annen person må faktisk følge README, gjennomføre den offentlige demoen og kjøre testene uten gruppens private filer/nøkler for at opprinnelig S6 skal være dokumentert.
+  evidence: Den nye [rene klonen](../process/leveranse-2026-11-06/ren-klon.md) kjøres av KI-agent på utviklerens macOS. Den beviser teknisk isolasjon og installasjon, ikke menneskelig førstegangsforståelse. Ingen slik attestasjon er skrevet eller konstruert.
+
+Relevant instruks er [offentlig demonstrasjon](../process/leveranse-2026-11-06/demonstrasjon.md).
+En eventuell lukking krever faktisk datert utføring, avvik/hjelp, resultater,
+revisjon og godkjent review etter reglene øverst. Ingen ny produktfunksjon er
+nødvendig. Denne økten lukker ingen av de åpne postene over.

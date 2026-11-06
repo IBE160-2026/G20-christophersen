@@ -1,43 +1,20 @@
 # Property Acquisition Agent — IBE160, G20
 
-> **Investeringsverktøy 6. november 2026:** Oversikten viser totalt kapitalbehov, egenkapital, samlet gjeld/belåningsgrad, justerbar finansiering, brutto-/nettoyield og månedlig kontantstrøm. Leie og samlet drift justeres direkte. [Spesifikasjon og avgrensning](.docs/implementation-artifacts/spec-paa-investeringsverktoy.md).
+PAA hjelper en privat eiendomsinvestor med førstevurdering av **ett boligutleieobjekt**. Last opp en salgsoppgave som PDF, kontroller dokumentets økonomi og risikofunn mot originalsidene, og prøv leie, drift og finansiering. Beregningene og screeningreglene utføres i vanlig kode. Investoren tar beslutningen.
 
-> **Analyseoversikt 5. november 2026:** PDF er eneste synlige inngang. Bolig, samlet økonomi, juridiske forhold, teknisk tilstand og dokumentasjon følger i leserekkefølge. Konsept A er bevart. Se [endringer, AI-status og sluttprøve](.docs/process/arbeidsokter/2026-11-05-analyseoversikt.md).
+**Leveransestatus 6. november 2026:** Lokal PDF-analyse og investeringsoversikt er ferdig innenfor det dokumenterte omfanget. Generell semantisk KI-analyse av importerte dokumenter er deaktivert. Demoen nedenfor trenger **ingen API-nøkkel, miljøfil, privat PDF, konto eller betalt tjeneste**. Tekstregler, lokale leiereferanser og valgfri lokal OCR er ikke en språkmodellanalyse. Historiske live-prøver og eldre demo med lagrede, fiktive uttrekk er egne bevis.
 
-> **Stabilisering 5. november 2026:** Konsept A støtter ny analyse, gjentatt lokal PDF-import og leieslider med tilbakestilling til publisert romreferanse. [Sluttkontroll med ekte PDF-er og uavhengig QA](.docs/process/arbeidsokter/2026-11-05-paa-stabilisering.md) dokumenterer faktisk testomfang og begrensninger. Full teknisk dekning, full drift og individuell markedsleie krever fortsatt mer grunnlag.
+[Desktopbilde](.docs/process/leveranse-2026-11-06/oversikt-desktop.png) og [mobiløkonomi](.docs/process/leveranse-2026-11-06/okonomi-mobil.png) viser bare fiktive demonstrasjonsdata.
 
-> **Godkjent konsept A, 30. oktober 2026:** Appen åpner nå med en lys eiendoms- og investeringsoversikt: faktisk dokumentbilde, kildebundet identitet/pris, store nøkkeltall og interaktiv finansiering. PDF er hovedinngangen. **Bak tallene** åpner den bevarte kontrollflyten. Scenarier er atskilt fra kontrollert screening. [Implementering og verifikasjon](.docs/implementation-artifacts/konsept-a-verifikasjon.md).
+Start med [leveranserapport og vurderingsgrunnlag](.docs/process/leveranse-2026-11-06/rapport.md), [prosess og KI-styring](.docs/process/leveranse-2026-11-06/prosess-og-ki.md) og [gjeldende scope, arkitektur og krav–kode–test](.docs/process/leveranse-2026-11-06/produkt-og-sporbarhet.md).
 
+## Installer og start
 
-> **Code-first salgsoppgave, 29. oktober 2026:** Generell lokal PDF-analyse supplerer
-> den tidligere syntetiske demoen. Eksplisitte felt og funn trekkes ut lokalt;
-> uløst rapporttekst sperrer bekreftelse mens live-porten er stengt.
-> [Design og kostnadsramme](.docs/planning-artifacts/salgsoppgave-code-first-design-2026-10-29.md).
->
-> **Salgsoppgave først, 28. oktober 2026:** Den godkjente offline-flyten er implementert.
-> Last opp en syntetisk salgsoppgave før tallbekreftelse, kontroller dokumentøkonomi
-> og finansiering, og kontroller integrert eller separat rapport før screening.
-> [Krav, nye bevis og begrensninger](.docs/implementation-artifacts/salgsoppgave-implementation-2026-10-28/verifikasjon.md).
-> Selve opplastingen er lokal. Videre økonomianalyse krever separat godkjenning
-> av kostnad og overføring av de viste utdragene.
-> FINN beholdes som utsatt alternativ. Historisk S5/S6 gjelder sine opprinnelige versjoner.
-
-Lokal førstevurdering av **ett boligutleieobjekt**, laget for investorens tidlige sortering. Brukeren registrerer og kontrollerer økonomiske forutsetninger, leser tilstandsrapportens original, kontrollerer TG2/TG3-funn og får en kodebestemt anbefaling: **Gå videre**, **Forkast** eller **Innhent mer informasjon**. Beregningene er bruttoyield, NOI, nettoyield og kontantstrøm før skatt. Investoren tar beslutningen; dette er ingen teknisk godkjenning eller komplett investeringsanalyse.
-
-Levert nå: lokal demo med rapportbundne, lagrede uttrekk for fire fiktive rapporter, menneskelig kontroll/korrigering, separat TG3-avklaring og revisjonsbundet resultat. Uttrekkene er kontrollerte fiktive demodata, skrevet for demoen; de stammer ikke fra en faktisk KI-/live-kjøring. Demo er standard og krever **ingen API-nøkkel, miljøfil, konto eller betalt tjeneste**. Live-integrasjonen bruker samme kontroll- og resultatflyt.
-
-**Bevisstatus 27. oktober 2026:** Story 4.4 har [godkjente originale live-/S2-bevis](.docs/implementation-artifacts/story-4-4-b2-uavhengig-sluttreview-2026-10-27.md). Story 4.5/S5 er avsluttet med [aksepterte avvik S5-W1](.docs/implementation-artifacts/story-4-5-s5-waiver-2026-10-27.md), med ufullstendig formell AC-akseptanse og uten validert tidsbesparelse. Ingen nye S5-målinger er planlagt. Annen-person-S6/5.4 er **ikke gjennomført**; 5.5 er delvis klargjort. [Leveringskontrollen](.docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md) skiller faktiske bevis fra åpne porter. Demo beviser ingen live-kvalitet eller live-tid. Automatisk søk, markedsdata, rangering og lagring mellom økter er utenfor denne smale v1.
-
-**Utvidelse 4. november 2026:** Brukeren har bestilt automatisk leieestimering for enkeltleiligheter. [Leieagenten nedenfor](#automatisk-leieestimat-i-konsept-a) henter åpne SSB-data og kobler dem til ubekreftet økonomiscenario. Historiske v1-bevis og kontrollporter over beholdes.
-
-**Historisk FINN-utvidelse:** FINN-lenkefeltet er fjernet fra både hovedflaten og tallkontrollen under bachelorprototypen. Last opp salgsoppgaven som PDF. Backendens importmotor og deaktiverte tilgangs-/kostnadsporter er bevart. Historiske implementerings- og API-bevis finnes i [FINN-2-verifikasjonen](.docs/implementation-artifacts/finn-responses-2026-10-28/sluttverifikasjon.md); de beskriver den tidligere brukerflaten. Ingen FINN-tilgang eller betalt transport åpnes av denne layoutendringen.
-
-
-## Installer og start demo
-
-Bruk et lokalt utsjekket repo og en terminal i **reporoten** (mappen som inneholder `package.json`). Forutsetninger er **Node.js 24.21.0 og npm 11.19.0**, låst i `package.json`, `package-lock.json` og `.nvmrc`. Installer denne Node-versjonen med tilhørende npm; bruker du allerede nvm, kan du kjøre `nvm install` og `nvm use`. nvm er ikke påkrevd. Ingen global Vite, Python, database, Docker eller egen frontendserver trengs for demo/test.
+Forutsetninger: **Node.js 24.21.0 og npm 11.19.0**, låst i `.nvmrc`, `package.json` og `package-lock.json`. Bruk eksempelvis `nvm install` og `nvm use` hvis nvm allerede er installert. nvm er valgfritt. Python, database, Docker og global Vite trengs ikke.
 
 ```sh
+git clone https://github.com/IBE160-2026/G20-christophersen.git
+cd G20-christophersen
 node --version
 npm --version
 npm ci
@@ -45,359 +22,35 @@ npm run build
 ANALYSIS_MODE=demo npm run demo
 ```
 
-De to første kommandoene skal vise `v24.21.0` og `11.19.0`. `npm ci` installerer nøyaktig fra låsfilen og erstatter eksisterende `node_modules`. Installasjon kan kreve nett til npm-registeret. Åpne **http://127.0.0.1:3000** i en moderne nettleser. Du skal se investeringsoversikten med **Last opp salgsoppgave**, ukjente verdier og **Demo · lagret KI-uttrekk**. Én Express-prosess serverer bygget `dist/`, API og PDF-/worker-/fontressurser lokalt. Etter installasjon kan build og hele demoen kjøres med eksternt nett sperret; behold tilgang til lokal loopback.
+Versjonskommandoene skal vise `v24.21.0` og `11.19.0`. Åpne **http://127.0.0.1:3000**. Du skal se investeringsoversikten med **Last opp salgsoppgave** og ukjente verdier. Stopp serveren med **Ctrl+C**. Installasjon trenger nett til npm-registeret; den lokale demonstrasjonen trenger ikke eksternt nett. Kommandoene over bruker en macOS-/Linux-terminal. Windows er ikke verifisert; bruk eventuelt et tilsvarende POSIX-miljø.
 
-Stopp med **Ctrl+C** i serverterminalen. Port 3000 må være ledig; serveren velger ikke en annen port. Ved «Bygget app mangler» kjører du `npm run build`. Ved opptatt port stopper du din tidligere demo/dev/testserver før ny oppstart. Ikke kjør dem samtidig. Etter kodeoppdatering: stopp serveren, kjør `npm run build`, start serveren igjen og last siden på nytt. Bygg og sidelasting alene oppdaterer ikke backendprosessen; en gammel prosess kan mangle nye API-ruter. Oppdatering/lukking av siden avslutter den midlertidige økten, inklusive tall, rapport, kontroll og resultat; ingen brukerdata lagres.
+Port 3000 må være ledig. `PAA_PORT=3001 ANALYSIS_MODE=demo npm run demo` bruker en annen port. Ved «Bygget app mangler»: kjør `npm run build`. Etter kodeoppdatering: stopp serveren, bygg på nytt og start igjen; en gammel backend oppdateres ikke ved sidelasting. npm kan varsle om det valgfrie macOS-scriptet til `fsevents`; dette hindret ikke verifisert installasjon/build. Vites chunkvarsel er dokumentert i testbeviset.
 
-Oppskriften er egenprøvd på macOS 26.6.2 arm64; andre plattformer er ikke egenprøvd. npm kan varsle om det valgfrie installasjonsscriptet til `fsevents@2.3.3` på macOS. Vite kan varsle om stor chunk; faktisk exitstatus og testresultat må fortsatt kontrolleres.
+## Demonstrer med prosjektets fiktive data
 
-## Investeringsoversikten
+Ingen ekte meglerdokumenter skal hentes eller deles for denne prøven. Velg den versjonerte filen **[mixed-12.pdf](tests/fixtures/sales-prospectus/mixed-12.pdf)** fra `tests/fixtures/sales-prospectus/` med **Last opp salgsoppgave**. PDF-en er laget for prosjektets tester og beskriver en fiktiv eiendom. Generator, forhåndsdefinert fasit og opphav står i [fixturebeskrivelsen](tests/fixtures/sales-prospectus/README.md).
 
-Last opp din salgsoppgave. Analyse starter lokalt uten innledende finansverdier. Ukjent adresse, areal, byggeår og økonomi vises eksplisitt; ingen eksempeleiendom eller illustrasjonsverdier fyller hullene. Hovedbildet velges konservativt fra første PDF-side når et dominerende fotopanel støttes av adresse og boligopplysninger i et gjenkjent forsideoppsett. Megler-/kontaktsider, små raster, helsideillustrasjoner og ukjente oppsett får nøytral plassholder. Det gjøres ingen generell motivgjenkjenning. Originalen og fysisk side er tilgjengelige; bildet godkjenner ikke dokumentets innhold.
+1. Vent på **Dokumentuttrekk klart.** Åpne **Beløp og kildegrunnlag**. Prisantydningen er 3 000 000 kr; prisgrunnlaget inklusive 200 000 kr fellesgjeld er 3 200 000 kr. Åpne en originalkilde og kontroller fysisk PDF-side. Lukk med Esc.
+2. Velg **Juster leie og drift ↗**. Oppgi årsleie **252 000**, årsdrift **48 000** og år **2026**, og velg **Bruk som ubekreftede forutsetninger**. Året må stemme med testdokumentets fellesgjeldsbetaling. Hovedflaten viser da **21 000 kr** i månedsleie og **4 000 kr** i månedsdrift; begge kan justeres direkte. Dette er egne, fiktive totalforutsetninger. Bruttoyield blir **7,88 %**, nettoyield **6,38 %**. Yieldgrunnlaget inkluderer fellesgjeld, men ikke kjøpsomkostninger. Renter/avdrag hører til finansiering.
+3. Sett egenkapital **1 000 000 kr**, nominell årsrente **5,5 %** og nedbetalingstid **25 år**. Kontantstrøm før skatt blir omtrent **3 258 kr/mnd**, inklusive fixturefilens betaling på fellesgjeld. **Utforsk kontantstrøm, lån og rente** viser grafer med datatabeller. Endret rente påvirker kontantstrømmen, ikke yield.
+4. Les **Juridiske forhold** og **Teknisk tilstand**. Åpne **Se alle funn og kilder** og originalsidene. Det syntetiske takfunnet har fysisk PDF-side **10**, trykt side **6**; sammendraget på fysisk side 2 er et tilleggsbelegg. Fravær av funn er ingen friskmelding.
+5. **Bak tallene** åpner den separate kontrollflyten. Scenariojusteringer er ubekreftede og godkjenner ingen tall, rapport, TG3 eller anbefaling. [Detaljert offentlig prøve](.docs/process/leveranse-2026-11-06/demonstrasjon.md) viser alle tre anbefalingene, feil input og gjentatt import med fasit.
 
-Juster **forventet månedsleie** med tekstfelt eller slider. Oppgi **samlet eierbetalt drift per måned**, inkludert kjente kostnader, øvrige eierutgifter og vedlikehold; renter og avdrag føres under finansiering. Dette er din egen totalforutsetning og erstatter driftsgrunnlaget i scenarioet. Dokumentets delsum legges ikke til på nytt. Blank drift gir ukjent netto og kontantstrøm. Beløpene gjelder scenarioåret som vises over økonomien; et statistisk utgangspunkt er ingen dokumentert leieavtale.
+Sideoppdatering eller lukking avslutter den midlertidige vurderingsøkten. Last opp filen igjen for å begynne på nytt. Prøv også `invalid-format.pdf` under `tests/fixtures/property-cases/` og `missing-report-6.pdf` under salgsoppgavene: feil eller manglende rapport skal vises uttrykkelig, uten oppdiktede resultater.
 
-Oppgi **egenkapital** eller **belåningsgrad**, **nominell årsrente** og **nedbetalingstid** for et privat annuitetslån. Alle avhengige tall oppdateres uten lagringsknapp. Presis løpetid kan oppgis i hele måneder. Kontantkjøp trenger ingen rente/løpetid; eventuell betaling på fellesgjeld beholdes. Høy belåning og negativ kontantstrøm vises uttrykkelig. Ingen lånemulighet godkjennes av appen. **Juster leie og drift** åpner dessuten registrering av egne årsverdier i det separate kontrollgrunnlaget; direkte scenariojusteringer endrer ingen bekreftelser.
+## Hva tallene og analysen betyr
 
-Totalt kapitalbehov = kontantbehov (kjøpesum og omkostninger) + fellesgjeld. Privat lån = kontantbehov − egenkapital. Belåningsgrad = (privat lån + fellesgjeld) / pris inklusive fellesgjeld, uten omkostninger. Bruttoyield = årsleie / samme prisgrunnlag. Nettoyield = (årsleie − samlet årsdrift) / prisgrunnlaget. Månedlig kontantstrøm = (årsleie − årsdrift − samlet årlig rente-/avdragsbetaling) / 12, før skatt. Yield er før finansiering og beskriver ikke avkastning på egenkapital. Rente påvirker kontantstrøm, ikke yield. Manglende eller motstridende kjøps-/gjeldsgrunnlag gir ukjente avhengige tall.
+**Økonomi:** Bruttoyield = årsleie/prisgrunnlag. NOI = årsleie − årsdrift. Nettoyield = NOI/prisgrunnlag. Kontantstrøm = (NOI − årlige renter/avdrag)/12. Samlet kapitalbehov inkluderer kjøpsomkostninger og fellesgjeld; yieldgrunnlaget utelater omkostningene. Standardscenarioet er 80 % samlet belåning, 6 % rente og 360 måneder. Det er et redigerbart eksempel, ingen lånegodkjenning. Dokumentets driftsdelsum er foreløpig; egen totaldrift erstatter delsummen og legges ikke oppå den. Blank drift gir ukjent netto og kontantstrøm. Skatt, ledighet, særskilte reparasjonstiltak, salg og verdiendring inngår ikke.
 
-Åpne **Utforsk kontantstrøm, lån og rente** for grafene. De viser akkumulert konstant kontantstrøm, restgjeld på privat lån og årlig kontantstrøm ved ulike renter. Kontantstrømgrafen inkluderer ikke innskutt egenkapital, salg, skatt eller verdiendring og er ikke totalavkastning. Alle grafdata finnes i tabell. Velg faner med piltaster/Home/End og utforsk punkter med grafens slider. Beregning skjer i lokale, avbrytbare workere; krevende beregninger stoppes etter 15 sekunder for hovedscenario og 30 sekunder for rentegraf, med en synlig melding.
+**Leie:** Lokale publiserte gruppereferanser fra Hybel/Menon, Utleiemegleren/NTB og et SSB-snapshot er datert og kildebelagt. De er ingen individuell markedsvurdering eller faktisk leieavtale. Manglende kommune/rom/type eller konflikt gir synlige begrensninger. [Kilder og metode](.docs/implementation-artifacts/leieagent-lokale-referanser.md).
 
-**Beløp og kildegrunnlag** kan foldes ut for dokumentbeløp og originalkilder. **Juridiske forhold** og **Teknisk tilstand** følger etter den samlede økonomien. Funn viser dokumentert forhold eller kontrollbehov, fysisk side og eventuell TG-grad; detaljer foldes ut. Lokale tekstregler søker etter manglende godkjenning av utleieenheter, brukstillatelser, servitutter og utleiebegrensninger. Tekniske avvik og eksplisitte TG2/TG3-funn beholder originalkilder og fysisk PDF-side. Åpne **Se alle funn og kilder** for beskrivelser, betydning, neste steg og original PDF. En separat tilstandsrapport kan lastes opp direkte herfra; **Bruk integrert rapport igjen** går tilbake til salgsoppgavens rapportgrunnlag. Funnene grupperes konservativt etter samme problem og identifiserte enhet/sted. Flere omtaler gir én rad med alle kildene; ulike eller uavklarte sammenhenger holdes adskilt. Hver rad kan utvides direkte for detaljer og originalkilder. Generelle juridiske forklaringer og dekningsmangler vises separat og inngår ikke i risikotelleren. Se [grupperingsspesifikasjon](.docs/implementation-artifacts/spec-unike-risikoforhold.md).
+**Dokumenter og risiko:** Importgrensen er 200 sider / 50 MiB, med ressursvern og eksplisitte uleste/usikre sider. Lokal juridisk/teknisk tekstanalyse har delvis dekning og kontrollerer ikke grunnbok, byggesaksarkiv eller lovlig utleie. Grafiske grader, ukjente oppsett og fortsettelser kan gi mangler. Ingen generell garanti om å finne alle TG2/TG3 i vilkårlige PDF-er gis. Komplett teknisk screening krever fortsatt egne kontrollporter. Den eldre separate rapportflyten har en annen 30-siderskontrakt.
 
-Risikoanalysen er gratis og lokal og har alltid delvis dekning. Den verifiserer ikke kommunens byggesaksarkiv eller grunnbok. Grafiske grader gjettes aldri. Bevart tekst fra sider med ufullstendig eller usikker lesing kan bare gi **mulige forhold**, tydelig merket med ufullstendig tekstgrunnlag og uten fastslått TG. Uleste sider, vedlegg og usikre rapportgrenser sperrer fortsatt komplett rapportdekning. Fravær av treff er ingen friskmelding. Risikomodulen endrer ikke finansreglene eller den kontrollerte screeninganbefalingen.
+**KI og data:** Vanlig PDF-import behandles lokalt. Frontend holder original og aktiv vurdering midlertidig; importens midlertidige serverfiler ryddes etter request. Ingen språkmodell kontaktes i standarddemoen. Bevarte økonomihjelpere gir forberedte pakker 15 minutters gyldighet; pakker kan bli liggende i serverminnet til neste forberedelsesrequest, utskifting eller serverstopp. Særskilt godkjent live-bruk kan skrive private resultat-/budsjettfiler. Eldre live-ruter er ikke globalt fjernet av `ANALYSIS_MODE=demo`. Kjør uten API-nøkkel som beskrevet; ikke aktiver betalte hjelpere under sensorprøven. [Presis status og arkitektur](.docs/process/leveranse-2026-11-06/produkt-og-sporbarhet.md).
 
-Teknisk analyse identifiserer rapportområder fra omslag, oppdragsnummer og sammenhengende rapportpaginering, både innebygd og separat. Området og usikre fysiske sider vises med originalåpning. Eksplisitte flerlinjede avvik støttes i avgrensede tekstformater. TG2/TG3 fra en navngitt komponentliste under eksplisitt TG-overskrift merkes **Oppgitt i sammendrag**; sammendraget kan avvike fra rapporten og inngår ikke i bekreftet rapportgrunnlag. Entydig samme navngitte komponent og grad i sammendrag og detalj vises én gang med begge belegg. Generiske navn, ukjent rom og gradkonflikter holdes atskilt. Ukoblede sammendrag har egen teller og skal ikke summeres med detaljene.
+## Tester og utvikling
 
-På macOS kan grafiske gradsymboler leses med lokal PDFKit og Vision OCR. Klargjør én gang per kodeversjon med Node-versjonen angitt over:
-
-```bash
-npm run prepare:visual
-```
-
-Dette krever Apples lokale kommandolinjeverktøy (`swiftc`) og bygger en ignorert kjørbar fil i `private/.local-visual/`. Ingen PDF eller OCR-tekst sendes til en tjeneste. Importen prøver automatisk bildeanalyse for ufullstendige/rasterbaserte rapporter eller uløste TG-markører, etter PDF.js. Separate rapporter uten sikre grenser beholder alle sine fysiske sider i analyseutvalget. Samsvar mellom helside-OCR og et eget symbolutsnitt gir lokal gradtolkning; geometrien må også støtte bygningsdel og avviksblokk. Kildene merkes **Lokal bildeanalyse / OCR** og åpner originalside med markert område. PDF-tekst og avledet OCR har forskjellige kildeformer. Økonomianalysen bruker fortsatt sine opprinnelige kilder.
-
-Eksplisitt navngitte tekstfortsettelser over to sider og entydige fortsettelser fra venstre spaltebunn til høyre spaltetopp kan samles med alle originalkilder. Ukjent komponentoverskrift, utydelige grenser og motstridende OCR sperrer koblingen. Et lite ekstra lokalt OCR-utsnitt forsøker å gjenfinne manglende avslutningsetiketter; ulike avlesninger beholdes som konflikt med opprinnelige sikkerhetsverdier.
-
-**Områder som trenger videre tolkning** viser et lokalt forberedt utvalg på høyst 12 mål og 8 fysiske sider, med nødvendig fortsettelseskontekst og originalåpning. Resterende kandidatområder og manglende kontekst vises som uavklart. Dette er ingen utført AI-analyse eller eksekverbar modellforespørsel. Ingen betaling reserveres. Senere transport krever godkjenning og verifisert pris, full tokenberegning og gjenopprettet budsjetthistorikk innen eksisterende USD 0,20 per logiske analyse. Bildetokens dekkes ikke automatisk av den eksisterende tekst-preflighten. Se [implementasjon og verifisert dekning](.docs/implementation-artifacts/spec-tg-fortsettelser.md).
-
-Bildeanalysen har 35 sekunder, høyst 40 sider per import og 12 MiB prosessutdata. Detaljblokker prioriteres; alle øvrige sider beholdes som usikre. Manglende runtime på andre plattformer, utydelige symboler, ukjente oppsett og avvik over sideskift gir synlige mangler. En rendret side eller et automatisk koblet funn er ikke komplett sidekontroll eller brukergodkjenning. Visuell analyse oppgraderer aldri TG-dekning til komplett. Kjør de faktiske lokale renderer-/OCR-integrasjonstestene på klargjort macOS med `PAA_TEST_LOCAL_VISION=1 npm test`; vanlige tester krever ikke Vision. Se [tekstleveransen](.docs/process/arbeidsokter/2026-11-03-teknisk-dokumentanalyse.md) og [grafisk analyse og verifikasjon](.docs/implementation-artifacts/spec-grafisk-tg-analyse.md).
-
-**Forhold å ta stilling til** viser risiko, TG-status og mangler. **Bak tallene** åpner registrering, kildebelegg og bekreftelse; **Etterprøv grunnlaget** åpner dokumentasjon og original-PDF. Rapportkontroll, separate TG3-avklaringer og kodebestemt anbefaling følger samme krav som før. Scenarioslidere endrer ingen bekreftelse eller tidligere kontrollert vurdering. PDF er eneste synlige importinngang; FINN-backenden er uendret. Hele den lokale økten avsluttes ved sidelasting.
-
-## Prøv salgsoppgave fra opplasting til resultat
-
-Bruk [syntetiske salgsoppgaver](tests/fixtures/sales-prospectus/README.md).
-Ukjente PDF-er går gjennom generell lokal analyse; de har ingen lagret
-AI-analyse. Kundedokumenter skal ikke legges i repoet.
-Importen bruker en egen versjonert grense på **200 fysiske sider**, **50 MiB per fil
-og samlet beholdt salgsoppgave + separat rapport**. Den gamle manuelle rapportruten
-beholder **30 sider**. Dokumentnavn og trykt sidetall erstatter aldri fysisk PDF-side.
-
-1. Velg `mixed-12.pdf` i **Last opp salgsoppgave** i investeringsoversikten. Åpne deretter **Bak tallene** for detaljkontroll.
-   Lesingen starter uten P/L/D/J/Ymin. P=3200000 fylles automatisk **ubekreftet**.
-   Kontantbehovet er 3075000; dokumentavgiften inngår allerede i omkostningene.
-   Kjent driftssubtotal er 60000/år og fellesgjeldsbetaling 12000/år, men full D
-   forblir ukjent til innholdet er kontrollert. Foto på fysisk side 3 forblir ulest.
-2. Åpne økonomifeltene og sammenlign hvert belegg med **Vis originalkilde**.
-   Kontroller beløp, periode/år, inkludering og gjeldsdel. Marker hvert relevant felt
-   og bekreft at hele driftsinnholdet er med **bare i denne tydelig fiktive varianten**.
-   Ingen fraværende avgift eller leie beregnes automatisk.
-3. Prøv finansieringen: egenkapital 1000000 viser slideren; flytt den til 0.
-   Sett rente 0 %, løpetid 300 måneder og år 2026. Velg **Bruk kontrollert
-   dokumentgrunnlag og finansiering**. Fasit: P=3200000, D=60000, J=135000.00
-   (3075000/300×12 + 12000). J merkes som egen forutsetning. Ingen tall bekreftes
-   automatisk. Manuelle P/D/J-rettinger beholdes ved senere bruk av importen.
-4. Oppgi L=400000/år i 2026 med forventet leie og egen begrunnet forutsetning,
-   samt Ymin=7 med eget kildegrunnlag. Kontroller og bekreft tallene.
-5. I Tilstandsrapport kontrollerer du rapportens tilhørighet mot originalen og
-   hele området, fysisk side 5–12. **Gå til Kontroller funn** viser to ulike bad
-   og ett takforhold med flere belegg. Taket ligger på fysisk 10 / trykt 6;
-   sammendragets fysiske side 2 er et ekstra belegg for samme forhold.
-6. Kontroller og bekreft enkeltfunn. Velg **Avklart** med en uttrykkelig fiktiv
-   begrunnelse og konkret eksternt avklaringsgrunnlag for taket, bekreft listen
-   og beregn resultatet: **Gå videre**. Med L=100000 og ny relevant bekreftelse
-   blir utfallet **Forkast**. Med TG3 **Uavklart** blir det **Innhent mer informasjon**.
-
-`attached-report-6.pdf` viser navn på ubehandlet PDF-vedlegg; last deretter opp
-`separate-report-4.pdf` i **Last opp separat tilstandsrapport**. Økonomien beholdes,
-mens rapportkontroll/TG3 må gjøres på nytt. Identiteten er ukjent i disse fiktive
-filene og krever eksplisitt kontroll mot begge originaler. Takets kilde åpner
-**separat fysisk side 3 / trykt 1**. `scanned-report-12.pdf` og
-`raster-footer-12.pdf` blokkerer komplett rapportgrunnlag; digital bunntekst gjør
-ikke rasterrapporten lest. `ambiguous-12.pdf` krever en entydig separat rapport.
-`bounded-200.pdf` beholder 200 sidestatuser, men velger bare økonomi/sammendrag
-og hele rapporten 5–12 til det kombinerte grunnlaget.
-
-Hvert filvalg i investeringsoversikten starter en ny lokal analyse, også når
-samme PDF velges igjen. **Start ny analyse** tømmer objekt, egne scenarioer og
-tidligere kontroll. **Prøv dokumentimporten på nytt** gjør et nytt gratis lokalt
-forsøk på valgt fil. I den detaljerte kontrollflaten kan samme hash i samme
-aktive versjons-/moduskontekst fortsatt gjenbruke vurderingen.
-Sidelasting avslutter økten. Backend beholder ingen originaler eller tekst mellom
-requests. Lokal OCR for tekniske rapporter er beskrevet over. Ingen automatisk vedleggsutpakking, betalt kall, token-count-tjeneste
-eller live-fallback inngår. Lokal frist er 60 s; tekstgrensene er 128 KiB/side og
-1 MiB samlet UTF-8, svargrensen 8 MiB. PDF-barnet har 256 MiB V8-heap, og
-forelderen stopper ved målt RSS over 512 MiB. RSS er best effort, ingen hard
-OS-garanti mot korte native topper. Hele prosessen stenges før behandlingslåsen
-frigis. Ingen tokenbasert live-kapasitet eller reell kildekvalitet er validert.
-
-I **Forventet leie** kan du dra **Juster forventet månedsleie** eller oppgi et
-presist beløp. Årsleie, bruttoyield og tilgjengelig foreløpig netto oppdateres
-med en gang. **Tilbakestill til publisert leiereferanse** bruker den viste
-romreferansen som ubekreftet scenario. SSB-sammenligningen og dokumenterte fakta
-beholdes separat. Full nettoyield og kontantstrøm vises først med tilstrekkelig
-kostnads- og finansieringsgrunnlag. Ingen sliderendring bekrefter en kontrollert
-investeringsanbefaling.
-
-Ved kildekodeoppdatering: avslutt gammel server, bygg og start på nytt med
-Node 24.21.0. Backend og importbarn kontrollerer nå at de bruker samme lokale
-kildeversjon før PDF-behandling. En utdatert prosess får konkret feilmelding;
-API- og inngangssiden caches ikke. En gammel prosess må ikke brukes til å
-godkjenne ny kode.
-
-Hele den ekte sluttprøven kan gjentas med port 3000 ledig og de private
-originalene på sine dokumenterte lokale stier:
-
-```sh
-npm run build
-node tools/finalization/real-prototype.mjs
-```
-
-Prøven starter/stopper egen ekte server på `localhost:3000`, har ingen mockede
-API-svar og feiler dersom en original mangler. Den bruker Playwrights installerte
-Chromium; ved en annen lokal installasjon kan `PAA_BROWSER_EXECUTABLE` oppgis.
-Skjermbilder, synlig tekst og `summary.json` lagres bare under ignorert
-`private/stabilization-2026-11-05/acceptance/`. Prøven starter serveren uten
-API-nøkkel og bruker ingen betalte tjenester.
-
-### Code-first analyse av ukjente PDF-er
-
-Samme opplasting leser alle sider lokalt med PDF.js og bygger et manifest over
-originale tekstintervaller. Kode finner rapportgrenser, identitetskandidater,
-eksplisitte økonomifelter og TG2/TG3 i støttede tekstmønstre. Tall og funn er
-ubekreftet og beholder hash, fysisk side og ordrett kilde. Uklar rapportgrense,
-identitet, raster eller ubehandlede vedlegg gir synlige mangler.
-
-All uløst tekst i det sikre rapportområdet beholdes til semantisk behandling,
-også avsnitt uten TG-nøkkelord. AI-grensen bruker én kompakt strict request per
-dokument og returnerer referanser til originaltekst. Kode avstemmer hver
-blokk og TG-kandidat; manglende eller ufullstendig svar sperrer bekreftelse.
-Manifestet hindrer tap ved filtrering, men beviser ikke modellens semantiske
-treffrate. Eksisterende originalkontroll, finans og screening gjelder fortsatt.
-
-Godkjent modell er **GPT-6.1 Sol**, reasoning low og Standard. Samlet ramme er
-**USD 0,20 per analyse**, inklusive separat rapport, med opptil 40 000
-inputtokens og 8 000 outputtokens inklusive reasoning per request. Hele
-requesten skal telles før reservasjon. USD 0,04–0,08 er regneeksempler for
-10–20k input og 2–4k output, ikke målt gjennomsnitt. Budsjettbrudd gir stopp,
-aldri avkorting eller automatisk nytt kall.
-
-**Generisk teknisk live-import er fortsatt stengt.** Presis inputtelling er implementert via
-Responses `inputTokens.count` i låst SDK 6.9.1, inklusive prompt, schema og
-reasoning-konfigurasjon. Hele genereringsrequesten bindes til tellegrunnlaget.
-Dette er serverbasert telling; offline SDK-stub er bare serialiseringsbevis.
-Count-endepunktets pris er ikke verifisert eller etablert som gratis i de
-kontrollerte kildene, så serverfabrikken stopper før nettverk. Ukjent teller,
-pris eller forbrukshistorikk sperrer transport. Ingen produksjonsklient
-opprettes av selve opplastingen. Den separate økonomiruten beskrevet nedenfor
-kan starte ett uttrykkelig godkjent kall. Lokale uttrekk koster ingen modellbruk.
-Når semantikk er nødvendig, viser appen restgrunnlaget og manglende estimat,
-og tillater ikke rapportbekreftelse. `ANALYSIS_MODE=live` åpner ikke denne
-porten. Første live-test krever ny godkjenning og underbygget preflight.
-
-### Nye dokumenter: lokal økonomi og godkjent KI-tolkning
-
-Last opp PDF-en i investeringsoversikten. Kode leser tekstlaget på alle fysiske
-sider og henter sikre beløp i støttede formater, med nøyaktige originale kilder.
-Ukjente beløp betyr at uttrekket ikke har etablert en verdi; det beviser ikke
-at opplysningen mangler i dokumentet. Tomme adressefelt i skjemaer kan ikke
-bruke neste feltnavn som adresse.
-
-**Forbered KI-analyse** kjører lokalt og viser hele de valgte økonomisidenes
-tekst, fysiske sidetall, eventuelle relevante sider som utelates og kostnadsramme.
-Forberedelsen gjør ingen eksterne kall eller reservasjoner. Den velger opptil
-fem hele lesbare sider som passer tekst- og requestbudsjettet; den påstår ikke
-full dokumentdekning. Brukeren må godkjenne både overføring til OpenAI og
-kostnad før **Start godkjent KI-analyse** blir tilgjengelig. Dette kallet krever
-`OPENAI_API_KEY` på lokal backend. Ingen nøkkel skal legges i frontend.
-
-AI velger referanser til beløp som kode allerede har lest fra originalen.
-Kode kontrollerer beløp, kilder, perioder og konflikter; lokale sikre verdier
-fra usendte sider beholdes. Alle AI-tolkninger er ubekreftet. Ingen manglende
-leie, full drift eller fellesgjeld erstattes med 0. Finansreglene er uendret.
-Et vellykket svar lagres privat under `private/uploaded-analysis/`. Ved ny
-opplasting av identisk PDF regenereres requestgrunnlaget og beløps-/kildereferanser
-valideres på nytt, også når filnavnet er endret. En annen PDF kan aldri bruke
-resultatet. Lagringsfeil vises; ingen ny kvote opprettes for å gjenta kallet.
-
-Økonomikallet bruker eksisterende GPT-6.1 Sol/low/Standard og et konservativt
-lokalt bytebudsjett, **ikke presis tokentelling** og ingen ekstern token-count.
-Maksimal reservasjon er **USD 0,15** innen dokumentets varige **USD 0,20**-ramme.
-Reservasjonen lagres før transport. Ett forsøk, ingen automatisk retry, og
-samme dokument får ingen ny kvote etter reload eller omstart. Ukjent belastning
-beholder reservasjonen. Ugyldig svar gir ingen nye økonomitall.
-
-Status ved startknappen viser analyserer, fullført eller feilet og blir synlig
-også når dokumentutdragene er åpne. Serveren har 120 sekunders frist; ved manglende
-HTTP-svar viser nettleseren et uavklart utfall etter 135 sekunder. Lokal statuslesing
-kan bekrefte senere avslutning uten et nytt AI-kall. Etter sidelasting leses
-tidligere forsøksstatus fra journalen; usikker belastning sperrer ny betaling.
-**Kontroller status lokalt (gratis)** leser bare lokal status og endrer ingen kvote.
-Trygg serverlogging inneholder tidspunkt, dokumenthash, requestdigest, HTTP-status
-og feilkategori, aldri API-nøkkel eller dokumentutdrag. En reservasjon er ikke
-bevis på fakturering; manglende kostnadsgrunnlag merkes ukjent.
-
-**Teknisk analyse av vilkårlige integrerte rapporter er fortsatt ufullstendig.**
-Økonomikallet analyserer ikke bilder, avgjør ikke ukjente rapportgrenser og
-bekrefter ikke TG-dekning. For den nye ekte PDF-en på 135 sider er seks sikre
-økonomifelter verifisert, mens teknisk grunnlag fortsatt sperrer bekreftelse.
-Ingen betalt live-analyse av denne PDF-en er gjennomført i implementeringsøkten.
-[Test- og diagnosebevis](.docs/process/arbeidsokter/2026-10-31-nye-salgsoppgaver-analyse.md).
-
-Offline klargjøring kjøres fra reporoten med `npm run prepare:live-test`.
-Den lagrer eksakt SDK-request og kontrollpakke i ignorert
-`private/salgsoppgave-live-preflight/`, inklusive separat SDK-count-request,
-uten nøkkellesing eller eksterne kall.
-Eksisterende budsjettjournal under `private/analysis-budgets/` må være
-initialisert én gang for den nye analysen; kommandoen initialiserer eller
-nullstiller aldri historikk. Manglende/korrupt historikk og ukjent telling
-eller pris gir `ready: false`. Reservasjoner beholdes ved omstart og deles
-med separat rapport. Krasjlåser krever manuell avstemming, aldri automatisk
-ny kvote. Det finnes ingen live-bryter i klargjøringskommandoen.
-
-Den frosne femsiders originalen har separat økonomi-/TG-fasit og negative
-sammenligningstester. Den er en syntetisk teknisk prøve, ingen representativ
-produksjonsbenchmark. [Tidligere klargjøring](.docs/implementation-artifacts/salgsoppgave-live-preflight-2026-10-29/verifikasjon.md).
-
-### Privat mottak av første ekte salgsoppgave
-
-Legg den komplette PDF-en i `private/incoming/salgsoppgave.pdf`, eller behold
-den utenfor repoet og oppgi lokal sti. Bruk et nøytralt case-ID uten adresse
-eller personnavn. Ikke legg ekte dokumenter i `tests/fixtures` eller `.docs`.
-
-```sh
-npm run representative:document -- intake private/incoming/salgsoppgave.pdf first-real
-npm run representative:document -- freeze first-real
-npm run representative:document -- check first-real
-npm run prepare:live-test -- --representative-case first-real
-```
-
-Kjør først bare `intake`. Det bevarer originalbytes, fysisk sidetekst og
-dekningsgrunnlag under ignorert `private/representative-cases/first-real/`.
-Fasit og menneskelig side-/kildekontroll er tomme og uavklarte. `freeze`
-stopper inntil et menneske har lest originalen uavhengig, skrevet fasit før
-modelloutput og dokumentert alle sider, TG-kandidater og økonomifelt.
-Attestasjonen er selvrapportert; programmet beviser ikke hvem som leste PDF-en.
-`check` kontrollerer frosne bytes/kilder på nytt. Privat preflight kan deretter
-lage requestene, men kaller aldri count eller generering og nullstiller aldri
-budsjett. Verktøy er deaktivert; uventet verktøybruk sperrer resultatet.
-
-[Prosedyre for uavhengig fasit og kildekontroll](.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/representative-document-procedure.md)
-beskriver utfylling, frysing og grensen mot faktisk test. `.gitignore` hindrer
-vanlig staging, men kan overstyres med `git add -f`; ikke gjør det for private
-originaler, tekst, fasit eller resultater. Første ekte dokument er mottatt
-privat 30. oktober; ukjent/ufullstendig tekstdekning og manglende menneskelig
-fasit sperrer kvalitetsprøven. [Mottakscheckpoint](.docs/process/arbeidsokter/2026-10-30-salgsoppgave-document-intake.md).
-[Kode-/reviewbevis og øvrige porter](.docs/implementation-artifacts/salgsoppgave-blockers-2026-10-29/verifikasjon.md).
-
-### Avgrenset økonomiprøve før teknisk analyse
-
-`src/backend/import/economy-trial.ts` har separat offline klargjøring med
-`prepareEconomyTrial(originalBytes, basis, selectedPhysicalPages)` og
-`prepareEconomyPreflight(packet, originalBytes, basis)`. Den siste leser
-originalen på nytt og kontrollerer hele pakke-/kildebindingen. Dette er et
-backendhjelpemiddel, ikke en ny opplastings- eller livekommando.
-
-Valgte sider må ha lesbart originalt tekstlag. Resten av sidene og raster-
-advarsler beholdes i lokalt sideregnskap, men sendes ikke. Ukjente kart eller
-OCR utenfor utvalget godkjenner eller blokkerer ikke tekstprøven. Ingen teknisk
-fullstendighet kan bekreftes. Kjent metadata valideres eksplisitt; dekodings-
-grense er egen årsak og blir ikke automatisk bevis på korrupt original.
-
-Økonomisvar er bare ubekreftede kandidater med eksakte kilder, originaltekst
-og krav om sammenligning mot menneskelig godkjent fasit. Kvartal/mva/avvik
-bevares; ingen årsomregning eller finans-/screeningendring utføres. Privat
-fasitforslag er ikke en menneskelig attestasjon. Fullstendig TG-prøve følger
-fortsatt den strengere prosedyren over.
-
-Den generiske `prepareEconomyPreflight` bruker bare lokale SDK-stubber, oppretter ingen budsjettjournal og
-gir `ready: false`. Faktisk count-kvittering, verifisert countpris, varig
-fellesbudsjett og særskilt betalt testgodkjenning mangler fortsatt. Maksimal
-modellreserve ved 40k input / 8k output inklusive reasoning er USD 0,18;
-ukjent tellegebyr kan ikke antas dekket av resten av USD 0,20.
-[Verifikasjon og godkjenningsgrense](.docs/implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/verifikasjon.md).
-
-For den særskilt avgrensede økonomitesten har brukeren senere godkjent lokal
-konservativ kontroll uten obligatorisk count-tjeneste. `prepareLocalEconomyCall`
-i `economy-local-budget.ts` klargjør en requestbundet pakke uten nettverk eller
-journalinit. `runLocalEconomyCall` krever ny eksplisitt betalt godkjenning og
-varig reservasjon før sitt ene API-kall; den er ikke automatisk aktivert i UI.
-Responsen er nå kompakt: økonomiverdier, korte kilde-ID-er og begrunnelser.
-Koden gjenoppbygger sitater, UTF-16-posisjoner og metadata fra originalen og
-beholder tidligere kontroller. 6000 output inklusive reasoning og høyst 36000
-konservative inputbudsjetttokens gir maksimum USD 0,15, med USD 0,05 margin.
-Ufullstendig svar avvises uten retry. [Kompakt leveranse og gjeldende prøveport](.docs/implementation-artifacts/salgsoppgave-economy-trial-2026-10-30/compact-resultat.md).
-
-## Prøv F1–F4 fra start til resultat
-
-For en enkel offline-prøve etter installasjon: installer også Chromium først hvis testene skal kjøres, slå deretter av Wi-Fi/koble fra Ethernet og behold localhost tilgjengelig. Registrer hvordan nett ble sperret i et faktisk S6-forsøk. Installasjonens nettbehov er ikke en del av offline-demoen.
-
-Bruk de innsjekkede PDF-ene i [tests/fixtures/property-cases](tests/fixtures/property-cases/README.md) og den forhåndsdefinerte [expected.json](tests/fixtures/property-cases/expected.json). Finansdata ligger separat fra rapportene. Bruk bare disse fiktive dataene i oppskriften. Bare **uendrede F1–F4-originalbytes** har lagrede demosvar; ny filidentitet gir ingen live-fallback.
-
-**P** er totalpris inklusive eventuell fellesgjeld, uten kjøpsomkostninger. **L** er brutto leieinntekt, **D** eierbetalte driftskostnader uten renter/avdrag, **J** gjeldsbetjening (renter og avdrag inklusive eventuell fellesgjeld), og **Ymin** ditt minimumskrav til nettoyield.
-
-| Case / rapportfil | P (NOK) | L (NOK/år) | D (NOK/år) | J (NOK/år) | Ymin | Forventet utfall etter nødvendig kontroll |
-|---|---:|---:|---:|---:|---:|---|
-| `F1-tilstandsrapport.pdf` | 16000000 | 1900000 | 400000 | 800000 | 7 % | Gå videre |
-| `F2-tilstandsrapport.pdf` | 16000000 | 1400000 | 400000 | 800000 | 7 % | Forkast: nettoyield under 7 % |
-| `F3-tilstandsrapport.pdf` | 16000000 | **blank** | 400000 | 800000 | 7 % | Innhent mer informasjon lokalt i Tallgrunnlag; ingen gyldig hovedstart |
-| `F4-tilstandsrapport.pdf` | 16000000 | 1900000 | 400000 | 800000 | 7 % | Innhent mer informasjon: alvorlig TG3 Uavklart |
-
-1. I **Tallgrunnlag** skriver du tall fra valgt case; **la L være blank for F3**. For **L, D og J** velger du **År** og **2026**. Velg **Egen forutsetning** for hvert felts opphav og skriv eksempelvis «F1 — kontrollert fiktiv P fra expected.json» i kilde/forutsetning (tilpass felt og case). For L velger du **Forventet leie**. Tall fra rapporten fylles ikke inn automatisk.
-2. Under **Kostnadsinnhold i D og J**, bruk **Legg til kostnadsinnhold** for postene nedenfor. Samlet beløp og rentedel/avdrag må oppgis, også 0. La **Inngår allerede i** være **Selvstendig post**. Perioden følger D (År 2026). Postene forklarer allerede registrerte D/J og legges ikke til totalene en gang til.
-
-   | Navn på post | Samlet beløp | Herav renter/avdrag |
-   |---|---:|---:|
-   | Felleskostnader uten gjeldsbetjening | 120000 | 0 |
-   | Kommunale avgifter/eiendomsskatt | 80000 | 0 |
-   | Forsikring | 40000 | 0 |
-   | Forvaltning | 60000 | 0 |
-   | Løpende vedlikehold | 100000 | 0 |
-   | Gjeldsbetjening: renter 600000 + avdrag 200000 | 800000 | 800000 |
-
-3. Velg **Bekreft tallgrunnlaget**. Rett eventuelle konkrete lokale feil, kontroller kildene/kostnadsinnholdet og bekreft igjen. F1/F2/F4 åpner **Fortsett til Tilstandsrapport**. F3 skal beholde blank L og vise manglende leie og **Innhent mer informasjon** her; den kan ikke gå videre før faktisk leiegrunnlag er innhentet, registrert og bekreftet. F3-fasiten har fire utilgjengelige beregninger (`null`), ikke fire nullbeløp. For å prøve F3-rapporten videre kan du i en egen, uttrykkelig endret variant sette L=1900000 med samme år/kildekontroll som F1; den er da ikke lenger det opprinnelige F3-mangelcaset.
-4. I **Tilstandsrapport** velger du den matchende PDF-filen og deretter **Start analyse**. Filvalg alene starter ingen analyse. Når fullført, velg **Gå til Kontroller funn**. Uttrekket er fortsatt ubekreftet.
-5. Velg hvert aktivt funns overskrift, sammenlign beskrivelse/TG med originalen og velg **Bekreft** på enkeltfunnet. TG2 «Slitt overflate på baderomsgulv» ligger på **PDF-side 2**. For F4 ligger TG3 «Alvorlig lekkasje i tak» på **PDF-side 4**, selv om trykt sidetall er 2. Bruk Forrige/Neste PDF-side og PDF-zoom ved behov. Ved smal flate: **Åpne PDF for valgt funn**, deretter **Tilbake til funnkontroll** eller Esc.
-6. F4 krever også et separat valg i **TG3-status for gjeldende forhold**: velg **Uavklart** for originalcaset. Enkeltfunnbekreftelse eller listebekreftelse avklarer ikke TG3. **Avklart** krever både kort begrunnelse og konkret eksternt avklaringsgrunnlag; velg det bare som en tydelig merket fiktiv kontrollvariant her. Avklart betyr ikke nødvendigvis utbedret.
-7. Kontroller hele gjeldende listen og velg **Bekreft gjeldende liste**, deretter **Beregn og vis resultat**. Kontroller anbefaling, årsberegninger, utløsende regler, alvorlige forhold/mangler og neste handling. Åpne detaljer for formel, kilde og opprinnelig uttrekk ved behov.
-
-| Case | Bruttoyield | NOI (kr/år) | Nettoyield | Kontantstrøm før skatt (kr/år) |
-|---|---:|---:|---:|---:|
-| F1 | 11,875 % | 1500000 | 9,375 % | 700000 |
-| F2 | 8,750 % | 1000000 | 6,250 % | 200000 |
-| F4 Uavklart | 11,875 % | 1500000 | 9,375 % | 700000 |
-
-F4-tallene er **Delgrunnlag** og overstyrer ikke TG3-mangelen. Start et uavhengig case med sideoppdatering; da registreres og kontrolleres grunnlaget på nytt.
-
-## Prøv blank/null, feil, korrigering og retur
-
-- **Blank og 0:** Fra bekreftet F1, gå tilbake til Tallgrunnlag og slett L; forsøk bekreftelse. Manglende leie forklares lokalt og er aldri 0. Sett L tilbake til 1900000 med kontrollert kilde før du prøver separat J=0. Fjern gjeldsposten fra kostnadsinnholdet, og behold fem driftsposter. Velg den synlige særskilte nullkontrollen for J før du bekrefter tallgrunnlaget igjen. Registrert 0 alene er ubekreftet. P må være større enn 0. Ved nytt resultat med ellers uendret bekreftet F1-grunnlag er yieldene/NOI uendret, kontantstrømmen 1500000 kr/år og anbefalingen Gå videre. Sett J=800000 og legg tilbake gjeldsposten før du sammenligner med original F1-fasit.
-- **Feil rapport:** Etter gyldige tall, velg `invalid-format.pdf` i samme fixturemappe og Start analyse. Forvent dokumentfeil, konkret lokal forklaring/handling og ingen vellykket tomliste. Velg deretter en uendret støttet rapport (for eksempel F1), start analyse og gjennomfør kontrollen igjen med ditt eksplisitt registrerte tallgrunnlag. En endret F1-PDF eller annen egen rapport kan være gyldig PDF uten å ha et lagret demosvar. Demo oppfinner ikke et svar.
-- **Korrigering:** På et disponibelt F1-case: velg funnet → **Korriger**, skriv et utkast, og prøv **Avbryt**. Ubrukt utkast endrer ikke gjeldende grunnlag. Prøv deretter en liten fiktiv tekstretting og **Bruk korrigering**. Original og brukerkorrigert opphav beholdes; bekreft funnet og listen på nytt. PDF-side må være en faktisk posisjon 1–4. **Avvis** beholder originalen som historikk, tar funnet ut av aktiv liste og er ingen teknisk godkjenning. Avslutt dette disponible caset med sideoppdatering og registrer/kontroller F1 fra start før du igjen bruker originalfasiten.
-- **Retur og nytt resultat:** Fra F1-resultat velger du **Endre tallgrunnlag**. Uendret retur bevarer bekreftelser. Endre L til 1400000 med oppdatert kildebeskrivelse; gammelt resultat blir **Utdatert** og kan bare leses som historisk. Bekreft endret tallgrunnlag, gå tilbake til kontroll og beregn på nytt. Uendret rapportuttrekk gjenbrukes; nettoyield blir 6,250 % og anbefalingen Forkast. Dette er en endret F1-finansvariant. Faktisk rapportbytte krever ny analyse og ny funn-/listekontroll. Brukt funnendring krever berørt ny kontroll/listebekreftelse; separat TG3-endring krever gyldig ny TG3-håndtering og nytt resultat.
-
-## Utvikling og tester
-
-Etter installasjon, med demo stoppet:
-
-```sh
-ANALYSIS_MODE=demo npm run dev
-```
-
-Åpne **http://127.0.0.1:3000**. Dev bruker Vite-middleware/HMR i samme Express-prosess. Backendendringer krever stopp/start. Valgfri `PAA_PORT` velger en annen lokal port (standard 3000). Avslutt med Ctrl+C før demo/test.
-
-Installer prosjektets Chromium mens nett er tilgjengelig. Playwright kjører browseren lokalt; ingen global Playwright trengs. På Linux kan browserens systembiblioteker måtte forberedes med `npx playwright install --with-deps chromium` (kan kreve administratorrettigheter); Linux-oppskriften er ikke egenprøvd her. Vanlig installasjon:
+Stopp demoen før testene. Installer korrekt Chromium mens nett er tilgjengelig:
 
 ```sh
 npx playwright install chromium
@@ -408,229 +61,27 @@ npm run test:components
 npm run test:e2e
 ```
 
-Kjør sekvensielt fra reporoten med port 3000 ledig. For isolert kjøring mens brukerens server kjører: `PAA_E2E_PORT=3001 npx playwright test`; valgt port brukes av testens nettleser, backend og oppstartskontroll. Privat kontroll av en eksisterende usikker journal krever både `PAA_UNSEEN_PDF` og eksplisitt `PAA_UNCERTAIN_DOCUMENT_SHA256`; vanlige tester oppretter sine egne isolerte journaler. `npm run test:e2e` bygger automatisk, starter/stopper først bygget demo og deretter dev. Vitest bruker lokale moduler, ekte fiktive PDF-er og HTTP-integrasjon. Komponenttester viser faktiske React-resultatkomponenter i Chromium. E2E dekker hovedflyt, kontrollporter, feil/retur, originalvisning, nøkkeltall, anbefalinger og fokus/responsivitet. Enkelte spesialutfall bruker en **kontrolladapter ved produktets adaptergrense** eller kontrollerte HTTP-svar; dette er testinnganger, ikke live-KI. Playwright-serverne tvinger `ANALYSIS_MODE=demo` og tom `OPENAI_API_KEY`, også når terminalen har arvet live-miljø. Bygg-/oppstartskontrollen bruker eksplisitt demo og en fiktiv nøkkelsentinel for lekkasjekontroll. Hele testoppskriften krever ingen betalt KI-tjeneste eller nøkkel. Browserforberedelsen krever vanligvis nedlasting; på Linux må nødvendige systembiblioteker også være installert før nettfri testkjøring.
+Kjør sekvensielt fra reporoten med port 3000 ledig. `test:e2e` bygger og starter/stopper først bygget demo, deretter dev. `PAA_E2E_PORT=3001 npm run test:e2e` velger annen testport. Testserverne setter eksplisitt demo og tom API-nøkkel. Vanlige tester bruker fiktive PDF-er, lokale data og kontrolladaptere; ingen betalt KI trengs. Playwright laster Chromium lokalt. På Linux kan systembiblioteker kreve `npx playwright install --with-deps chromium`; Linux er ikke egenprøvd.
 
-Testene kontrollerer også sentral finans-/terskellogikk og blank/null/feiltilstander mot uavhengig fasit. De beviser ikke manuell lesbarhet, alle hjelpemidler eller live-uttrekkskvalitet. Se [samlet automatisk verifikasjon 5.1](.docs/implementation-artifacts/story-5-1-verifikasjon.md), [manuell UX-kontroll 5.2](.docs/implementation-artifacts/story-5-2-manuell-kontroll.md) og [egen README-gjennomkjøring 5.3](.docs/implementation-artifacts/story-5-3-verifikasjon.md). Egen gjennomkjøring er forberedelse; **annen person i rent miljø/S6 (5.4) er ennå ikke gjennomført**.
+Private originalprøver og native macOS-OCR er valgfrie og hoppes over uten sine forutsetninger. **Skip er ikke beståtte prøver.** [Testresultater og bevisgrenser](.docs/process/leveranse-2026-11-06/teknisk-og-test.md) skiller offentlig regresjon, syntetisk fasit, historisk live og private originaler. Feilspor ligger ignorert i `test-results/`; åpne en faktisk `trace.zip` med `npx playwright show-trace <sti>`.
 
-Ved Playwright-feil ligger beholdte spor og skjermbilder i `test-results/`. Åpne en faktisk generert `trace.zip` med `npx playwright show-trace <sti-til-trace.zip>`; erstatt plassholderen med filens sti. Disse genererte feilartefaktene er Git-ignorert.
+Utvikling: `ANALYSIS_MODE=demo npm run dev` på samme lokale adresse; backendendringer krever omstart. Valgfri grafisk PDF-analyse på macOS: `npm run prepare:visual` bygger en ignorert PDFKit/Vision-hjelper med Apples `swiftc`. Det sender ingen dokumenter ut og er **ikke nødvendig** for den offentlige demoen. [.env.example](.env.example) viser hemmelighetsfri standardkonfigurasjon; serveren leser ikke `.env` automatisk.
 
-## Valgfri live-kjøring
+## Struktur og dokumentasjon
 
-Demooppskriften ovenfor er komplett alene. Live krever egen OpenAI API-tilgang og kan koste penger. Valgt modell er **gpt-6.1-sol**, Responses API og reasoning `low`. Den eldre separate rapportflyten sender ett leverandørkall per godkjent analyseforsøk, uten automatisk retry; et nytt forsøk i en ny økt kan koste på nytt selv for samme rapport. Den nye salgsoppgaveøkonomien har i stedet varig engangsreservasjon og gjenoppretting for samme dokument som beskrevet over. Kontroller modelltilgang og godkjent restbudsjett før du starter analyse; [R1](.docs/planning-artifacts/r1-live-ki-semester-v1.md) og [de faktiske forsøkene](.docs/implementation-artifacts/story-4-4-b2-sluttkontroll-2026-10-27.md) dokumenterer datert kostnadsgrunnlag, ikke et løfte om dagens pris eller kontosaldo.
+| Mappe | Ansvar |
+| --- | --- |
+| `src/domain/`, `src/contracts/` | Rene beregnings-/screeningregler og delte validerte kontrakter. |
+| `src/frontend/`, `src/presentation/` | React, midlertidig økt, kontroll, original-PDF og tallpresentasjon. |
+| `src/backend/` | Lokal Express-server, PDF-workers, import og bevarte adaptergrenser. |
+| `tests/` | Unit/integrasjon, komponent/E2E, fiktive PDF-er og forhåndsdefinert fasit. |
+| `.docs/planning-artifacts/`, `.docs/specs/` | Brief, PRD, UX, arkitektur og kravhistorikk. |
+| `.docs/implementation-artifacts/` | Spesifikasjoner, verifikasjon/review og [eneste sentrale oversikt over utsatt arbeid](.docs/implementation-artifacts/deferred-work.md). |
+| `.docs/process/` | Brukerpromptlogger, arbeidsøkter og [leveransekontroll](.docs/process/leveranse-2026-11-06/rapport.md). |
+| `private/` (ignorert) | Eventuelle egne originaler, OCR-hjelper og private test-/budsjettfiler; distribueres ikke. |
 
-Stopp demo/dev/testserveren. Kopier den hemmelighetsfrie eksempelfilen:
+Plan: [Product Brief](.docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md), [PRD](.docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md), [arkitektur](.docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md), [godkjent Konsept A](.docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-30/DESIGN.md). [Gjeldende avstemming](.docs/process/leveranse-2026-11-06/produkt-og-sporbarhet.md) forklarer endringene fra opprinnelig v1; gamle dokumenter er historiske bevis, ikke løfter om at alle planer er oppfylt. [Promptmekanismen](.docs/process/prompts/README.md) logger brukerens instrukser, ikke fullstendige samtaler.
 
-```sh
-cp .env.example .env
-```
+Historiske avgrensninger: S2/live gjelder bare sitt kontrollerte utvalg. S5 er avsluttet med akseptert avvik og beviser ingen tidsbesparelse. **S6 med en annen person er ikke gjennomført.** Den nye rene klonen er en AI-assistert teknisk prøve. Ingen slik menneskelig test eller godkjenning er konstruert i ettertid.
 
-Rediger `.env` lokalt: behold `ANALYSIS_MODE=live` og sett din egen `OPENAI_API_KEY`. Filen er Git-ignorert. Nøkkelen skal bare ligge i backendmiljøet, aldri i frontend/Vite-variabler, skjermbilder eller delte logger. Start deretter:
-
-```sh
-npm run build
-env -u OPENAI_API_KEY -u ANALYSIS_MODE node --env-file=.env src/backend/server.ts
-```
-
-Åpne samme lokale adresse og kontroller **Live analyse** før du velger en rapport og eksplisitt **Start analyse**. Dokumentfasen har egen 60 s-frist; etter godkjent dokumentgrunnlag har live-fasen 120 s. Avbrudd beviser ikke at leverandørens behandling/belastning stoppet. Feil vises lokalt; ingen demo-fallback eller automatisk nytt kall brukes. Manglende nøkkel gir trygg analysefeil. Det finnes ingen nett-/nøkkelkonfigurasjon i appen.
-
-Serveren leser ikke `.env` automatisk: `--env-file` gjør det i kommandoen over. Allerede eksporterte variabler har forrang over miljøfilen; `env -u` fjerner derfor arvet nøkkel/modus fra denne oppstarten, slik at valgt `.env` gjelder. Kommandoen er for den dokumenterte macOS-/POSIX-terminalen. For å gå tilbake til demo, stopp live-serveren og kjør:
-
-```sh
-ANALYSIS_MODE=demo npm run demo
-```
-
-Bare eksplisitt Start analyse kan utløse det betalte uttrekket; tallberegning og ny screening fra uendret rapport er lokale. Se [backendgrensen](src/backend/README.md) for kontrakter og feil-/timeoutdetaljer.
-
-## Struktur og sporbarhet
-
-Se også [pre-submission quality gate](.docs/implementation-artifacts/pre-submission-quality-gate-2026-10-27.md), [UI før/etter og review](.docs/implementation-artifacts/sluttforing-2026-10-27-review.md), [S6-forberedelse](.docs/implementation-artifacts/story-5-4-forberedelse-2026-10-27.md), [kort ekstern instruks](.docs/implementation-artifacts/story-5-4-ekstern-instruks.md), [leveringskontroll](.docs/implementation-artifacts/story-5-5-leveringskontroll-2026-10-27.md) og [arbeidsøkt](.docs/process/arbeidsokter/2026-10-27-kontrollert-sluttforing.md).
-
-| Plassering | Ansvar |
-|---|---|
-| `src/frontend/` | React, midlertidig økt, kontroll, lokale PDF-ressurser og resultatvisning; bruker domain/contracts. |
-| `src/domain/` | Rene finans-, validerings- og screeningregler; bruker contracts, ingen UI/server/I/O. |
-| `src/contracts/` | Delte runtime-skjema og typer; ingen UI/server/I/O. |
-| `src/backend/` | Lokal server, PDF-bytes/identitet/sider/tekst, analysepipeline og lagret demo; [modulbruk](src/backend/README.md). |
-| `tests/unit/`, `tests/integration/` | Rene grenser, reell PDF-/HTTP-integrasjon og samlet demo. |
-| `tests/e2e/`, `tests/components/` | Bygget app/dev og resultatkomponenter i Chromium. |
-| `tests/fixtures/` | Versjonerte fiktive PDF-er og uavhengig fasit; ingen private originaler. |
-| `src/backend/analysis/data/` | Rapportbundne lagrede [demosvar og opphav](src/backend/analysis/data/README.md). |
-| `.docs/` | Planer, implementerings-/test-/reviewbevis og KI-prosess. |
-
-Private originaler hører til Git-ignorert `private/`. `.env`/`.env.*`, avhengigheter og byggeutdata er ignorert; bare eventuelle hemmelighetsfrie `.example`-filer er tillatt. Demo leser ingen nødvendig miljøfil. Lokal statisk server tilbyr bygget app, ikke reporoten eller private filer.
-
-- Låst grunnlag: [SPEC](.docs/specs/spec-IBE160/SPEC.md), [epics/Story 5.3 AC](.docs/planning-artifacts/epics.md#story-53-dokumentere-en-komplett-oppskrift-for-lokal-demo-og-tester), [arkitektur AD-1–AD-10](.docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md), [DESIGN](.docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md) og [EXPERIENCE](.docs/planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md).
-- Fremdrift: [sprintplan](.docs/implementation-artifacts/sprint-plan.md), [gjeldende sprintstatus](.docs/implementation-artifacts/sprint-status.yaml), [5.1-review](.docs/implementation-artifacts/story-5-1-review.md), [5.2-review](.docs/implementation-artifacts/story-5-2-review.md).
-- Prosess: [promptlogg og mekanisme](.docs/process/prompts/README.md), [5.3-prompt](.docs/process/prompts/2026-10-22-story-5-3.md), [5.3-arbeidsøkt](.docs/process/arbeidsokter/2026-10-22-story-5-3.md), [forrige mini-sprint](.docs/process/arbeidsokter/2026-10-21-mini-sprint-3-3-3-4.md).
-- Kursgrunnlag: [sensorveiledning](.docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf) og [faglærerens brief-tilbakemelding](.docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md).
-
-Gruppeprosjekt i **IBE160 Programmering med KI**, Høgskolen i Molde, høsten 2026. Medlem: Mads Semb Christophersen. Startstrukturen er tilpasset [Vites offisielle react-ts-starter](https://github.com/vitejs/vite/tree/df7503cc499e0b49e45701e3be7546918ee9d322/packages/create-vite/template-react-ts).
-
-### Lokale leiereferanser i Konsept A
-
-Etter PDF-opplasting leses adresse, kommune, bydel når dokumentert, internt areal,
-rom og boligtype fra eksisterende dokumentgrunnlag. Leieagenten bruker et lite,
-versjonert lokalt utdrag fra Utleiemegleren/NTB og Hybel/Menon, samt et separat
-SSB-snapshot fra tabell 09897. **Ingen internettilgang, API-nøkkel eller betalt
-modell trengs for leieberegningen.** Lenker til originalkildene åpnes bare når
-brukeren klikker. PDF/OCR/TG-løpet og kostnadsportene for eventuell modellbruk
-beholdes.
-
-20 manuelt kontrollerte observasjoner har kilde, publiseringsdato,
-observasjonsperiode, geografi, boligtype, pris og kontrakts-/annonsegrunnlag.
-Hybels Q3 2026-data gir romreferanser for Bergen, Oslo og Gamle Oslo.
-Utleiemeglerens eldre kronebeløp har blandet annonse-/porteføljegrunnlag; nyere
-vekstprosenter vises bare som kontekst. Aktive kontrakter, nye kontrakter og
-annonser blandes ikke til én pris. Kommune gir bare grov bytilordning; bydel
-utledes ikke fra adressen. Arealfordeling og individuelle sammenligningsobjekter
-mangler, så **individuell markedsleie er uttrykkelig ikke beregnet**.
-
-SSB beholdes som intern kontrollkilde i 2025-nivå. Råceller, formel og kilder
-finnes under «Leiekilder og metode». Hovedflaten viser Hybel/Menon som
-statistisk gruppereferanse, sammen med leieslider og tilbakestilling. Eksisterende interpolasjon mellom arealpunkter og tydelig
-merket ytterpunktstilnærming høyst 2 m² utenfor beholdes. Større avstand,
-ukjent område, flerboligobjekt og motstrid gir en synlig begrensning.
-Rom og soverom holdes adskilt; BRA-i foretrekkes. Tidligere prosentmarginer er
-fjernet. Sonespennet viser bare geografiske forskjeller i de brukte SSB-cellene,
-ikke individuell usikkerhet. Ingen prisvekst-, standard-, etasje- eller
-beliggenhetsjustering gjøres. SSB eldre enn tre kalenderår avvises.
-
-Bare urørt leiegrunnlag kan bruke SSB-referansen i et ubekreftet økonomiscenario.
-Manuell/faktisk leie og konflikter overstyres aldri. Årsleie er 12 × månedsleie
-før ledighet, kostnader og skatt. Statistikkåret beholdes; beregningstid gjør
-ikke eldre leie sammenlignbar med drift fra et annet år. Full drift,
-gjeldsbetaling og screeningbekreftelse har fortsatt egne kontrollporter.
-
-Se [kilder, faktiske tabeller, metode og manuelt vedlikehold](.docs/implementation-artifacts/leieagent-lokale-referanser.md)
-og [spesifikasjon og verifikasjon](.docs/implementation-artifacts/spec-lokalt-leiegrunnlag.md).
-
-#### Ekte megleroppsett og modellgrenser
-
-Leieuttrekket støtter også `SALGSOBJEKT`, `Boligtype/eierform`, Unicode-
-bindestrek i BRA-i, kompakt `BRA-I/ BRA TOTAL intern/total kvm`, forsideadresse
-på to linjer og kommune fra eksplisitt matrikkelbetegnelse. Etasjetabeller
-holdes adskilt fra objekttotaler, også over sideskift. Tomme budskjemafelt og
-meglerkontorets adresse/kommune blir ikke boligopplysninger.
-
-Dokumenterte boligopplysninger vises i Konsept A selv når markedsestimat ikke
-kan beregnes. Enebolig, blandet boligtype eller intern/total-motstrid skal ikke
-bli en kunstig leilighetsleie. SSB-modellens publiserte arealpunkter må passe
-romgruppen, med høyst 2 m² avvik for tydelig merket ytterpunktstilnærming;
-ingen ekstrapolering eller automatisk bruk av en etasje som en
-selvstendig leilighet skjer. Ukjent faktisk leie beholdes som ukjent.
-
-`tests/e2e/rent-real-document.spec.ts` inneholder en valgfri privat PDF-prøve
-og en syntetisk prøve av lokale leiereferanser. Alle leieprøvene bruker
-offentlige, lagrede SSB-svar og krever ikke nett. Private PDF-er, råresponser og bilder distribueres ikke.
-Se [ekte PDF-undersøkelse og testbevis](.docs/process/arbeidsokter/2026-11-04-leieagent-ekte-pdf.md).
-
-
-#### Store digitale salgsoppgaver og Nordvik-prøven
-
-Importen strømmer PDF-en til ett eid originalgrunnlag og deler dette lesende
-med parserworkerne. Grupper har høyst 20 sider og avsluttes tidligere ved høyt
-minneforbruk; hver worker avsluttes før neste starter. Parserheapen er begrenset
-til 256 MiB gammel og 16 MiB ung generasjon. Importprosessen beholder sin
-512 MiB RSS-vakt, med et tidligere parservern på 448 MiB. Fullførte sider og
-levert tekst bevares ved parserens ressursgrense; manglende kontroll får fysisk
-side og årsak. Formatkontrollen laster ikke unødvendige systemfonter.
-
-OCR brukes som lokalt supplement for manglende/usikker tekst og grafiske detaljer.
-OCR kjører separat med eget ressursvern; 512 MiB er ikke et samlet budsjett for
-hele prosesstreet. Sider uten bildekontroll beholder eksplisitt usikker dekning.
-Originalviseren frigjør avsluttede canvas- og sideressurser.
-
-Nordvik Rostockgata 96 er prøvd med ekte privat PDF på 170 sider og integrert
-19-siders rapport. Alle bestilte bolig-/økonomifelt hentes med fysiske kilder.
-Eksplisitt «Bydel: 1 Gamle Oslo» på fysisk PDF-side 117 velger prissone 01.02.
-For 59 m² og 3 rom brukes den publiserte 60 m²-cellen (3.060) som tydelig
-merket tilnærming: 18 900 kr/mnd, 226 800 kr/år i 2025-nivå. Bare én SSB-sone er valgt, så sonespennet er 18 900–18 900 kr/mnd uten
-påstått individuell usikkerhet. Hybels treromsreferanse for aktive kontrakter i
-Gamle Oslo er separat 20 426 kr/mnd i Q3 2026. Individuell markedsleie er ikke
-beregnet; 59→60 er heller ikke en direkte SSB-prediksjon for 59 m².
-Dokumentert null fellesgjeld per 26.10.2026 (fysisk side 28) gir automatisk
-prisgrunnlag 8 600 000 kr. Fellesutgifter 3 660 kr/mnd (side 26) gir kjent
-årsdrift 43 920 kr, uten å telle de inkluderte delpostene på nytt. Med
-SSB-referansen blir bruttoyield 2,64 % og foreløpig netto før finansiering og
-øvrige ukjente kostnader 182 880 kr/år, tilsvarende 2,13 %. Dette er et
-avgrenset scenario: kostnadsåret er ukjent, flere eierkostnader mangler og
-full drift/kontantstrøm og kontrollert screening har fortsatt egne sperrer.
-Teknisk fullstendighet er fortsatt uavklart, selv om alle 19 rapportsider er
-lokalt bildekontrollert.
-Se [minneundersøkelsen](.docs/process/arbeidsokter/2026-11-04-nordvik-minneflyt.md) og
-[leiegrunnlag og tidligere testbevis](.docs/process/arbeidsokter/2026-11-04-rostockgata-leieestimat.md) og
-[automatisk dokumentøkonomi og foreløpig netto](.docs/process/arbeidsokter/2026-11-04-rostockgata-automatisk-netto.md).
-
-Den private originalen må ligge i `private/incoming/nordvik-rostockgata-96.pdf`.
-Kjør på macOS med klargjort lokal Vision og ledig testport:
-
-```bash
-npm run prepare:visual
-npm run build
-PAA_E2E_PORT=3001 PAA_TEST_NORDVIK_REQUIRED=1 npx playwright test tests/e2e/rent-real-document.spec.ts --grep "ekte Nordvik"
-```
-
-Flagget krever originalen og tillater ikke skip. Prøven bruker lokale, publiserte
-referanser og arkiverte SSB-celler, uten eksterne leieoppslag eller betalt KI. Uten privat fil hoppes denne enkeltprøven over
-i vanlig regresjon; syntetiske format-, felt- og ressursprøver kjører fortsatt.
-
-
-Nøstegaten 65 A bruker privat original med 152 sider og uendret tekstlag.
-Lagkontrollen vurderer hver side; faktiske valgfrie lag og uavklart struktur
-sperres fortsatt. Økonomisidene dokumenterer 4 050 000 kr, 40 m² BRA-i,
-2 rom / 1 soverom, null fellesgjeld og **1 020 kr/mnd** i fellesutgifter
-(FINN-tallet 1 019 bekreftes ikke). Kommunale avgifter er 12 957 kr/år,
-inkludert eiendomsskatt. Dokumentet varsler uvisse økninger for fasade og heis.
-
-Den automatiske brede Bergen-modellen gir 12 000 kr/mnd i SSB 2025-nivå,
-144 000 kr/år, brutto 3,56 % og foreløpig 2,93 % ved et kostnadsfradrag
-på 25 197 kr/år. Sistnevnte forutsetter at kommunale avgifter kommer i tillegg
-til felleskostnadene. Beløpene er dokumentert, men eventuell overlapping er
-uavklart; forutsetningen vises særskilt, og dokumentfeltet forblir ukjent.
-Bydel er uavklart; begge Bergen-soner inngår. Sonespennet er 11 300–12 600
-kr/mnd uten prosentmargin. Hybels toromsreferanse for Bergen er separat
-13 891 kr/mnd for aktive kontrakter i Q3 2026. Individuell markedsleie og
-individuelt usikkerhetsintervall er ikke beregnet. Kostnadsår, øvrige utgifter,
-finansiering og full netto er fortsatt uavklart; ingen prisjustering eller
-fullstendig kostnadsdekning påstås. Teknisk fullstendighet er fortsatt sperret.
-Lokal rapport-OCR 86–101 er separat fra økonomiens tekstkilder.
-Se [årsaker, fysisk kildefasit og faktiske testutfall](.docs/process/arbeidsokter/2026-11-05-nostegaten-okonomi.md)
-og [tidligere minneverifikasjon](.docs/process/arbeidsokter/2026-11-05-robust-pdf-minne.md).
-
-For å kreve begge private originaler i nettleserprøven, legg Nøstegaten-filen i
-`private/incoming/nostegaten-65-a.pdf` og kjør:
-
-```bash
-PAA_E2E_PORT=3001 PAA_TEST_NORDVIK_REQUIRED=1 PAA_TEST_NOSTEGATEN_REQUIRED=1 npx playwright test tests/e2e/rent-real-document.spec.ts --grep "ekte Nordvik|ekte Nøstegaten"
-```
-
-Persondatafrie fase-/minnetall og private uttrekk kan gjenskapes lokalt med:
-
-```bash
-node tools/pdf-memory/probe.ts private/incoming/nostegaten-65-a.pdf private/incoming/nordvik-rostockgata-96.pdf --output-dir private/pdf-memory
-```
-
-Verktøyet bruker den faktiske importflyten uten modelltransport og lagrer bare
-under ignorert `private/`, i en ny resultatmappe for hver kjøring. Tidligere filer
-overskrives ikke. Det måler Node og lokal OCR separat og oppgir også
-en samplet RSS-sum; denne summen er ikke dekket av Node-prosessens 512 MiB-vakt.
-
-
-### Ekte sluttprøve av investeringsverktøyet
-
-Private originaler lagres lokalt som `private/incoming/nostegaten-65-a.pdf` og
-`private/incoming/nordvik-rostockgata-96.pdf`; de distribueres ikke i Git. Med
-prosjektets Node/npm-versjon, tilgjengelig lokal OCR og ledig port 3000:
-
-```sh
-npm run build
-PAA_TEST_INVESTMENT_REQUIRED=1 npx playwright test tests/e2e/investment-tool-real.spec.ts
-```
-
-Prøven bruker ekte backend og begge originaler, egen økonomisk fasit,
-direkte justeringer, negativ kontantstrøm, høy belåning, nullrente, kontantkjøp,
-mangler, kilder, graf, mobil og gjentatt opplasting. Ingen API-svar stubbes.
-Uten private originaler blir disse to private casene hoppet over i ordinær
-regresjon; flagget over krever at de faktisk kjøres.
-[Prosess og faktiske resultater](.docs/process/arbeidsokter/2026-11-05-investeringsverktoy.md)
-og [uavhengig QA](.docs/process/arbeidsokter/2026-11-05-investeringsverktoy-uavhengig-qa.md).
+Grunnlag: [Sensorveiledning IBE160 del 1](.docs/reference/course/Sensorveiledning-IBE160-Del-1.pdf), [faglærerfeedback](.docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/tilbakemelding-product-brief.md) og [AGENTS.md](AGENTS.md). Prosjekt i **IBE160 Programmering med KI**, Høgskolen i Molde, høsten 2026. Medlem: Mads Semb Christophersen. Startstrukturen bygger på Vites React/TypeScript-starter; tredjepartsavhengigheter beholder sine egne lisenser.

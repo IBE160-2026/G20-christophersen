@@ -1,0 +1,24 @@
+{
+  "baseline": "639291814886a6058a24adf95c69e8633b645944",
+  "files": [
+    ".docs/implementation-artifacts/deferred-work.md",
+    ".docs/implementation-artifacts/spec-leveransekontroll-2026-11-06.md",
+    ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+    ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+    ".docs/process/arbeidsokter/2026-11-06-leveransekontroll.md",
+    ".docs/process/leveranse-2026-11-06/agentoppdrag.md",
+    ".docs/process/leveranse-2026-11-06/demonstrasjon.md",
+    ".docs/process/leveranse-2026-11-06/produkt-og-sporbarhet.md",
+    ".docs/process/leveranse-2026-11-06/prosess-og-ki.md",
+    ".docs/process/leveranse-2026-11-06/rapport.md",
+    ".docs/process/leveranse-2026-11-06/ren-klon.md",
+    ".docs/process/leveranse-2026-11-06/teknisk-og-test.md",
+    ".docs/process/leveranse-2026-11-06/uavhengig-sensor.md",
+    "README.md",
+    "src/backend/README.md"
+  ],
+  "localFileTargets": 423,
+  "missing": [],
+  "limitation": "Kontrollerer fil/dirmål; ikke eksterne kilder eller fragmentankre."
+}

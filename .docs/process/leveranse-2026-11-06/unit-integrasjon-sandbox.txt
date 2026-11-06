@@ -1,0 +1,347 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/integration/http-analysis.test.ts (22 tests | 21 failed) 3169ms
+   ❯ Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp (22)
+     × F1 følger faktisk PDF og uavhengig fasit med ett adapterkall 10ms
+     × F2 følger faktisk PDF og uavhengig fasit med ett adapterkall 2ms
+     × F3 følger faktisk PDF og uavhengig fasit med ett adapterkall 0ms
+     × F4 følger faktisk PDF og uavhengig fasit med ett adapterkall 0ms
+     × navn og MIME er bare metadata, feil signatur/container er dokumentfeil 0ms
+     × avviser ugyldig korrelasjon, ingen/flere filer og skjulte metadata 0ms
+     × metadata 1 MiB er innen grensen, én byte over 413; base64 og ekstra JSON-felt behandles aldri 0ms
+     × PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked 0ms
+     × vilkårlige chunks og falsk boundary bevarer originalbytehash 0ms
+     × aktiv lås gjelder under upload med andre requestId/generasjon og slipper etter abort 0ms
+     × http-adapter-failure.ts gir trygg feil uten retry og beholder markør 1ms
+     × http-adapter-invalid.ts gir trygg feil uten retry og beholder markør 0ms
+     × aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon 0ms
+     × without-text-layer.pdf blir dokumentfeil uten adaptertillatelse eller varig markør 0ms
+     × text-31-pages.pdf blir dokumentfeil uten adaptertillatelse eller varig markør 0ms
+     × cleanup-feil i parser eier fortsatt workertråder som termineres med prosessen 0ms
+     × klientabort under parser stopper synkront heng og lar samme session starte igjen 0ms
+     × én reell 60 s-frist stopper parserheng, adapterheng og sen retur etter flere steg 5ms
+     × serverstopp venter på faktisk cleanup av en request med hengende adapter 1ms
+     × 413 når fram mens chunked-klienten fremdeles forsøker å skrive overgrense 0ms
+     × klientabort under adapter terminerer prosessen og beholder duplikatsperre 0ms
+ ❯ tests/integration/document-import.test.ts (14 tests | 11 failed) 7435ms
+   × SO-AC1/5/14: faktisk HTTP/barn gir kildebundet økonomi før finansinput, uten nøkkel og med stengt live 13ms
+   × SO-AC2: separat rapport 31 går via ny profil og egen fysisk original 2ms
+   × SO-AC2: separat rapport 200 går via ny profil og egen fysisk original 0ms
+   × SO-AC2: separat rapport 201 går via ny profil og egen fysisk original 0ms
+   × SO-AC2: inclusive 50 MiB og samlet rapportbudsjett/bytte uten AI over grensen 0ms
+   × SO-AC13: global prosesslås deles med legacy og beholdes til child-close ved abort 0ms
+   × SO-AC13: uploadstopp avslutter faktisk mottak før lås frigis 0ms
+   ❯ SO-AC13: foreldrefrist, RSS og terminalcleanup (3)
+     × RSS-stopp måles fra forelderen, også ved blokkert child-eventloop 5004ms
+   × ukjent originalhash får generell lokal plan med stengt semantisk port 1ms
+   × review: faktisk PDF-worker/HTTP stopper per-page-tekstgrensen før adapter og frigir låsen 11ms
+   × review: faktisk PDF-worker/HTTP stopper aggregate-tekstgrensen før adapter og frigir låsen 0ms
+ ❯ tests/unit/document-import.test.ts (30 tests | 1 failed) 21683ms
+   × SO-AC12: kjent eiendomsmotstrid blokkeres selv med ellers komplett rapport 5005ms
+ ❯ tests/integration/code-first-pdf.test.ts (12 tests | 1 failed) 25503ms
+   × unsafe page finance stays unusable, catalog present=true 5016ms
+ ❯ tests/integration/live-http.test.ts (7 tests | 7 failed) 32ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline empty.pdf, durable duplicate and safe mode metadata 23ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline transport.pdf, durable duplicate and safe mode metadata 4ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline invalid.pdf, durable duplicate and safe mode metadata 2ms
+   × 4.3 AC1/3: real HTTP/process/SDK offline incomplete.pdf, durable duplicate and safe mode metadata 1ms
+   × 4.3 AC3: production missing key is safe live failure after document gate, never fallback 1ms
+   × 4.3 AC5: abort terminates actual live child before lock release and marker survives 1ms
+   × 4.3 AC2: production HTTP/SDK preserves nonempty findings and source uncertainty 1ms
+ ❯ tests/integration/uploaded-economy-http.test.ts (8 tests | 8 failed) 18ms
+   × forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall 10ms
+   × ukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst 4ms
+   × fire gjentatte gratis forberedelser av samme dokument/økt erstatter pakken uten å fylle minnet 1ms
+   × tidsavbrudd lukker en stanset multipart-opplasting og frigir låsen for neste forberedelse 1ms
+   × stenging venter på pågående transport og journalavslutning 1ms
+   × HTTP-feil fra leverandøren får trygg kategori og audit uten nøkkel, utdrag eller rå feiltekst 1ms
+   × statusruten avviser ugyldig hash og sperrer ødelagt historikk uten nye kall eller filendring 0ms
+   × statusruten bevarer ukjent historisk kostnadsgrunnlag og eksplisitt eksakt grunnlag 1ms
+ ❯ tests/unit/import-session.test.ts (37 tests | 1 failed) 19737ms
+   ❯ SO-AC1/11/12: importøkt og manuelt eierskap (8)
+     × kjent identitetsmotstrid lar seg ikke bekrefte bort 5005ms
+ ❯ tests/integration/saved-economy-real.test.ts (1 test | 1 failed) 29ms
+   × privat original går gjennom HTTP, import-child og standard integritetsbundet arkivleser 28ms
+ ❯ tests/integration/server-mode.test.ts (3 tests | 3 failed) 9ms
+   × 4.3: actual server entry with ANALYSIS_MODE=(unset) 6ms
+   × 4.3: actual server entry with ANALYSIS_MODE=live 2ms
+   × 4.3: actual server entry with ANALYSIS_MODE=unknown 0ms
+ ❯ tests/integration/rent-http.test.ts (1 test | 1 failed) 8ms
+   × faktisk HTTP-rute utleder dokumentgrunnlag, bruker kun lokale statistikkfiler og validerer respons 7ms
+ ❯ tests/integration/listing-http.test.ts (7 tests | 7 failed) 15ms
+   × FI-1: deaktivert kanal gjør ingen ekstern transport selv med injisert adapter 8ms
+   × kontrollert adapter returnerer validert grunnlag og korrelasjon 3ms
+   × avviser ugyldig URL, credentials, port og overstor kropp før adapter 1ms
+   × feil side og ufullført handling blir trygg avvisning uten intern feildetalj 1ms
+   × FINN-2: gate-approved production backend uses stubbed SDK and returns retained-attempt status 2ms
+   × FINN-2: incomplete operator approvals return safe configuration status without key access 0ms
+   × FINN-2: concurrent request returns busy without consuming the other code 0ms
+ ❯ tests/integration/http-analysis-review.test.ts (2 tests | 1 failed) 5837ms
+   ❯ Story 2.5 – uavhengige HTTP-/ressursprøver i review (2)
+     × tolv samtidige starter under delvis upload avvises, og serverstopp drenerer upload uten parserstart 5005ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 63 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/code-first-pdf.test.ts > unsafe page finance stays unusable, catalog present=true
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/code-first-pdf.test.ts:109:23
+    107|
+    108| const unsafeFinance = ['Bevart tekst', 'Prisantydning: 3 000 000 kr', …
+    109| it.each([false, true])('unsafe page finance stays unusable, catalog pr…
+       |                       ^
+    110|   for (const layerUse of ['text', 'form', 'orphan-form', 'unresolved',…
+    111|     const format = await validatePdf(newProspectusPdf(unsafeFinance, {…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/63]⎯
+
+ FAIL  tests/integration/document-import.test.ts > SO-AC1/5/14: faktisk HTTP/barn gir kildebundet økonomi før finansinput, uten nøkkel og med stengt live
+ FAIL  tests/integration/document-import.test.ts > SO-AC2: separat rapport 31 går via ny profil og egen fysisk original
+ FAIL  tests/integration/document-import.test.ts > SO-AC2: separat rapport 200 går via ny profil og egen fysisk original
+ FAIL  tests/integration/document-import.test.ts > SO-AC2: separat rapport 201 går via ny profil og egen fysisk original
+ FAIL  tests/integration/document-import.test.ts > SO-AC2: inclusive 50 MiB og samlet rapportbudsjett/bytte uten AI over grensen
+ FAIL  tests/integration/document-import.test.ts > SO-AC13: global prosesslås deles med legacy og beholdes til child-close ved abort
+ FAIL  tests/integration/document-import.test.ts > SO-AC13: uploadstopp avslutter faktisk mottak før lås frigis
+ FAIL  tests/integration/document-import.test.ts > ukjent originalhash får generell lokal plan med stengt semantisk port
+ FAIL  tests/integration/document-import.test.ts > review: faktisk PDF-worker/HTTP stopper per-page-tekstgrensen før adapter og frigir låsen
+ FAIL  tests/integration/document-import.test.ts > review: faktisk PDF-worker/HTTP stopper aggregate-tekstgrensen før adapter og frigir låsen
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F1 følger faktisk PDF og uavhengig fasit med ett adapterkall
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F2 følger faktisk PDF og uavhengig fasit med ett adapterkall
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F3 følger faktisk PDF og uavhengig fasit med ett adapterkall
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > F4 følger faktisk PDF og uavhengig fasit med ett adapterkall
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > navn og MIME er bare metadata, feil signatur/container er dokumentfeil
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > avviser ugyldig korrelasjon, ingen/flere filer og skjulte metadata
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > metadata 1 MiB er innen grensen, én byte over 413; base64 og ekstra JSON-felt behandles aldri
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > PDF akkurat 50 MiB passerer størrelse, én byte over stanses før prosess også chunked
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > vilkårlige chunks og falsk boundary bevarer originalbytehash
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > aktiv lås gjelder under upload med andre requestId/generasjon og slipper etter abort
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > http-adapter-failure.ts gir trygg feil uten retry og beholder markør
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > http-adapter-invalid.ts gir trygg feil uten retry og beholder markør
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > aktiv sessionlås gjelder under adapterarbeid på tvers av hash og korrelasjon
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > without-text-layer.pdf blir dokumentfeil uten adaptertillatelse eller varig markør
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > text-31-pages.pdf blir dokumentfeil uten adaptertillatelse eller varig markør
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > cleanup-feil i parser eier fortsatt workertråder som termineres med prosessen
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > klientabort under parser stopper synkront heng og lar samme session starte igjen
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > én reell 60 s-frist stopper parserheng, adapterheng og sen retur etter flere steg
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > serverstopp venter på faktisk cleanup av en request med hengende adapter
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > 413 når fram mens chunked-klienten fremdeles forsøker å skrive overgrense
+ FAIL  tests/integration/http-analysis.test.ts > Story 2.5 HTTP – original, terminalkontrakt og prosesslivsløp > klientabort under adapter terminerer prosessen og beholder duplikatsperre
+ FAIL  tests/integration/listing-http.test.ts > FI-1: deaktivert kanal gjør ingen ekstern transport selv med injisert adapter
+ FAIL  tests/integration/listing-http.test.ts > kontrollert adapter returnerer validert grunnlag og korrelasjon
+ FAIL  tests/integration/listing-http.test.ts > avviser ugyldig URL, credentials, port og overstor kropp før adapter
+ FAIL  tests/integration/listing-http.test.ts > feil side og ufullført handling blir trygg avvisning uten intern feildetalj
+ FAIL  tests/integration/listing-http.test.ts > FINN-2: gate-approved production backend uses stubbed SDK and returns retained-attempt status
+ FAIL  tests/integration/listing-http.test.ts > FINN-2: incomplete operator approvals return safe configuration status without key access
+ FAIL  tests/integration/listing-http.test.ts > FINN-2: concurrent request returns busy without consuming the other code
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline empty.pdf, durable duplicate and safe mode metadata
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline transport.pdf, durable duplicate and safe mode metadata
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline invalid.pdf, durable duplicate and safe mode metadata
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC1/3: real HTTP/process/SDK offline incomplete.pdf, durable duplicate and safe mode metadata
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC3: production missing key is safe live failure after document gate, never fallback
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC5: abort terminates actual live child before lock release and marker survives
+ FAIL  tests/integration/live-http.test.ts > 4.3 AC2: production HTTP/SDK preserves nonempty findings and source uncertainty
+ FAIL  tests/integration/rent-http.test.ts > faktisk HTTP-rute utleder dokumentgrunnlag, bruker kun lokale statistikkfiler og validerer respons
+ FAIL  tests/integration/saved-economy-real.test.ts > privat original går gjennom HTTP, import-child og standard integritetsbundet arkivleser
+ FAIL  tests/integration/server-mode.test.ts > 4.3: actual server entry with ANALYSIS_MODE=(unset)
+ FAIL  tests/integration/server-mode.test.ts > 4.3: actual server entry with ANALYSIS_MODE=live
+ FAIL  tests/integration/server-mode.test.ts > 4.3: actual server entry with ANALYSIS_MODE=unknown
+ FAIL  tests/integration/uploaded-economy-http.test.ts > forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+ FAIL  tests/integration/uploaded-economy-http.test.ts > ukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst
+ FAIL  tests/integration/uploaded-economy-http.test.ts > fire gjentatte gratis forberedelser av samme dokument/økt erstatter pakken uten å fylle minnet
+ FAIL  tests/integration/uploaded-economy-http.test.ts > tidsavbrudd lukker en stanset multipart-opplasting og frigir låsen for neste forberedelse
+ FAIL  tests/integration/uploaded-economy-http.test.ts > stenging venter på pågående transport og journalavslutning
+ FAIL  tests/integration/uploaded-economy-http.test.ts > HTTP-feil fra leverandøren får trygg kategori og audit uten nøkkel, utdrag eller rå feiltekst
+ FAIL  tests/integration/uploaded-economy-http.test.ts > statusruten avviser ugyldig hash og sperrer ødelagt historikk uten nye kall eller filendring
+ FAIL  tests/integration/uploaded-economy-http.test.ts > statusruten bevarer ukjent historisk kostnadsgrunnlag og eksplisitt eksakt grunnlag
+Error: listen EPERM: operation not permitted 127.0.0.1
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/63]⎯
+
+ FAIL  tests/integration/document-import.test.ts > SO-AC13: foreldrefrist, RSS og terminalcleanup > RSS-stopp måles fra forelderen, også ved blokkert child-eventloop
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/document-import.test.ts:113:3
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/63]⎯
+
+ FAIL  tests/integration/http-analysis-review.test.ts > Story 2.5 – uavhengige HTTP-/ressursprøver i review > tolv samtidige starter under delvis upload avvises, og serverstopp drenerer upload uten parserstart
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/http-analysis-review.test.ts:12:3
+     10|
+     11| describe('Story 2.5 – uavhengige HTTP-/ressursprøver i review', () => {
+     12|   it('tolv samtidige starter under delvis upload avvises, og serversto…
+       |   ^
+     13|     const events: LifecycleEvent[] = []
+     14|     const router = createAnalysisRouter({ onLifecycle: event => events…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/63]⎯
+
+ FAIL  tests/unit/document-import.test.ts > SO-AC12: kjent eiendomsmotstrid blokkeres selv med ellers komplett rapport
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/unit/document-import.test.ts:112:1
+    110|   expect(suggestions(outcome).P).toBe(expected.P)
+    111| })
+    112| it('SO-AC12: kjent eiendomsmotstrid blokkeres selv med ellers komplett…
+       | ^
+    113|   const prospectus=(await importFixture('bounded-200.pdf')).outcome, r…
+    114|   expect(comparePropertyIdentity(prospectus,report)).toBe('conflict')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/63]⎯
+
+ FAIL  tests/unit/import-session.test.ts > SO-AC1/11/12: importøkt og manuelt eierskap > kjent identitetsmotstrid lar seg ikke bekrefte bort
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/unit/import-session.test.ts:104:3
+    102|     }
+    103|   })
+    104|   it('kjent identitetsmotstrid lar seg ikke bekrefte bort',async()=>{
+       |   ^
+    105|     const prospectus=await importFixture('bounded-200.pdf'),report=awa…
+    106|     let state=load(load(createInitialSession(),prospectus),report,'rep…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/63]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 6 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:458:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "import-hang-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:458:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "import-hang-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:458:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "import-late-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:458:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "import-late-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:458:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "RSS-stopp måles fra forelderen, også ved blokkert child-eventloop". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:2306:21
+ ❯ listenInCluster node:net:2437:12
+ ❯ node:net:2666:7
+ ❯ process.processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/integration/http-analysis-review.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "tolv samtidige starter under delvis upload avvises, og serverstopp drenerer upload uten parserstart". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  12 failed | 99 passed | 1 skipped (112)
+      Tests  63 failed | 2175 passed | 7 skipped (2245)
+     Errors  6 errors
+   Start at  11:11:50
+   Duration  53.03s (tests 95%, import 4%)
+

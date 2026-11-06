@@ -1,0 +1,23 @@
+
+Running 17 tests using 1 worker
+
+  ✓   1 tests/e2e/new-document-import.spec.ts:71:1 › ny ukjent PDF i tom økt henter bare eksplisitte kodefelt og åpner nye originalkilder (1.3s)
+  ✓   2 tests/e2e/new-document-import.spec.ts:92:1 › ny ukjent fritekst-PDF får ukjente beløp og eksplisitt sperret KI, ingen oppdiktet erstatning (996ms)
+  -   3 tests/e2e/new-document-import.spec.ts:102:1 › ny PDF med samme filnavn erstatter forrige ekte dokument uten tall-, kilde- eller forutsetningslekkasje
+  -   4 tests/e2e/new-document-import.spec.ts:138:46 › ny ekte salgsoppgave: tom økt
+  -   5 tests/e2e/new-document-import.spec.ts:138:46 › ny ekte salgsoppgave: erstatter tidligere ekte dokument
+  -   6 tests/e2e/new-document-import.spec.ts:188:1 › 135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI-forberedelse
+  -   7 tests/e2e/new-document-import.spec.ts:260:1 › ekte135: usikkert tidligere forsøk vises fra journal uten nytt betalt kall
+  -   8 tests/e2e/new-document-import.spec.ts:279:1 › ekte135: synlig fremdrift og feil ved knappen under lange utdrag, høyst ett kall
+  ✓   9 tests/e2e/new-document-import.spec.ts:318:1 › hengende HTTP-svar får synlig klientfrist uten automatisk nytt kall (2.0s)
+  ✓  10 tests/e2e/new-document-import.spec.ts:347:1 › status etter ny sidelasting følges lokalt fra analyserer til feilet (2.3s)
+  ✓  11 tests/e2e/new-document-import.spec.ts:362:1 › klientfrist avstemmes lokalt til fullført uten ny betalt forespørsel (2.0s)
+  ✓  12 tests/e2e/new-document-import.spec.ts:393:1 › feilet statuspoll avslutter analyserer og gratis statuskontroll kan gjenopprette (2.4s)
+  ✓  13 tests/e2e/new-document-import.spec.ts:410:1 › gammel backend uten statusrute gir konkret omstartshjelp og sperrer betaling (975ms)
+  ✓  14 tests/e2e/new-document-import.spec.ts:420:1 › gratis kontroll kan gjenopprette idle etter statusfeil før noe betalt forsøk (1.1s)
+  ✓  15 tests/e2e/new-document-import.spec.ts:435:1 › gammel backend med tekstlig 404 viser omstartshjelp og kan forberedes på nytt (2.9s)
+  ✓  16 tests/e2e/new-document-import.spec.ts:471:1 › KI-knappen krever begge uttrykkelige samtykker og ny PDF nullstiller godkjenningen (2.0s)
+  ✓  17 tests/e2e/new-document-import.spec.ts:499:1 › godkjent KI-svar oppdaterer gjeldende eiendom med nye kildebundne tall (2.0s)
+
+  6 skipped
+  11 passed (21.5s)

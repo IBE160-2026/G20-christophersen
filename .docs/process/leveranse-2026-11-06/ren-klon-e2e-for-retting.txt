@@ -1,0 +1,348 @@
+
+> property-acquisition-agent@0.0.0 test:e2e
+> npm run build && playwright test && playwright test --config playwright.dev.config.ts
+
+
+> property-acquisition-agent@0.0.0 build
+> npm run typecheck && vite build
+
+
+> property-acquisition-agent@0.0.0 typecheck
+> tsc -b
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                    0.53 kB │ gzip:   0.34 kB
+dist/assets/property-image-worker-CuZTJ3K5.js      1.71 kB
+dist/assets/scenario-worker-Bu58LcsM.js           96.86 kB
+dist/assets/pdf.worker.min-CjEcRF4W.mjs        1,264.34 kB
+dist/assets/index-DqctO-00.css                    74.94 kB │ gzip:  11.98 kB
+dist/assets/index-6wiCoghi.js                  1,087.41 kB │ gzip: 323.58 kB
+
+✓ built in 234ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+Running 245 tests using 1 worker
+
+  ✓    1 tests/e2e/app-shell.spec.ts:8:1 › Konsept A: PDF først, ukjente verdier og bevart kontrollport (542ms)
+  ✓    2 tests/e2e/app-shell.spec.ts:30:1 › Konsept A: alle ressurser lokalt uten ekstern transport (222ms)
+  ✓    3 tests/e2e/app-shell.spec.ts:38:1 › AC5: HTTP serverer byggeutdata og avviser repo, private filer og ukjente API-ruter (72ms)
+  ✓    4 tests/e2e/app-shell.spec.ts:95:1 › Konsept A: komposisjon og typografi følger godkjent retning (217ms)
+  ✓    5 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 320px (288ms)
+  ✓    6 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 390px (288ms)
+  ✓    7 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 768px (296ms)
+  ✓    8 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 1024px (316ms)
+  ✓    9 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 1440px (317ms)
+  ✓   10 tests/e2e/app-shell.spec.ts:118:1 › Story 2.5: faktisk demoserver analyserer én multipart-PDF med backendhash og korrelasjon (1.4s)
+  ✓   11 tests/e2e/app-shell.spec.ts:134:1 › 4.3 startup: invalid or secret-bearing metadata blocks boot without a mode fallback (178ms)
+  ✓   12 tests/e2e/app-shell.spec.ts:143:1 › 4.3 startup: stalled metadata shows status and a bounded safe error (182ms)
+  ✓   13 tests/e2e/financial-input.spec.ts:5:1 › 1.3 AC1: blanke ubekreftede felt, synlige definisjoner, enheter og eksplisitt periode/år (337ms)
+  ✓   14 tests/e2e/financial-input.spec.ts:24:1 › 1.3 AC2/AC3/AC4: F1/F3, råstrenger, 0, sletting, periode/år og tilgjengelig retur (659ms)
+  ✓   15 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 1440×900 (771ms)
+  ✓   16 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 720×450 (705ms)
+  ✓   17 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×225 (680ms)
+  ✓   18 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 360×160 (531ms)
+  ✓   19 tests/e2e/financial-input.spec.ts:73:3 › 1.3 UX: feltrekkefølge, fokus og ombryting ved 320×160 (567ms)
+  ✓   20 tests/e2e/financial-input.spec.ts:120:1 › 1.5 AC1/AC4/AC5: fem synlige opphav, forventet leie og uløst kildekonflikt uten automatisk valg (668ms)
+  ✓   21 tests/e2e/financial-input.spec.ts:163:1 › 1.5 AC1/NFR-2: faktisk leie krever kilde, viser tilknyttet feil og beholder brukeropphav etter retting (410ms)
+  ✓   22 tests/e2e/financial-input.spec.ts:186:1 › 1.5 AC2/AC3/AC5 FR-2: synlig 120000=100000+20000, inkludert overlapp og bevarte D/J-totaler (559ms)
+  ✓   23 tests/e2e/financial-input.spec.ts:224:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 1440×900 (856ms)
+  ✓   24 tests/e2e/financial-input.spec.ts:224:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 360×225 (785ms)
+  ✓   25 tests/e2e/financial-input.spec.ts:224:3 › 1.5 UX: åpen kildekonflikt og kostnadspost kan nås uten fokusklipping ved 320×160 (815ms)
+  ✓   26 tests/e2e/financial-input.spec.ts:263:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 1440×900 (369ms)
+  ✓   27 tests/e2e/financial-input.spec.ts:263:3 › 1.5 NFR-2: feil for like og lange kostnadsnavn er tilknyttet uten vannrett rulling ved 320×160 (315ms)
+  ✓   28 tests/e2e/financial-input.spec.ts:293:1 › 1.7 AC1/AC3/AC4/AC5: F1, årsgrunnlag, eksplisitt bekreftelse, uendret retur, retting og øktslutt (681ms)
+  ✓   29 tests/e2e/financial-input.spec.ts:332:3 › 1.7 AC2/AC6: F3 manglende L viser lokale feil, første berørte felt og krever retting (505ms)
+  ✓   30 tests/e2e/financial-input.spec.ts:332:3 › 1.7 AC2/AC6: ugyldig P viser lokale feil, første berørte felt og krever retting (489ms)
+  ✓   31 tests/e2e/financial-input.spec.ts:332:3 › 1.7 AC2/AC6: ulike år viser lokale feil, første berørte felt og krever retting (487ms)
+  ✓   32 tests/e2e/financial-input.spec.ts:350:1 › 1.7 AC2/AC3: J=0 krever egen nullkontroll; blank behandles annerledes (667ms)
+  ✓   33 tests/e2e/financial-input.spec.ts:383:1 › 1.7 AC2: L-konflikt består gjennom forsøk; opphav og ny kontroll må rettes eksplisitt (536ms)
+  ✓   34 tests/e2e/financial-input.spec.ts:402:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1440×900 (480ms)
+  ✓   35 tests/e2e/financial-input.spec.ts:402:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 1280×800 (467ms)
+  ✓   36 tests/e2e/financial-input.spec.ts:402:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 720×450 (442ms)
+  ✓   37 tests/e2e/financial-input.spec.ts:402:3 › 1.7 AC6: lokal feil/nullkontroll, bekreftelse og trinnfokus ved 320×200 (435ms)
+Story 1.7 målt kontrast: {"action":11.986248364538982,"error":7.104296467437304,"issueText":10.856276273271185,"control":3.8101786636538826,"focus":6.701109538539959}
+  ✓   38 tests/e2e/financial-input.spec.ts:437:1 › 1.7 AC1/AC2/AC6: måned, synlig årsgrunnlag, nøyaktig kildefokus og målt kontroll-/feilkontrast (602ms)
+  ✓   39 tests/e2e/financial-input.spec.ts:484:3 › 1.7 AC2: kostnadsfeil i beløp fokuserer kontrollen som må rettes (523ms)
+  ✓   40 tests/e2e/financial-input.spec.ts:484:3 › 1.7 AC2: kostnadsfeil i rentedel fokuserer kontrollen som må rettes (488ms)
+  ✓   41 tests/e2e/financial-input.spec.ts:484:3 › 1.7 AC2: kostnadsfeil i inkludering fokuserer kontrollen som må rettes (572ms)
+  ✓   42 tests/e2e/investment-overview.spec.ts:28:1 › A: faktisk lokal PDF, egne forutsetninger og interaktiv økonomi uten autoritativ bekreftelse (17.4s)
+  ✓   43 tests/e2e/investment-overview.spec.ts:82:1 › A: ukjent leie og uriktig input viser mangler; kilde/risikodialog fungerer med tastatur (1.6s)
+  ✓   44 tests/e2e/investment-overview.spec.ts:99:1 › A: scenario endrer aldri kontrollert vurdering, TG3 eller resultatets snapshot (2.3s)
+  ✓   45 tests/e2e/investment-overview.spec.ts:134:1 › A: ugyldig år overskriver ikke egne verdier (1.4s)
+  ✓   46 tests/e2e/investment-overview.spec.ts:143:1 › A: risiko vises på hovedsiden med separate undersøkelsesgrupper og riktig originalside (1.4s)
+  ✓   47 tests/e2e/investment-overview.spec.ts:161:1 › A: separat rapport importeres direkte fra risikooversikten og kan erstattes med integrert rapport (2.2s)
+  ✓   48 tests/e2e/investment-overview.spec.ts:184:1 › A: automatisk leie fra ekte PDF-import gir sporbar forventning og bevarer manuell økonomi (2.3s)
+  ✓   49 tests/e2e/investment-overview.spec.ts:238:1 › A: leiefeil og sent svar fra forrige dokument viser aldri gammel leie (1.9s)
+  ✓   50 tests/e2e/investment-overview.spec.ts:266:37 › A: nytt gratis leieforsøk virker etter nettfeil (1.2s)
+  ✓   51 tests/e2e/investment-overview.spec.ts:266:37 › A: nytt gratis leieforsøk virker etter nettfeil og bevarer manuell leie (1.3s)
+  -   52 tests/e2e/investment-tool-real.spec.ts:43:27 › ekte investeringsverktøy: Nøstegaten 65 A, finansfasit, risiko, mobil og gjentatt opplasting
+  -   53 tests/e2e/investment-tool-real.spec.ts:43:27 › ekte investeringsverktøy: Rostockgata 96, finansfasit, risiko, mobil og gjentatt opplasting
+  ✓   54 tests/e2e/listing-import.spec.ts:3:1 › PDF er eneste synlige importinngang i oversikt og økonomikontroll (303ms)
+  ✓   55 tests/e2e/listing-import.spec.ts:18:1 › FINN-backendens deaktiverte tilgangsport beholdes (6ms)
+  ✘   56 tests/e2e/new-document-import.spec.ts:67:1 › ny ukjent PDF i tom økt henter bare eksplisitte kodefelt og åpner nye originalkilder (1.0s)
+  ✘   57 tests/e2e/new-document-import.spec.ts:88:1 › ny ukjent fritekst-PDF får ukjente beløp og eksplisitt sperret KI, ingen oppdiktet erstatning (1.1s)
+  -   58 tests/e2e/new-document-import.spec.ts:98:1 › ny PDF med samme filnavn erstatter forrige ekte dokument uten tall-, kilde- eller forutsetningslekkasje
+  -   59 tests/e2e/new-document-import.spec.ts:134:46 › ny ekte salgsoppgave: tom økt
+  -   60 tests/e2e/new-document-import.spec.ts:134:46 › ny ekte salgsoppgave: erstatter tidligere ekte dokument
+  -   61 tests/e2e/new-document-import.spec.ts:184:1 › 135-siders ekte dokument: sikre tall, falske adresser fjernet og gratis KI-forberedelse
+  -   62 tests/e2e/new-document-import.spec.ts:256:1 › ekte135: usikkert tidligere forsøk vises fra journal uten nytt betalt kall
+  -   63 tests/e2e/new-document-import.spec.ts:275:1 › ekte135: synlig fremdrift og feil ved knappen under lange utdrag, høyst ett kall
+  ✓   64 tests/e2e/new-document-import.spec.ts:314:1 › hengende HTTP-svar får synlig klientfrist uten automatisk nytt kall (2.0s)
+  ✓   65 tests/e2e/new-document-import.spec.ts:343:1 › status etter ny sidelasting følges lokalt fra analyserer til feilet (2.3s)
+  ✓   66 tests/e2e/new-document-import.spec.ts:358:1 › klientfrist avstemmes lokalt til fullført uten ny betalt forespørsel (2.0s)
+  ✓   67 tests/e2e/new-document-import.spec.ts:389:1 › feilet statuspoll avslutter analyserer og gratis statuskontroll kan gjenopprette (2.4s)
+  ✓   68 tests/e2e/new-document-import.spec.ts:406:1 › gammel backend uten statusrute gir konkret omstartshjelp og sperrer betaling (989ms)
+  ✓   69 tests/e2e/new-document-import.spec.ts:416:1 › gratis kontroll kan gjenopprette idle etter statusfeil før noe betalt forsøk (1.1s)
+  ✓   70 tests/e2e/new-document-import.spec.ts:431:1 › gammel backend med tekstlig 404 viser omstartshjelp og kan forberedes på nytt (3.0s)
+  ✓   71 tests/e2e/new-document-import.spec.ts:467:1 › KI-knappen krever begge uttrykkelige samtykker og ny PDF nullstiller godkjenningen (2.0s)
+  ✓   72 tests/e2e/new-document-import.spec.ts:495:1 › godkjent KI-svar oppdaterer gjeldende eiendom med nye kildebundne tall (2.0s)
+  ✓   73 tests/e2e/property-risk.spec.ts:10:1 › juridisk risiko fra ny lokal PDF vises med ordrett originalside uten KI-kall (1.8s)
+  -   74 tests/e2e/property-risk.spec.ts:55:1 › privat Øvre Blekeveien: side 58 og ufullstendig integrert rapport åpnes i originalen
+  ✓   75 tests/e2e/property-risk.spec.ts:154:1 › tekniske grader og sammendrag holdes atskilt med originalside, tastatur og mobil (1.6s)
+  ✓   76 tests/e2e/property-risk.spec.ts:200:1 › samme PDF-bytehash med to filnavn bevarer begge sammendrag og åpner riktig original (2.7s)
+  ✓   77 tests/e2e/property-risk.spec.ts:227:1 › lokalt visuelt kildebevis viser sideusikkerhet og åpner originalregion med tastatur og mobil (1.7s)
+  ✓   78 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Gå videre (1.8s)
+  ✓   79 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Forkast (1.9s)
+  ✓   80 tests/e2e/prospectus-import.spec.ts:39:53 › SO-AC1/11/14/15: faktisk offline import og kontroll til Innhent mer informasjon (1.8s)
+  ✓   81 tests/e2e/prospectus-import.spec.ts:48:1 › SO-AC5/6: økonomikilde og fysisk10/trykt6 åpnes i riktig original; to bad og ett tak består (1.8s)
+  ✓   82 tests/e2e/prospectus-import.spec.ts:64:1 › SO-AC4/12: faktisk PDF-vedlegg ber om separat fil; rapportbytte bevarer økonomi og åpner separat fysisk3 (2.4s)
+  ✓   83 tests/e2e/prospectus-import.spec.ts:77:1 › SO-AC3/4: raster med digital bunntekst og uklare rapporter kan ikke få komplett kontroll (1.3s)
+  ✓   84 tests/e2e/prospectus-import.spec.ts:82:1 › SO-AC12: sammehash gjenbruk og nyhash tømmer manuell økonomi/finansiering (2.0s)
+  ✓   85 tests/e2e/prospectus-import.spec.ts:92:1 › SO-AC9/11: kontrollert dokumentøkonomi og delt slider/finansiering fyller P/D/J uten manuell overføring (2.5s)
+  ✓   86 tests/e2e/prospectus-import.spec.ts:121:1 › salgsoppgavens hovedinngang og selektivt 200-sidersgrunnlag er synlig uten intern kildeinformasjon i hovedtekst (3.2s)
+  ✓   87 tests/e2e/prospectus-import.spec.ts:129:1 › review: kontrollbelegg åpner riktig original og separat rapport kan gjenopprettes lokalt uten ny POST (4.6s)
+  ✓   88 tests/e2e/prospectus-import.spec.ts:150:1 › code-first: ukjent PDF gir lokal økonomi, synlig rest/kostnad og uoverstyrbar rapportport; samme hash gjenbrukes (1.4s)
+  -   89 tests/e2e/rent-real-document.spec.ts:31:1 › ekte PDF: dokumentopplysninger leses automatisk og enebolig får ærlig modellbegrensning
+  ✓   90 tests/e2e/rent-real-document.spec.ts:82:1 › lokalt leiegrunnlag: støttet kompakt leilighet gir synlig referanse gjennom faktisk HTTP-rute (1.3s)
+  -   91 tests/e2e/rent-real-document.spec.ts:128:1 › ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekreftet økonomi gjennom HTTP
+  -   92 tests/e2e/rent-real-document.spec.ts:297:1 › ekte Nøstegaten: 152 sider, dokumentøkonomi og automatisk SSB-leie med foreløpig avkastning
+  ✓   93 tests/e2e/report-analysis.spec.ts:83:1 › Story 4.3 demo — felles kontrollflyt › 2.6 AC1/4/5/6: faktisk HTTP/adapter, ett kall, originalhash, synlighetsgrense og finansgjenbruk (2.5s)
+  ✓   94 tests/e2e/report-analysis.spec.ts:115:1 › Story 4.3 demo — felles kontrollflyt › 2.6 AC4: gyldig tomliste og alle usikkerheter gjennom ordinær kontrolladapter (2.6s)
+  ✓   95 tests/e2e/report-analysis.spec.ts:147:1 › Story 4.3 demo — felles kontrollflyt › 2.6 AC4: analysefeil/delresultat og dokumentfeil er ufullført (3.2s)
+  ✓   96 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 demo — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur invalid-json gir feil (568ms)
+  ✓   97 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 demo — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur sessionId gir feil (1.3s)
+  ✓   98 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 demo — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur requestId gir feil (1.4s)
+  ✓   99 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 demo — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur generation gir feil (1.3s)
+  ✓  100 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 demo — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur reportHash gir feil (1.3s)
+  ✓  101 tests/e2e/report-analysis.spec.ts:201:1 › Story 4.3 demo — felles kontrollflyt › 2.6 AC3: rapportbytte og forlatt pågående analyse forkaster gamle svar og forsøker abort (671ms)
+  ✓  102 tests/e2e/report-analysis.spec.ts:226:1 › Story 4.3 demo — felles kontrollflyt › 2.6: produksjonsdemo viser faktiske F4-funn uten ekstern trafikk (1.4s)
+  ✓  103 tests/e2e/report-analysis.spec.ts:240:1 › Story 4.3 demo — felles kontrollflyt › 2.6 AC6: liste utenfor liten arbeidsflate er ikke synlig før den rulles inn (1.4s)
+  ✓  104 tests/e2e/report-analysis.spec.ts:258:1 › Story 4.3 demo — felles kontrollflyt › 2.6 review AC6: fullført rapporttrinn og én kunngjøring ved tastaturretur (1.4s)
+  ✓  105 tests/e2e/report-analysis.spec.ts:285:1 › Story 4.3 demo — felles kontrollflyt › 2.6 review AC6: kun seksjonskant synlig teller ikke som synlig listestart (1.5s)
+  ✓  106 tests/e2e/report-analysis.spec.ts:313:3 › Story 4.3 demo — felles kontrollflyt › 2.6 review AC2/4/6: transport kunngjøres én gang uten retry eller fokusflytting (569ms)
+  ✓  107 tests/e2e/report-analysis.spec.ts:313:3 › Story 4.3 demo — felles kontrollflyt › 2.6 review AC2/4/6: invalid-json kunngjøres én gang uten retry eller fokusflytting (567ms)
+  ✓  108 tests/e2e/report-analysis.spec.ts:343:1 › Story 4.3 demo — felles kontrollflyt › pre-submission: duplikat etter transportfeil beholder originalkode uten outcome (671ms)
+  ✓  109 tests/e2e/report-analysis.spec.ts:372:1 › Story 4.3 demo — felles kontrollflyt › 2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/zoom og beholdt fokus (1.7s)
+  ✓  110 tests/e2e/report-analysis.spec.ts:407:1 › Story 4.3 demo — felles kontrollflyt › 2.7 AC3/5: smalt panel har headingfokus, fokusfelle, Esc/retur og bevart valg/posisjon (1.8s)
+  ✓  111 tests/e2e/report-analysis.spec.ts:439:1 › Story 4.3 demo — felles kontrollflyt › 2.7 AC4 RT-7/8: usikker kilde gjettes ikke og workerfeil er synlig uten ny analyse (1.5s)
+  ✓  112 tests/e2e/report-analysis.spec.ts:455:1 › Story 4.3 demo — felles kontrollflyt › 2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og originalen kan gjenbrukes (1.8s)
+  ✓  113 tests/e2e/report-analysis.spec.ts:509:1 › Story 4.3 demo — felles kontrollflyt › 2.7 AC4: faktisk renderfeil skjuler gammel side, beholder dokument/side og starter ikke analyse (1.6s)
+  ✓  114 tests/e2e/report-analysis.spec.ts:522:1 › Story 4.3 demo — felles kontrollflyt › 2.7 AC4 RT-7: kjent men ugyldig kildeside viser faktisk mangel uten gjettet navigasjon (1.5s)
+  ✓  115 tests/e2e/report-analysis.spec.ts:532:1 › Story 4.3 demo — felles kontrollflyt › 2.7 cleanup/lasting: ventende worker gir ærlig status og frigjøres ved trinnretur (1.7s)
+  ✓  116 tests/e2e/report-analysis.spec.ts:552:1 › Story 4.3 demo — felles kontrollflyt › 2.7 visuell QA: 1440, 1280, smalt panel og sterk zoom bevarer kilder/kontroller (2.0s)
+  ✓  117 tests/e2e/report-analysis.spec.ts:577:1 › Story 4.3 demo — felles kontrollflyt › 2.7 kontrakt: usikker grad med kjent kilde og utelatt valgfri originalhash viser riktig originalside (1.6s)
+  ✓  118 tests/e2e/report-analysis.spec.ts:586:1 › Story 4.3 demo — felles kontrollflyt › 2.7 uavhengig review: terminal renderfeil avslutter busy og ny naboside kan vises (1.7s)
+  ✓  119 tests/e2e/report-analysis.spec.ts:606:1 › Story 4.3 demo — felles kontrollflyt › 2.7 uavhengig review: Hel side passer i leseregion og 1199/1200-grensen bevarer kilde (2.0s)
+  ✓  120 tests/e2e/report-analysis.spec.ts:629:1 › Story 4.3 demo — felles kontrollflyt › 2.7 uavhengig review: rapportbytte under ventende render frigjør gammel original og nullstiller visning (2.7s)
+  ✓  121 tests/e2e/report-analysis.spec.ts:666:1 › Story 4.3 demo — felles kontrollflyt › 2.8 AC1–4 RT-11: originalfasit, kontroll, separat utkast, eksplisitt bruk/avbryt og ett analyse-POST (1.8s)
+  ✓  122 tests/e2e/report-analysis.spec.ts:716:1 › Story 4.3 demo — felles kontrollflyt › 2.8 AC2/4: ugyldig utkast, feltfokus, panel-Esc, funnbytte og trinnretur bevarer ubrukt utkast (1.9s)
+  ✓  123 tests/e2e/report-analysis.spec.ts:763:1 › Story 4.3 demo — felles kontrollflyt › 2.8 AC4: ukjent grad/kilde gjettes ikke, eksplisitt gyldig retting bevarer original usikkerhet (1.6s)
+  ✓  124 tests/e2e/report-analysis.spec.ts:784:1 › Story 4.3 demo — felles kontrollflyt › 2.8 uavhengig review: delvis retting bevarer feltfeil og retur stjeler ikke fokus (1.7s)
+  ✓  125 tests/e2e/report-analysis.spec.ts:808:1 › Story 4.3 demo — felles kontrollflyt › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm (1.6s)
+  ✓  126 tests/e2e/report-analysis.spec.ts:840:1 › Story 4.3 demo — felles kontrollflyt › 2.8 uavhengig review: ugyldig utkast bevares uten nytt feilfokus ved funnretur (1.6s)
+  ✓  127 tests/e2e/report-analysis.spec.ts:852:1 › Story 4.3 demo — felles kontrollflyt › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema (1.5s)
+  ✓  128 tests/e2e/report-analysis.spec.ts:876:1 › Story 4.3 demo — felles kontrollflyt › 2.9 AC1–4 RT-12: dokumentfasit, tastatur-Avvis, bevart original, andre funn og retur med ett POST (2.1s)
+  ✓  129 tests/e2e/report-analysis.spec.ts:952:1 › Story 4.3 demo — felles kontrollflyt › 2.9 AC1/4 RT-12: historisk retting og ubrukt utkast bevares, smalt kildepanel og retur stjeler ikke fokus (1.9s)
+  ✓  130 tests/e2e/report-analysis.spec.ts:997:1 › Story 4.3 demo — felles kontrollflyt › 2.9 AC3: eksplisitt avvisning av usikker kandidat bevarer kildeusikkerhet og rapportbegrensning (1.5s)
+  ✓  131 tests/e2e/report-analysis.spec.ts:1011:1 › Story 4.3 demo — felles kontrollflyt › 2.9 uavhengig review: avvist langt ugyldig utkast er lesbar historikk uten aktive feil og med synlig fokus (1.6s)
+  ✓  132 tests/e2e/report-analysis.spec.ts:1060:1 › Story 4.3 demo — felles kontrollflyt › 3.9 AC3/6 FR5-5/6: ett av to TG3 avklart fornyer fortsatt prioritet 1; alle avklart lar økonomien avgjøre (2.1s)
+  ✓  133 tests/e2e/report-analysis.spec.ts:1103:1 › Story 4.3 demo — felles kontrollflyt › 2.10 AC1–3/5: separat eksplisitt avklaring, negative tekstfelt, to TG3, originalfasit og fokus (2.0s)
+  ✓  134 tests/e2e/report-analysis.spec.ts:1161:1 › Story 4.3 demo — felles kontrollflyt › 2.10 AC4: representasjon bevares, samme ID overfører ikke avklaring til rettet forhold eller kilde (1.8s)
+  ✓  135 tests/e2e/report-analysis.spec.ts:1197:1 › Story 4.3 demo — felles kontrollflyt › 2.10 AC1/5: kort skjerm bevarer feltfokus og ny rapport overfører ingen avklaring (2.4s)
+  ✓  136 tests/e2e/report-analysis.spec.ts:1220:1 › Story 4.3 demo — felles kontrollflyt › 2.10 review: to separate avklaringer, listestatus og beholdt grunnlag etter TG2-retting (1.6s)
+  ✓  137 tests/e2e/report-analysis.spec.ts:1257:5 › Story 4.3 demo — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC1/4/5 RT11/13/14/19: korrigert kontrollert liste, separat tastaturbekreftelse, utkast/retur og ny retting (2.3s)
+  ✓  138 tests/e2e/report-analysis.spec.ts:1347:5 › Story 4.3 demo — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC1/2/4 RT10/12: avvisning og tomliste krever eksplisitt ny bekreftelse, rapportbytte nullstiller (2.6s)
+  ✓  139 tests/e2e/report-analysis.spec.ts:1378:5 › Story 4.3 demo — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC3/4/5 RT19: Uavklart tillater kontrollslutt, separat TG3-endring bevarer bekreftet liste (1.9s)
+  ✓  140 tests/e2e/report-analysis.spec.ts:1416:5 › Story 4.3 demo — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC2 AT18: usikker kandidat sperrer listebekreftelse og rapportbegrensning består etter avvisning (1.7s)
+  ✓  141 tests/e2e/report-analysis.spec.ts:1438:5 › Story 4.3 demo — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC2 AT18: delresultat er ufullført, alle kjente lokale mangler vises uten bekreftelsesvei (1.4s)
+  ✓  142 tests/e2e/report-analysis.spec.ts:83:1 › Story 4.3 live — felles kontrollflyt › 2.6 AC1/4/5/6: faktisk HTTP/adapter, ett kall, originalhash, synlighetsgrense og finansgjenbruk (2.5s)
+  ✓  143 tests/e2e/report-analysis.spec.ts:115:1 › Story 4.3 live — felles kontrollflyt › 2.6 AC4: gyldig tomliste og alle usikkerheter gjennom ordinær kontrolladapter (2.6s)
+  ✓  144 tests/e2e/report-analysis.spec.ts:147:1 › Story 4.3 live — felles kontrollflyt › 2.6 AC4: analysefeil/delresultat og dokumentfeil er ufullført (3.3s)
+  ✓  145 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 live — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur invalid-json gir feil (580ms)
+  ✓  146 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 live — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur sessionId gir feil (1.3s)
+  ✓  147 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 live — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur requestId gir feil (1.3s)
+  ✓  148 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 live — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur generation gir feil (1.3s)
+  ✓  149 tests/e2e/report-analysis.spec.ts:183:3 › Story 4.3 live — felles kontrollflyt › 2.6 AC2: kontrollert ugyldig 200-retur reportHash gir feil (1.4s)
+  ✓  150 tests/e2e/report-analysis.spec.ts:201:1 › Story 4.3 live — felles kontrollflyt › 2.6 AC3: rapportbytte og forlatt pågående analyse forkaster gamle svar og forsøker abort (654ms)
+  ✓  151 tests/e2e/report-analysis.spec.ts:226:1 › Story 4.3 live — felles kontrollflyt › 2.6: produksjonsdemo viser faktiske F4-funn uten ekstern trafikk (1.4s)
+  ✓  152 tests/e2e/report-analysis.spec.ts:240:1 › Story 4.3 live — felles kontrollflyt › 2.6 AC6: liste utenfor liten arbeidsflate er ikke synlig før den rulles inn (1.4s)
+  ✓  153 tests/e2e/report-analysis.spec.ts:258:1 › Story 4.3 live — felles kontrollflyt › 2.6 review AC6: fullført rapporttrinn og én kunngjøring ved tastaturretur (1.4s)
+  ✓  154 tests/e2e/report-analysis.spec.ts:285:1 › Story 4.3 live — felles kontrollflyt › 2.6 review AC6: kun seksjonskant synlig teller ikke som synlig listestart (1.5s)
+  ✓  155 tests/e2e/report-analysis.spec.ts:313:3 › Story 4.3 live — felles kontrollflyt › 2.6 review AC2/4/6: transport kunngjøres én gang uten retry eller fokusflytting (570ms)
+  ✓  156 tests/e2e/report-analysis.spec.ts:313:3 › Story 4.3 live — felles kontrollflyt › 2.6 review AC2/4/6: invalid-json kunngjøres én gang uten retry eller fokusflytting (584ms)
+  ✓  157 tests/e2e/report-analysis.spec.ts:343:1 › Story 4.3 live — felles kontrollflyt › pre-submission: duplikat etter transportfeil beholder originalkode uten outcome (687ms)
+  ✓  158 tests/e2e/report-analysis.spec.ts:372:1 › Story 4.3 live — felles kontrollflyt › 2.7 AC1/2/5 RT-5: original fysisk side 4, lokale ressurser, hel side/nabo/zoom og beholdt fokus (1.8s)
+  ✓  159 tests/e2e/report-analysis.spec.ts:407:1 › Story 4.3 live — felles kontrollflyt › 2.7 AC3/5: smalt panel har headingfokus, fokusfelle, Esc/retur og bevart valg/posisjon (1.8s)
+  ✓  160 tests/e2e/report-analysis.spec.ts:439:1 › Story 4.3 live — felles kontrollflyt › 2.7 AC4 RT-7/8: usikker kilde gjettes ikke og workerfeil er synlig uten ny analyse (1.6s)
+  ✓  161 tests/e2e/report-analysis.spec.ts:455:1 › Story 4.3 live — felles kontrollflyt › 2.7 race: raske funn-/sidebytter presenterer bare gjeldende canvas og originalen kan gjenbrukes (1.8s)
+  ✓  162 tests/e2e/report-analysis.spec.ts:509:1 › Story 4.3 live — felles kontrollflyt › 2.7 AC4: faktisk renderfeil skjuler gammel side, beholder dokument/side og starter ikke analyse (1.6s)
+  ✓  163 tests/e2e/report-analysis.spec.ts:522:1 › Story 4.3 live — felles kontrollflyt › 2.7 AC4 RT-7: kjent men ugyldig kildeside viser faktisk mangel uten gjettet navigasjon (1.5s)
+  ✓  164 tests/e2e/report-analysis.spec.ts:532:1 › Story 4.3 live — felles kontrollflyt › 2.7 cleanup/lasting: ventende worker gir ærlig status og frigjøres ved trinnretur (1.7s)
+  ✓  165 tests/e2e/report-analysis.spec.ts:552:1 › Story 4.3 live — felles kontrollflyt › 2.7 visuell QA: 1440, 1280, smalt panel og sterk zoom bevarer kilder/kontroller (2.0s)
+  ✓  166 tests/e2e/report-analysis.spec.ts:577:1 › Story 4.3 live — felles kontrollflyt › 2.7 kontrakt: usikker grad med kjent kilde og utelatt valgfri originalhash viser riktig originalside (1.6s)
+  ✓  167 tests/e2e/report-analysis.spec.ts:586:1 › Story 4.3 live — felles kontrollflyt › 2.7 uavhengig review: terminal renderfeil avslutter busy og ny naboside kan vises (1.7s)
+  ✓  168 tests/e2e/report-analysis.spec.ts:606:1 › Story 4.3 live — felles kontrollflyt › 2.7 uavhengig review: Hel side passer i leseregion og 1199/1200-grensen bevarer kilde (2.0s)
+  ✓  169 tests/e2e/report-analysis.spec.ts:629:1 › Story 4.3 live — felles kontrollflyt › 2.7 uavhengig review: rapportbytte under ventende render frigjør gammel original og nullstiller visning (2.7s)
+  ✓  170 tests/e2e/report-analysis.spec.ts:666:1 › Story 4.3 live — felles kontrollflyt › 2.8 AC1–4 RT-11: originalfasit, kontroll, separat utkast, eksplisitt bruk/avbryt og ett analyse-POST (1.8s)
+  ✓  171 tests/e2e/report-analysis.spec.ts:716:1 › Story 4.3 live — felles kontrollflyt › 2.8 AC2/4: ugyldig utkast, feltfokus, panel-Esc, funnbytte og trinnretur bevarer ubrukt utkast (1.9s)
+  ✓  172 tests/e2e/report-analysis.spec.ts:763:1 › Story 4.3 live — felles kontrollflyt › 2.8 AC4: ukjent grad/kilde gjettes ikke, eksplisitt gyldig retting bevarer original usikkerhet (1.6s)
+  ✓  173 tests/e2e/report-analysis.spec.ts:784:1 › Story 4.3 live — felles kontrollflyt › 2.8 uavhengig review: delvis retting bevarer feltfeil og retur stjeler ikke fokus (1.7s)
+  ✓  174 tests/e2e/report-analysis.spec.ts:808:1 › Story 4.3 live — felles kontrollflyt › 2.8 uavhengig review: kontrollstatus kunngjøres og Bruk/Avbryt gir synlig fokus på kort skjerm (1.6s)
+  ✓  175 tests/e2e/report-analysis.spec.ts:840:1 › Story 4.3 live — felles kontrollflyt › 2.8 uavhengig review: ugyldig utkast bevares uten nytt feilfokus ved funnretur (1.6s)
+  ✓  176 tests/e2e/report-analysis.spec.ts:852:1 › Story 4.3 live — felles kontrollflyt › 2.8 uavhengig review: Korriger er i synlig arbeidsflate etter tastaturbruk av kort skjema (1.5s)
+  ✓  177 tests/e2e/report-analysis.spec.ts:876:1 › Story 4.3 live — felles kontrollflyt › 2.9 AC1–4 RT-12: dokumentfasit, tastatur-Avvis, bevart original, andre funn og retur med ett POST (2.1s)
+  ✓  178 tests/e2e/report-analysis.spec.ts:952:1 › Story 4.3 live — felles kontrollflyt › 2.9 AC1/4 RT-12: historisk retting og ubrukt utkast bevares, smalt kildepanel og retur stjeler ikke fokus (1.9s)
+  ✓  179 tests/e2e/report-analysis.spec.ts:997:1 › Story 4.3 live — felles kontrollflyt › 2.9 AC3: eksplisitt avvisning av usikker kandidat bevarer kildeusikkerhet og rapportbegrensning (1.5s)
+  ✓  180 tests/e2e/report-analysis.spec.ts:1011:1 › Story 4.3 live — felles kontrollflyt › 2.9 uavhengig review: avvist langt ugyldig utkast er lesbar historikk uten aktive feil og med synlig fokus (1.7s)
+  ✓  181 tests/e2e/report-analysis.spec.ts:1060:1 › Story 4.3 live — felles kontrollflyt › 3.9 AC3/6 FR5-5/6: ett av to TG3 avklart fornyer fortsatt prioritet 1; alle avklart lar økonomien avgjøre (2.1s)
+  ✓  182 tests/e2e/report-analysis.spec.ts:1103:1 › Story 4.3 live — felles kontrollflyt › 2.10 AC1–3/5: separat eksplisitt avklaring, negative tekstfelt, to TG3, originalfasit og fokus (2.0s)
+  ✓  183 tests/e2e/report-analysis.spec.ts:1161:1 › Story 4.3 live — felles kontrollflyt › 2.10 AC4: representasjon bevares, samme ID overfører ikke avklaring til rettet forhold eller kilde (1.8s)
+  ✓  184 tests/e2e/report-analysis.spec.ts:1197:1 › Story 4.3 live — felles kontrollflyt › 2.10 AC1/5: kort skjerm bevarer feltfokus og ny rapport overfører ingen avklaring (2.4s)
+  ✓  185 tests/e2e/report-analysis.spec.ts:1220:1 › Story 4.3 live — felles kontrollflyt › 2.10 review: to separate avklaringer, listestatus og beholdt grunnlag etter TG2-retting (1.6s)
+  ✓  186 tests/e2e/report-analysis.spec.ts:1257:5 › Story 4.3 live — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC1/4/5 RT11/13/14/19: korrigert kontrollert liste, separat tastaturbekreftelse, utkast/retur og ny retting (2.3s)
+  ✓  187 tests/e2e/report-analysis.spec.ts:1347:5 › Story 4.3 live — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC1/2/4 RT10/12: avvisning og tomliste krever eksplisitt ny bekreftelse, rapportbytte nullstiller (2.6s)
+  ✓  188 tests/e2e/report-analysis.spec.ts:1378:5 › Story 4.3 live — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC3/4/5 RT19: Uavklart tillater kontrollslutt, separat TG3-endring bevarer bekreftet liste (1.9s)
+  ✓  189 tests/e2e/report-analysis.spec.ts:1416:5 › Story 4.3 live — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC2 AT18: usikker kandidat sperrer listebekreftelse og rapportbegrensning består etter avvisning (1.6s)
+  ✓  190 tests/e2e/report-analysis.spec.ts:1438:5 › Story 4.3 live — felles kontrollflyt › Story 2.11 — gjeldende liste og lokal tilstrekkelighet › AC2 AT18: delresultat er ufullført, alle kjente lokale mangler vises uten bekreftelsesvei (1.3s)
+  ✓  191 tests/e2e/report-analysis.spec.ts:1451:22 › Story 4.3 live — felles kontrollflyt › 4.3 AC3: production missing-key failure remains visible in built live flow (1.3s)
+  ✓  192 tests/e2e/screening-result.spec.ts:61:3 › Story 4.3 demo — samme kodebestemte resultat › 4.4 B1 offline originalreplay F1: eksplisitt begrensningsvurdering og fortsatt TG3-vern (1.6s)
+  ✓  193 tests/e2e/screening-result.spec.ts:61:3 › Story 4.3 demo — samme kodebestemte resultat › 4.4 B1 offline originalreplay F2: eksplisitt begrensningsvurdering og fortsatt TG3-vern (1.2s)
+  ✓  194 tests/e2e/screening-result.spec.ts:61:3 › Story 4.3 demo — samme kodebestemte resultat › 4.4 B1 offline originalreplay F4: eksplisitt begrensningsvurdering og fortsatt TG3-vern (1.3s)
+  ✓  195 tests/e2e/screening-result.spec.ts:139:3 › Story 4.3 demo — samme kodebestemte resultat › 3.7 AC1/2/5/6 F1: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus (2.0s)
+  ✓  196 tests/e2e/screening-result.spec.ts:139:3 › Story 4.3 demo — samme kodebestemte resultat › 3.7 AC1/2/5/6 F2: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus (1.9s)
+  ✓  197 tests/e2e/screening-result.spec.ts:139:3 › Story 4.3 demo — samme kodebestemte resultat › 3.7 AC1/2/5/6 F4: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus (2.0s)
+  ✓  198 tests/e2e/screening-result.spec.ts:193:1 › Story 4.3 demo — samme kodebestemte resultat › 3.7 AC4/6: historisk vern, én kunngjøring, sticky trinn og 200 prosent tilsvarende ombrytning (1.8s)
+  ✓  199 tests/e2e/screening-result.spec.ts:216:3 › Story 4.3 demo — samme kodebestemte resultat › 3.7 AC2 AT13: brukt korrigering og originalrapport er tilgjengelig med bevart opphav (2.1s)
+  ✓  200 tests/e2e/screening-result.spec.ts:216:3 › Story 4.3 demo — samme kodebestemte resultat › 3.7 AC2 AT13: avvist original og originalrapport er tilgjengelig med bevart opphav (2.1s)
+  ✓  201 tests/e2e/screening-result.spec.ts:247:1 › Story 4.3 demo — samme kodebestemte resultat › 3.7 AC6: gyldighetsstatus kunngjøres én gang og detaljbetjening/trinnretur stjeler ikke fokus (1.7s)
+  ✓  202 tests/e2e/screening-result.spec.ts:274:1 › Story 4.3 demo — samme kodebestemte resultat › review E1/A1: avvist fremmed originalkilde velger aldri en side i aktiv PDF (908ms)
+  ✓  203 tests/e2e/screening-result.spec.ts:302:1 › Story 4.3 demo — samme kodebestemte resultat › review B7: historisk kilde åpner bevart side uten ny aktiv funnversjon som kildekontekst (1.9s)
+  ✓  204 tests/e2e/screening-result.spec.ts:319:1 › Story 4.3 demo — samme kodebestemte resultat › review B11: hele originalrapporten får presise etiketter og tastaturretur i smalt panel (1.7s)
+  ✓  205 tests/e2e/screening-result.spec.ts:348:1 › Story 4.3 demo — samme kodebestemte resultat › 3.8 BT-12 AC1/2/4/5: offline ugyldig→rettet→bekreftet L gir F2 uten ny analyse og med fokus/status (2.1s)
+  ✓  206 tests/e2e/screening-result.spec.ts:395:3 › Story 4.3 demo — samme kodebestemte resultat › 3.8 BT-13 AC3: bare Ymin endres til 10 %, samme fire nøkkeltall (1.9s)
+  ✓  207 tests/e2e/screening-result.spec.ts:395:3 › Story 4.3 demo — samme kodebestemte resultat › 3.8 BT-13 AC3: manglende Ymin rettes til 10 %, samme fire nøkkeltall (1.9s)
+  ✓  208 tests/e2e/screening-result.spec.ts:428:3 › Story 4.3 demo — samme kodebestemte resultat › 3.8 AC4 F4: L=1400000 fornyer økonomien og gjenbruker uavklart alvorlig TG3 med prioritet 1 (1.9s)
+  ✓  209 tests/e2e/screening-result.spec.ts:428:3 › Story 4.3 demo — samme kodebestemte resultat › 3.8 AC4 F4: L=3000000 fornyer økonomien og gjenbruker uavklart alvorlig TG3 med prioritet 1 (1.8s)
+  ✓  210 tests/e2e/screening-result.spec.ts:446:1 › Story 4.3 demo — samme kodebestemte resultat › 3.8 AT-10: fornyelse ved nøyaktig 7 % består; én krone under gir Forkast med avrundingsforklaring (2.0s)
+  ✓  211 tests/e2e/screening-result.spec.ts:467:1 › Story 4.3 demo — samme kodebestemte resultat › 3.8 AT-11: fornyelse med kontantstrøm 0 består; −1 kr gir Forkast (1.9s)
+  ✓  212 tests/e2e/screening-result.spec.ts:504:1 › Story 4.3 demo — samme kodebestemte resultat › 3.9 AC1/2/6 AT-13/16 RT-11/13: utkast, Avbryt, ugyldig Bruk og ny kontroll i bygget offline demo (2.6s)
+  ✓  213 tests/e2e/screening-result.spec.ts:568:1 › Story 4.3 demo — samme kodebestemte resultat › 3.9 AC2 RT-3/12: avvist TG3 bevarer original, krever listekontroll og regnes ikke som avklaring (1.9s)
+  ✓  214 tests/e2e/screening-result.spec.ts:592:1 › Story 4.3 demo — samme kodebestemte resultat › 3.9 AC3/6 AT-7–9/20 RT-14/15: hver TG3-tekst/statusendring reevalueres uten ny finans-/listebekreftelse (2.5s)
+  ✓  215 tests/e2e/screening-result.spec.ts:640:3 › Story 4.3 demo — samme kodebestemte resultat › 3.9 AC4: brukt TG3-korrigering med samme-ID, kjent forholdsbinding=true (2.0s)
+  ✓  216 tests/e2e/screening-result.spec.ts:640:3 › Story 4.3 demo — samme kodebestemte resultat › 3.9 AC4: brukt TG3-korrigering med samme-ID, kjent forholdsbinding=false (2.1s)
+  ✓  217 tests/e2e/screening-result.spec.ts:672:1 › Story 4.3 demo — samme kodebestemte resultat › 3.9 AC5/6: rapportbytte, synlig ny analysefeil og deretter eksplisitt kontrollert ny rapport (3.2s)
+  ✓  218 tests/e2e/screening-result.spec.ts:705:1 › Story 4.3 demo — samme kodebestemte resultat › 3.9 AC5: kontrollert sent svar fra forlatt rapport kan ikke overstyre ny rapport og nytt resultat (2.8s)
+  ✓  219 tests/e2e/screening-result.spec.ts:61:3 › Story 4.3 live — samme kodebestemte resultat › 4.4 B1 offline originalreplay F1: eksplisitt begrensningsvurdering og fortsatt TG3-vern (1.6s)
+  ✓  220 tests/e2e/screening-result.spec.ts:61:3 › Story 4.3 live — samme kodebestemte resultat › 4.4 B1 offline originalreplay F2: eksplisitt begrensningsvurdering og fortsatt TG3-vern (1.2s)
+  ✓  221 tests/e2e/screening-result.spec.ts:61:3 › Story 4.3 live — samme kodebestemte resultat › 4.4 B1 offline originalreplay F4: eksplisitt begrensningsvurdering og fortsatt TG3-vern (1.3s)
+  ✓  222 tests/e2e/screening-result.spec.ts:139:3 › Story 4.3 live — samme kodebestemte resultat › 3.7 AC1/2/5/6 F1: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus (2.0s)
+  ✓  223 tests/e2e/screening-result.spec.ts:139:3 › Story 4.3 live — samme kodebestemte resultat › 3.7 AC1/2/5/6 F2: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus (1.9s)
+  ✓  224 tests/e2e/screening-result.spec.ts:139:3 › Story 4.3 live — samme kodebestemte resultat › 3.7 AC1/2/5/6 F4: kontrollert bygget demo, anbefaling/fasit, originalside, retur og fokus (2.1s)
+  ✓  225 tests/e2e/screening-result.spec.ts:193:1 › Story 4.3 live — samme kodebestemte resultat › 3.7 AC4/6: historisk vern, én kunngjøring, sticky trinn og 200 prosent tilsvarende ombrytning (1.8s)
+  ✓  226 tests/e2e/screening-result.spec.ts:216:3 › Story 4.3 live — samme kodebestemte resultat › 3.7 AC2 AT13: brukt korrigering og originalrapport er tilgjengelig med bevart opphav (2.1s)
+  ✓  227 tests/e2e/screening-result.spec.ts:216:3 › Story 4.3 live — samme kodebestemte resultat › 3.7 AC2 AT13: avvist original og originalrapport er tilgjengelig med bevart opphav (2.1s)
+  ✓  228 tests/e2e/screening-result.spec.ts:247:1 › Story 4.3 live — samme kodebestemte resultat › 3.7 AC6: gyldighetsstatus kunngjøres én gang og detaljbetjening/trinnretur stjeler ikke fokus (1.7s)
+  ✓  229 tests/e2e/screening-result.spec.ts:274:1 › Story 4.3 live — samme kodebestemte resultat › review E1/A1: avvist fremmed originalkilde velger aldri en side i aktiv PDF (875ms)
+  ✓  230 tests/e2e/screening-result.spec.ts:302:1 › Story 4.3 live — samme kodebestemte resultat › review B7: historisk kilde åpner bevart side uten ny aktiv funnversjon som kildekontekst (1.9s)
+  ✓  231 tests/e2e/screening-result.spec.ts:319:1 › Story 4.3 live — samme kodebestemte resultat › review B11: hele originalrapporten får presise etiketter og tastaturretur i smalt panel (1.7s)
+  ✓  232 tests/e2e/screening-result.spec.ts:348:1 › Story 4.3 live — samme kodebestemte resultat › 3.8 BT-12 AC1/2/4/5: offline ugyldig→rettet→bekreftet L gir F2 uten ny analyse og med fokus/status (2.1s)
+  ✓  233 tests/e2e/screening-result.spec.ts:395:3 › Story 4.3 live — samme kodebestemte resultat › 3.8 BT-13 AC3: bare Ymin endres til 10 %, samme fire nøkkeltall (1.9s)
+  ✓  234 tests/e2e/screening-result.spec.ts:395:3 › Story 4.3 live — samme kodebestemte resultat › 3.8 BT-13 AC3: manglende Ymin rettes til 10 %, samme fire nøkkeltall (1.9s)
+  ✓  235 tests/e2e/screening-result.spec.ts:428:3 › Story 4.3 live — samme kodebestemte resultat › 3.8 AC4 F4: L=1400000 fornyer økonomien og gjenbruker uavklart alvorlig TG3 med prioritet 1 (1.9s)
+  ✓  236 tests/e2e/screening-result.spec.ts:428:3 › Story 4.3 live — samme kodebestemte resultat › 3.8 AC4 F4: L=3000000 fornyer økonomien og gjenbruker uavklart alvorlig TG3 med prioritet 1 (1.9s)
+  ✓  237 tests/e2e/screening-result.spec.ts:446:1 › Story 4.3 live — samme kodebestemte resultat › 3.8 AT-10: fornyelse ved nøyaktig 7 % består; én krone under gir Forkast med avrundingsforklaring (2.0s)
+  ✓  238 tests/e2e/screening-result.spec.ts:467:1 › Story 4.3 live — samme kodebestemte resultat › 3.8 AT-11: fornyelse med kontantstrøm 0 består; −1 kr gir Forkast (2.0s)
+  ✓  239 tests/e2e/screening-result.spec.ts:504:1 › Story 4.3 live — samme kodebestemte resultat › 3.9 AC1/2/6 AT-13/16 RT-11/13: utkast, Avbryt, ugyldig Bruk og ny kontroll i bygget offline demo (2.5s)
+  ✓  240 tests/e2e/screening-result.spec.ts:568:1 › Story 4.3 live — samme kodebestemte resultat › 3.9 AC2 RT-3/12: avvist TG3 bevarer original, krever listekontroll og regnes ikke som avklaring (1.9s)
+  ✓  241 tests/e2e/screening-result.spec.ts:592:1 › Story 4.3 live — samme kodebestemte resultat › 3.9 AC3/6 AT-7–9/20 RT-14/15: hver TG3-tekst/statusendring reevalueres uten ny finans-/listebekreftelse (2.5s)
+  ✓  242 tests/e2e/screening-result.spec.ts:640:3 › Story 4.3 live — samme kodebestemte resultat › 3.9 AC4: brukt TG3-korrigering med samme-ID, kjent forholdsbinding=true (2.0s)
+  ✓  243 tests/e2e/screening-result.spec.ts:640:3 › Story 4.3 live — samme kodebestemte resultat › 3.9 AC4: brukt TG3-korrigering med samme-ID, kjent forholdsbinding=false (2.0s)
+  ✓  244 tests/e2e/screening-result.spec.ts:672:1 › Story 4.3 live — samme kodebestemte resultat › 3.9 AC5/6: rapportbytte, synlig ny analysefeil og deretter eksplisitt kontrollert ny rapport (3.2s)
+  ✓  245 tests/e2e/screening-result.spec.ts:705:1 › Story 4.3 live — samme kodebestemte resultat › 3.9 AC5: kontrollert sent svar fra forlatt rapport kan ikke overstyre ny rapport og nytt resultat (2.8s)
+
+
+  1) tests/e2e/new-document-import.spec.ts:67:1 › ny ukjent PDF i tom økt henter bare eksplisitte kodefelt og åpner nye originalkilder 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "Ingen lagret analyse for dette dokumentet"
+    Received string:    "Lagret analyse finnes ikke; kun lokalt uttrekk vises. Videre KI-analyse har ikke startet. Ingen nye KI-API-kall er utført."
+
+      52 |   expect(outcome.reportHash).toBe(sha(bytes))
+      53 |   expect(outcome.economy.analysis?.provenance).toBe('local-only')
+    > 54 |   expect(outcome.economy.analysis?.reason).toContain('Ingen lagret analyse for dette dokumentet')
+         |                                            ^
+      55 |   expect(outcome.economy.analysis?.requestDigest).toBeNull()
+      56 |   expect(outcome.economy.analysis?.observations).toEqual([])
+      57 |   expect(outcome.economy.analysis?.selectedPages).toEqual([])
+        at localOnly (/private/tmp/paa-leveranse-6392918-20261106/tests/e2e/new-document-import.spec.ts:54:44)
+        at /private/tmp/paa-leveranse-6392918-20261106/tests/e2e/new-document-import.spec.ts:70:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/new-document-import-ny-ukj-9ef3f-og-åpner-nye-originalkilder/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/new-document-import-ny-ukj-9ef3f-og-åpner-nye-originalkilder/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/new-document-import-ny-ukj-9ef3f-og-åpner-nye-originalkilder/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/new-document-import-ny-ukj-9ef3f-og-åpner-nye-originalkilder/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/new-document-import.spec.ts:88:1 › ny ukjent fritekst-PDF får ukjente beløp og eksplisitt sperret KI, ingen oppdiktet erstatning 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "Ingen lagret analyse for dette dokumentet"
+    Received string:    "Lagret analyse finnes ikke; kun lokalt uttrekk vises. Videre KI-analyse har ikke startet. Ingen nye KI-API-kall er utført."
+
+      52 |   expect(outcome.reportHash).toBe(sha(bytes))
+      53 |   expect(outcome.economy.analysis?.provenance).toBe('local-only')
+    > 54 |   expect(outcome.economy.analysis?.reason).toContain('Ingen lagret analyse for dette dokumentet')
+         |                                            ^
+      55 |   expect(outcome.economy.analysis?.requestDigest).toBeNull()
+      56 |   expect(outcome.economy.analysis?.observations).toEqual([])
+      57 |   expect(outcome.economy.analysis?.selectedPages).toEqual([])
+        at localOnly (/private/tmp/paa-leveranse-6392918-20261106/tests/e2e/new-document-import.spec.ts:54:44)
+        at /private/tmp/paa-leveranse-6392918-20261106/tests/e2e/new-document-import.spec.ts:91:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/new-document-import-ny-ukj-e1c71--ingen-oppdiktet-erstatning/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/new-document-import-ny-ukj-e1c71--ingen-oppdiktet-erstatning/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/new-document-import-ny-ukj-e1c71--ingen-oppdiktet-erstatning/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/new-document-import-ny-ukj-e1c71--ingen-oppdiktet-erstatning/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests/e2e/new-document-import.spec.ts:67:1 › ny ukjent PDF i tom økt henter bare eksplisitte kodefelt og åpner nye originalkilder 
+    tests/e2e/new-document-import.spec.ts:88:1 › ny ukjent fritekst-PDF får ukjente beløp og eksplisitt sperret KI, ingen oppdiktet erstatning 
+  12 skipped
+  231 passed (6.4m)

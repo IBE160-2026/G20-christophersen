@@ -65,3 +65,16 @@ ANALYSIS_MODE=demo OPENAI_API_KEY= node .docs/process/leveranse-2026-11-06/prove
 Helperen skriver nye bilder/resultat i en unik midlertidig mappe og stopper sin egen server. Den overskriver ikke historiske bevis. `PAA_PROOF_PORT` kan velge en annen ledig port.
 
 Alle tre anbefalingene, fysisk side 10 mot trykt 6, kontrollporter, feil input og gjentakelse har eget [offentlig E2E-spor](../../../tests/e2e/prospectus-import.spec.ts). S6 med en faktisk annen person er fortsatt åpen i [sentral oversikt](../../implementation-artifacts/deferred-work.md).
+
+
+## Ny klon av faktisk leveransecommit
+
+Lokal commit **`6e3fbe6739eb17e007eac058ffdfae24e0306409`** inneholder forbedringene, testrettingen og aktiv promptlogg. Den er klonet på nytt med `git clone --no-local` til en annen tom mappe. Ny **HOME og helt ny npm-cache** ble brukt; ingen overlappende installasjon, `.env`, privat mappe eller kopiert `node_modules` inngikk.
+
+`npm ci` installerte 132 pakker fra låsfilen på 6 sekunder og rapporterte 0 kjente sårbarheter. `npm run build` bestod. Den faktisk committede README-helperen bestod deretter alle seks kontrollpunkter på egen lokal server, uten eksterne browserforespørsler eller pageerrors. Etter prøven er klonens versjonerte arbeidstre rent, og `.env`/`private/` finnes fortsatt ikke. Den nye browserinstallasjonen fra denne økten ble brukt som eksplisitt testforutsetning; ingen gammel cacheversjon ble tilpasset.
+
+Bevis: [ny installasjon](committed-installasjon.txt), [build](committed-build.txt), [demo](committed-demo-resultat.json), [revisjon, isolasjon og filhash](committed-verification.json). Dette er en faktisk oppstartskontroll av committet innhold. Den etterfølgende beviscommiten endrer bare dokumentasjon/prosessbevis, ikke produkt, pakker, testretting eller README-oppskrift. Den fulle regresjonen over gjelder de samme uendrede runtimefilene og den samme testrettingen.
+
+Ved første staging viste `git diff --check` terminalmellomrom og ekstra sluttlinjer i de originale verktøyloggene. Rålogger beholdes byte-for-byte; de er ikke kode eller redigert dokumentasjon. Kode, Markdown, JSON og bevishelperne er kontrollert med `git diff --check` fra referansen, med bare leveransemappens `.txt`-rålogger utelatt. Ingen gamle promptlogger er formatert eller endret.
+
+[Ny verdi-fri historikk-/arbeidstrekontroll etter leveransecommit](repository-audit-committed.json) dekker også den nye leveransedokumentasjonen. Den opprinnelige baselinekontrollen beholdes uendret; samme kode ble kjørt med bare nytt utfilnavn. Ingen ukjente nøkkelmønstertreff eller endrede frosne originalbevis ble funnet.

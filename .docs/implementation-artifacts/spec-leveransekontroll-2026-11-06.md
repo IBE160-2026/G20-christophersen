@@ -2,7 +2,7 @@
 title: 'Etterprøvbar og selvstendig kjørbar PAA-leveranse'
 type: chore
 created: '2026-11-06'
-status: in-review
+status: done
 route: dispatch
 baseline_commit: 639291814886a6058a24adf95c69e8633b645944
 review_loop_iteration: 0
@@ -42,7 +42,7 @@ context: []
 - [x] `planning-artifacts/briefs/`, `prds/`, `architecture/`: merk gjeldende status og avvik uten å erstatte opprinnelig kravgrunnlag.
 - [x] `.docs/implementation-artifacts/deferred-work.md`: registrer reelle gjenværende mangler med eksplisitt status; ikke lukk historiske poster uten påkrevd bevis.
 - [x] Relevant kode/testkonfigurasjon: rett bare dokumenterte leveransehindringer eller kritiske feil, og kjør relevante regresjonstester.
-- [ ] Promptlogg og arbeidsøkt: dokumenter tre oppdrag, kontroll, avgrensninger og lokal commit.
+- [x] Promptlogg og arbeidsøkt: dokumenter tre oppdrag, kontroll, avgrensninger og lokal commit.
 
 **Akseptansekriterier:**
 - Gitt en lokal klon av versjonerte filer uten privat mappe, miljøfil eller API-nøkkel, når README følges med angitt runtime, så starter appen og syntetisk PDF kan importeres og kontrolleres.
@@ -83,3 +83,8 @@ context: []
 ### Sluttkontroll før lokal commit
 
 Alle konkrete reviewfunn er behandlet. Full offentlig E2E etter retting: 233 pass/12 private skip og 3/3 dev. Ren-klon-unit/integrasjon: 2 237 pass/8 skip; hovedrepo: 2 238 pass/7 skip. Komponenter 50/50 og native OCR separat 7/7. Npm-audit har null kjente sårbarheter. 173 runtimekildefiler samt package-/lockfil og `.nvmrc` er byteidentiske med baseline. Uavhengig sensurtillegg gir konservativt 4,00/B for del 1; ingen blokkende sluttreviewfunn står igjen. S5/S6 og øvrige dokumenterte avgrensninger er ikke lukket.
+
+
+### Avslutning etter faktisk commitkontroll
+
+Commit `6e3fbe6739eb17e007eac058ffdfae24e0306409` er klonet med ny HOME og tom npm-cache. `npm ci`, build og alle seks offentlige demopunkter består; `.env` og privat mappe mangler, og klonens versjonerte arbeidstre er rent. Etterkontrollen lagres i egen dokumentasjonscommit. Rå `.txt`-logger beholdes byte-for-byte med verktøyenes terminalmellomrom; øvrig kilde/dokumentdiff består whitespace-kontroll fra baseline. Ingen gjenstående implementerings-/reviewoppgave i dette mandatet; åpne produkt-/menneskebevisgrenser er bevart i sentral ledger.

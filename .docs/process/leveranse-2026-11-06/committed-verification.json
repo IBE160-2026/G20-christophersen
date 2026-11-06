@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-06",
+  "revision": "6e3fbe6739eb17e007eac058ffdfae24e0306409",
+  "cloneMethod": "git clone --no-local from local repository, new HOME and npm cache",
+  "envFileExists": false,
+  "privateDirectoryExists": false,
+  "workingTree": [],
+  "npmCiExitCode": 0,
+  "buildExitCode": 0,
+  "demoProof": {
+    "date": "2026-11-06",
+    "passed": true,
+    "runtime": "v24.21.0",
+    "checks": [
+      "Nøkkelfri oppstart og faktisk syntetisk PDF-import",
+      "README-fasit: brutto 7,88 %, netto 6,38 %, kontantstrøm ca. 3258 kr/mnd",
+      "Originalside og Esc/fokusretur",
+      "390 px: ingen horisontal sidescroll; økonomi visuelt dokumentert",
+      "Bak tallene åpner Tallgrunnlag fra dagens oversikt",
+      "Feil fil og ny import nullstiller gammelt grunnlag"
+    ],
+    "externalBrowserRequests": [],
+    "browserErrors": [],
+    "limitation": "Programmatisk browsernett-sperre, ikke OS-brannmur. Privat mappe og API-nøkkel inngår ikke i klonen. Ingen annen-person-S6.",
+    "output": "/tmp/paa-readme-proof-JtpKcQ"
+  },
+  "runtime": "Node 24.21.0 / npm 11.19.0",
+  "limitation": "Same macOS host and explicitly installed Chromium 1248; not another-person S6 or new OS.",
+  "fileDigests": {
+    "README.md": "1f14aaaaa61c6b8c4b8a5137e1d285c70ab1635535fe1daed11804a41dabd94f",
+    "package.json": "f5e88c518081c159664d9f675c098f00d9fb5ed7f3cf754b624892e478690cc3",
+    "package-lock.json": "6af85cdc417022fcf3e6e51fc4cd22e710081bb126d8cf3b34f0a40035b21450",
+    ".nvmrc": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
+    "tests/e2e/new-document-import.spec.ts": "f7cb878d24ecf1d139546b5f4eb39b91de6304fbfaaacf8c092775b9cc6e712c",
+    ".docs/process/leveranse-2026-11-06/prove-demo.mjs": "6abbb2fbcf0526f6f0f63fc44ed9320ac52407ddaec27773e903a50edfe3ef66"
+  }
+}

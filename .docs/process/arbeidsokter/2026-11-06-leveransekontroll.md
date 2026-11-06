@@ -44,3 +44,10 @@ Sluttgjennomgang, lokale commitreferanser og eventuell oppfølgingskontroll før
 - README-fasit, faktisk PDF-backend, originalside, Esc/fokus, navigasjon, feil og ny import: seks kontrollpunkter bestått. Ingen eksterne browserforespørsler eller pageerrors. Endelig mobilbilde er viewport 390×844 og visuelt kontrollert; desktopbildet viser hele den fiktive siden.
 - Fem sluttreviewfunn er etterprøvd og dokumentasjonsrettet: retensjon mot gyldighet, feil bokstavreferanse, slettet README-anker, utdatert agentreferat og feil antall tidsfristfeil. Ingen nye verifikasjonsgap fra prosessagenten. Alle funn er triagert i specen.
 - Npm-audit: 0 kjente sårbarheter. Historikkskann: 3 308 blobs ved referansen, bare tre allerede kjente fiktive nøkkeltesttreff, ingen forbudte versjonerte stier og 209 uendrede frosne bevisfiler. Fil-lenkekontroll og hooktester består. Skannets avgrensning står i rapporten.
+
+
+### Lokal commit og oppstartskontroll
+
+Forbedringene og promptloggen ble committet lokalt som `6e3fbe6739eb17e007eac058ffdfae24e0306409`. En helt ny lokal klon av akkurat denne commiten med ny HOME/cache bestod `npm ci`, build og den offentlige demoprøvens seks kontrollpunkter; ingen `.env` eller privat mappe finnes i klonen, og dens Git-arbeidstre er rent. [Revisjonsbundet bevis](../leveranse-2026-11-06/committed-verification.json) binder innhold og miljø. En separat lokal beviscommit avslutter spesifikasjonen og lagrer denne etterkontrollen; runtime, pakker, README-oppskrift og testretting endres ikke.
+
+Rå verktøylogger inneholder terminalmellomrom som `git diff --check` melder ved staging. De er bevart byte-for-byte som etterprøvbart råbevis; kontrollen av kode/Markdown/JSON/scripts består når bare leveransemappens `.txt`-rålogger utelates. Ingen slik whitespace-retting utføres i eldre promptlogger. Ingen push eller nye betalte KI-kall er utført.

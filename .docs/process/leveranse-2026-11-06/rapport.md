@@ -45,3 +45,8 @@ Mange grønne tester beviser de konkrete finans-, kilde-, tilstands- og feilhån
 Gjeldende åpne forhold finnes bare i [deferred-work](../../implementation-artifacts/deferred-work.md): S6/annen person, PAA-SO2s generelle dokument-/TG-/juridiske dekning, PAA-LEIE1s individuelle markedskalibrering, format-/samlet minneavgrensning, utsatt FINN-tilgang og historisk ukjent belastning. **S5-W1 er akseptert avvik, ikke rettet eller fullt bestått.** Disse grensene er ikke skjult av implementerte funksjoner eller nye dokumenter.
 
 Etter uavhengig rekontroll vurderes alle sju kriteriene foreløpig til **B**, som gir **4,00 / B for del 1** med veiledningens vekter. Baseline var 3,85/B; forbedringen gjelder særlig README og etterprøvbarhet. Fungerende, ikke-triviell kjerne og konkrete prosess-/testbevis støtter B. Begrenset dokumentfasit, ufullført S5/S6 og manglende ekstern førstegangsbrukertest gjør A usikkert. [Sensoragentens daterte begrunnelse](uavhengig-sensor.md) er et KI-basert skjønn, ikke garantert sensur. Del 1 teller 70 %; ingen total emne-/bachelorkarakter kan utledes uten del 2 og eventuell annen relevant veiledning.
+
+
+## Lokal levering
+
+Forbedringene og promptloggen finnes i lokal commit **`6e3fbe6739eb17e007eac058ffdfae24e0306409`**. En ny klon av denne faktiske commiten, med ny HOME/cache og uten privat mappe eller miljøfil, bestod installasjon, build og offentlig demo på nytt. [Revisjonsbundet etterkontroll](committed-verification.json) dokumenterer resultat og filhash. Den etterfølgende beviscommiten lagrer bare etterkontroll/status; produktet og testrettingen er uendret. Ingen push er utført.

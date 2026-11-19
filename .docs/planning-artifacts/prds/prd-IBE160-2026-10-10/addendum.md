@@ -2,14 +2,55 @@
 title: "PRD-addendum: Property Acquisition Agent"
 status: final
 created: 2026-10-10
-updated: 2026-10-10
+updated: 2026-11-19
 ---
 
 # PRD-addendum: Property Acquisition Agent
 
+## Lesestatus 19. november: historisk fasit og gjeldende tillegg
+
+Tabellene fra oktober nedenfor bevares som opprinnelige testspesifikasjoner,
+ikke som påstand om dagens fullstendige testresultater. [Gjeldende PRD](prd.md)
+er revidert mot senere vedtak og implementasjon. [Oppfølgingsrapporten](oppfolging-prd-2026-11-19.md)
+forklarer endringene; den opprinnelige PRD-ordlyden finnes i commit `684e61d`.
+Ingen gamle test-ID-er eller story-AC er omskrevet for å få senere leveranser
+til å fremstå som opprinnelig planlagt eller bestått.
+
+| Historisk fasit | Gjeldende anvendelse og kontroll |
+| --- | --- |
+| FR-5-eksempler, RT-13, AT-7–AT-9/AT-20 | Alle aktive TG3 omfattes. Det finnes ingen separat «ikke-alvorlig TG3»-klasse. Manglende/ugyldig avklaring blokkerer; alle avklart med F2 gir fortsatt Forkast. Se `tests/unit/tg3-resolution.test.ts` og `complete-screening.test.ts`. |
+| RT-1/RT-2, RT-9: 30/31 sider og ingen OCR | Fortsatt fasit for eldre separat rapportadapter. Hovedimport bruker 200 sider/50 MiB og valgfri lokal OCR; se FR-6/FR-9. Ufullstendig dekning gir fortsatt ingen komplett screening. |
+| RT-3/RT-15: gjenbruk og lagret demo | Bevares. Vanlig ny hovedimport gjør null språkmodellkall. Demoens lagrede svar er håndskrevet fiksjon, ikke historiske modelluttrekk. |
+| RT-16: ti TG2/to TG3 | Et terskeleksempel, ikke dokumentert korpusstørrelse. PRD-en foreslår nå minst tre ulike rapporter, minst ti TG2/to TG3, med uavhengig forhåndsfasit og eksplisitt nevner. Ikke gjennomført her. |
+| BT-1–BT-18, AT-1–AT-20 | Formler, uavrundede terskler og prioritet bevares. AT-17s anbefaling øverst gjelder kontrollert resultat, ikke kravet til første skjerm i ny investeringsoversikt. Scenario/kapital/annuitet har egne senere spesifikasjoner og påvirker ikke kontrollert snapshot. |
+| TT-1–TT-9 og Q-1 | Historiske S5-målepunkter. Q-1 om måledefinisjon er løst, men faktisk måleakseptanse er ikke bestått. S5-W1 avslutter gammel runde med akseptert avvik. Ny testprotokoll er separat og uutført. |
+
+## Gjeldende kontrolltilfeller fra 19. november
+
+Følgende presiserte kontrolltilfeller er dokumentasjonskrav, ikke nye produktfunksjoner:
+
+1. Et aktivt TG3 uten «alvorlig»-ordlyd i beskrivelsen er fortsatt avklaringspliktig.
+   Ingen test skal forvente at KI klassifiserer det som ufarlig. Etter korrekt
+   retting mot originalen til TG2 gjelder ikke TG3-avklaring, men ny listekontroll
+   kreves. Avvisning av feilaktige uttrekk bevarer opphav og er ikke teknisk avklaring.
+2. Avklart krever eksplisitt status, begrunnelse, konkret grunnlag og binding til
+   gjeldende funn. To TG3 hvor bare ett er gyldig avklart gir prioritet 1;
+   endret side/hash/funn kan ikke arve gammel avklaring. Eksisterende FR5-/bindingstester
+   kontrollerer dette; en ekstern faguttalelses sannhet kontrolleres ikke av appen.
+3. Kontrollert transport før/ved 120 s, sene svar, null retry og manglende
+   budsjett/samtykke testes uten leverandørkall i `live-adapter.test.ts`,
+   `economy-local-budget.test.ts` og `tests/integration/uploaded-economy-http.test.ts`.
+   S5s 300 s er ikke timeout. Daterte resultatlogger må leses med sin versjon og modus.
+
+Ny uavhengig brukertest og balansert manuell/PAA-tidsstudie står i
+[testprotokollen](../../../process/evaluering/testprotokoll-del1-2026-11-19.md).
+Alle restpunkter følges bare i [sentral oversikt](../../../implementation-artifacts/deferred-work.md).
+
+## Opprinnelig spesifikasjon 10. oktober
+
 Dette vedlegget bevarer de avklarte testeksemplene og S5-måleprotokollen fra [PRD-en](prd.md). Flytting er redaksjonell; krav, forventede utfall og brukerbeslutninger er uendret. Test-ID-ene brukes videre i stories og testbevis. Ingen produkttester eller tidsmålinger er gjennomført gjennom utarbeidingen av dette dokumentet.
 
-## TG3-avklaring: testeksempler for FR-5
+### TG3-avklaring: testeksempler for FR-5
 
 | Gitt | Når | Forventet resultat |
 |---|---|---|
@@ -21,7 +62,7 @@ Dette vedlegget bevarer de avklarte testeksemplene og S5-måleprotokollen fra [P
 | Alle alvorlige TG3-funn har gyldig avklaring; øvrig kritisk grunnlag er tilstrekkelig | Økonomien er som F2 | Forkast fordi nettoyield er lavere enn Ymin. |
 | Gyldig avklaring og tidligere Gå videre | Status endres til Uavklart | Gjeldende anbefaling er Innhent mer informasjon. |
 
-## Rapportanalyse: RT-1–RT-19
+### Rapportanalyse: RT-1–RT-19
 
 Testdata utarbeides med forhåndsdefinert fasit i tråd med brief/addendum. Tabellen angir forventet atferd; testene er ikke implementert eller kjørt i denne PRD-økten.
 
@@ -47,7 +88,7 @@ Testdata utarbeides med forhåndsdefinert fasit i tråd med brief/addendum. Tabe
 | RT-18 · FR-7 | Ett eksplisitt TG2 mangler i uttrekket, men samlet TG2-resultat når S2s 90 %-terskel | Utelatelsen dokumenteres som uttrekksfeil selv om S2s minimum er nådd; relevansfiltrering er fortsatt ikke tillatt. |
 | RT-19 · FR-9, FR-11 | KI-kallet feiler uten å returnere funn; økonomien er som F1 | Tydelig analysefeil og Innhent mer informasjon. Ingen vellykket tom funnliste, brukerbekreftet komplett teknisk grunnlag eller Gå videre. |
 
-## Beregninger: BT-1–BT-18
+### Beregninger: BT-1–BT-18
 
 Alle uendrede verdier i tabellen er som F1: P = 16 000 000 kr, L = 1 900 000 kr/år, D = 400 000 kr/år, J = 800 000 kr/år og Ymin = 7 %. Oppgitte verdier er bekreftet med mindre testen sier noe annet. Anbefalingseksemplene forutsetter tilstrekkelig teknisk grunnlag med mindre annet er angitt. Dette er kravfasit; produkttestene er ikke implementert eller kjørt her.
 
@@ -72,7 +113,7 @@ Alle uendrede verdier i tabellen er som F1: P = 16 000 000 kr, L = 1 900 000 kr/
 | BT-17 · FR-13 | J mangler og L = 1 400 000 kr/år | Bruttoyield 8,75 %, NOI 1 000 000 kr/år og nettoyield 6,25 % kan vises som delberegninger. Endelig anbefaling er Innhent mer informasjon; ikke Forkast selv om nettoyield er under Ymin. |
 | BT-18 · FR-13 | Ymin mangler, øvrige verdier som F1 | Alle fire nøkkeltall kan vises; endelig anbefaling er Innhent mer informasjon, ikke Gå videre. |
 
-## Anbefaling: AT-1–AT-20
+### Anbefaling: AT-1–AT-20
 
 Uendrede verdier og grunnlagsforutsetninger er som komplett F1. Fasit følger de låste regelvariantene i Product Brief-addendum og godkjente presiseringer. Dette er spesifiserte testeksempler, ikke kjørte produkttester.
 
@@ -99,7 +140,7 @@ Uendrede verdier og grunnlagsforutsetninger er som komplett F1. Fasit følger de
 | AT-19 · FR-16, FR-17 | Samme ferdig registrerte grunnlag og faste regler evalueres gjentatte ganger; omfatter F1, F2 og kombinasjonen i AT-18 | Nøyaktig samme anbefaling, utløsende regelgrunnlag, regelbegrunnelse og anbefalingsbundne neste handling hver gang. Ingen KI-kall for å produsere anbefaling eller begrunnelse. |
 | AT-20 · FR-16, FR-17 | F2-økonomi og uavklart alvorlig TG3 samtidig | Innhent mer informasjon etter prioritet 1. TG3-avklaringsbehov vises; yieldbrudd kan ikke overstyre til Forkast. Gyldige økonomiske delresultater er fortsatt tilgjengelige. |
 
-## S5: Måleprotokoll og TT-1–TT-9
+### S5: Måleprotokoll og TT-1–TT-9
 
 1. Bruk en forhåndsdefinert case og dokumentfasit. Hovedanalysen må ha gyldige, bekreftede finansverdier og en ferdig opplastet støttet rapport ved start. Case F3 med manglende L er fortsatt en regeltest, men har ikke gyldig startgrunnlag for en vellykket S5-hovedanalyse før tallmangelen er rettet.
 2. Registrer **t_start** ved brukerens trykk på «Start analyse», **t_liste** når ferdig funnliste med beskrivelser, PDF-sider og eventuell usikkerhet er synlig, og **t_bekreftet** når kontrollen er gjennomført og gjeldende liste er bekreftet med håndtert TG3-status. Beregn hovedanalysetid = t_liste − t_start og kontrolltid = t_bekreftet − t_liste. Registrer tidsverdier med samme tidsgrunnlag og tilstrekkelig presisjon til å kontrollere sekundgrensene.

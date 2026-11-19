@@ -2,10 +2,17 @@
 title: "Product Brief: Property Acquisition Agent"
 status: complete
 created: 2026-09-15
-updated: 2026-11-06
+updated: 2026-11-19
 ---
 
 # Product Brief: Property Acquisition Agent
+
+> **Lesestatus 19. november 2026:** Hovedteksten nedenfor bevarer den godkjente
+> problemforståelsen og opprinnelige v1-avgrensningen fra oktober. Senere
+> autoriserte utvidelser er nå innarbeidet i [gjeldende PRD med kravstatus](../../prds/prd-IBE160-2026-10-10/prd.md).
+> Eldre «utenfor v1» og «ikke startet» beskriver den daterte opprinnelige fasen;
+> de overstyrer ikke de senere vedtakene. [Oppfølgingen av faglærer](../../prds/prd-IBE160-2026-10-10/oppfolging-prd-2026-11-19.md)
+> forklarer skillet. Historiske bevis og S5-W1 er bevart.
 
 > **Autorisert utvidelse 2026-11-05:** Brukeren har bestilt en samlet investeringsoversikt med kapitalbehov, egenkapital/belåningsgrad, annuitetsfinansiering og direkte leie-/driftsscenario. Dette utvider de opprinnelige v1-avgrensningene nedenfor, uten å endre yielddefinisjonene, kildekravene eller skillet mellom scenario og kontrollert screening. Ingen betalt AI eller ny ekstern integrasjon inngår. Se [gjeldende implementeringsspec](../../../implementation-artifacts/spec-paa-investeringsverktoy.md). Den opprinnelige briefteksten bevares som historikk.
 

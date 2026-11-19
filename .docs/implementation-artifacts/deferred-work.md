@@ -7,6 +7,18 @@ eksplisitt lukking regnes som åpne. Lukking krever dato, relevant commit og
 dokumentert løsning med godkjent relevant test/review; story-status alene
 er ikke lukkebevis. Historikk og lukkede punkter skal ikke slettes.
 
+## Dokumentoppfølging 2026-11-19 — ingen nye lukkinger
+
+PRD-revisjonen endrer ikke nåstatus eller beviskrav i indeksen 6. november
+nedenfor. Se [full kommentaravstemming](../planning-artifacts/prds/prd-IBE160-2026-10-10/oppfolging-prd-2026-11-19.md).
+Dette er datert oppfølging av eksisterende poster, ikke et nytt issuesystem.
+
+| Eksisterende punkt | Eksplisitt status og neste bevis |
+| --- | --- |
+| R4-S6 / Story 5.4 | **Åpen.** [Protokoll prøve A](../process/evaluering/testprotokoll-del1-2026-11-19.md#prøve-a-annen-persons-readme-kjøring-s6) forbereder faktisk annen-person-kjøring og forståelseskontroll. Mads organiserer rekruttering; ingen person er testet i denne økten. Lukking krever faktisk utføring, revisjon, avvik/hjelp, relevante tester og godkjent review med beviscommit. |
+| Story 4.5 / S5-W1 | **Akseptert avvik; ikke rettet, tidsbesparelse fortsatt udokumentert.** [Protokoll prøve B](../process/evaluering/testprotokoll-del1-2026-11-19.md#prøve-b-manuell-vurdering-mot-dagens-lokale-paa) er separat fremtidig lokal studie med fire deltakere og balanserte A/B-caser. Mads eier eventuell senere organisering. Nye pakker/fasit og deltakere er ikke klargjort. Gammel S5-runde gjenåpnes ikke, og ingen betalt test autoriseres. |
+| PAA-SO2 / PAA-LEIE1 / PAA-AI-20261031-1 | **Fortsatt åpne med tidligere avgrensninger.** PRD gjør generell dokument-/TG-dekning, individuell leie og ukjent belastning tydeligere. Planlagt korpus er ikke evaluert; ingen kontofasit eller ny tillatelse foreligger. |
+
 ## Gjeldende lesestart 2026-11-06
 
 Leveransekontrollen endrer ingen tidligere lukking. Tabellen er en datert indeks

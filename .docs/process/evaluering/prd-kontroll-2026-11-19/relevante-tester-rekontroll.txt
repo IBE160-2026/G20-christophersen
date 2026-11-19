@@ -1,0 +1,18 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/tg3-resolution.test.ts tests/unit/complete-screening.test.ts tests/unit/thresholds.test.ts tests/unit/finance.test.ts tests/unit/financial-basis.test.ts tests/unit/financial-confirmation.test.ts tests/unit/financial-result-renewal.test.ts tests/unit/result-snapshot.test.ts tests/unit/finding-control.test.ts tests/unit/finding-list-control.test.ts tests/unit/live-adapter.test.ts tests/unit/code-first-budget.test.ts tests/unit/economy-local-budget.test.ts tests/unit/financial-scenario.test.ts tests/unit/financing.test.ts tests/integration/document-import.test.ts tests/integration/demo-analysis.test.ts tests/integration/uploaded-economy-http.test.ts tests/integration/code-first-pdf.test.ts tests/integration/server-mode.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  20 passed (20)
+      Tests  620 passed (620)
+   Start at  17:18:34
+   Duration  18.83s (tests 97%, import 3%)
+
+npm notice
+npm notice New major version of npm available! 11.19.0 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice

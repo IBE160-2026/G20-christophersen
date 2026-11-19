@@ -1,5 +1,12 @@
 # Sporbarhet fra kilder til spesifikasjon
 
+> **Lesestatus 19. november 2026:** Kartene nedenfor bevarer opprinnelig
+> CAP-/AD-/story-arv. [Gjeldende PRD](../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md)
+> inneholder nå kravstatus etter autoriserte omfangsendringer. «Planlagt» og
+> «gjenstår» nedenfor gjelder sine historiske kontrolltidspunkter; faktisk
+> implementasjon og testspor står i [leveranseavstemmingen](../../process/leveranse-2026-11-06/produkt-og-sporbarhet.md).
+> Ingen eldre AC eller test-ID-er omdefineres av revisjonen.
+
 CAP-ID-ene grupperer eksisterende krav for videre BMAD-arbeid. De erstatter ingen godkjent ID eller beslutning. [Brief](../../planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md), [PRD](../../planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md), [DESIGN](../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/DESIGN.md), [EXPERIENCE](../../planning-artifacts/ux-designs/ux-IBE160-2026-10-13/EXPERIENCE.md) og [final spine](../../planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md) er obligatoriske adopterte kompanjonger, sammen med begge produktaddenda.
 
 ## Kildearv og beslutnings-ID-er

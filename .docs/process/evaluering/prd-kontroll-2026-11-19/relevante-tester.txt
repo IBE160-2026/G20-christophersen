@@ -1,0 +1,191 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run tests/unit/tg3-resolution.test.ts tests/unit/complete-screening.test.ts tests/unit/thresholds.test.ts tests/unit/finance.test.ts tests/unit/financial-basis.test.ts tests/unit/financial-confirmation.test.ts tests/unit/financial-result-renewal.test.ts tests/unit/result-snapshot.test.ts tests/unit/finding-control.test.ts tests/unit/finding-list-control.test.ts tests/unit/live-adapter.test.ts tests/unit/code-first-budget.test.ts tests/unit/economy-local-budget.test.ts tests/unit/financial-scenario.test.ts tests/unit/financing.test.ts tests/integration/document-import.test.ts tests/integration/demo-analysis.test.ts tests/integration/uploaded-economy-http.test.ts tests/integration/code-first-pdf.test.ts tests/integration/server-mode.test.ts
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+ ❯ tests/integration/uploaded-economy-http.test.ts (8 tests | 8 failed) 23ms
+   × forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall 10ms
+   × ukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst 3ms
+   × fire gjentatte gratis forberedelser av samme dokument/økt erstatter pakken uten å fylle minnet 5ms
+   × tidsavbrudd lukker en stanset multipart-opplasting og frigir låsen for neste forberedelse 1ms
+   × stenging venter på pågående transport og journalavslutning 1ms
+   × HTTP-feil fra leverandøren får trygg kategori og audit uten nøkkel, utdrag eller rå feiltekst 2ms
+   × statusruten avviser ugyldig hash og sperrer ødelagt historikk uten nye kall eller filendring 1ms
+   × statusruten bevarer ukjent historisk kostnadsgrunnlag og eksplisitt eksakt grunnlag 1ms
+ ❯ tests/integration/server-mode.test.ts (3 tests | 3 failed) 10ms
+   × 4.3: actual server entry with ANALYSIS_MODE=(unset) 6ms
+   × 4.3: actual server entry with ANALYSIS_MODE=live 2ms
+   × 4.3: actual server entry with ANALYSIS_MODE=unknown 0ms
+ ❯ tests/integration/document-import.test.ts (14 tests | 11 failed) 7231ms
+   × SO-AC1/5/14: faktisk HTTP/barn gir kildebundet økonomi før finansinput, uten nøkkel og med stengt live 10ms
+   × SO-AC2: separat rapport 31 går via ny profil og egen fysisk original 2ms
+   × SO-AC2: separat rapport 200 går via ny profil og egen fysisk original 1ms
+   × SO-AC2: separat rapport 201 går via ny profil og egen fysisk original 0ms
+   × SO-AC2: inclusive 50 MiB og samlet rapportbudsjett/bytte uten AI over grensen 0ms
+   × SO-AC13: global prosesslås deles med legacy og beholdes til child-close ved abort 2ms
+   × SO-AC13: uploadstopp avslutter faktisk mottak før lås frigis 0ms
+   ❯ SO-AC13: foreldrefrist, RSS og terminalcleanup (3)
+     × RSS-stopp måles fra forelderen, også ved blokkert child-eventloop 5002ms
+   × ukjent originalhash får generell lokal plan med stengt semantisk port 1ms
+   × review: faktisk PDF-worker/HTTP stopper per-page-tekstgrensen før adapter og frigir låsen 2ms
+   × review: faktisk PDF-worker/HTTP stopper aggregate-tekstgrensen før adapter og frigir låsen 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 22 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/document-import.test.ts > SO-AC1/5/14: faktisk HTTP/barn gir kildebundet økonomi før finansinput, uten nøkkel og med stengt live
+ FAIL  tests/integration/document-import.test.ts > SO-AC2: separat rapport 31 går via ny profil og egen fysisk original
+ FAIL  tests/integration/document-import.test.ts > SO-AC2: separat rapport 200 går via ny profil og egen fysisk original
+ FAIL  tests/integration/document-import.test.ts > SO-AC2: separat rapport 201 går via ny profil og egen fysisk original
+ FAIL  tests/integration/document-import.test.ts > SO-AC2: inclusive 50 MiB og samlet rapportbudsjett/bytte uten AI over grensen
+ FAIL  tests/integration/document-import.test.ts > SO-AC13: global prosesslås deles med legacy og beholdes til child-close ved abort
+ FAIL  tests/integration/document-import.test.ts > SO-AC13: uploadstopp avslutter faktisk mottak før lås frigis
+ FAIL  tests/integration/document-import.test.ts > ukjent originalhash får generell lokal plan med stengt semantisk port
+ FAIL  tests/integration/document-import.test.ts > review: faktisk PDF-worker/HTTP stopper per-page-tekstgrensen før adapter og frigir låsen
+ FAIL  tests/integration/document-import.test.ts > review: faktisk PDF-worker/HTTP stopper aggregate-tekstgrensen før adapter og frigir låsen
+ FAIL  tests/integration/server-mode.test.ts > 4.3: actual server entry with ANALYSIS_MODE=(unset)
+ FAIL  tests/integration/server-mode.test.ts > 4.3: actual server entry with ANALYSIS_MODE=live
+ FAIL  tests/integration/server-mode.test.ts > 4.3: actual server entry with ANALYSIS_MODE=unknown
+ FAIL  tests/integration/uploaded-economy-http.test.ts > forbereder lokalt, krever begge samtykker og binder dokument/request før ett stubbet SDK-kall
+ FAIL  tests/integration/uploaded-economy-http.test.ts > ukjent leverandørutfall beholder reservasjon og gjenforsøk er sperret uten lekkasje av feiltekst
+ FAIL  tests/integration/uploaded-economy-http.test.ts > fire gjentatte gratis forberedelser av samme dokument/økt erstatter pakken uten å fylle minnet
+ FAIL  tests/integration/uploaded-economy-http.test.ts > tidsavbrudd lukker en stanset multipart-opplasting og frigir låsen for neste forberedelse
+ FAIL  tests/integration/uploaded-economy-http.test.ts > stenging venter på pågående transport og journalavslutning
+ FAIL  tests/integration/uploaded-economy-http.test.ts > HTTP-feil fra leverandøren får trygg kategori og audit uten nøkkel, utdrag eller rå feiltekst
+ FAIL  tests/integration/uploaded-economy-http.test.ts > statusruten avviser ugyldig hash og sperrer ødelagt historikk uten nye kall eller filendring
+ FAIL  tests/integration/uploaded-economy-http.test.ts > statusruten bevarer ukjent historisk kostnadsgrunnlag og eksplisitt eksakt grunnlag
+Error: listen EPERM: operation not permitted 127.0.0.1
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/22]⎯
+
+ FAIL  tests/integration/document-import.test.ts > SO-AC13: foreldrefrist, RSS og terminalcleanup > RSS-stopp måles fra forelderen, også ved blokkert child-eventloop
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/document-import.test.ts:113:3
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/22]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 5 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:457:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "import-hang-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:457:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "import-hang-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:457:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "import-late-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:457:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "import-late-child.ts termineres uten automatisk retry/sen suksess og frigir gratis import etter cleanup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: spawn EPERM
+ ❯ ChildProcess.spawn node:internal/child_process:457:11
+ ❯ spawn node:child_process:813:9
+ ❯ execFile node:child_process:349:17
+ ❯ Timeout._onTimeout src/backend/http/run-import.ts:51:14
+     49|         sampling = true
+     50|         // Parent sampling remains effective if the parser blocks its …
+     51|         ps = execFile('/bin/ps', ['-o', 'rss=', '-p', String(child.pid…
+       |              ^
+     52|           sampling = false
+     53|           if (!error && /^\s*\d+\s*$/.test(stdout)) {
+ ❯ listOnTimeout node:internal/timers:685:17
+ ❯ process.processTimers node:internal/timers:618:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'spawn' }
+This error originated in "tests/integration/document-import.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "RSS-stopp måles fra forelderen, også ved blokkert child-eventloop". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  3 failed | 17 passed (20)
+      Tests  22 failed | 598 passed (620)
+     Errors  5 errors
+   Start at  17:16:38
+   Duration  16.79s (tests 95%, import 4%, transform 1%)
+

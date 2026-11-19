@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-19",
+  "source_commit": "684e61d3686f83f05c3f6cb1a3720dfb3f622c68",
+  "scope": "changed/new Markdown, local links/anchors and documentation invariants; no external URL verification",
+  "markdown_files": [
+    ".docs/implementation-artifacts/deferred-work.md",
+    ".docs/planning-artifacts/architecture/architecture-IBE160-2026-10-14/ARCHITECTURE-SPINE.md",
+    ".docs/planning-artifacts/architecture/technology-principles-2026-11-19.md",
+    ".docs/planning-artifacts/briefs/brief-IBE160-2026-09-15/brief.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/.memlog.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/addendum.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/implementation-evidence-2026-11-19.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/oppfolging-prd-2026-11-19.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/prd.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/reconcile-feedback-2026-11-19.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/review-editorial-2026-11-19.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/review-rubric-2026-11-19.md",
+    ".docs/planning-artifacts/prds/prd-IBE160-2026-10-10/sluttkontroll-2026-11-19.md",
+    ".docs/process/arbeidsokter/2026-11-19-prd-faglaerer.md",
+    ".docs/process/evaluering/testprotokoll-del1-2026-11-19.md",
+    ".docs/specs/spec-IBE160/sporbarhet.md",
+    "README.md"
+  ],
+  "local_links_checked": 348,
+  "markdown_fragments_checked": 11,
+  "stable_ids_ok": true,
+  "historical_addendum_unchanged_except_heading_levels": true,
+  "original_prd_sha256": "e4c5fdbaa5b0989c44eee3c663af32483a30d20d9ea29a4209bc35ab61388126",
+  "word_count_method": "whitespace split including Markdown and paths",
+  "original_prd_words": 7496,
+  "revised_prd_words": 4579,
+  "reduction_percent": 38.9,
+  "active_prompt_log": ".docs/process/prompts/session-01a1f491-7d2e-7f43-beec-4f31510eb7b7.jsonl",
+  "prompt_log_records": 1,
+  "prompt_log_valid": true,
+  "memlog_history_preserved": true,
+  "product_files_changed": [],
+  "independent_decimal_arithmetic": {
+    "F1": {
+      "grossYield": "11.875",
+      "NOI": "1500000",
+      "netYield": "9.375",
+      "cashFlow": "700000"
+    },
+    "F2": {
+      "grossYield": "8.75",
+      "NOI": "1000000",
+      "netYield": "6.25",
+      "cashFlow": "200000"
+    },
+    "A": {
+      "grossYield": "9",
+      "NOI": "260000",
+      "netYield": "6.5",
+      "cashFlow": "140000",
+      "kind": "planned-task-values-not-observations"
+    },
+    "B": {
+      "grossYield": "9",
+      "NOI": "325000",
+      "netYield": "6.5",
+      "cashFlow": "175000",
+      "kind": "planned-task-values-not-observations"
+    }
+  },
+  "errors": [],
+  "result": "pass"
+}

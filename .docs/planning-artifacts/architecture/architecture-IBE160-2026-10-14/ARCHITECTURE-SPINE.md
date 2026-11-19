@@ -24,6 +24,13 @@ companions: [.memlog.md]
 
 # Architecture Spine — Property Acquisition Agent
 
+> **Lesestatus 19. november 2026:** AD-1–AD-10 nedenfor er det opprinnelige
+> arkitekturgrunnlaget med daterte oppdateringer. Gjeldende import-/scenario-
+> og KI-grenser leses i [revidert PRD](../../prds/prd-IBE160-2026-10-10/prd.md)
+> og leveranseavstemmingen lenket nedenfor. [Prinsippvurderingen av technology.md](../technology-principles-2026-11-19.md)
+> begrunner relevante eksisterende valg; referansen beskriver et annet produkt
+> og medfører ingen endring av PAA-stacken eller nye tjenester.
+
 > **Produktretning 2026-10-28:** Salgsoppgave blir hovedinngangen til PAA;
 > FINN beholdes som fremtidig alternativ uten videre utvikling/live-aktivering nå.
 > Se [Correct Course, endringsforslag og implementeringsspec](../../sprint-change-proposal-2026-10-28.md).

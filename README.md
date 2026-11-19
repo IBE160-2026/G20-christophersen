@@ -8,6 +8,8 @@ PAA hjelper en privat eiendomsinvestor med førstevurdering av **ett boligutleie
 
 Start med [leveranserapport og vurderingsgrunnlag](.docs/process/leveranse-2026-11-06/rapport.md), [prosess og KI-styring](.docs/process/leveranse-2026-11-06/prosess-og-ki.md) og [gjeldende scope, arkitektur og krav–kode–test](.docs/process/leveranse-2026-11-06/produkt-og-sporbarhet.md).
 
+[PRD-oppfølging 19. november](.docs/planning-artifacts/prds/prd-IBE160-2026-10-10/oppfolging-prd-2026-11-19.md) avstemmer faglærerens kommentarer mot gjeldende krav og kode. [Uavhengig brukertest og tidsstudie](.docs/process/evaluering/testprotokoll-del1-2026-11-19.md) er konkrete, uutførte planer; de dokumenterer ingen nye resultater eller tidsbesparelse.
+
 ## Installer og start
 
 Forutsetninger: **Node.js 24.21.0 og npm 11.19.0**, låst i `.nvmrc`, `package.json` og `package-lock.json`. Bruk eksempelvis `nvm install` og `nvm use` hvis nvm allerede er installert. nvm er valgfritt. Python, database, Docker og global Vite trengs ikke.

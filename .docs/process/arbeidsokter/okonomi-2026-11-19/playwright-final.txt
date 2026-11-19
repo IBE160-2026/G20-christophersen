@@ -1,0 +1,19 @@
+[WebServer] (node:51813) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+(node:51822) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/e2e/app-shell.spec.ts:8:1 › Konsept A: PDF først, ukjente verdier og bevart kontrollport (658ms)
+  ✓   2 tests/e2e/app-shell.spec.ts:30:1 › Konsept A: alle ressurser lokalt uten ekstern transport (227ms)
+  ✓   3 tests/e2e/app-shell.spec.ts:95:1 › Konsept A: komposisjon og typografi følger godkjent retning (225ms)
+  ✓   4 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 320px (309ms)
+  ✓   5 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 390px (306ms)
+  ✓   6 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 768px (296ms)
+  ✓   7 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 1024px (319ms)
+  ✓   8 tests/e2e/app-shell.spec.ts:106:50 › Konsept A: ombryting, dialog og tastatur ved 1440px (330ms)
+  ✓   9 tests/e2e/rent-real-document.spec.ts:128:1 › ekte Nordvik: alle 170 sider, kildebelagt 59→60-leieestimat og ubekreftet økonomi gjennom HTTP (21.2s)
+  ✓  10 tests/e2e/rent-real-document.spec.ts:297:1 › ekte Nøstegaten: 152 sider, dokumentøkonomi og automatisk SSB-leie med foreløpig avkastning (23.1s)
+
+  10 passed (48.8s)

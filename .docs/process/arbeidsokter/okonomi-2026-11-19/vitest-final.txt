@@ -1,0 +1,16 @@
+
+> property-acquisition-agent@0.0.0 test
+> vitest run --maxWorkers=1
+
+
+ RUN  v5.0.4 /Users/madschristophersen/IBE160/G20-christophersen
+
+
+ Test Files  111 passed | 1 skipped (112)
+      Tests  2245 passed | 7 skipped (2252)
+   Start at  17:58:02
+   Duration  326.61s (tests 97%, import 3%)
+
+    Isolate  112 workers spawned · ~90ms startup each (spawn + environment, per file)
+             at least ~10.04s faster with isolate: false — reuses workers across files instead of one per file
+

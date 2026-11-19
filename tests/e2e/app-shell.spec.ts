@@ -101,12 +101,21 @@ test('Konsept A: komposisjon og typografi følger godkjent retning', async ({ pa
     const image = document.querySelector('.hero-visual')!.getBoundingClientRect()
     return { background: css('.investment-shell').backgroundColor, title: css('.hero-title').fontFamily, size: parseFloat(css('.hero-title').fontSize), columns: css('.investment-kpis').gridTemplateColumns.split(' ').length, imageWidth: image.width / hero.width }
   })
-  expect(styles.background).toBe('rgb(247, 248, 245)'); expect(styles.title).toContain('Georgia'); expect(styles.size).toBeGreaterThan(50); expect(styles.columns).toBe(4); expect(styles.imageWidth).toBeGreaterThan(.4)
+  expect(styles.background).toBe('rgb(247, 248, 245)'); expect(styles.title).toContain('Georgia'); expect(styles.size).toBeGreaterThan(50); expect(styles.columns).toBe(3); expect(styles.imageWidth).toBeGreaterThan(.4)
 })
 for (const width of [320, 390, 768, 1024, 1440]) test(`Konsept A: ombryting, dialog og tastatur ved ${width}px`, async ({ page }) => {
   await page.setViewportSize({ width, height: 900 }); await page.goto('/')
   await expect(page.locator('.hero-title')).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  if (width <= 390) {
+    const cards = await page.locator('.investment-kpis article').evaluateAll(elements => elements.map(element => { const { x, y, width } = element.getBoundingClientRect(); return { x, y, width, fits: element.scrollWidth <= element.clientWidth } }))
+    expect(cards).toHaveLength(3)
+    expect(cards[0]!.y).toBe(cards[1]!.y)
+    expect(cards[2]!.y).toBeGreaterThan(cards[0]!.y)
+    expect(cards[2]!.x).toBe(cards[0]!.x)
+    expect(cards[2]!.width).toBeGreaterThan(cards[0]!.width)
+    expect(cards.every(card => card.fits)).toBe(true)
+  }
   await page.keyboard.press('Tab'); await expect(page.getByRole('link', { name: 'Hopp til arbeidsinnhold' })).toBeFocused()
   await page.keyboard.press('Enter'); await expect(page.locator('#investment-title')).toBeFocused()
   const opener = page.getByRole('button', { name: 'Eiendommen', exact: true }); await opener.click()

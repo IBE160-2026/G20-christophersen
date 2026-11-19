@@ -1,5 +1,6 @@
 import { expect, it, vi } from 'vitest'
 import { createElement } from 'react'
+import type { ComponentProps } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { InvestmentOverview } from '../../src/frontend/investment/InvestmentOverview.tsx'
 import { ImportClient } from '../../src/frontend/analysis/import-client.ts'
@@ -17,9 +18,12 @@ async function state() {
   session.sources.L = { kind: 'assumption', description: 'Leiescenario', conflict: null, rentNature: 'expected' }
   return session
 }
+function overview(session: ReturnType<typeof createInitialSession>, overrides: Partial<ComponentProps<typeof InvestmentOverview>> = {}) {
+  const markup = renderToStaticMarkup(createElement(InvestmentOverview, { session, rent: { status: 'idle', result: null, retry: () => {} }, dispatch: () => {}, importClient: new ImportClient(() => {}), listingClient: new ListingClient(() => {}), onOpen: () => {}, overviewRef: { current: null }, controls: { equity: '', annualInterest: '', months: '' }, onControls: () => {}, ...overrides }))
+  return markup.replaceAll('\u00a0', ' ')
+}
 function render(session: ReturnType<typeof createInitialSession>) {
-  const markup = renderToStaticMarkup(createElement(InvestmentOverview, { session, rent: { status: 'idle', result: null, retry: () => {} }, dispatch: () => {}, importClient: new ImportClient(() => {}), listingClient: new ListingClient(() => {}), onOpen: () => {}, overviewRef: { current: null }, controls: { equity: '', annualInterest: '', months: '' }, onControls: () => {} }))
-  return markup.match(/<details class="scenario-basis">[\s\S]*?<\/details>/)![0].replaceAll('\u00a0', ' ')
+  return overview(session).match(/<details class="scenario-basis">[\s\S]*?<\/details>/)![0].replaceAll('\u00a0', ' ')
 }
 it.each(['', 'ugyldig', '0'])('viser kjent årsoverskudd uten prosent eller divisjon når P er %s', async rawValue => {
   const session = sessionReducer(sessionReducer(await state(), { type: 'register-value', field: 'P', rawValue: '1' }), { type: 'register-value', field: 'P', rawValue })
@@ -56,4 +60,48 @@ it('utelater bare generert dokumenthash i prisforklaringen og bevarer kildeident
   const manual = sessionReducer(session, { type: 'register-source', field: 'P', source: { kind: 'source', description: description + ' Manuell kilde.', conflict: null } })
   expect(priceExplanation(manual)).toContain(outcome.reportHash)
   expect(priceExplanation(manual)).toContain('Manuell kilde.')
+})
+
+
+it('viser tre hovedtall og merker automatisk delsum uten full nettoavkastning', async () => {
+  const markup = overview(await state())
+  const kpis = markup.match(/<div class="investment-kpis"[\s\S]*?<\/div>/)![0]
+  expect(kpis.match(/<article>/g)).toHaveLength(3)
+  expect(kpis).toContain('Avkastning etter drift')
+  expect(kpis).toContain('2,13')
+  expect(kpis).toContain('Foreløpig · kun dokumentert delsum · før finansiering og skatt')
+  expect(kpis).not.toContain('Nettoavkastning')
+  expect(kpis).not.toContain('scenario-preliminary-net')
+})
+it('bruker egen totaldrift i én prosent og i aktiv formel, med dokumentdelsum som referanse', async () => {
+  const markup = overview(await state(), { operatingOverride: '4000' })
+  expect(markup).toContain('2,08') // (226800 − 48000) / 8600000 × 100
+  expect(markup).toContain('Egen totalforutsetning · før finansiering og skatt')
+  expect(markup).toContain('valgt årsdrift 48 000 kr = 178 800 kr/år')
+  expect(markup).toContain('Dokumentets delsum som referanse')
+  expect(markup).toContain('43 920 kr')
+})
+it.each(['', '-1', 'ugyldig'])('ugyldig egen drift %s får ikke fallback til dokumentdelsummen', async operatingOverride => {
+  const markup = overview(await state(), { operatingOverride })
+  expect(markup).toMatch(/data-testid="scenario-net">—/)
+  expect(markup).toMatch(/data-testid="scenario-cash">—/)
+  expect(markup).not.toContain('scenario-operating-formula')
+  expect(markup).toContain('2,64') // Brutto er uavhengig av drift.
+})
+
+it('eksplisitt null drift er en egen forutsetning og erstattes ikke av dokumentdelsum', async () => {
+  const markup = overview(await state(), { operatingOverride: '0' })
+  expect(markup).toMatch(/data-testid="scenario-net">2,64/)
+  expect(markup).toContain('valgt årsdrift 0 kr = 226 800 kr/år')
+  expect(markup).toContain('Egen totalforutsetning · før finansiering og skatt')
+})
+it('registrert totaldrift har forrang over dokumentdelsum uten lokal overstyring', async () => {
+  let session = await state()
+  session = sessionReducer(session, { type: 'register-value', field: 'D', rawValue: '48000' })
+  session.financial.D.period = 'year'; session.financial.D.year = '2025'
+  session.sources.D = { kind: 'assumption', description: 'Samlet årsdrift', conflict: null }
+  const markup = overview(session)
+  expect(markup).toMatch(/data-testid="scenario-net">2,08/)
+  expect(markup).toContain('Registrert drift · før finansiering og skatt')
+  expect(markup).toContain('valgt årsdrift 48 000 kr = 178 800 kr/år')
 })
